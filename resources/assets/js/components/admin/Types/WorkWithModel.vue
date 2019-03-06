@@ -1,0 +1,589 @@
+<template>
+    <div>
+        <PageElementsBreadcrumb :breadcrumbElements="breadcrumbElements"/>
+
+        <div class="ds-block" v-on:click="alerts = []">
+            <el-form label-position="top" class="ds-source"
+                     ref="formWorkWithModel"
+                     :rules="rules"
+                     @keydown.enter="onSubmit"
+                     :model="form"
+                     label-width="120px">
+                <el-form-item label="Наименование" prop="name">
+                    <el-input type="text" v-model="form.name" placeholder="Введите Имя"></el-input>
+                </el-form-item>
+                <el-form-item label="SEO URL" prop="slug">
+                    <el-input type="text" v-model="form.slug" placeholder="SEO URL"></el-input>
+                </el-form-item>
+
+                <el-form-item label="Порядок сортировки" prop="sorting_order">
+                    <el-input type="text" v-model="form.sorting_order" placeholder="Введите порядок сортировки"></el-input>
+                </el-form-item>
+
+                <PageElementsAlerts :alerts="alerts" :type="typeAlerts"/>
+
+                <el-form-item>
+                    <el-button v-if="showFilters" type="default" @click="modalWorkWithFilters">Управление фильтрами</el-button>
+                    <el-button v-if="showTree" type="default" @click="modalCreateNode">Добавить категорию</el-button>
+                    <el-button type="primary" @click="onSubmit">{{submitName}}</el-button>
+                </el-form-item>
+            </el-form>
+        </div>
+
+        <div class="ds-block" v-if="showTree">
+            <el-row class="ds-description">
+                <h3 class="text-center">Список категорий</h3>
+                Наименование категории | Порядок сортировки | Операции
+            </el-row>
+            <el-tree class="ds-description"
+                :data="renderTree()"
+                node-key="id"
+                default-expand-all
+                :props="defaultProps"
+                :expand-on-click-node="false">
+                <span class="ds-tree-node" slot-scope="{ node }">
+                    <span>{{ node.label }}</span>
+                    <span>{{ node.data.sorting_order }}</span>
+                    <span>
+                        <el-button
+                                type="primary"
+                                @click="modalWorkWithFiltersCategory(node.data)"
+                                size="mini">
+                            <i class="ai-filter" />
+                        </el-button>
+                        <el-button
+                            type="primary"
+                            @click="modalEditNode(node.data)"
+                            size="mini">
+                            <i class="el-icon-edit"></i>
+                        </el-button>
+                        <el-button
+                            type="danger"
+                            size="mini"
+                            @click="modalDeleteNode(node.data)">
+                            <i class="el-icon-delete"></i>
+                        </el-button>
+                    </span>
+                </span>
+            </el-tree>
+        </div>
+
+        <el-dialog :title="titleDialogWorkWith" :visible.sync="visibleDialogWorkWithNode">
+            <el-form ref="formWorkWithNode"
+                     :rules="rulesNode"
+                     :model="workWithNode">
+                <el-form-item label="Наименование" prop="name">
+                    <el-input v-model="workWithNode.name"></el-input>
+                </el-form-item>
+                <el-form-item label="SEO адрес" prop="slug">
+                    <el-input v-model="workWithNode.slug"></el-input>
+                </el-form-item>
+                <el-form-item  label="Порядок сортировки" prop="sorting_order">
+                    <el-input v-model="workWithNode.sorting_order"></el-input>
+                </el-form-item>
+                <el-select v-model="workWithNode.parent_id" placeholder="Выберите родителя" prop="parent_id">
+                    <el-option
+                            v-for="item in renderSelectParent"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id">
+                    </el-option>
+                </el-select>
+            </el-form>
+            <PageElementsAlerts :alerts="modalAlerts" :type="modalTypeAlerts"/>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="visibleDialogWorkWithNode = false">Отмена</el-button>
+                <el-button type="primary" @click="clickWorkWithNode">Сохранить</el-button>
+            </span>
+        </el-dialog>
+
+        <el-dialog :title="titleDialogWorkWith" :visible.sync="visibleDialogWorkWithFilters">
+            <FiltersTableSelect :currentModel="currentModel"
+                                         :model="this.form"
+                                         v-on:selectFilter="filterActionHandler"/>
+            <PageElementsAlerts :alerts="modalAlerts" :type="modalTypeAlerts"/>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="visibleDialogWorkWithFilters = false">Отмена</el-button>
+            </span>
+        </el-dialog>
+
+        <el-dialog :title="titleDialogWorkWith" :visible.sync="visibleDialogWorkWithFiltersCategory">
+            <FiltersTableSelect :currentModel="currentModel"
+                                :model="this.workWithCategory"
+                                v-on:selectFilter="filterActionHandlerCategory"/>
+            <PageElementsAlerts :alerts="modalAlerts" :type="modalTypeAlerts"/>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="visibleDialogWorkWithFiltersCategory = false">Отмена</el-button>
+            </span>
+        </el-dialog>
+
+        <el-dialog
+                :title="deleteNodeTitleDialog"
+                :visible.sync="deleteNodeDialogVisible"
+                width="60%">
+            <el-alert
+                    :title="deleteNodeTitleAlert"
+                    :type="deleteNodeTypeAlert"
+                    :closable="false">
+            </el-alert>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="deleteNodeDialogVisible = false">Отмена</el-button>
+                <el-button type="primary" @click="deleteNode">Подтверждаю</el-button>
+            </span>
+        </el-dialog>
+    </div>
+</template>
+
+<script>
+    import { PageElementsBreadcrumb, PageElementsAlerts } from '../page/elements';
+    import { generatingValidationMessage } from '../../../helpers/generatingValidationMessage';
+    import * as ApiTypes from '../../../app/admin/api/Types';
+    import * as ApiCategories from '../../../app/admin/api/Categories';
+    import { FiltersTableSelect } from '../Filters';
+    import * as helperRouter from '../../../app/helpers/router';
+
+    let arrayToTree = require('array-to-tree');
+    let slugify = require('slugify');
+
+    export default {
+        name: 'types-work-with-model',
+        created() {
+            this.currentRoute = this.$router.currentRoute;
+            if (this.currentRoute.name === 'types-update') {
+                this.showTree = this.showFilters = true;
+                if (this.types !== undefined && this.types.length) {
+                    let typeStore = this.types.find((type) => type.id === this.$route.params.id);
+                    this.form = typeStore;
+                    this.oldForm = _.cloneDeep(this.form);
+                    this.categories = typeStore.categories;
+                }
+                else {
+                    ApiTypes.show(this.$route.params.id).then((response) => {
+                        this.form = response.data.type;
+                        this.categories = response.data.type.categories;
+                        this.oldForm = _.cloneDeep(this.form);
+                    });
+                }
+
+                this.submitName = 'Обновить';
+                this.pageTitle = helperRouter.getRouteByName(this.$router, 'types-update').meta.title;
+            }
+            else {
+                this.submitName = 'Создать';
+                this.pageTitle = helperRouter.getRouteByName(this.$router, 'types-create').meta.title;
+            }
+            this.setBreadcrumbElements();
+        },
+        data() {
+            return {
+                rulesNode: {
+                    name: [
+                        {required: true, message: generatingValidationMessage('required'), trigger: ['blur', 'change']},
+                        {max: 255, min: 3, message: generatingValidationMessage('length', [255, 3]), trigger: ['blur', 'change']}
+                    ],
+                    slug: [
+                        {required: true, message: generatingValidationMessage('required'), trigger: ['blur', 'change']},
+                        {max: 255, min: 3, message: generatingValidationMessage('length', [255, 3]), trigger: ['blur', 'change']}
+                    ],
+                    sorting_order: [
+                        {required: true, message: generatingValidationMessage('required'), trigger: ['blur', 'change']},
+                        {pattern: /^\d{1,3}$/, message: 'Значение в этом поле не должно быть от 0 до 999', trigger: ['blur', 'change']}
+                    ]
+                },
+                deleteNodeDialogVisible: false,
+                deleteNodeTypeAlert: null,
+                deleteNodeTitleAlert: null,
+                deleteNodeTitleDialog: null,
+                modalAlerts: [],
+                modalTypeAlerts: 'success',
+                workWithNode: {},
+                titleDialogWorkWith: '',
+                visibleDialogWorkWithNode: false,
+                visibleDialogWorkWithFilters: false,
+                categories: [],
+                defaultProps: {
+                    children: 'children',
+                    label: 'name'
+                },
+                countChangesSlug: 0,
+                showTree: false,
+                showFilters: false,
+                pageTitle: '',
+                form: this.defaultFormData(),
+                oldForm: null,
+                rules: {
+                    name: [
+                        {required: true, message: generatingValidationMessage('required'), trigger: ['blur', 'change']},
+                        {max: 255, min: 3, message: generatingValidationMessage('length', [255, 3]), trigger: ['blur', 'change']}
+                    ],
+                    slug: [
+                        {required: true, message: generatingValidationMessage('required'), trigger: ['blur', 'change']},
+                        {max: 255, min: 3, message: generatingValidationMessage('length', [255, 3]), trigger: ['blur', 'change']}
+                    ],
+                    sorting_order: [
+                        {required: true, message: generatingValidationMessage('required'), trigger: ['blur', 'change']},
+                        {pattern: /^\d+$/, message: generatingValidationMessage('integer'), trigger: ['blur', 'change']}
+                    ],
+                },
+                currentRoute: null,
+                breadcrumbElements: [],
+                submitName: null,
+                alerts: [],
+                typeAlerts: 'success',
+                currentModel: 'types',
+                workWithCategory: {},
+                visibleDialogWorkWithFiltersCategory: false,
+            }
+        },
+        computed: {
+            types: function() {
+                return this.$store.getters.types
+            },
+            renderSelectParent: function() {
+                let result = this.categories;
+                if (!result.find((item) => item.id === 1)) {
+                    result.unshift({
+                        'name': 'Корневая категория',
+                        'id': 1
+                    });
+                }
+                return result;
+            }
+        },
+        methods: {
+            changeOldForm: function(data) {
+                this.oldForm = data;
+            },
+            filterActionHandler: function(filter) {
+                ApiTypes.handleFilter({
+                    'type_id': this.form.id,
+                    'filter_id': filter.id
+                }).then((response) => {
+                    response = response.data;
+                    if (response.status === 'success') {
+                        if (response.operation === 'add') {
+                            this.$notify.success({
+                                offset: 50,
+                                title: 'Запрос успешно выполнен',
+                                message: response.message
+                            });
+                            this.form.filters.unshift(response.create_model);
+                        }
+                        else {
+                            let index = this.form.filters.findIndex((item) => item.filter_id === filter.id);
+                            this.form.filters.splice(index, 1);
+                            this.$notify.error({
+                                offset: 50,
+                                title: 'Запрос успешно выполнен',
+                                message: response.message
+                            });
+                        }
+                        this.changeOldForm(this.form);
+                    }
+
+                }).catch((error) => {
+                    this.alerts = error.response.data.errors;
+                    this.typeAlerts = 'error';
+                });
+            },
+            sortCategories: function () {
+                this.form.categories.sort(function(a, b) {
+                    return a.sorting_order - b.sorting_order;
+                });
+            },
+            modalCreateNode: function () {
+                this.titleDialogWorkWith = 'Добавить категорию';
+                this.workWithNode = {
+                    name: '',
+                    sorting_order: 0,
+                    slug: ''
+                };
+                this.visibleDialogWorkWithNode = true;
+                this.modalAlerts = [];
+            },
+            modalWorkWithFilters: function() {
+                this.currentModel = 'types';
+                this.titleDialogWorkWith = `Управление фильтрами типа "${this.form.name}"`;
+                this.visibleDialogWorkWithFilters = true;
+                this.modalAlerts = [];
+            },
+            modalWorkWithFiltersCategory: function(category) {
+                this.workWithCategory = category;
+                this.currentModel = 'type_category';
+                this.titleDialogWorkWith = `Управление фильтрами типа "${this.form.name}" категории "${category.name}"`;
+                this.visibleDialogWorkWithFiltersCategory = true;
+
+                this.modalAlerts = [];
+            },
+            filterActionHandlerCategory: function(filter) {
+                ApiCategories.handleFilter({
+                    'category_id': this.workWithCategory.id,
+                    'filter_id': filter.id
+                }).then((response) => {
+                    response = response.data;
+                    if (response.status === 'success') {
+                        let indexCategory = this.form.categories.findIndex((item) => item.id === this.workWithCategory.id);
+                        if (response.operation === 'add') {
+                            this.form.categories[indexCategory].filters.unshift(response.create_model);
+                            this.$notify.success({
+                                offset: 50,
+                                title: 'Запрос успешно выполнен',
+                                message: response.message
+                            });
+                        }
+                        else {
+                            let indexFilter = this.form.categories[indexCategory].filters.findIndex((item) => {
+                                return item.filter_id === filter.id;
+                            });
+                            this.form.categories[indexCategory].filters.splice(indexFilter, 1);
+                            this.$notify.error({
+                                offset: 50,
+                                title: 'Запрос успешно выполнен',
+                                message: response.message
+                            });
+                        }
+                        this.workWithCategory =  this.form.categories[indexCategory];
+                        this.changeOldForm(this.form);
+                    }
+
+                }).catch((error) => {
+                    this.alerts = error.response.data.errors;
+                    this.typeAlerts = 'error';
+                });
+            },
+            deleteNode: function () {
+                ApiCategories.destroy(this.workWithNode.id).then((response) => {
+                    for (let i in response.data.remove_categories) {
+                        let index = this.categories.findIndex((item) => item.id === response.data.remove_categories[i]);
+                        this.form.categories.splice(index, 1);
+                    }
+                    this.oldForm = this.form;
+                    this.deleteNodeDialogVisible = false;
+                    this.$notify.success({
+                        offset: 50,
+                        title: 'Запрос успешно выполнен',
+                        message: response.data.message
+                    });
+                });
+            },
+            modalDeleteNode: function (node) {
+                this.workWithNode = node;
+                this.deleteNodeTitleDialog = 'Подтверите удаление категории';
+                this.deleteNodeTypeAlert = 'warning';
+                this.deleteNodeTitleAlert = 'При удалении категории все ее подкатегории так же будут удалить. Товары при этом которые привязаны к этой категории остаются не тронуты.';
+                this.deleteNodeDialogVisible = true;
+            },
+            renderTree: function() {
+                let categories = this.categories.filter(function (item) {
+                    return item.id !== 1
+                });
+                return arrayToTree(categories)
+            },
+            modalEditNode: function (node) {
+                this.titleDialogWorkWith = 'Изменить данные категории';
+                this.workWithNode = node;
+                this.visibleDialogWorkWithNode = true;
+                this.modalAlerts = [];
+            },
+            clickWorkWithNode: function () {
+                this.$refs['formWorkWithNode'].validate((valid) => {
+                    if (valid) {
+                        if (this.workWithNode.id !== undefined) {
+                            ApiCategories.update(this.workWithNode.id, this.workWithNode).then((response) => {
+                                let category = response.data.category;
+                                let index = this.categories.findIndex((item) => item.id === category.id);
+                                this.categories[index] = category;
+                                this.form.categories = this.categories;
+                                this.sortCategories();
+                                this.oldForm = this.form;
+                                this.visibleDialogWorkWithNode = false;
+                                this.$notify.success({
+                                    offset: 50,
+                                    title: 'Запрос успешно выполнен',
+                                    message: response.data.message
+                                });
+                            }).catch((error) => {
+                                this.modalAlerts = error.response.data.errors;
+                                this.modalTypeAlerts = 'error';
+                            });
+                        }
+                        else {
+                            this.workWithNode.type_id = this.form.id;
+                            if (this.workWithNode.parent_id === undefined) {
+                                this.workWithNode.parent_id = 1;
+                            }
+                            ApiCategories.create(this.workWithNode).then((response) => {
+                                this.form.categories.unshift(response.data.category);
+                                this.sortCategories();
+                                this.oldForm = this.form;
+                                this.visibleDialogWorkWithNode = false;
+                                this.$notify.success({
+                                    offset: 50,
+                                    title: 'Запрос успешно выполнен',
+                                    message: response.data.message
+                                });
+                            }).catch((error) => {
+                                this.modalAlerts = error.response.data.errors;
+                                this.modalTypeAlerts = 'error';
+                            });
+                        }
+                    }
+                });
+            },
+            sortTypes: function (types) {
+                return _.orderBy(types, 'sorting_order', 'asc');
+            },
+            setDataToStore: function (data = null) {
+                let currentData = (data === null) ? this.oldForm : data;
+                let types = this.types;
+                if (types) {
+                    let index = types.findIndex((type) => type.id === this.currentRoute.params.id);
+                    types[index] = currentData;
+
+                    this.$store.commit('updateTypes', this.sortTypes(types));
+                }
+            },
+            defaultFormData: function () {
+                return {
+                    id: null,
+                    name: '',
+                    sorting_order: 0,
+                    slug: ''
+                }
+            },
+            setBreadcrumbElements: function () {
+                this.breadcrumbElements = [
+                    {href: this.$router.resolve({name: 'main'}).href, title: helperRouter.getRouteByName(this.$router, 'main').meta.title},
+                    {href: this.$router.resolve({name: 'types-list'}).href, title: helperRouter.getRouteByName(this.$router, 'types-list').meta.title},
+                    {href: '', title: this.pageTitle}
+                ];
+            },
+            onSubmit: function () {
+                this.$refs['formWorkWithModel'].validate((valid) => {
+                    if (valid) {
+                        if (this.currentRoute.name === 'types-update') {
+                            let self = this;
+                            ApiTypes.update(this.$route.params.id, this.form).then((response) => {
+                                this.$notify.success({
+                                    offset: 50,
+                                    title: 'Запрос успешно выполнен',
+                                    message: response.data.message
+                                });
+
+                                self.oldForm = response.data.type;
+                                self.setDataToStore(response.data.type);
+                            }).catch((error) => {
+                                self.alerts = error.response.data.errors;
+                                self.typeAlerts = 'error';
+                            });
+                        }
+                        else {
+                            let self = this;
+                            ApiTypes.create(self.form).then((response) => {
+                                let types = self.types;
+                                if (types.length) {
+                                    types.unshift(response.data.type);
+
+                                    self.$store.commit('updateTypes', this.sortTypes(types));
+                                }
+                                self.$notify.success({
+                                    offset: 50,
+                                    title: 'Запрос успешно выполнен',
+                                    message: response.data.message
+                                });
+                                self.$router.push({name: 'types-list'});
+                            }).catch((error) => {
+                                self.alerts = error.response.data.errors;
+                                self.typeAlerts = 'error';
+                            });
+                        }
+                    } else {
+                        this.$notify.error({
+                            offset: 50,
+                            title: 'Ошибка',
+                            message: 'При проверке данных произошла ошибка. Проверте форму ввода данных.'
+                        });
+                        return false;
+                    }
+                });
+            }
+        },
+        components: {
+            PageElementsBreadcrumb,
+            PageElementsAlerts,
+            FiltersTableSelect
+        },
+        watch: {
+            '$route' (to, from) {
+                this.showTree = false;
+                this.submitName = 'Создать';
+                this.pageTitle = helperRouter.getRouteByName(this.$router, 'types-create').meta.title;
+                this.form = this.defaultFormData();
+                this.setBreadcrumbElements();
+                this.currentRoute = this.$router.currentRoute;
+            },
+            'workWithNode.name': function (val) {
+                if (val !== undefined) {
+                    this.workWithNode.slug = slugify(val, {
+                        replacement: '-',
+                        remove: null,
+                        lower: true
+                    })
+                }
+            },
+            'workWithNode.slug': function (val) {
+                if (val !== undefined) {
+                    this.workWithNode.slug = slugify(val, {
+                        replacement: '-',
+                        remove: null,
+                        lower: true
+                    })
+                }
+            },
+            'form.name': function (val) {
+                if (this.countChangesSlug !== 0) {
+                    if (val !== undefined) {
+                        this.form.slug = slugify(val, {
+                            replacement: '-',
+                            remove: null,
+                            lower: true
+                        })
+                    }
+                }
+                this.countChangesSlug += 1;
+            },
+            'form.slug': function (val) {
+                if (val !== undefined) {
+                    this.form.slug = slugify(val, {
+                        replacement: '-',
+                        remove: null,
+                        lower: true
+                    })
+                }
+            }
+        },
+        beforeDestroy() {
+            if (this.currentRoute.name === 'types-update') {
+                this.setDataToStore();
+            }
+        }
+    }
+</script>
+
+<style>
+    *, ::after, ::before {
+        box-sizing: content-box;
+    }
+    .el-tree-node__content {
+        padding-bottom: 15px;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        height: 26px;
+        cursor: pointer;
+        padding-top: 5px;
+    }
+</style>

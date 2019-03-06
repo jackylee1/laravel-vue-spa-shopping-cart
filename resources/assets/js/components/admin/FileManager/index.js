@@ -1,0 +1,1 @@
+export { default as FileManagerMain } from './Main';

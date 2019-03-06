@@ -1,0 +1,88 @@
+.el-header {
+    background-color: rgb(28, 10, 92);
+    color: #333;
+    line-height: 60px;
+}
+
+.el-aside {
+    color: #333;
+}
+
+.ds-image {
+    width: 100%;
+    display: block;
+}
+
+.ds-block {
+    border: 1px solid #ebebeb;
+    border-radius: 3px;
+    transition: .2s;
+    margin: 10px 3px 3px 3px;
+    background-color: rgb(250, 250, 250);
+}
+
+.ds-block .ds-source {
+    padding: 24px;
+}
+
+.ds-description {
+    box-sizing: border-box;
+    font-size: 14px;
+    line-height: 22px;
+    color: rgb(102, 102, 102);
+    word-break: break-word;
+    background-color: rgb(255, 255, 255);
+    padding: 20px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(235, 235, 235);
+    border-image: initial;
+    border-radius: 3px;
+    margin: 10px;
+}
+
+.ds-tree-node {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.required-field > .el-form-item__label:before {
+    content: "*";
+    color: #f56c6c;
+    margin-right: 4px;
+}
+
+.ds-breadcrumb {
+    border-bottom: 1px solid #ebeef5;
+    padding: 10px;
+    margin: 10px 10px 40px 10px;
+}
+
+.ds-pagination {
+    padding: 10px;
+    margin: 10px;
+    text-align: center;
+}
+
+.ds-query-form {
+    padding: 25px;
+    background-color: #f2f2f2;
+}
+
+.ds-query-form > .el-form-item {
+    margin-bottom: 0;
+}
+
+.el-main h3 {
+    margin: 20px 0 20px;
+    font-weight: 400;
+    color: #1f2f3d;
+}
+
+.text-center {
+    text-align: center;
+}

@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Models;
+
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
+use Illuminate\Database\Eloquent\Model;
+
+/**
+ * App\Models\CategoryFilter
+ *
+ * @property int $id
+ * @property int $category_id
+ * @property int $filter_id
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CategoryFilter newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CategoryFilter newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CategoryFilter query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CategoryFilter whereCategoryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CategoryFilter whereFilterId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CategoryFilter whereId($value)
+ * @mixin \Eloquent
+ */
+class CategoryFilter extends Model
+{
+    use Cachable;
+    
+    protected $fillable = ['category_id', 'filter_id'];
+    public $timestamps = false;
+}
