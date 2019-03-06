@@ -495,11 +495,13 @@
             },
             getCategory: function (typeId, categoryId) {
                 let type = this.getType(typeId);
-
-                if (type.categories.length) {
-                    return type.categories.find(item => item.id === categoryId) || {
+                if (typeof type.categories !== 'undefined' && Array.isArray(type.categories) && type.categories.length) {
+                    return type.categories.find(item => item.id === categoryId);
+                }
+                else {
+                    return {
                         name: null
-                    }
+                    };
                 }
             },
             getType: function (id) {
