@@ -20,6 +20,8 @@ class CreateProductInFiltersTable extends Migration
             $table->integer('category_id')->unsigned()->nullable();
             $table->integer('filter_id')->unsigned()->nullable();
 
+            $table->unique(['product_id', 'type_id', 'category_id', 'filter_id'], 'product_in_filters_u_ptcf');
+
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->foreign('type_id')->references('id')->on('types')->onDelete('cascade');
             $table->foreign('filter_id')->references('id')->on('filters')->onDelete('cascade');

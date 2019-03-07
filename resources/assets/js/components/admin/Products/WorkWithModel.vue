@@ -69,7 +69,7 @@
                 <el-form-item>
                     <el-button v-if="currentRoute.name === 'products-update'"
                                type="default"
-                               @click="dialogWorkWithFilter">Управление фильтрами</el-button>
+                               @click="dialogWorkWithFilter">Добавить в ...</el-button>
                     <el-button type="primary" @click="onSubmit">{{submitName}}</el-button>
                 </el-form-item>
             </el-form>
@@ -182,6 +182,7 @@
             <span slot="footer" class="dialog-footer">
                 <el-button @click="visibleDialogWorkWithFilters = false">Отмена</el-button>
                 <el-button type="primary"
+                           v-if="btnInDialogWorkWithFilters"
                            @click="addFilterToProduct">Сохранить</el-button>
             </span>
         </el-dialog>
@@ -403,9 +404,16 @@
                     label: 'name',
                     children: 'children'
                 },
+                btnInDialogWorkWithFilters: true
             }
         },
         methods: {
+            handleShowBtnDialogWorkWithFilters: function () {
+                let checkFilter = this.form.filters.findIndex(item => item.type_id === this.selectedType
+                    && item.category_id === this.lastSelectedCategory()
+                    && item.filter_id === this.selectedFilter);
+                this.btnInDialogWorkWithFilters = (checkFilter === -1);
+            },
             removeFilterProduct: function (index, filters) {
                 let filter = filters[index];
                 ApiProducts.removeFilterToProduct({
@@ -490,7 +498,7 @@
                 this.modalAlerts = [];
                 this.resetFormAddFilter();
 
-                this.titleDialogWorkWith = 'Управление фильтрами';
+                this.titleDialogWorkWith = 'Добавить в ...';
                 this.visibleDialogWorkWithFilters = true;
             },
             getCategory: function (typeId, categoryId) {
@@ -839,6 +847,15 @@
                         lower: true
                     })
                 }
+            },
+            'selectedType': function (val) {
+                this.handleShowBtnDialogWorkWithFilters();
+            },
+            'selectedCategory': function (val) {
+                this.handleShowBtnDialogWorkWithFilters();
+            },
+            'selectedFilter': function (val) {
+                this.handleShowBtnDialogWorkWithFilters();
             }
         },
         beforeDestroy() {

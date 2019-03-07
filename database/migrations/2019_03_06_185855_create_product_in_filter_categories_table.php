@@ -18,6 +18,8 @@ class CreateProductInFilterCategoriesTable extends Migration
             $table->integer('product_in_filter_id')->unsigned();
             $table->integer('category_id')->unsigned();
 
+            $table->unique(['product_in_filter_id', 'category_id'], 'product_in_filter_categories_u_pc');
+
             $table->foreign('product_in_filter_id')->references('id')->on('product_in_filters')->onDelete('cascade');
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
         });
