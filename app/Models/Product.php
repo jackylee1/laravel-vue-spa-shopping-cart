@@ -49,6 +49,8 @@ use App\Tools\File;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product whereUpdatedAt($value)
  * @mixin \Eloquent
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product whereDiscount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product disableCache()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product withCacheCooldownSeconds($seconds)
  */
 class Product extends Model
 {
@@ -81,13 +83,18 @@ class Product extends Model
         'images',
         'mainImage',
         'bestseller',
-        'filters'
+        'filters',
+        'available'
     ];
 
     public $path_image = 'public/images/products/';
 
     public function images() {
         return $this->hasMany('App\Models\ProductImage');
+    }
+
+    public function available() {
+        return $this->hasMany('App\Models\ProductAvailable', 'product_id', 'id');
     }
 
     public function mainImage() {

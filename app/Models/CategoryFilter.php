@@ -18,6 +18,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CategoryFilter whereFilterId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CategoryFilter whereId($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CategoryFilter disableCache()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CategoryFilter withCacheCooldownSeconds($seconds)
  */
 class CategoryFilter extends Model
 {

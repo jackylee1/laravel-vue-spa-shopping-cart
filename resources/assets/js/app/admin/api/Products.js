@@ -31,3 +31,15 @@ export function addFilterToProduct(request) {
 export function removeFilterToProduct(request) {
     return axios.post('/api/admin/products/remove_filter', request);
 }
+
+export function availableCreate(request) {
+    return axios.post('/api/admin/products/available/create', request);
+}
+
+export function availableUpdateQuantity(request) {
+    return axios.post('/api/admin/products/available/update_quantity', request);
+}
+
+export function availableDestroy(request) {
+    return axios.post('/api/admin/products/available/destroy', request);
+}

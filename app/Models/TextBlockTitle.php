@@ -18,6 +18,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TextBlockTitle whereSortingOrder($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TextBlockTitle whereTitle($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TextBlockTitle disableCache()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TextBlockTitle withCacheCooldownSeconds($seconds)
  */
 class TextBlockTitle extends Model
 {

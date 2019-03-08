@@ -70,57 +70,116 @@
                     <el-button v-if="currentRoute.name === 'products-update'"
                                type="default"
                                @click="dialogWorkWithFilter">Добавить в ...</el-button>
+                    <el-button v-if="currentRoute.name === 'products-update'"
+                               type="default"
+                               @click="dialogWorkWithAvailable">Наличие товара</el-button>
                     <el-button type="primary" @click="onSubmit">{{submitName}}</el-button>
                 </el-form-item>
             </el-form>
         </div>
 
-        <div class="ds-block" v-if="currentRoute.name === 'products-update'">
-            <h4 class="text-center">Добавлен в</h4>
-            <el-table
-                    :data="form.filters"
-                    style="width: 100%">
-                <el-table-column
-                        fixed
-                        label="Тип">
-                    <template slot-scope="props">
-                        {{ getType(props.row.type_id).name }}
-                    </template>
-                </el-table-column>
-                <el-table-column
-                        fixed
-                        label="Категория">
-                    <template slot-scope="props">
-                        <template v-for="(category, index) in props.row.categories">
-                            {{ getCategory(props.row.type_id, category.category_id).name }}
-                            <template v-if="index !== props.row.categories.length - 1">
-                                <i class="ai-arrow-right"></i>
+        <el-row v-if="currentRoute.name === 'products-update'">
+            <el-col :span="12">
+                <div class="ds-block">
+                    <h4 class="text-center">Добавлен в</h4>
+                    <el-table
+                            :data="form.filters"
+                            style="width: 100%">
+                        <el-table-column
+                                fixed
+                                label="Тип">
+                            <template slot-scope="props">
+                                {{ getType(props.row.type_id).name }}
                             </template>
-                        </template>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                        fixed
-                        label="Фильтр">
-                    <template slot-scope="props">
-                        {{ getFilter(props.row.filter_id).name }}
-                    </template>
-                </el-table-column>
-                <el-table-column
-                        fixed="right"
-                        label="Управление"
-                        min-width="100">
-                    <template slot-scope="props">
-                        <el-button
-                                size="mini"
-                                type="danger"
-                                @click.native.prevent="removeFilterProduct(props.$index, form.filters)">
-                            <i class="el-icon-delete"></i>
-                        </el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-        </div>
+                        </el-table-column>
+                        <el-table-column
+                                fixed
+                                min-width="250"
+                                label="Категория">
+                            <template slot-scope="props">
+                                <template v-for="(category, index) in props.row.categories">
+                                    {{ getCategory(props.row.type_id, category.category_id).name }}
+                                    <template v-if="index !== props.row.categories.length - 1">
+                                        <i class="ai-arrow-right"></i>
+                                    </template>
+                                </template>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                                fixed
+                                label="Фильтр">
+                            <template slot-scope="props">
+                                {{ getFilter(props.row.filter_id).name }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                                fixed="right"
+                                label="Управление"
+                                min-width="50">
+                            <template slot-scope="props">
+                                <el-button
+                                        size="mini"
+                                        type="danger"
+                                        @click.native.prevent="removeFilterProduct(props.$index, form.filters)">
+                                    <i class="el-icon-delete"></i>
+                                </el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </div>
+            </el-col>
+            <el-col :span="12">
+                <div class="ds-block">
+                    <h4 class="text-center">Данные наличия товара</h4>
+                    <el-table
+                            :data="form.available"
+                            style="width: 100%">
+                        <el-table-column
+                                fixed
+                                prop="id"
+                                label="ID"
+                                min-width="15">
+                        </el-table-column>
+                        <el-table-column
+                                fixed
+                                label="Параметры">
+                            <template slot-scope="props">
+                                <template v-for="(filter, index) in props.row.filters">
+                                    {{ getFilter(filter.filter_id).name }}
+                                    <template v-if="index !== props.row.filters.length - 1">
+                                        <i class="ai-plus"></i>
+                                    </template>
+                                </template>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                                fixed
+                                prop="quantity"
+                                label="Количество "
+                                min-width="45">
+                        </el-table-column>
+                        <el-table-column
+                                fixed="right"
+                                label="Управление"
+                                min-width="45">
+                            <template slot-scope="props">
+                                <el-button
+                                        @click.native.prevent="dialogUpdateAvailable(props.$index)"
+                                        size="mini">
+                                    <i class="el-icon-edit"></i>
+                                </el-button>
+                                <el-button
+                                        size="mini"
+                                        type="danger"
+                                        @click.native.prevent="removeAvailable(props.$index)">
+                                    <i class="el-icon-delete"></i>
+                                </el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </div>
+            </el-col>
+        </el-row>
 
         <div class="ds-block" v-if="currentRoute.name === 'products-update'">
             <h4 class="text-center">Список изображений</h4>
@@ -144,6 +203,41 @@
                 <div slot="tip" class="el-upload__tip">jpg/png/jpeg/gif/ изображения размером не более 2048kb</div>
             </el-upload>
         </div>
+
+        <el-dialog width="40%" :title="titleDialogWorkWith" :visible.sync="visibleDialogWorkWithAvailable">
+            <el-form ref="formWorkWithAvailable">
+                <el-form-item label="Выберите параметры товара">
+                    <el-select :disabled="disabledSelectFilters"
+                               v-model="selectedFilters"
+                               multiple
+                               placeholder="Выберите параметры товара">
+                        <el-option
+                                v-for="item in this.getFiltersFromAvailable()"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="Количество">
+                    <el-input type="text" v-model="availableQuantity" placeholder="Введите количество"></el-input>
+                </el-form-item>
+            </el-form>
+            <el-alert type="info" :closable="false" style="margin: 5px;">
+                Чтобы создать запись количества товара нужно выбрать параметры товара и ввести количество товара
+                по связке этих параметров. Параметры товара в свою очередь являюься фильтрами в которые был добавлен
+                товар.
+            </el-alert>
+            <PageElementsAlerts :alerts="modalAlerts" :type="modalTypeAlerts"/>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="visibleDialogWorkWithAvailable = false">Отмена</el-button>
+                <el-button type="primary"
+                           v-if="btnInDialogWorkWithAvailable"
+                           @click="handleClockDialogAvailable">
+                    {{btnDialogAvailable}}
+                </el-button>
+            </span>
+        </el-dialog>
 
         <el-dialog width="40%" :title="titleDialogWorkWith" :visible.sync="visibleDialogWorkWithFilters">
             <el-form ref="formWorkWithFilters">
@@ -247,8 +341,8 @@
     import * as helperRouter from '../../../app/helpers/router';
     import * as helperArray from '../../../app/admin/helpers/Array';
 
-    import { PageElementsBreadcrumb, PageElementsAlerts } from '../page/elements';
-    import { generatingValidationMessage } from '../../../helpers/generatingValidationMessage';
+    import {PageElementsAlerts, PageElementsBreadcrumb} from '../page/elements';
+    import {generatingValidationMessage} from '../../../helpers/generatingValidationMessage';
 
     let arrayToTree = require('array-to-tree');
     let slugify = require('slugify');
@@ -404,10 +498,106 @@
                     label: 'name',
                     children: 'children'
                 },
-                btnInDialogWorkWithFilters: true
+                btnInDialogWorkWithFilters: true,
+                visibleDialogWorkWithAvailable: false,
+                btnInDialogWorkWithAvailable: true,
+                selectedFilters: [],
+                availableQuantity: 999,
+                availableObject: {},
+                disabledSelectFilters: false,
+                btnDialogAvailable: ''
             }
         },
         methods: {
+            removeAvailable: function (index) {
+                let available = this.form.available[index];
+                ApiProducts.availableDestroy({
+                    'id': available.id
+                }).then((response) => {
+                    this.form.available.splice(index, 1);
+                    this.changeOldForm(this.form);
+                    this.$notify.success({
+                        offset: 50,
+                        title: 'Запрос выполнен',
+                        message: response.data.message
+                    });
+                }).catch((error) => {
+                    this.alerts = error.response.data.errors;
+                    this.typeAlerts = 'error';
+                })
+            },
+            getFiltersFromAvailable: function () {
+                if (typeof this.form.filters !== 'undefined' && this.form.filters.length) {
+                    return [...new Set(this.form.filters.map(item => item.filter_id))].map((item) => {
+                        return this.getFilter(item);
+                    });
+                }
+            },
+            dialogWorkWithAvailable: function () {
+                this.modalAlerts = this.selectedFilters = [];
+
+                this.availableQuantity = 999;
+                this.titleDialogWorkWith = 'Наличие товара';
+                this.btnDialogAvailable = 'Сохранить';
+
+                this.visibleDialogWorkWithAvailable = true;
+                this.disabledSelectFilters = false;
+            },
+            dialogUpdateAvailable: function (index) {
+                this.availableObject = this.form.available[index];
+                this.dialogWorkWithAvailable();
+                this.selectedFilters = this.availableObject.filters.map((item) => {
+                    return item.filter_id;
+                });
+                this.availableQuantity = this.availableObject.quantity;
+                this.btnDialogAvailable = 'Изменить';
+                this.disabledSelectFilters = this.btnInDialogWorkWithAvailable = true;
+                this.titleDialogWorkWith = 'Изменить данные о наличии товара';
+            },
+            addAvailableToProduct: function () {
+                ApiProducts.availableCreate({
+                    'product_id': this.form.id,
+                    'filters': this.selectedFilters,
+                    'quantity': this.availableQuantity
+                }).then((response) => {
+                    this.form.available.unshift(response.data.available);
+                    this.changeOldForm(this.form);
+                    this.visibleDialogWorkWithAvailable = false;
+                    this.$notify.success({
+                        offset: 50,
+                        title: 'Запрос выполнен',
+                        message: response.data.message
+                    });
+                }).catch((error) => {
+                    this.modalAlerts = error.response.data.errors;
+                    this.modalTypeAlerts = 'error';
+                })
+            },
+            handleClockDialogAvailable: function () {
+                let method = (Object.keys(this.availableObject).length === 0)
+                    ? 'addAvailableToProduct' : 'updateAvailableProduct';
+                this[method]();
+            },
+            updateAvailableProduct: function () {
+                ApiProducts.availableUpdateQuantity({
+                    'id': this.availableObject.id,
+                    'quantity': this.availableQuantity
+                }).then((response) => {
+                    let index = this.form.available.findIndex((item) => item.id === this.availableObject.id);
+                    this.form.available[index].quantity = this.availableQuantity;
+                    this.changeOldForm(this.form);
+                    this.visibleDialogWorkWithAvailable = false;
+
+                    this.$notify.success({
+                        offset: 50,
+                        title: 'Запрос выполнен',
+                        message: response.data.message
+                    });
+                }).catch((error) => {
+                    this.modalAlerts = error.response.data.errors;
+                    this.modalTypeAlerts = 'error';
+                });
+            },
             handleShowBtnDialogWorkWithFilters: function () {
                 let checkFilter = this.form.filters.findIndex(item => item.type_id === this.selectedType
                     && item.category_id === this.lastSelectedCategory()
@@ -856,6 +1046,30 @@
             },
             'selectedFilter': function (val) {
                 this.handleShowBtnDialogWorkWithFilters();
+            },
+            'visibleDialogWorkWithAvailable': function (val) {
+                if (!val) {
+                    this.availableQuantity = 999;
+                    this.availableObject = {};
+                }
+            },
+            'selectedFilters': function (filters) {
+                if (Object.keys(this.availableObject).length === 0) {
+                    let filtersAvailable = new Set(filters);
+                    let checkExists = false;
+                    this.form.available.forEach((item) => {
+                        let filtersItem = item.filters.map((item) => {
+                            return item.filter_id;
+                        });
+                        filtersItem = new Set(filtersItem);
+                        let difference = new Set([...filtersItem].filter(x => !filtersAvailable.has(x)));
+                        if (difference.size === 0) {
+                            checkExists = true;
+                            return false;
+                        }
+                    });
+                    this.btnInDialogWorkWithAvailable = (!checkExists);
+                }
             }
         },
         beforeDestroy() {

@@ -25,6 +25,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserGroup whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserGroup whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserGroup disableCache()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserGroup withCacheCooldownSeconds($seconds)
  */
 class UserGroup extends Model
 {

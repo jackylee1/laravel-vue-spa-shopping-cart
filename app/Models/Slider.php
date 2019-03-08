@@ -27,6 +27,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Slider whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Slider whereUrl($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Slider disableCache()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Slider withCacheCooldownSeconds($seconds)
  */
 class Slider extends Model
 {

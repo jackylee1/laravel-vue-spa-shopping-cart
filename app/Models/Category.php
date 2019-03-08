@@ -29,6 +29,8 @@ use Nestable\NestableTrait;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Category whereSortingOrder($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Category whereTypeId($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Category disableCache()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Category withCacheCooldownSeconds($seconds)
  */
 class Category extends Model
 {

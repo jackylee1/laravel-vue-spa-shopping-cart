@@ -48,6 +48,12 @@ Route::group([
     Route::prefix('products')->group(function () {
         Route::post('add_filter', 'Api\Admin\ProductController@addFilter');
         Route::post('remove_filter', 'Api\Admin\ProductInFilterController@remove');
+
+        Route::prefix('available')->group(function () {
+            Route::post('create', 'Api\Admin\ProductAvailableController@create');
+            Route::post('update_quantity', 'Api\Admin\ProductAvailableController@updateQuantity');
+            Route::post('destroy', 'Api\Admin\ProductAvailableController@destroy');
+        });
     });
     Route::prefix('product_images')->group(function () {
         Route::post('upload', 'Api\Admin\ProductController@uploadImage');

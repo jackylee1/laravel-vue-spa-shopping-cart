@@ -18,6 +18,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ProductInFilterCategory whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ProductInFilterCategory whereProductInFilterId($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ProductInFilterCategory disableCache()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ProductInFilterCategory withCacheCooldownSeconds($seconds)
  */
 class ProductInFilterCategory extends Model
 {

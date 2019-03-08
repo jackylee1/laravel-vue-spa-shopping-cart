@@ -25,6 +25,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ProductImage whereProductId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ProductImage whereSortingOrder($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ProductImage disableCache()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ProductImage withCacheCooldownSeconds($seconds)
  */
 class ProductImage extends Model
 {

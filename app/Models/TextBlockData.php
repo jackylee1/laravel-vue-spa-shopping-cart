@@ -28,6 +28,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TextBlockData whereSortingOrder($value)
  * @property string|null $slug
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TextBlockData whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TextBlockData disableCache()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TextBlockData withCacheCooldownSeconds($seconds)
  */
 class TextBlockData extends Model
 {

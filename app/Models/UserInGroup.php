@@ -19,6 +19,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserInGroup whereUserGroupId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserInGroup whereUserId($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserInGroup disableCache()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserInGroup withCacheCooldownSeconds($seconds)
  */
 class UserInGroup extends Model
 {

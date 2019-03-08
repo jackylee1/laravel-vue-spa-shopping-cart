@@ -18,6 +18,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TypeFilter whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TypeFilter whereTypeId($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TypeFilter disableCache()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TypeFilter withCacheCooldownSeconds($seconds)
  */
 class TypeFilter extends Model
 {

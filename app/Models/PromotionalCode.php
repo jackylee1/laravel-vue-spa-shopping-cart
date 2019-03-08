@@ -27,6 +27,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PromotionalCode whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PromotionalCode whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PromotionalCode disableCache()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PromotionalCode withCacheCooldownSeconds($seconds)
  */
 class PromotionalCode extends Model
 {

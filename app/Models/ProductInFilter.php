@@ -25,6 +25,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \App\Models\Filter $filter
  * @property-read \App\Models\Product $product
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ProductInFilter whereTypeId($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProductInFilterCategory[] $categories
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ProductInFilter disableCache()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ProductInFilter withCacheCooldownSeconds($seconds)
  */
 class ProductInFilter extends Model
 {

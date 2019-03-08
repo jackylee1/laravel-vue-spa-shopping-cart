@@ -40,6 +40,8 @@ use Nestable\NestableTrait;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Filter whereShowOnHeader($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Filter whereShowOnIndex($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Filter whereTypeIndex($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Filter disableCache()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Filter withCacheCooldownSeconds($seconds)
  */
 class Filter extends Model
 {
