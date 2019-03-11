@@ -62,6 +62,9 @@
                 </el-select>
             </el-form-item>
             <el-form-item>
+                <el-button type="default" @click="onResetSearch">
+                    Сбросить
+                </el-button>
                 <el-button type="primary" @click="onSubmitSearch">
                     <i class="el-icon-search"></i> Поиск
                 </el-button>
@@ -362,6 +365,19 @@
             changeSelectCategory: function () {
                 this.formSearch.selected_filters = [];
                 return this.getFilters();
+            },
+            onResetSearch: function () {
+                this.formSearch = {
+                    q: '',
+                    selected_type: null,
+                    selected_categories: [],
+                    selected_filters: [],
+                    only_discounts: 0,
+                };
+                this.oldFormSearch = this.formSearch;
+                this.$store.commit('updateSearchProducts', this.formSearch);
+
+                this.getProducts(1);
             },
             onSubmitSearch: function () {
                 this.getProducts(1);
