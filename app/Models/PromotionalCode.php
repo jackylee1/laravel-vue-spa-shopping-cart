@@ -42,7 +42,7 @@ class PromotionalCode extends Model
     public static function promotionalCodes() {
         $query = PromotionalCode::query();
         if (request()->get('q') !== null) {
-            $like = prepareForLike(request()->get('q'));
+            $like = getOnlyCharacters(request()->get('q'));
             $query->whereRaw('lower(like_code) like ?', ["%{$like}%"]);
         }
 

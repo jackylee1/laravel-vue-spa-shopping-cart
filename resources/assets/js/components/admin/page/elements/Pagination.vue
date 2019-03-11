@@ -4,7 +4,7 @@
                        class="ds-pagination"
                        background
                        @current-change="handleCurrentPageChange"
-                       :current-page.sync="currentPage"
+                       :current-page="currentPage"
                        :page-size="pageSize"
                        layout="prev, pager, next, jumper"
                        :total="total">

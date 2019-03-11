@@ -277,6 +277,8 @@
                 </el-form-item>
                 <el-form-item v-if="selectedType !== null" label="Выберите категорию">
                     <el-cascader
+                            expand-trigger="hover"
+                            filterable
                             :options="this.getTreeCategories()"
                             :props="selectProps"
                             v-model="selectedCategory"
@@ -285,6 +287,8 @@
                 </el-form-item>
                 <el-form-item v-if="selectFilters.length" label="Выберите фильтр">
                     <el-cascader
+                            expand-trigger="hover"
+                            filterable
                             :options="selectFilters"
                             :props="selectProps"
                             v-model="selectedFilter">

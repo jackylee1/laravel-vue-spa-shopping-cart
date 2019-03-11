@@ -51,11 +51,10 @@ export default {
             },
             products: {
                 q: '',
-                selectedType: null,
-                selectedCategories: [],
-                selectedFilters: [],
-                onlyDiscounts: 0,
-                selectedTypeObject: {}
+                selected_type: null,
+                selected_categories: [],
+                selected_filters: [],
+                only_discounts: 0,
             },
             promotionalCodes: {
                 q: '',

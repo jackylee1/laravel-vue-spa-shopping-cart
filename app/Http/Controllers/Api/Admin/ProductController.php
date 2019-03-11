@@ -109,7 +109,22 @@ class ProductController extends Controller
 
     public function index()
     {
+        $validator = Validator::make(\request()->all(), [
+            'q' => 'nullable|string',
+            'selected_type' => 'nullable|integer|exists:types,id',
+            'selected_categories' => 'nullable|array',
+            'selected_categories.*' => 'nullable|integer|exists:categories,id',
+            'selected_filters' => 'nullable|array',
+            'selected_filters.*' => 'nullable|integer|exists:filters,id',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
         $products = Product::getProducts();
+
         return response()->json([
             'products' => $products
         ]);

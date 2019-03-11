@@ -4,19 +4,60 @@
 
         <PageElementsAlerts :alerts="alerts" :type="typeAlert"/>
 
-        <el-form :inline="true" :model="formSearch" class="ds-query-form">
+        <el-form :model="formSearch" class="ds-query-form" label-width="250px">
             <el-form-item label="Поиск по">
                 <el-input v-model="formSearch.q"
-                          style="min-width: 300px"
                           placeholder="наименованию и краткому описанию"></el-input>
             </el-form-item>
             <el-form-item label="Только акционные">
-                <el-select v-model="formSearch.onlyDiscounts" placeholder="Только акционные товары">
+                <el-select style="min-width: 450px;"
+                           v-model="formSearch.only_discounts"
+                           placeholder="Только акционные товары">
                     <el-option
                             v-for="item in this.selectBoolean"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="Выберите тип">
+                <el-select style="min-width: 450px;"
+                           @change="changeSelectType"
+                           v-model="formSearch.selected_type"
+                           placeholder="Выберите тип">
+                    <el-option
+                            v-for="item in types"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item v-if="formSearch.selected_type !== null"
+                          label="Выберите категорию">
+                <el-cascader style="min-width: 450px;"
+                             expand-trigger="hover"
+                             filterable
+                             :options="this.getTreeCategories()"
+                             :props="selectProps"
+                             v-model="formSearch.selected_categories"
+                             @change="changeSelectCategory">
+                </el-cascader>
+            </el-form-item>
+            <el-form-item v-if="formSearch.selected_type !== null"
+                          label="Выберите параметры">
+                <el-select
+                        v-model="formSearch.selected_filters"
+                        multiple
+                        collapse-tags
+                        style="min-width: 450px;"
+                        placeholder="Выберите параметры">
+                    <el-option
+                            v-for="item in this.getFilters()"
+                            :key="item.id"
+                            :label="item.label"
+                            :value="item.id">
                     </el-option>
                 </el-select>
             </el-form-item>
@@ -148,11 +189,14 @@
 
 <script>
     import * as helperRouter from '../../../app/helpers/router';
+    import * as helperArray from '../../../app/admin/helpers/Array';
     import * as ApiProducts from '../../../app/admin/api/Products';
     import * as ApiFilters from '../../../app/admin/api/Filters';
     import * as ApiTypes from '../../../app/admin/api/Types';
 
     import { PageElementsPagination, PageElementsBreadcrumb, PageElementsAlerts } from '../page/elements';
+
+    let arrayToTree = require('array-to-tree');
 
     export default {
         name: 'products-list',
@@ -199,11 +243,10 @@
             return {
                 formSearch: {
                     q: '',
-                    selectedType: null,
-                    selectedCategories: [],
-                    selectedFilters: [],
-                    onlyDiscounts: 0,
-                    selectedTypeObject: {}
+                    selected_type: null,
+                    selected_categories: [],
+                    selected_filters: [],
+                    only_discounts: 0,
                 },
                 oldFormSearch: null,
                 products: [],
@@ -220,12 +263,17 @@
                 alerts: [],
                 filters: [],
                 types: [],
+                treeCategories: [],
+                selectProps: {
+                    value: 'id',
+                    label: 'name',
+                    children: 'children'
+                },
+                selectedCategory: [],
+                selectedFilters: [],
             }
         },
         computed: {
-            changeSelectType: function () {
-
-            },
             productsStore: function () {
                 return this.$store.getters.products;
             },
@@ -255,8 +303,70 @@
                     this.types = response.data.types;
                 });
             },
-            onSubmitSearch: function () {
+            changeSelectType: function () {
+                this.formSearch.selected_categories = this.formSearch.selected_filters = [];
+            },
+            getTreeCategories: function () {
+                if (this.formSearch.selected_type !== null) {
+                    let type = this.types.find((item) => item.id === this.formSearch.selected_type);
+                    let categories = type.categories.map((item) => {
+                        if (item.parent_id === 1) {
+                            item.parent_id = 0;
+                        }
+                        return item;
+                    }).filter((item) => {
+                        return item.id !== 1;
+                    });
+                    categories = arrayToTree(categories);
 
+                    return categories;
+                }
+            },
+            lastSelectedCategory: function () {
+                return (this.formSearch.selected_categories !== null && this.formSearch.selected_categories.length) ? this.formSearch.selected_categories[this.formSearch.selected_categories.length - 1] : null;
+            },
+            getFilters: function () {
+                let filters, treeFilters, listFilters = [];
+                if (this.formSearch.selected_categories.length) {
+                    filters = this.types.find(item => item.id === this.formSearch.selected_type)
+                        .categories
+                        .find((item) => item.id === this.lastSelectedCategory())
+                        .filters;
+                }
+                else {
+                    filters = this.types.find(item => item.id === this.formSearch.selected_type).filters;
+                }
+                treeFilters = this.filters.map(filter => {
+                    let check = filters.findIndex(item => item.filter_id === filter.id || item.filter_id === filter.parent_id);
+                    if (check !== -1) {
+                        return filter;
+                    }
+                }).filter(item => {
+                    return typeof item !== "undefined";
+                });
+
+                treeFilters = helperArray.sort(treeFilters);
+                treeFilters = arrayToTree(treeFilters);
+
+                listFilters = treeFilters.map(filter => {
+                    return filter.children.map(filterItem => {
+                        return {
+                            id: filterItem.id,
+                            label: `${filter.name} -> ${filterItem.name}`
+                        }
+                    });
+                }).flat();
+
+                return listFilters;
+            },
+            changeSelectCategory: function () {
+                this.formSearch.selected_filters = [];
+                return this.getFilters();
+            },
+            onSubmitSearch: function () {
+                this.getProducts(1);
+                this.oldFormSearch = this.formSearch;
+                this.$store.commit('updateSearchProducts', this.formSearch);
             },
             deleteProduct: function () {
                 if (this.operationsOnProduct) {
@@ -293,7 +403,7 @@
             },
             getProducts: function (page = 1) {
                 this.loading = true;
-                return ApiProducts.get(page).then((response) => {
+                return ApiProducts.get(page, this.formSearch).then((response) => {
                     this.products = response.data.products.data;
                     this.total = response.data.products.total;
                     this.currentPage = response.data.products.current_page;
@@ -319,7 +429,7 @@
         },
         beforeDestroy() {
 
-        }
+        },
     }
 </script>
 

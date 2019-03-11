@@ -123,6 +123,36 @@ class Product extends Model
 
     protected function getProducts() {
         $query = Product::query();
+        if (request()->filled('q')) {
+            $like_data = getLikeData(request()->get('q'));
+            $query->whereRaw('lower(like_name) like ?', ["%{$like_data['str']}%"])
+                ->orWhereRaw('lower(like_name) like ?', ["%{$like_data['add_spaces']}%"])
+                ->orWhereRaw('lower(like_name) like ?', ["%{$like_data['clear_spaces']}%"])
+                ->orWhereRaw('lower(like_name) like ?', ["%{$like_data['like']}%"]);
+            $query->orWhereRaw('lower(like_preview_description) like ?', ["%{$like_data['str']}%"])
+                ->orWhereRaw('lower(like_preview_description) like ?', ["%{$like_data['add_spaces']}%"])
+                ->orWhereRaw('lower(like_preview_description) like ?', ["%{$like_data['clear_spaces']}%"])
+                ->orWhereRaw('lower(like_preview_description) like ?', ["%{$like_data['like']}%"]);
+        }
+        if (request()->get('only_discounts') == 1) {
+            $query->where('discount_price', '>', 0);
+        }
+        if (request()->filled('selected_type')) {
+            $query->whereHas('filters', function ($query) {
+                $query->where('type_id', request()->get('selected_type'));
+                if (request()->filled('selected_categories')) {
+                    $count_categories = count(request()->get('selected_categories'));
+                    if ($count_categories > 0) {
+                        $category_id = request()->get('selected_categories')[$count_categories-1];
+                        $query->where('category_id', $category_id);
+                    }
+                }
+                if (request()->filled('selected_filters') && count(request()->get('selected_filters')) > 0) {
+                    $query->whereIn('filter_id', request()->get('selected_filters'));
+                }
+            });
+        }
+
         $products = $query->orderBy('created_at', 'desc')->paginate(10);
 
         ProductTool::checkRelevanceDiscount($products->items());

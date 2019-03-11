@@ -1,5 +1,7 @@
-export function get() {
-    return axios.get('/api/admin/products');
+export function get(page = 1, params = {}) {
+    return axios.get(`/api/admin/products?page=${page}`, {
+        params: params
+    });
 }
 export function show(id) {
     return axios.get(`/api/admin/products/${id}`);
