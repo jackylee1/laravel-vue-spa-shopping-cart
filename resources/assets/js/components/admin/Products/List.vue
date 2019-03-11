@@ -4,6 +4,29 @@
 
         <PageElementsAlerts :alerts="alerts" :type="typeAlert"/>
 
+        <el-form :inline="true" :model="formSearch" class="ds-query-form">
+            <el-form-item label="Поиск по">
+                <el-input v-model="formSearch.q"
+                          style="min-width: 300px"
+                          placeholder="наименованию и краткому описанию"></el-input>
+            </el-form-item>
+            <el-form-item label="Только акционные">
+                <el-select v-model="formSearch.onlyDiscounts" placeholder="Только акционные товары">
+                    <el-option
+                            v-for="item in this.selectBoolean"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="onSubmitSearch">
+                    <i class="el-icon-search"></i> Поиск
+                </el-button>
+            </el-form-item>
+        </el-form>
+
         <el-table
                 v-loading="loading"
                 :data="products"
@@ -31,15 +54,16 @@
                 <template slot-scope="props">
                     <p>SEO URL: {{props.row.slug}}</p>
                     <p v-if="props.row.preview_description.length">Краткое описание: {{props.row.preview_description}}</p>
-                    <p v-if="props.row.share_price">Акцилнная цена: {{props.row.share_price}}</p>
+                    <p v-if="props.row.discount_price > 0">Акцилнная цена: {{props.row.discount_price}}</p>
                     <p v-if="props.row.date_inclusion">Дата включения: {{props.row.date_inclusion}}</p>
+                    <p>Дата добавления: {{props.row.created_at}}</p>
                 </template>
             </el-table-column>
             <el-table-column
                     label="Наименование"
                     min-width="150">
                 <template slot-scope="props">
-                    <template v-if="props.row.share_price !== null">
+                    <template v-if="props.row.discount_price !== null && props.row.discount_price > 0">
                         {{props.row.name}}
                         <el-tooltip class="item" effect="dark" content="Акционный товар" placement="top-start">
                             <i class="ai-tag-o share-price" />
@@ -51,9 +75,16 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    prop="price"
                     label="Цена"
                     min-width="70">
+                <template slot-scope="props">
+                    <template v-if="props.row.discount_price !== null && props.row.discount_price > 0">
+                        <p>{{props.row.discount_price}} <strike style="color: red">{{props.row.price}}</strike></p>
+                    </template>
+                    <template v-else>
+                        <p>{{props.row.price}}</p>
+                    </template>
+                </template>
             </el-table-column>
             <el-table-column
                     label="Статус"
@@ -71,11 +102,6 @@
                         </el-tooltip>
                     </template>
                 </template>
-            </el-table-column>
-            <el-table-column
-                    prop="created_at"
-                    label="Дата добавления"
-                    min-width="160">
             </el-table-column>
             <el-table-column
                     fixed="right"
@@ -123,12 +149,31 @@
 <script>
     import * as helperRouter from '../../../app/helpers/router';
     import * as ApiProducts from '../../../app/admin/api/Products';
+    import * as ApiFilters from '../../../app/admin/api/Filters';
+    import * as ApiTypes from '../../../app/admin/api/Types';
 
     import { PageElementsPagination, PageElementsBreadcrumb, PageElementsAlerts } from '../page/elements';
 
     export default {
         name: 'products-list',
         mounted () {
+            if (this.typesStore.length) {
+                this.types = this.typesStore;
+            }
+            else {
+                this.setTypes();
+            }
+
+            if (this.filtersStore.length) {
+                this.filters = this.filtersStore;
+            }
+            else {
+                this.setFilters();
+            }
+
+            this.formSearch = this.searchProducts;
+            this.oldFormSearch = _.cloneDeep(this.formSearch);
+
             this.breadcrumbElements = [
                 {href: this.$router.resolve({name: 'main'}).href, title: helperRouter.getRouteByName(this.$router, 'main').meta.title},
                 {href: this.$router.resolve({name: 'products-list'}).href, title: this.$router.currentRoute.meta.title},
@@ -152,6 +197,15 @@
         },
         data() {
             return {
+                formSearch: {
+                    q: '',
+                    selectedType: null,
+                    selectedCategories: [],
+                    selectedFilters: [],
+                    onlyDiscounts: 0,
+                    selectedTypeObject: {}
+                },
+                oldFormSearch: null,
                 products: [],
                 currentPage: 0,
                 total: 0,
@@ -164,14 +218,46 @@
                 typeAlert: 'warning',
                 titleAlert: '',
                 alerts: [],
+                filters: [],
+                types: [],
             }
         },
         computed: {
+            changeSelectType: function () {
+
+            },
             productsStore: function () {
                 return this.$store.getters.products;
-            }
+            },
+            searchProducts: function () {
+                return this.$store.getters.searchProducts;
+            },
+            selectBoolean: function () {
+                return this.$store.getters.selectDataBoolean;
+            },
+            filtersStore: function () {
+                return this.$store.getters.filters;
+            },
+            typesStore: function () {
+                return this.$store.getters.types;
+            },
         },
         methods: {
+            setFilters: function () {
+                ApiFilters.get().then((response) => {
+                    this.$store.commit('updateFilters', response.data.filters);
+                    this.filters = response.data.filters;
+                });
+            },
+            setTypes: function () {
+                ApiTypes.get().then((response) => {
+                    this.$store.commit('updateTypes', response.data.types);
+                    this.types = response.data.types;
+                });
+            },
+            onSubmitSearch: function () {
+
+            },
             deleteProduct: function () {
                 if (this.operationsOnProduct) {
                     ApiProducts.destroy(this.operationsOnProduct.id).then((response) => {

@@ -49,6 +49,14 @@ export default {
                 q: '',
                 status: 'all'
             },
+            products: {
+                q: '',
+                selectedType: null,
+                selectedCategories: [],
+                selectedFilters: [],
+                onlyDiscounts: 0,
+                selectedTypeObject: {}
+            },
             promotionalCodes: {
                 q: '',
                 status: 'all',
@@ -127,6 +135,9 @@ export default {
         },
         selectDataTextBlockDataTypes: function (state) {
             return state.selectData.textBlockDataTypes;
+        },
+        searchProducts: function (state) {
+            return state.search.products;
         }
     },
     mutations: {
@@ -183,7 +194,10 @@ export default {
         },
         updateTextBlockData: function (state, payload) {
             state.textBlockData = payload;
-        }
+        },
+        updateSearchProducts: function (state, payload) {
+            state.search.products = payload;
+        },
     },
     actions: {
         login: function (context) {

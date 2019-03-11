@@ -41,8 +41,24 @@
                     <el-input type="text" v-model="form.price" placeholder="Введите Цену"></el-input>
                 </el-form-item>
 
-                <el-form-item label="Скидка (%)" prop="discount">
-                    <el-input type="text" v-model="form.discount" placeholder="Скидка (%)"></el-input>
+                <el-form-item label="Акционная цена" prop="discount_price">
+                    <el-input type="text" v-model="form.discount_price" placeholder="Акционная цена"></el-input>
+                </el-form-item>
+
+                <el-form-item label="Дата/время начала скидки" prop="discount_start">
+                    <el-date-picker
+                            v-model="form.discount_start"
+                            type="datetime"
+                            placeholder="Дата/время начала скидки">
+                    </el-date-picker>
+                </el-form-item>
+
+                <el-form-item label="Дата/время окончания скидки" prop="discount_end">
+                    <el-date-picker
+                            v-model="form.discount_end"
+                            type="datetime"
+                            placeholder="Дата/время окончания скидки">
+                    </el-date-picker>
                 </el-form-item>
 
                 <el-form-item label="Отображать на сайте?" prop="status">
@@ -79,7 +95,7 @@
         </div>
 
         <el-row v-if="currentRoute.name === 'products-update'">
-            <el-col :span="12">
+            <el-col :span="24">
                 <div class="ds-block">
                     <h4 class="text-center">Добавлен в</h4>
                     <el-table
@@ -94,7 +110,7 @@
                         </el-table-column>
                         <el-table-column
                                 fixed
-                                min-width="250"
+                                min-width="200"
                                 label="Категория">
                             <template slot-scope="props">
                                 <template v-for="(category, index) in props.row.categories">
@@ -107,9 +123,15 @@
                         </el-table-column>
                         <el-table-column
                                 fixed
+                                min-width="200"
                                 label="Фильтр">
                             <template slot-scope="props">
-                                {{ getFilter(props.row.filter_id).name }}
+                                <template v-for="(filter, index) in props.row.filters">
+                                    {{ getFilter(filter.filter_id).name }}
+                                    <template v-if="index !== props.row.filters.length - 1">
+                                        <i class="ai-arrow-right"></i>
+                                    </template>
+                                </template>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -128,7 +150,7 @@
                     </el-table>
                 </div>
             </el-col>
-            <el-col :span="12">
+            <el-col :span="24">
                 <div class="ds-block">
                     <h4 class="text-center">Данные наличия товара</h4>
                     <el-table
@@ -256,20 +278,17 @@
                 <el-form-item v-if="selectedType !== null" label="Выберите категорию">
                     <el-cascader
                             :options="this.getTreeCategories()"
-                            :props="categoryProps"
+                            :props="selectProps"
                             v-model="selectedCategory"
                             @change="changeSelectCategory">
                     </el-cascader>
                 </el-form-item>
                 <el-form-item v-if="selectFilters.length" label="Выберите фильтр">
-                    <el-select v-model="selectedFilter" placeholder="Выберите фильтр">
-                        <el-option
-                                v-for="item in selectFilters"
-                                :key="item.id"
-                                :label="item.name"
-                                :value="item.id">
-                        </el-option>
-                    </el-select>
+                    <el-cascader
+                            :options="selectFilters"
+                            :props="selectProps"
+                            v-model="selectedFilter">
+                    </el-cascader>
                 </el-form-item>
             </el-form>
             <PageElementsAlerts :alerts="modalAlerts" :type="modalTypeAlerts"/>
@@ -456,8 +475,8 @@
                         {required: true, message: generatingValidationMessage('required'), trigger: ['blur', 'change']},
                         {pattern: /^\d+(\.\d{1,2})?$/, message: 'Недопустимое значение. Значение в этом поле должно быть числом с плавающей точкой. (150.99, 1500.5, и тп)', trigger: ['blur', 'change']}
                     ],
-                    discount: [
-                        {pattern: /^[1-9][0-9]?$|^100$/, message: 'Значение в этом поле должно быть от 1 до 100', trigger: ['blur', 'change']}
+                    discount_price: [
+                        {pattern: /^\d+(\.\d{1,2})?$/, message: 'Недопустимое значение. Значение в этом поле должно быть числом с плавающей точкой. (150.99, 1500.5, и тп)', trigger: ['blur', 'change']}
                     ],
                     status: [
                         {required: true, message: generatingValidationMessage('required'), trigger: ['blur', 'change']},
@@ -490,10 +509,10 @@
                 visibleDialogWorkWithFilters: false,
                 selectFilters: [],
                 selectedType: null,
-                selectedFilter: null,
+                selectedFilter: [],
                 selectedCategory: [],
                 selectedTypeObject: {},
-                categoryProps: {
+                selectProps: {
                     value: 'id',
                     label: 'name',
                     children: 'children'
@@ -601,7 +620,7 @@
             handleShowBtnDialogWorkWithFilters: function () {
                 let checkFilter = this.form.filters.findIndex(item => item.type_id === this.selectedType
                     && item.category_id === this.lastSelectedCategory()
-                    && item.filter_id === this.selectedFilter);
+                    && item.filter_id === this.lastSelectedFilter());
                 this.btnInDialogWorkWithFilters = (checkFilter === -1);
             },
             removeFilterProduct: function (index, filters) {
@@ -635,7 +654,8 @@
                     'product_id': this.form.id,
                     'type_id': this.selectedType,
                     'category_id': this.lastSelectedCategory(),
-                    'filter_id': this.selectedFilter,
+                    'filter_id': this.lastSelectedFilter(),
+                    'filters': this.selectedFilter,
                     'categories': this.selectedCategory,
                 }).then((response) => {
                     if(response.data.status === 'success') {
@@ -658,7 +678,10 @@
                 });
             },
             lastSelectedCategory: function () {
-                return (this.selectedCategory.length) ? this.selectedCategory[this.selectedCategory.length - 1] : null;
+                return (this.selectedCategory !== null && this.selectedCategory.length) ? this.selectedCategory[this.selectedCategory.length - 1] : null;
+            },
+            lastSelectedFilter: function () {
+                return (this.selectedFilter !== null && this.selectedFilter.length) ? this.selectedFilter[this.selectedFilter.length - 1] : null;
             },
             changeSelectType: function () {
                 this.selectedCategory = this.selectFilters = this.modalAlerts = [];
@@ -668,7 +691,7 @@
                 }
             },
             changeSelectCategory: function () {
-                this.selectedFilter = null;
+                this.selectedFilter = [];
 
                 let filters = [];
                 if (this.selectedCategory.length) {
@@ -680,9 +703,16 @@
                     filters = this.selectedTypeObject.filters;
                 }
 
-                this.selectFilters = filters.map(filter => {
-                    return this.filters.find((item) => item.id === filter.filter_id);
+                this.selectFilters = this.filters.map(filter => {
+                    let check = filters.findIndex(item => item.filter_id === filter.id || item.filter_id === filter.parent_id);
+                    if (check !== -1) {
+                        return filter;
+                    }
+                }).filter(item => {
+                    return typeof item !== "undefined";
                 });
+
+                this.selectFilters = arrayToTree(this.selectFilters);
             },
             dialogWorkWithFilter: function () {
                 this.modalAlerts = [];
@@ -946,7 +976,9 @@
                     description: '',
                     preview_description: '',
                     price: 0,
-                    discount: null,
+                    discount_price: null,
+                    discount_start: null,
+                    discount_end: null,
                     status: 1,
                     data: null
                 }

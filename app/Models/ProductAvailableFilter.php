@@ -18,6 +18,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ProductAvailableFilter whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ProductAvailableFilter whereProductAvailableId($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ProductAvailableFilter disableCache()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ProductAvailableFilter withCacheCooldownSeconds($seconds)
  */
 class ProductAvailableFilter extends Model
 {

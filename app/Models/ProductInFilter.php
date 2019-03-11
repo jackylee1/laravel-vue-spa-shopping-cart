@@ -47,7 +47,7 @@ class ProductInFilter extends Model
     ];
     public $timestamps = false;
 
-    protected $with = ['categories'];
+    protected $with = ['categories', 'filters'];
 
     public function product() {
         return $this->hasOne('App\Models\Product', 'id', 'product_id');
@@ -63,6 +63,10 @@ class ProductInFilter extends Model
 
     public function categories() {
         return $this->hasMany('App\Models\ProductInFilterCategory', 'product_in_filter_id', 'id');
+    }
+
+    public function filters() {
+        return $this->hasMany('App\Models\ProductInFilterTree', 'product_in_filter_id', 'id');
     }
 
     protected function destroyModel($id) {

@@ -16,6 +16,11 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ProductAvailable whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ProductAvailable whereProductId($value)
  * @mixin \Eloquent
+ * @property int $quantity
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProductAvailableFilter[] $filters
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ProductAvailable disableCache()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ProductAvailable whereQuantity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ProductAvailable withCacheCooldownSeconds($seconds)
  */
 class ProductAvailable extends Model
 {

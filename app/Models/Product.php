@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Tools\Models\ProductTool;
+use Carbon\Carbon;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Model;
 use App\Tools\File;
@@ -18,7 +20,6 @@ use App\Tools\File;
  * @property string $preview_description
  * @property string $like_preview_description
  * @property float $price
- * @property int|null $discount
  * @property int|null $main_image
  * @property int $status
  * @property string|null $date_inclusion
@@ -51,6 +52,13 @@ use App\Tools\File;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product whereDiscount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product disableCache()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product withCacheCooldownSeconds($seconds)
+ * @property float|null $discount_price
+ * @property string|null $discount_start
+ * @property string|null $discount_end
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProductAvailable[] $available
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product whereDiscountEnd($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product whereDiscountPrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product whereDiscountStart($value)
  */
 class Product extends Model
 {
@@ -65,7 +73,9 @@ class Product extends Model
         'preview_description',
         'like_preview_description',
         'price',
-        'discount',
+        'discount_price',
+        'discount_start',
+        'discount_end',
         'main_image',
         'status',
         'date_inclusion'
@@ -73,7 +83,9 @@ class Product extends Model
 
     protected $casts = [
         'price' => 'float',
-        'discount' => 'integer',
+        'discount_price' => 'float',
+        'discount_start' => 'datetime',
+        'discount_end' => 'datetime',
         'main_image' => 'integer',
         'status' => 'integer',
         'date_inclusion' => 'date'
@@ -111,7 +123,11 @@ class Product extends Model
 
     protected function getProducts() {
         $query = Product::query();
-        return $query->orderBy('created_at', 'desc')->paginate(10);
+        $products = $query->orderBy('created_at', 'desc')->paginate(10);
+
+        ProductTool::checkRelevanceDiscount($products->items());
+
+        return $products;
     }
 
     protected function getProduct($id) {
@@ -127,7 +143,11 @@ class Product extends Model
         $model->preview_description = request()->get('preview_description');
         $model->like_preview_description = getOnlyCharacters(request()->get('preview_description'));
         $model->price = number_format((float)request()->get('price'), 2, '.', '');
-        $model->discount = request()->get('discount');
+        $model->discount_price = number_format((float)request()->get('discount_price'), 2, '.', '');
+        if (request()->filled('discount_start') && request()->filled('discount_end')) {
+            $model->discount_start = Carbon::parse(request()->get('discount_start'))->toDateTimeString();
+            $model->discount_end = Carbon::parse(request()->get('discount_end'))->toDateTimeString();
+        }
         $model->status = request()->get('status');
         $model->date_inclusion = request()->get('date_inclusion');
 
@@ -191,13 +211,23 @@ class Product extends Model
             'filter_id' => request()->get('filter_id')
         ]);
         $filter->setRelation('categories', collect([]));
+        $filter->setRelation('filters', collect([]));
         if (is_array(request()->get('categories')) && count(request()->get('categories')) > 0) {
             $category_field = collect(['category_id']);
-            $create_categories= collect(request()->get('categories'))->map(function($item) use ($category_field) {
+            $create_categories = collect(request()->get('categories'))->map(function($item) use ($category_field) {
                 return $category_field->combine($item);
             });
-            $categories = $filter->categories()->createMany($create_categories->toArray());
-            $filter->setRelation('categories', $categories);
+            $create_models = $filter->categories()->createMany($create_categories->toArray());
+            $filter->setRelation('categories', $create_models);
+        }
+
+        if (is_array(request()->get('filters')) && count(request()->get('filters')) > 0) {
+            $filter_field = collect(['filter_id']);
+            $create_filters = collect(request()->get('filters'))->map(function($item) use ($filter_field) {
+                return $filter_field->combine($item);
+            });
+            $create_models = $filter->filters()->createMany($create_filters->toArray());
+            $filter->setRelation('filters', $create_models);
         }
 
         return $filter;

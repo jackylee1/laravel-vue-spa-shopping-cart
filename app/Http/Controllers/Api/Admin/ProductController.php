@@ -7,6 +7,7 @@ use App\Tools\File;
 use App\Tools\Image;
 use App\Traits\ImageTrait;
 use App\Traits\ValidateTrait;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -45,16 +46,52 @@ class ProductController extends Controller
                 'article' => 'required|string|unique:products,article',
             ]);
         }
-
         $this->setValidateRule([
             'name' => 'required|string|max:255',
             'description' => 'required|string|max:10000',
             'preview_description' => 'required|string|max:2000',
             'price' => 'required|regex:/^\d+(\.\d{1,2})?$/',
-            'discount' => 'nullable|integer|between:1,100',
+            'discount_price' => [
+                'nullable',
+                'regex:/^\d+(\.\d{1,2})?$/',
+                function ($attribute, $value, $fail) {
+                    if ($value > request()->get('price')) {
+                        return $fail('Акционная цена должна быть меньше Цены товара');
+                    }
+                    if ($value == 0) {
+                        return $fail('Акционная цена должна быть больше нуля');
+                    }
+                },
+                'required_with:discount_start,discount_end'
+            ],
+            'discount_start' => 'nullable|datetime|required_with:discount_price',
+            'discount_end' => 'nullable|datetime|required_with:discount_price',
             'status' => 'required|boolean',
             'date_inclusion' => 'nullable|date',
         ]);
+        if (request()->filled('discount_start') && request()->filled('discount_end')) {
+            $start = Carbon::parse(request()->get('discount_start'));
+            $end = Carbon::parse(request()->get('discount_end'));
+            $this->setValidateRule([
+                'discount_start' => [
+                    function ($attribute, $value, $fail) use ($start, $end) {
+                        if ($start->gt($end)) {
+                            $fail('"Дата начала" не может быть больше "Даты окончания" скидки.');
+                        }
+                    }
+                ],
+                'discount_end' => [
+                    function ($attribute, $value, $fail) use ($start, $end) {
+                        if ($end->lt($start)) {
+                            $fail('"Дата/время окончания скидки" не может быть меньше "Дата/время начала скидки".');
+                        }
+                        if ($end->lt(Carbon::now())) {
+                            $fail('"Дата/время окончания скидки" не может быть меньше текущей даты.');
+                        }
+                    }
+                ]
+            ]);
+        }
         $this->setValidateAttribute([
             'slug' => 'SEO URL',
             'article' => 'Артикул',
@@ -62,7 +99,9 @@ class ProductController extends Controller
             'description' => 'Описание',
             'preview_description' => 'Краткое описания',
             'price' => 'Цена',
-            'discount' => 'Процент скидки',
+            'discount_price' => 'Акционная цена',
+            'discount_start' => 'Дата/время начала скидки',
+            'discount_end' => 'Дата/время окончания скидки',
             'status' => 'Статус',
             'date_inclusion' => 'Дата включения',
         ]);
@@ -190,7 +229,9 @@ class ProductController extends Controller
             'category_id' => 'nullable|integer|exists:categories,id',
             'filter_id' => 'nullable|integer|exists:filters,id',
             'categories' => 'nullable|array',
-            'categories.*' => 'nullable|integer|exists:categories,id'
+            'categories.*' => 'nullable|integer|exists:categories,id',
+            'filters' => 'nullable|array',
+            'filters.*' => 'nullable|integer|exists:filters,id'
         ]);
         $this->setValidateAttribute([
             'type_id' => 'Тип',

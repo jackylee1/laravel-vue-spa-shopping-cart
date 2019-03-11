@@ -23,10 +23,13 @@ class CreateProductsTable extends Migration
             $table->text('preview_description');
             $table->text('like_preview_description');
             $table->float('price');
-            $table->integer('discount')->nullable();
+            $table->float('discount_price')->nullable();
+            $table->dateTime('discount_start')->nullable();
+            $table->dateTime('discount_end')->nullable();
             $table->integer('main_image')->nullable();
-            $table->boolean('status')->default(false);
             $table->date('date_inclusion')->nullable(); //дата включения
+            $table->boolean('status')->default(false);
+
             $table->timestamps();
         });
     }

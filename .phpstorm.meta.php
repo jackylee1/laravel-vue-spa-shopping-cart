@@ -5,14 +5,13 @@ namespace PHPSTORM_META {
 
    /**
     * PhpStorm Meta file, to provide autocomplete information for PhpStorm
-    * Generated on 2019-02-21 21:05:06.
+    * Generated on 2019-03-11 12:11:06.
     *
     * @author Barry vd. Heuvel <barryvdh@gmail.com>
     * @see https://github.com/barryvdh/laravel-ide-helper
     */
     override(new \Illuminate\Contracts\Container\Container, map([
         '' => '@',
-        'Alexusmai\LaravelFileManager\ACLService\ACLRepository' => \Alexusmai\LaravelFileManager\ACLService\ConfigACLRepository::class,
         'Barryvdh\Debugbar\LaravelDebugbar' => \Barryvdh\Debugbar\LaravelDebugbar::class,
         'Illuminate\Broadcasting\BroadcastManager' => \Illuminate\Broadcasting\BroadcastManager::class,
         'Illuminate\Bus\Dispatcher' => \Illuminate\Bus\Dispatcher::class,
@@ -33,6 +32,7 @@ namespace PHPSTORM_META {
         'Illuminate\Session\Middleware\StartSession' => \Illuminate\Session\Middleware\StartSession::class,
         'NunoMaduro\Collision\Contracts\Adapters\Phpunit\Listener' => \NunoMaduro\Collision\Adapters\Phpunit\Listener::class,
         'NunoMaduro\Collision\Contracts\Provider' => \NunoMaduro\Collision\Provider::class,
+        'Psr\Http\Message\ResponseInterface' => \Zend\Diactoros\Response::class,
         'auth' => \Illuminate\Auth\AuthManager::class,
         'auth.driver' => \Tymon\JWTAuth\JWTGuard::class,
         'auth.password' => \Illuminate\Auth\Passwords\PasswordBrokerManager::class,
@@ -81,6 +81,8 @@ namespace PHPSTORM_META {
         'command.notification.make' => \Illuminate\Foundation\Console\NotificationMakeCommand::class,
         'command.notification.table' => \Illuminate\Notifications\Console\NotificationTableCommand::class,
         'command.observer.make' => \Illuminate\Foundation\Console\ObserverMakeCommand::class,
+        'command.optimize' => \Illuminate\Foundation\Console\OptimizeCommand::class,
+        'command.optimize.clear' => \Illuminate\Foundation\Console\OptimizeClearCommand::class,
         'command.package.discover' => \Illuminate\Foundation\Console\PackageDiscoverCommand::class,
         'command.policy.make' => \Illuminate\Foundation\Console\PolicyMakeCommand::class,
         'command.preset' => \Illuminate\Foundation\Console\PresetCommand::class,
@@ -139,6 +141,7 @@ namespace PHPSTORM_META {
         'queue.worker' => \Illuminate\Queue\Worker::class,
         'redirect' => \Illuminate\Routing\Redirector::class,
         'redis' => \Illuminate\Redis\RedisManager::class,
+        'redis.connection' => \Illuminate\Redis\Connections\PredisConnection::class,
         'router' => \Illuminate\Routing\Router::class,
         'session' => \Illuminate\Session\SessionManager::class,
         'session.store' => \Illuminate\Session\Store::class,
@@ -168,7 +171,6 @@ namespace PHPSTORM_META {
     ]));
     override(\Illuminate\Contracts\Container\Container::make(0), map([
         '' => '@',
-        'Alexusmai\LaravelFileManager\ACLService\ACLRepository' => \Alexusmai\LaravelFileManager\ACLService\ConfigACLRepository::class,
         'Barryvdh\Debugbar\LaravelDebugbar' => \Barryvdh\Debugbar\LaravelDebugbar::class,
         'Illuminate\Broadcasting\BroadcastManager' => \Illuminate\Broadcasting\BroadcastManager::class,
         'Illuminate\Bus\Dispatcher' => \Illuminate\Bus\Dispatcher::class,
@@ -189,6 +191,7 @@ namespace PHPSTORM_META {
         'Illuminate\Session\Middleware\StartSession' => \Illuminate\Session\Middleware\StartSession::class,
         'NunoMaduro\Collision\Contracts\Adapters\Phpunit\Listener' => \NunoMaduro\Collision\Adapters\Phpunit\Listener::class,
         'NunoMaduro\Collision\Contracts\Provider' => \NunoMaduro\Collision\Provider::class,
+        'Psr\Http\Message\ResponseInterface' => \Zend\Diactoros\Response::class,
         'auth' => \Illuminate\Auth\AuthManager::class,
         'auth.driver' => \Tymon\JWTAuth\JWTGuard::class,
         'auth.password' => \Illuminate\Auth\Passwords\PasswordBrokerManager::class,
@@ -237,6 +240,8 @@ namespace PHPSTORM_META {
         'command.notification.make' => \Illuminate\Foundation\Console\NotificationMakeCommand::class,
         'command.notification.table' => \Illuminate\Notifications\Console\NotificationTableCommand::class,
         'command.observer.make' => \Illuminate\Foundation\Console\ObserverMakeCommand::class,
+        'command.optimize' => \Illuminate\Foundation\Console\OptimizeCommand::class,
+        'command.optimize.clear' => \Illuminate\Foundation\Console\OptimizeClearCommand::class,
         'command.package.discover' => \Illuminate\Foundation\Console\PackageDiscoverCommand::class,
         'command.policy.make' => \Illuminate\Foundation\Console\PolicyMakeCommand::class,
         'command.preset' => \Illuminate\Foundation\Console\PresetCommand::class,
@@ -295,6 +300,7 @@ namespace PHPSTORM_META {
         'queue.worker' => \Illuminate\Queue\Worker::class,
         'redirect' => \Illuminate\Routing\Redirector::class,
         'redis' => \Illuminate\Redis\RedisManager::class,
+        'redis.connection' => \Illuminate\Redis\Connections\PredisConnection::class,
         'router' => \Illuminate\Routing\Router::class,
         'session' => \Illuminate\Session\SessionManager::class,
         'session.store' => \Illuminate\Session\Store::class,
@@ -324,7 +330,6 @@ namespace PHPSTORM_META {
     ]));
     override(\Illuminate\Contracts\Container\Container::makeWith(0), map([
         '' => '@',
-        'Alexusmai\LaravelFileManager\ACLService\ACLRepository' => \Alexusmai\LaravelFileManager\ACLService\ConfigACLRepository::class,
         'Barryvdh\Debugbar\LaravelDebugbar' => \Barryvdh\Debugbar\LaravelDebugbar::class,
         'Illuminate\Broadcasting\BroadcastManager' => \Illuminate\Broadcasting\BroadcastManager::class,
         'Illuminate\Bus\Dispatcher' => \Illuminate\Bus\Dispatcher::class,
@@ -345,6 +350,7 @@ namespace PHPSTORM_META {
         'Illuminate\Session\Middleware\StartSession' => \Illuminate\Session\Middleware\StartSession::class,
         'NunoMaduro\Collision\Contracts\Adapters\Phpunit\Listener' => \NunoMaduro\Collision\Adapters\Phpunit\Listener::class,
         'NunoMaduro\Collision\Contracts\Provider' => \NunoMaduro\Collision\Provider::class,
+        'Psr\Http\Message\ResponseInterface' => \Zend\Diactoros\Response::class,
         'auth' => \Illuminate\Auth\AuthManager::class,
         'auth.driver' => \Tymon\JWTAuth\JWTGuard::class,
         'auth.password' => \Illuminate\Auth\Passwords\PasswordBrokerManager::class,
@@ -393,6 +399,8 @@ namespace PHPSTORM_META {
         'command.notification.make' => \Illuminate\Foundation\Console\NotificationMakeCommand::class,
         'command.notification.table' => \Illuminate\Notifications\Console\NotificationTableCommand::class,
         'command.observer.make' => \Illuminate\Foundation\Console\ObserverMakeCommand::class,
+        'command.optimize' => \Illuminate\Foundation\Console\OptimizeCommand::class,
+        'command.optimize.clear' => \Illuminate\Foundation\Console\OptimizeClearCommand::class,
         'command.package.discover' => \Illuminate\Foundation\Console\PackageDiscoverCommand::class,
         'command.policy.make' => \Illuminate\Foundation\Console\PolicyMakeCommand::class,
         'command.preset' => \Illuminate\Foundation\Console\PresetCommand::class,
@@ -451,6 +459,7 @@ namespace PHPSTORM_META {
         'queue.worker' => \Illuminate\Queue\Worker::class,
         'redirect' => \Illuminate\Routing\Redirector::class,
         'redis' => \Illuminate\Redis\RedisManager::class,
+        'redis.connection' => \Illuminate\Redis\Connections\PredisConnection::class,
         'router' => \Illuminate\Routing\Router::class,
         'session' => \Illuminate\Session\SessionManager::class,
         'session.store' => \Illuminate\Session\Store::class,
@@ -480,7 +489,6 @@ namespace PHPSTORM_META {
     ]));
     override(\App::make(0), map([
         '' => '@',
-        'Alexusmai\LaravelFileManager\ACLService\ACLRepository' => \Alexusmai\LaravelFileManager\ACLService\ConfigACLRepository::class,
         'Barryvdh\Debugbar\LaravelDebugbar' => \Barryvdh\Debugbar\LaravelDebugbar::class,
         'Illuminate\Broadcasting\BroadcastManager' => \Illuminate\Broadcasting\BroadcastManager::class,
         'Illuminate\Bus\Dispatcher' => \Illuminate\Bus\Dispatcher::class,
@@ -501,6 +509,7 @@ namespace PHPSTORM_META {
         'Illuminate\Session\Middleware\StartSession' => \Illuminate\Session\Middleware\StartSession::class,
         'NunoMaduro\Collision\Contracts\Adapters\Phpunit\Listener' => \NunoMaduro\Collision\Adapters\Phpunit\Listener::class,
         'NunoMaduro\Collision\Contracts\Provider' => \NunoMaduro\Collision\Provider::class,
+        'Psr\Http\Message\ResponseInterface' => \Zend\Diactoros\Response::class,
         'auth' => \Illuminate\Auth\AuthManager::class,
         'auth.driver' => \Tymon\JWTAuth\JWTGuard::class,
         'auth.password' => \Illuminate\Auth\Passwords\PasswordBrokerManager::class,
@@ -549,6 +558,8 @@ namespace PHPSTORM_META {
         'command.notification.make' => \Illuminate\Foundation\Console\NotificationMakeCommand::class,
         'command.notification.table' => \Illuminate\Notifications\Console\NotificationTableCommand::class,
         'command.observer.make' => \Illuminate\Foundation\Console\ObserverMakeCommand::class,
+        'command.optimize' => \Illuminate\Foundation\Console\OptimizeCommand::class,
+        'command.optimize.clear' => \Illuminate\Foundation\Console\OptimizeClearCommand::class,
         'command.package.discover' => \Illuminate\Foundation\Console\PackageDiscoverCommand::class,
         'command.policy.make' => \Illuminate\Foundation\Console\PolicyMakeCommand::class,
         'command.preset' => \Illuminate\Foundation\Console\PresetCommand::class,
@@ -607,6 +618,7 @@ namespace PHPSTORM_META {
         'queue.worker' => \Illuminate\Queue\Worker::class,
         'redirect' => \Illuminate\Routing\Redirector::class,
         'redis' => \Illuminate\Redis\RedisManager::class,
+        'redis.connection' => \Illuminate\Redis\Connections\PredisConnection::class,
         'router' => \Illuminate\Routing\Router::class,
         'session' => \Illuminate\Session\SessionManager::class,
         'session.store' => \Illuminate\Session\Store::class,
@@ -636,7 +648,6 @@ namespace PHPSTORM_META {
     ]));
     override(\App::makeWith(0), map([
         '' => '@',
-        'Alexusmai\LaravelFileManager\ACLService\ACLRepository' => \Alexusmai\LaravelFileManager\ACLService\ConfigACLRepository::class,
         'Barryvdh\Debugbar\LaravelDebugbar' => \Barryvdh\Debugbar\LaravelDebugbar::class,
         'Illuminate\Broadcasting\BroadcastManager' => \Illuminate\Broadcasting\BroadcastManager::class,
         'Illuminate\Bus\Dispatcher' => \Illuminate\Bus\Dispatcher::class,
@@ -657,6 +668,7 @@ namespace PHPSTORM_META {
         'Illuminate\Session\Middleware\StartSession' => \Illuminate\Session\Middleware\StartSession::class,
         'NunoMaduro\Collision\Contracts\Adapters\Phpunit\Listener' => \NunoMaduro\Collision\Adapters\Phpunit\Listener::class,
         'NunoMaduro\Collision\Contracts\Provider' => \NunoMaduro\Collision\Provider::class,
+        'Psr\Http\Message\ResponseInterface' => \Zend\Diactoros\Response::class,
         'auth' => \Illuminate\Auth\AuthManager::class,
         'auth.driver' => \Tymon\JWTAuth\JWTGuard::class,
         'auth.password' => \Illuminate\Auth\Passwords\PasswordBrokerManager::class,
@@ -705,6 +717,8 @@ namespace PHPSTORM_META {
         'command.notification.make' => \Illuminate\Foundation\Console\NotificationMakeCommand::class,
         'command.notification.table' => \Illuminate\Notifications\Console\NotificationTableCommand::class,
         'command.observer.make' => \Illuminate\Foundation\Console\ObserverMakeCommand::class,
+        'command.optimize' => \Illuminate\Foundation\Console\OptimizeCommand::class,
+        'command.optimize.clear' => \Illuminate\Foundation\Console\OptimizeClearCommand::class,
         'command.package.discover' => \Illuminate\Foundation\Console\PackageDiscoverCommand::class,
         'command.policy.make' => \Illuminate\Foundation\Console\PolicyMakeCommand::class,
         'command.preset' => \Illuminate\Foundation\Console\PresetCommand::class,
@@ -763,6 +777,7 @@ namespace PHPSTORM_META {
         'queue.worker' => \Illuminate\Queue\Worker::class,
         'redirect' => \Illuminate\Routing\Redirector::class,
         'redis' => \Illuminate\Redis\RedisManager::class,
+        'redis.connection' => \Illuminate\Redis\Connections\PredisConnection::class,
         'router' => \Illuminate\Routing\Router::class,
         'session' => \Illuminate\Session\SessionManager::class,
         'session.store' => \Illuminate\Session\Store::class,
@@ -792,7 +807,6 @@ namespace PHPSTORM_META {
     ]));
     override(\app(0), map([
         '' => '@',
-        'Alexusmai\LaravelFileManager\ACLService\ACLRepository' => \Alexusmai\LaravelFileManager\ACLService\ConfigACLRepository::class,
         'Barryvdh\Debugbar\LaravelDebugbar' => \Barryvdh\Debugbar\LaravelDebugbar::class,
         'Illuminate\Broadcasting\BroadcastManager' => \Illuminate\Broadcasting\BroadcastManager::class,
         'Illuminate\Bus\Dispatcher' => \Illuminate\Bus\Dispatcher::class,
@@ -813,6 +827,7 @@ namespace PHPSTORM_META {
         'Illuminate\Session\Middleware\StartSession' => \Illuminate\Session\Middleware\StartSession::class,
         'NunoMaduro\Collision\Contracts\Adapters\Phpunit\Listener' => \NunoMaduro\Collision\Adapters\Phpunit\Listener::class,
         'NunoMaduro\Collision\Contracts\Provider' => \NunoMaduro\Collision\Provider::class,
+        'Psr\Http\Message\ResponseInterface' => \Zend\Diactoros\Response::class,
         'auth' => \Illuminate\Auth\AuthManager::class,
         'auth.driver' => \Tymon\JWTAuth\JWTGuard::class,
         'auth.password' => \Illuminate\Auth\Passwords\PasswordBrokerManager::class,
@@ -861,6 +876,8 @@ namespace PHPSTORM_META {
         'command.notification.make' => \Illuminate\Foundation\Console\NotificationMakeCommand::class,
         'command.notification.table' => \Illuminate\Notifications\Console\NotificationTableCommand::class,
         'command.observer.make' => \Illuminate\Foundation\Console\ObserverMakeCommand::class,
+        'command.optimize' => \Illuminate\Foundation\Console\OptimizeCommand::class,
+        'command.optimize.clear' => \Illuminate\Foundation\Console\OptimizeClearCommand::class,
         'command.package.discover' => \Illuminate\Foundation\Console\PackageDiscoverCommand::class,
         'command.policy.make' => \Illuminate\Foundation\Console\PolicyMakeCommand::class,
         'command.preset' => \Illuminate\Foundation\Console\PresetCommand::class,
@@ -919,6 +936,7 @@ namespace PHPSTORM_META {
         'queue.worker' => \Illuminate\Queue\Worker::class,
         'redirect' => \Illuminate\Routing\Redirector::class,
         'redis' => \Illuminate\Redis\RedisManager::class,
+        'redis.connection' => \Illuminate\Redis\Connections\PredisConnection::class,
         'router' => \Illuminate\Routing\Router::class,
         'session' => \Illuminate\Session\SessionManager::class,
         'session.store' => \Illuminate\Session\Store::class,
@@ -948,7 +966,6 @@ namespace PHPSTORM_META {
     ]));
     override(\resolve(0), map([
         '' => '@',
-        'Alexusmai\LaravelFileManager\ACLService\ACLRepository' => \Alexusmai\LaravelFileManager\ACLService\ConfigACLRepository::class,
         'Barryvdh\Debugbar\LaravelDebugbar' => \Barryvdh\Debugbar\LaravelDebugbar::class,
         'Illuminate\Broadcasting\BroadcastManager' => \Illuminate\Broadcasting\BroadcastManager::class,
         'Illuminate\Bus\Dispatcher' => \Illuminate\Bus\Dispatcher::class,
@@ -969,6 +986,7 @@ namespace PHPSTORM_META {
         'Illuminate\Session\Middleware\StartSession' => \Illuminate\Session\Middleware\StartSession::class,
         'NunoMaduro\Collision\Contracts\Adapters\Phpunit\Listener' => \NunoMaduro\Collision\Adapters\Phpunit\Listener::class,
         'NunoMaduro\Collision\Contracts\Provider' => \NunoMaduro\Collision\Provider::class,
+        'Psr\Http\Message\ResponseInterface' => \Zend\Diactoros\Response::class,
         'auth' => \Illuminate\Auth\AuthManager::class,
         'auth.driver' => \Tymon\JWTAuth\JWTGuard::class,
         'auth.password' => \Illuminate\Auth\Passwords\PasswordBrokerManager::class,
@@ -1017,6 +1035,8 @@ namespace PHPSTORM_META {
         'command.notification.make' => \Illuminate\Foundation\Console\NotificationMakeCommand::class,
         'command.notification.table' => \Illuminate\Notifications\Console\NotificationTableCommand::class,
         'command.observer.make' => \Illuminate\Foundation\Console\ObserverMakeCommand::class,
+        'command.optimize' => \Illuminate\Foundation\Console\OptimizeCommand::class,
+        'command.optimize.clear' => \Illuminate\Foundation\Console\OptimizeClearCommand::class,
         'command.package.discover' => \Illuminate\Foundation\Console\PackageDiscoverCommand::class,
         'command.policy.make' => \Illuminate\Foundation\Console\PolicyMakeCommand::class,
         'command.preset' => \Illuminate\Foundation\Console\PresetCommand::class,
@@ -1075,6 +1095,7 @@ namespace PHPSTORM_META {
         'queue.worker' => \Illuminate\Queue\Worker::class,
         'redirect' => \Illuminate\Routing\Redirector::class,
         'redis' => \Illuminate\Redis\RedisManager::class,
+        'redis.connection' => \Illuminate\Redis\Connections\PredisConnection::class,
         'router' => \Illuminate\Routing\Router::class,
         'session' => \Illuminate\Session\SessionManager::class,
         'session.store' => \Illuminate\Session\Store::class,
