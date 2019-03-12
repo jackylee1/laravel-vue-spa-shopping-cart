@@ -1090,20 +1090,24 @@
                 }
             },
             'selectedFilters': function (filters) {
-                if (Object.keys(this.availableObject).length === 0) {
-                    let filtersAvailable = new Set(filters);
+                if (Object.keys(this.availableObject).length === 0 && filters.length) {
                     let checkExists = false;
+
                     this.form.available.forEach((item) => {
                         let filtersItem = item.filters.map((item) => {
                             return item.filter_id;
                         });
-                        filtersItem = new Set(filtersItem);
-                        let difference = new Set([...filtersItem].filter(x => !filtersAvailable.has(x)));
-                        if (difference.size === 0) {
+
+                        let uniqueOne = filtersItem.filter((o) => filters.indexOf(o) === -1);
+                        let uniqueTwo = filters.filter((o) => filtersItem.indexOf(o) === -1);
+                        let unique = uniqueOne.concat(uniqueTwo);
+
+                        if (unique.length === 0) {
                             checkExists = true;
                             return false;
                         }
                     });
+
                     this.btnInDialogWorkWithAvailable = (!checkExists);
                 }
             }
