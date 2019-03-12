@@ -9,13 +9,12 @@
     <title>{{env('APP_NAME')}}</title>
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
 </head>
 <body style="margin: 0;">
 <div id="app">
     <layout/>
 </div>
 
-<script src="{{ asset('js/admin.js') }}"></script>
+<script src="{{ mix('js/admin.js') }}"></script>
 </body>
 </html>
