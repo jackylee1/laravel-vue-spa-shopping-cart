@@ -15,15 +15,23 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->increments('id');
+
             $table->integer('user_id')->nullable()->unsigned();
-            $table->boolean('status')->default(false);
-            $table->integer('category')->default(1);
-            $table->char('one_click_tel')->nullable();
-            /*
-             * 1 - с сайта
-             * 2 - телефон
-             * 3 - в один клик
-             */
+            $table->string('user_name')->nullable();
+            $table->string('user_surname')->nullable();
+            $table->string('user_patronymic')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('email')->nullable();
+            $table->text('note')->nullable();
+
+            $table->integer('order_status_id')->nullable();
+            $table->integer('delivery_method')->nullable();
+            $table->integer('order_payment_method_id')->nullable();
+            $table->integer('promotional_code_id')->nullable();
+
+            $table->float('total_price')->nullable();
+            $table->float('total_discount_price')->nullable();
+
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

@@ -19,6 +19,9 @@
                         <template v-if="route.name === 'users' || route.name === 'user-groups'">
                             <users-icon class="custom-class"></users-icon>
                         </template>
+                        <template v-if="route.name === 'orders'">
+                            <shopping-cart-icon class="custom-class"></shopping-cart-icon>
+                        </template>
                         <template v-if="route.name === 'types'">
                             <box-icon class="custom-class"></box-icon>
                         </template>
@@ -47,7 +50,7 @@
     import {
         HomeIcon, ShoppingBagIcon, UsersIcon,
         BoxIcon, TagIcon, FilterIcon, InboxIcon,
-        ImageIcon, AlignLeftIcon
+        ImageIcon, AlignLeftIcon, ShoppingCartIcon
     } from 'vue-feather-icons'
 
     export default {
@@ -68,7 +71,8 @@
             ShoppingBagIcon,
             InboxIcon,
             ImageIcon,
-            AlignLeftIcon
+            AlignLeftIcon,
+            ShoppingCartIcon
         }
     }
 </script>

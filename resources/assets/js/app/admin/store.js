@@ -70,6 +70,7 @@ export default {
         sliders: [],
         textBlockTitles: [],
         textBlockData: [],
+        orderStatuses: [],
     },
     getters: {
         isLoggedIn(state) {
@@ -137,6 +138,9 @@ export default {
         },
         searchProducts: function (state) {
             return state.search.products;
+        },
+        orderStatuses: function (state) {
+            return state.orderStatuses;
         }
     },
     mutations: {
@@ -196,6 +200,9 @@ export default {
         },
         updateSearchProducts: function (state, payload) {
             state.search.products = payload;
+        },
+        updateOrderStatuses: function (state, payload) {
+            state.orderStatuses = payload;
         },
     },
     actions: {

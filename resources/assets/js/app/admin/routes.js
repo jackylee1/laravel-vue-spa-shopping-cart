@@ -9,6 +9,7 @@ import { FileManagerMain } from "../../components/admin/FileManager";
 import { SlidersList, SlidersWorkWithModel } from "../../components/admin/Sliders";
 import { TextBlockTitlesList, TextBlockTitlesWorkWithModel } from "../../components/admin/TextBlockTitles";
 import { TextBlockDataList, TextBlockDataWorkWithModel } from "../../components/admin/TextBlockData";
+import { OrderStatusesList, OrderStatusesWorkWithModel } from "../../components/admin/OrderStatuses";
 
 export const routes = [
     {
@@ -21,6 +22,49 @@ export const routes = [
             name: 'Главная',
             title: 'Главная'
         }
+    },
+    {
+        path: '/admin/orders',
+        name: 'orders',
+        meta: {
+            requiresAuth: true,
+            hidden: false,
+            name: 'Заказы',
+            title: 'Заказы'
+        },
+        component: LayoutRouterView,
+        children: [
+            {
+                name: 'order-statuses-list',
+                path: 'order_statuses',
+                component: OrderStatusesList,
+                meta: {
+                    hidden: false,
+                    name: 'Список статусов',
+                    title: 'Список статусов'
+                }
+            },
+            {
+                name: 'order-statuses-create',
+                path: 'order_statuses/create',
+                component: OrderStatusesWorkWithModel,
+                meta: {
+                    hidden: false,
+                    name: 'Добавить статус заказа',
+                    title: 'Добавить статус заказа'
+                }
+            },
+            {
+                name: 'order-statuses-update',
+                path: 'order_statuses/:id',
+                component: OrderStatusesWorkWithModel,
+                meta: {
+                    hidden: true,
+                    name: 'Обновление статусу заказа',
+                    title: 'Обновление статусу заказа'
+                }
+            }
+        ]
     },
     {
         path: '/admin/products',

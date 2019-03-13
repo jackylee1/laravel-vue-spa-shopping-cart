@@ -75,6 +75,10 @@ Route::group([
         'index', 'show', 'store', 'update', 'destroy'
     ]);
 
+    Route::resource('order_statuses', 'Api\Admin\OrderStatusController')->only([
+        'index', 'show', 'store', 'update', 'destroy'
+    ]);
+
     Route::prefix('upload')->group(function () {
         Route::post('images', 'Api\Admin\UploadFileController@image');
     });

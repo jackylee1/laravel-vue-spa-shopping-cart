@@ -6,8 +6,7 @@
                     <el-alert
                             style="padding: 10px;margin-bottom: 10px;"
                             :title="message"
-                            :type="type"
-                            :closable="false">
+                            :type="type">
                     </el-alert>
                 </template>
             </template>
@@ -16,8 +15,7 @@
             <el-alert
                     style="padding: 10px;margin-bottom: 10px;"
                     :title="alerts"
-                    :type="type"
-                    :closable="false">
+                    :type="type">
             </el-alert>
         </template>
     </div>

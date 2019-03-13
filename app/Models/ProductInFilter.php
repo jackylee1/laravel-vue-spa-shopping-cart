@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProductInFilterCategory[] $categories
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ProductInFilter disableCache()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ProductInFilter withCacheCooldownSeconds($seconds)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProductInFilterTree[] $filters
  */
 class ProductInFilter extends Model
 {
