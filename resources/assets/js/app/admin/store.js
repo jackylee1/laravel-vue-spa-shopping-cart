@@ -71,6 +71,7 @@ export default {
         textBlockTitles: [],
         textBlockData: [],
         orderStatuses: [],
+        orderPaymentMethods: [],
     },
     getters: {
         isLoggedIn(state) {
@@ -141,6 +142,9 @@ export default {
         },
         orderStatuses: function (state) {
             return state.orderStatuses;
+        },
+        orderPaymentMethods: function (state) {
+            return state.orderPaymentMethods;
         }
     },
     mutations: {
@@ -203,6 +207,9 @@ export default {
         },
         updateOrderStatuses: function (state, payload) {
             state.orderStatuses = payload;
+        },
+        updateOrderPaymentMethods: function (state, payload) {
+            state.orderPaymentMethods = payload;
         },
     },
     actions: {

@@ -79,6 +79,10 @@ Route::group([
         'index', 'show', 'store', 'update', 'destroy'
     ]);
 
+    Route::resource('order_payment_methods', 'Api\Admin\OrderPaymentMethodController')->only([
+        'index', 'show', 'store', 'update', 'destroy'
+    ]);
+
     Route::prefix('upload')->group(function () {
         Route::post('images', 'Api\Admin\UploadFileController@image');
     });

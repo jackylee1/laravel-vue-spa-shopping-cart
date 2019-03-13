@@ -10,6 +10,7 @@ import { SlidersList, SlidersWorkWithModel } from "../../components/admin/Slider
 import { TextBlockTitlesList, TextBlockTitlesWorkWithModel } from "../../components/admin/TextBlockTitles";
 import { TextBlockDataList, TextBlockDataWorkWithModel } from "../../components/admin/TextBlockData";
 import { OrderStatusesList, OrderStatusesWorkWithModel } from "../../components/admin/OrderStatuses";
+import { OrderPaymentMethodsList, OrderPaymentMethodsWorkWithModel } from "../../components/admin/OrderPaymentMethods";
 
 export const routes = [
     {
@@ -63,7 +64,37 @@ export const routes = [
                     name: 'Обновление статусу заказа',
                     title: 'Обновление статусу заказа'
                 }
-            }
+            },
+            {
+                name: 'order-payment-methods-list',
+                path: 'order_payment_methods',
+                component: OrderPaymentMethodsList,
+                meta: {
+                    hidden: false,
+                    name: 'Список статусов оплаты',
+                    title: 'Список статусов оплаты'
+                }
+            },
+            {
+                name: 'order-payment-methods-create',
+                path: 'order_payment_methods/create',
+                component: OrderPaymentMethodsWorkWithModel,
+                meta: {
+                    hidden: false,
+                    name: 'Добавить статус оплаты',
+                    title: 'Добавить статус оплаты'
+                }
+            },
+            {
+                name: 'order-payment-methods-update',
+                path: 'order_payment_methods/:id',
+                component: OrderPaymentMethodsWorkWithModel,
+                meta: {
+                    hidden: true,
+                    name: 'Обновление статуса оплаты',
+                    title: 'Обновление статуса оплаты'
+                }
+            },
         ]
     },
     {
