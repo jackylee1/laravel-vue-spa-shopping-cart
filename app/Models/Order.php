@@ -86,4 +86,22 @@ class Order extends Model
     public function promotionCode() {
         return $this->hasOne('App\Models\PromotionalCode', 'id', 'promotional_code_id');
     }
+
+    protected function createModel() {
+        return $this::create();
+    }
+
+    protected function getOrder($id) {
+        return $this::find($id);
+    }
+
+    protected function orders() {
+        $query = Order::query();
+
+        return $query->orderBy('created_at', 'asc')->paginate();
+    }
+
+    protected function destroyModel($id) {
+        Order::find($id)->delete();
+    }
 }

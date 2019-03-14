@@ -11,6 +11,7 @@ import { TextBlockTitlesList, TextBlockTitlesWorkWithModel } from "../../compone
 import { TextBlockDataList, TextBlockDataWorkWithModel } from "../../components/admin/TextBlockData";
 import { OrderStatusesList, OrderStatusesWorkWithModel } from "../../components/admin/OrderStatuses";
 import { OrderPaymentMethodsList, OrderPaymentMethodsWorkWithModel } from "../../components/admin/OrderPaymentMethods";
+import { OrdersList, OrdersWorkWithModel } from "../../components/admin/Orders";
 
 export const routes = [
     {
@@ -35,6 +36,36 @@ export const routes = [
         },
         component: LayoutRouterView,
         children: [
+            {
+                name: 'orders-list',
+                path: '',
+                component: OrdersList,
+                meta: {
+                    hidden: false,
+                    name: 'Список заказов',
+                    title: 'Список заказов'
+                }
+            },
+            {
+                name: 'orders-create',
+                path: 'orders/create',
+                component: OrdersWorkWithModel,
+                meta: {
+                    hidden: false,
+                    name: 'Создать заказ',
+                    title: 'Создать заказ'
+                }
+            },
+            {
+                name: 'orders-update',
+                path: 'orders/:id',
+                component: OrdersWorkWithModel,
+                meta: {
+                    hidden: true,
+                    name: 'Обновить заказ',
+                    title: 'Обновть заказ'
+                }
+            },
             {
                 name: 'order-statuses-list',
                 path: 'order_statuses',
