@@ -32,6 +32,8 @@ class CreateOrdersTable extends Migration
             $table->float('total_price')->nullable();
             $table->float('total_discount_price')->nullable();
 
+            $table->boolean('read_status')->default(false);
+
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

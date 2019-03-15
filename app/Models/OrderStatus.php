@@ -68,7 +68,9 @@ class OrderStatus extends Model
         $request = new \Illuminate\Http\Request();
         $request->merge([
             'name' => 'Ожидает обработки',
-            'default' => 1
+            'default' => 1,
+            'color' => '#000',
+            'sorting_order' => 0
         ]);
         $request->merge(request()->all());
         app()->instance('request', $request);

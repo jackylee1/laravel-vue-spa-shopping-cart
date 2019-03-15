@@ -4,6 +4,7 @@ namespace App;
 
 use App\Models\UserInGroup;
 use App\Models\UserPromotionalCode;
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -46,7 +47,8 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  */
 class User extends Authenticatable implements JWTSubject
 {
-    use Notifiable;
+    use Notifiable,
+        Cachable;
 
     protected $fillable = [
         'name', 'email', 'password',

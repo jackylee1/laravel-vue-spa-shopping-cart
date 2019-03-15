@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Hash;
 
 /**
  * App\Models\Order
@@ -71,6 +72,10 @@ class Order extends Model
         'total_discount_price' => 'float'
     ];
 
+    protected $with = [
+        'products', 'historyStatuses'
+    ];
+
     public function user() {
         return $this->hasOne('App\User', 'id', 'user_id');
     }
@@ -87,8 +92,43 @@ class Order extends Model
         return $this->hasOne('App\Models\PromotionalCode', 'id', 'promotional_code_id');
     }
 
-    protected function createModel() {
-        return $this::create();
+    public function products() {
+        return $this->hasMany('App\Models\OrderProduct', 'order_id', 'id');
+    }
+
+    public function historyStatuses() {
+        return $this->hasMany('App\Models\OrderHistoryStatus', 'order_id', 'id');
+    }
+
+    protected function createModel($note = null) {
+        $order = new $this;
+
+        $default_order_status = OrderStatus::getDefault();
+        if ($default_order_status === null) {
+            $default_order_status = OrderStatus::createDefaultStatus();
+        }
+        $order->order_status_id = $default_order_status->id;
+        $order->note = $note;
+        $order->save();
+
+        $order->historyStatuses()->create(['order_status_id' => $default_order_status->id]);
+
+        return $order->fresh();
+    }
+
+    protected function updateModel() {
+        $order = Order::find(request()->get('id'));
+
+        $order->update([
+            'user_name' => request()->get('user_name'),
+            'user_surname' => request()->get('user_surname'),
+            'user_patronymic' => request()->get('user_patronymic'),
+            'phone' => request()->get('phone'),
+            'email' => request()->get('email'),
+            'note' => request()->get('note'),
+        ]);
+
+        return $order;
     }
 
     protected function getOrder($id) {

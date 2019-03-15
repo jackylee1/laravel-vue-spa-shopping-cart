@@ -17,10 +17,10 @@
                     <el-input type="text" v-model="form.discount" placeholder="Введите процент скидки"></el-input>
                 </el-form-item>
 
-                <el-form-item label="Статус пользователя" prop="status">
+                <el-form-item label="Статус" prop="status">
                     <el-select v-model="form.status" placeholder="Выберите статус">
                         <el-option
-                                v-for="item in statuses"
+                                v-for="item in this.selectListPromotionalCodeStatuses"
                                 :key="item.value"
                                 :label="item.label"
                                 :value="item.value">
@@ -96,7 +96,6 @@
                     ],
                 },
                 currentRoute: null,
-                statuses: this.selectListPromotionalCodeStatuses,
                 breadcrumbElements: [],
                 submitName: null,
                 alerts: [],
@@ -129,7 +128,7 @@
                 return {
                     id: null,
                     code: '',
-                    status: '',
+                    status: 1,
                     discount: 0,
                 }
             },

@@ -248,8 +248,8 @@
                     }
 
                 }).catch((error) => {
-                    self.alerts = error.response.data.errors;
-                    self.typeAlerts = 'error';
+                    this.alerts = error.response.data.errors;
+                    this.typeAlerts = 'error';
                 });
             },
             setDataWhenCreating: function(user) {
@@ -311,37 +311,35 @@
                             }
                         }
                         if (this.currentRoute.name === 'users-update') {
-                            let self = this;
                             ApiUsers.update(this.$route.params.id, this.form).then((response) => {
                                 this.$notify.success({
                                     offset: 50,
                                     title: 'Запрос успешно выполнен',
                                     message: response.data.message
                                 });
-                                self.oldForm = response.data.user;
-                                self.setDataToStore(response.data.user);
+                                this.oldForm = response.data.user;
+                                this.setDataToStore(response.data.user);
                             }).catch((error) => {
-                                self.alerts = error.response.data.errors;
-                                self.typeAlerts = 'error';
+                                this.alerts = error.response.data.errors;
+                                this.typeAlerts = 'error';
                             });
                         }
                         else {
-                            let self = this;
-                            ApiUsers.create(self.form).then((response) => {
-                                let users = self.$store.getters.users;
+                            ApiUsers.create(this.form).then((response) => {
+                                let users = this.$store.getters.users;
                                 if (users.data !== undefined && users.data.length) {
                                     users.data.unshift(response.data.user);
-                                    self.$store.commit('updateUsers', users);
+                                    this.$store.commit('updateUsers', users);
                                 }
-                                self.$notify.success({
+                                this.$notify.success({
                                     offset: 50,
                                     title: 'Запрос успешно выполнен',
                                     message: response.data.message
                                 });
-                                self.$router.push({name: 'users-list'});
+                                this.$router.push({name: 'users-list'});
                             }).catch((error) => {
-                                self.alerts = error.response.data.errors;
-                                self.typeAlerts = 'error';
+                                this.alerts = error.response.data.errors;
+                                this.typeAlerts = 'error';
                             });
                         }
                     } else {
