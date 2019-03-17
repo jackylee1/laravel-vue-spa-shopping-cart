@@ -102,8 +102,8 @@ export const routes = [
                 component: OrderPaymentMethodsList,
                 meta: {
                     hidden: false,
-                    name: 'Список статусов оплаты',
-                    title: 'Список статусов оплаты'
+                    name: 'Список методов оплаты',
+                    title: 'Список методов оплаты'
                 }
             },
             {
@@ -112,8 +112,8 @@ export const routes = [
                 component: OrderPaymentMethodsWorkWithModel,
                 meta: {
                     hidden: false,
-                    name: 'Добавить статус оплаты',
-                    title: 'Добавить статус оплаты'
+                    name: 'Добавить метод оплаты',
+                    title: 'Добавить метод оплаты'
                 }
             },
             {
@@ -122,8 +122,8 @@ export const routes = [
                 component: OrderPaymentMethodsWorkWithModel,
                 meta: {
                     hidden: true,
-                    name: 'Обновление статуса оплаты',
-                    title: 'Обновление статуса оплаты'
+                    name: 'Обновление метода оплаты',
+                    title: 'Обновление метода оплаты'
                 }
             },
         ]

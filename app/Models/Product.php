@@ -160,8 +160,11 @@ class Product extends Model
         return $products;
     }
 
-    protected function getProduct($id) {
-        return Product::find($id);
+    public static function getProduct($id) {
+        $product = Product::find($id);
+        $product = ProductTool::checkRelevanceDiscount($product);
+
+        return $product;
     }
 
     private function workWithModel($model) {

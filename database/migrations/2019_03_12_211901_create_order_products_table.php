@@ -18,6 +18,8 @@ class CreateOrderProductsTable extends Migration
             $table->integer('order_id')->unsigned();
             $table->integer('product_id')->unsigned();
             $table->integer('product_available_id')->unsigned();
+            $table->float('product_price');
+            $table->float('product_discount_price')->nullable();
             $table->float('price');
             $table->float('discount_price')->nullable();
             $table->integer('quantity');

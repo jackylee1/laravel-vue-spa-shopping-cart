@@ -119,14 +119,23 @@ class Order extends Model
     protected function updateModel() {
         $order = Order::find(request()->get('id'));
 
-        $order->update([
-            'user_name' => request()->get('user_name'),
-            'user_surname' => request()->get('user_surname'),
-            'user_patronymic' => request()->get('user_patronymic'),
-            'phone' => request()->get('phone'),
-            'email' => request()->get('email'),
-            'note' => request()->get('note'),
-        ]);
+        $order->user_id = request()->get('user_id');
+        $order->user_name = request()->get('user_name');
+        $order->user_surname = request()->get('user_surname');
+        $order->user_patronymic = request()->get('user_patronymic');
+        $order->phone = request()->get('phone');
+        $order->email = request()->get('email');
+        $order->note = request()->get('note');
+        if ($order->order_status_id != request()->get('order_status_id')) {
+            $order->order_status_id = request()->get('order_status_id');
+            $order_history_status = $order->historyStatuses()->create([
+                'order_status_id' => request()->get('order_status_id')
+            ]);
+            $order->historyStatuses->push($order_history_status);
+        }
+        $order->order_payment_method_id = request()->get('order_payment_method_id');
+
+        $order->save();
 
         return $order;
     }
@@ -139,6 +148,64 @@ class Order extends Model
         $query = Order::query();
 
         return $query->orderBy('created_at', 'asc')->paginate();
+    }
+
+    protected function addProduct() {
+        $order = Order::find(request()->get('order_id'));
+        $product = Product::getProduct(request()->get('product_id'));
+        $available = $product->available()->where('id', request()->get('product_available_id'))->first();
+        $available->update([
+            'quantity' => $available->quantity - request()->get('quantity')
+        ]);
+
+        $price = $product->price  * request()->get('quantity');
+        $discount_price = $product->discount_price * request()->get('quantity');
+
+        $order_product = $order->products()->create([
+            'product_id' => $product->id,
+            'product_available_id' => request()->get('product_available_id'),
+            'price' => $price,
+            'discount_price' => $discount_price,
+            'product_price' => $product->price,
+            'product_discount_price' => $product->discount_price,
+            'quantity' => request()->get('quantity')
+        ])->fresh();
+
+        $order->products->push($order_product);
+
+        $order->update([
+            'total_price' => $order->total_price + $price,
+        ]);
+
+        return $order;
+    }
+
+    protected function deleteProduct() {
+        $order = Order::find(request()->get('order_id'));
+        $order_product = $order->products->where('id', request()->get('order_product_id'))->first();
+        $available = $order_product->available()->where('id', $order_product->product_available_id)->first();
+        $available->update([
+            'quantity' => $order_product->quantity + $available->quantity
+        ]);
+        $order->products()->where('id', request()->get('order_product_id'))->delete();
+        $order->total_price = $order->total_price - $order_product->price;
+        $order->save();
+
+        return [
+            'order' => $order->fresh(),
+            'order_product' => $order_product
+        ];
+    }
+
+    protected function deleteStatus() {
+        $order = Order::find(request()->get('order_id'));
+        $order->historyStatuses()->where('id', request()->get('order_status_id'))->delete();
+
+        return $order->fresh();
+    }
+
+    protected function getFirstStatus() {
+        return Order::find(request()->get('order_id'))->historyStatuses()->orderBy('id', 'asc')->first();
     }
 
     protected function destroyModel($id) {

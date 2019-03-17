@@ -86,6 +86,11 @@ Route::group([
     Route::resource('orders', 'Api\Admin\OrderController')->only([
         'index', 'show', 'store', 'update', 'destroy'
     ]);
+    Route::prefix('orders')->group(function () {
+        Route::post('add_product', 'Api\Admin\OrderController@addProduct');
+        Route::post('delete_product', 'Api\Admin\OrderController@deleteProduct');
+        Route::post('delete_status', 'Api\Admin\OrderController@deleteStatus');
+    });
 
     Route::prefix('upload')->group(function () {
         Route::post('images', 'Api\Admin\UploadFileController@image');

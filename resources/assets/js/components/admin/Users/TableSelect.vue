@@ -74,11 +74,15 @@
                     min-width="70">
                 <template slot-scope="props">
                     <el-button
-                            :type="(props.row[relationForAction] !== null
+                            :type="(relationForAction != null
+                                    && relationKey != null
+                                    && props.row[relationForAction] !== null
                                     && props.row[relationForAction][relationKey] !== null
                                     && props.row[relationForAction][relationKey] === parseInt($route.params.id))
                                     ? 'danger' : 'success'"
-                            :icon="(props.row[relationForAction] !== null
+                            :icon="(relationForAction != null
+                                    && relationKey != null
+                                    && props.row[relationForAction] !== null
                                     && props.row[relationForAction][relationKey] !== null
                                     && props.row[relationForAction][relationKey] === parseInt($route.params.id))
                                     ? 'el-icon-close' : 'el-icon-check'" circle
@@ -126,7 +130,11 @@
             },
             listStatuses: function () {
                 let statuses = this.selectListStatuses;
-                statuses.unshift({'label': 'Все пользователи', 'value': 'all'});
+                let index = statuses.findIndex(item => item.value === 'all');
+                if (index === -1) {
+                    statuses.unshift({'label': 'Все пользователи', 'value': 'all'});
+                }
+
                 return statuses;
             },
             getUsersStorage: function () {

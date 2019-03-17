@@ -26,5 +26,38 @@ use Illuminate\Database\Eloquent\Model;
  */
 class OrderProduct extends Model
 {
-    //
+    public $timestamps = false;
+    protected $fillable = [
+        'order_id',
+        'product_id',
+        'product_available_id',
+        'price',
+        'discount_price',
+        'product_price',
+        'product_discount_price',
+        'quantity'
+    ];
+
+    protected $casts = [
+        'order_id' => 'integer',
+        'product_id' => 'integer',
+        'product_available_id' => 'integer',
+        'price' => 'float',
+        'product_price' => 'float',
+        'product_discount_price' => 'float',
+        'discount_price' => 'float',
+        'quantity' => 'integer'
+    ];
+
+    protected $with = [
+        'product', 'available'
+    ];
+
+    public function product() {
+        return $this->hasOne('App\Models\Product', 'id', 'product_id');
+    }
+
+    public function available() {
+        return $this->hasOne('App\Models\ProductAvailable', 'id', 'product_available_id');
+    }
 }

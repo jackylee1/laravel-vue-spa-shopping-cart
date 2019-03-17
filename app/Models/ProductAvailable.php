@@ -44,7 +44,7 @@ class ProductAvailable extends Model
         return $this->hasMany('App\Models\ProductAvailableFilter', 'product_available_id', 'id');
     }
 
-    protected function getItem($id) {
+    public static function getItem($id) {
         return ProductAvailable::find($id);
     }
 
