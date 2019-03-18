@@ -59,6 +59,10 @@ class PromotionalCode extends Model
         return $query->orderByDesc('created_at')->paginate(10);
     }
 
+    public static function getCodeById($id) {
+        return PromotionalCode::find($id);
+    }
+
     protected function getModelByCode($code = null) {
         return PromotionalCode::where('code', $code)->first();
     }

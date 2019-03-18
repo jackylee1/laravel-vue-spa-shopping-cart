@@ -42,7 +42,7 @@ class UserGroup extends Model
         return UserGroup::orderByDesc('id')->get();
     }
 
-    protected function userGroup($id) {
+    public static function userGroup($id) {
         return UserGroup::find($id);
     }
 

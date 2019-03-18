@@ -42,7 +42,7 @@ class PromotionalCodeController extends Controller
     public function index(Request $request)
     {
         $this->setValidateRule([
-            'q' => 'nullable|string|max:255',
+            'q' => 'nullable|string|max:191',
             'status' => [
                 'nullable',
                 function($attribute, $value, $fail) {

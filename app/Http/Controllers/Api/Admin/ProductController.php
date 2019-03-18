@@ -47,7 +47,7 @@ class ProductController extends Controller
             ]);
         }
         $this->setValidateRule([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:191',
             'description' => 'required|string|max:10000',
             'preview_description' => 'required|string|max:2000',
             'price' => 'required|regex:/^\d+(\.\d{1,2})?$/',

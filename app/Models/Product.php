@@ -176,7 +176,9 @@ class Product extends Model
         $model->preview_description = request()->get('preview_description');
         $model->like_preview_description = getOnlyCharacters(request()->get('preview_description'));
         $model->price = number_format((float)request()->get('price'), 2, '.', '');
-        $model->discount_price = number_format((float)request()->get('discount_price'), 2, '.', '');
+        $model->discount_price = (request()->get('discount_price') != null)
+            ? number_format((float)request()->get('discount_price'), 2, '.', '')
+            : null;
         if (request()->filled('discount_start') && request()->filled('discount_end')) {
             $model->discount_start = Carbon::parse(request()->get('discount_start'))->toDateTimeString();
             $model->discount_end = Carbon::parse(request()->get('discount_end'))->toDateTimeString();

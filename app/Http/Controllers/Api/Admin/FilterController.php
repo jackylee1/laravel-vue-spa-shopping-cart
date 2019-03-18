@@ -73,7 +73,7 @@ class FilterController extends Controller
         }
 
         $this->setValidateRule([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:191',
             'sorting_order' => 'required|integer',
             'type' => 'required|integer|between:0,2',
             'show_on_header' => 'nullable|boolean',

@@ -35,7 +35,7 @@ class UserGroupController extends Controller
             $this->validateForUpdate();
         }
         $this->setValidateRule([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:191',
             'discount' => 'required|integer|min:0|max:100'
         ]);
         $this->setValidateAttribute([

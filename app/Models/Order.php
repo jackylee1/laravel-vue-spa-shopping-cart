@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Hash;
 
 /**
  * App\Models\Order
@@ -47,6 +47,8 @@ use Illuminate\Support\Facades\Hash;
  */
 class Order extends Model
 {
+    use Cachable;
+
     protected $fillable = [
         'user_id',
         'user_name',
@@ -60,7 +62,8 @@ class Order extends Model
         'order_payment_method_id',
         'promotional_code_id',
         'total_price',
-        'total_discount_price'
+        'total_discount_price',
+        'read_status'
     ];
     protected $casts = [
         'user_id' => 'integer',
@@ -69,7 +72,8 @@ class Order extends Model
         'order_payment_method_id' => 'integer',
         'promotional_code_id' => 'integer',
         'total_price' => 'float',
-        'total_discount_price' => 'float'
+        'total_discount_price' => 'float',
+        'read_status' => 'integer'
     ];
 
     protected $with = [
@@ -111,9 +115,46 @@ class Order extends Model
         $order->note = $note;
         $order->save();
 
-        $order->historyStatuses()->create(['order_status_id' => $default_order_status->id]);
+        $order->historyStatuses()->create([
+            'order_status_id' => $default_order_status->id,
+            'send_status' => 0
+        ]);
 
         return $order->fresh();
+    }
+
+    private function recalculatePrice($order, $discount_promotional = 0) {
+        $discount = 0;
+        if ($order->user->discount > 0) {
+            $discount = $order->user->discount;
+        }
+        elseif ($order->user->group !== null) {
+            $user_group = UserGroup::userGroup($order->user->group->user_group_id);
+            $discount = $user_group->discount;
+        }
+
+        if ($discount_promotional !== 0) {
+            $discount = (($discount + $discount_promotional) > 100) ? 100 : $discount + $discount_promotional;
+        }
+
+        $total_price = $total_discount_price = 0;
+        $order->products->each(function ($product) use ($discount, &$total_price, &$total_discount_price) {
+            $total_price += $product->price;
+            if ($product->discount_price != null) {
+                $total_discount_price += $product->discount_price;
+            }
+            else {
+                $deduct_discount = $product->price * ((100 - $discount) / 100);
+                $total_discount_price += $deduct_discount;
+            }
+        });
+
+        if ($discount != 0) {
+            $order->total_price = $total_price;
+            $order->total_discount_price = $total_discount_price;
+        }
+
+        return $order;
     }
 
     protected function updateModel() {
@@ -129,11 +170,33 @@ class Order extends Model
         if ($order->order_status_id != request()->get('order_status_id')) {
             $order->order_status_id = request()->get('order_status_id');
             $order_history_status = $order->historyStatuses()->create([
-                'order_status_id' => request()->get('order_status_id')
+                'order_status_id' => request()->get('order_status_id'),
+                'send_status' => 0
             ]);
             $order->historyStatuses->push($order_history_status);
         }
         $order->order_payment_method_id = request()->get('order_payment_method_id');
+        $order->promotional_code_id = request()->get('promotion_code_id');
+
+        $discount_promotional = 0;
+        if (request()->filled('promotional_code_id')) {
+            $promotional_code = PromotionalCode::getCodeById(request()->get('promotional_code_id'));
+            $discount_promotional = $promotional_code->discount;
+
+            $promotional_code->status = 0;
+            $promotional_code->save();
+
+            if ($order->user !== null
+                && request()->get('promotional_code_id') != $order->promotional_code_id) {
+                $order->user->promotionalCodeUsage()->create([
+                    'promotional_code_id' => request()->get('promotional_code_id')
+                ]);
+            }
+
+            $order->promotional_code_id = request()->get('promotional_code_id');
+        }
+
+        $order = $this->recalculatePrice($order, $discount_promotional);
 
         $order->save();
 
@@ -147,7 +210,7 @@ class Order extends Model
     protected function orders() {
         $query = Order::query();
 
-        return $query->orderBy('created_at', 'asc')->paginate();
+        return $query->orderByDesc('created_at')->paginate();
     }
 
     protected function addProduct() {
@@ -173,9 +236,9 @@ class Order extends Model
 
         $order->products->push($order_product);
 
-        $order->update([
-            'total_price' => $order->total_price + $price,
-        ]);
+        $order = $this->recalculatePrice($order);
+
+        $order->save();
 
         return $order;
     }
@@ -188,7 +251,13 @@ class Order extends Model
             'quantity' => $order_product->quantity + $available->quantity
         ]);
         $order->products()->where('id', request()->get('order_product_id'))->delete();
-        $order->total_price = $order->total_price - $order_product->price;
+        $products = $order->products->filter(function ($item) {
+            return $item->id !== request()->get('order_product_id');
+        });
+        $order->setRelation('products', $products);
+
+        $order = $this->recalculatePrice($order);
+
         $order->save();
 
         return [
@@ -205,7 +274,24 @@ class Order extends Model
     }
 
     protected function getFirstStatus() {
-        return Order::find(request()->get('order_id'))->historyStatuses()->orderBy('id', 'asc')->first();
+        return Order::find(request()->get('order_id'))
+            ->historyStatuses()->orderBy('id', 'asc')
+            ->first();
+    }
+
+    protected function getStatus() {
+        return Order::find(request()->get('order_id'))
+            ->historyStatuses()
+            ->where('id', request()->get('status_id'))
+            ->first();
+    }
+
+    protected function updateReadStatus() {
+        $order = Order::find(\request()->get('id'));
+        $order->read_status = true;
+        $order->save();
+
+        return $order;
     }
 
     protected function destroyModel($id) {

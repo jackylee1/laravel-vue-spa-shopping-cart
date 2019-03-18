@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -14,5 +15,17 @@ use Illuminate\Database\Eloquent\Model;
  */
 class PromotionCodeUsageHistory extends Model
 {
-    //
+    use Cachable;
+
+    protected $table = 'promotional_code_usage_histories';
+
+    protected $fillable = [
+        'user_id',
+        'promotional_code_id'
+    ];
+
+    protected $casts = [
+        'user_id' => 'integer',
+        'promotional_code_id' => 'integer'
+    ];
 }

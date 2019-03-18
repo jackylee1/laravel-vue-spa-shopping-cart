@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Models\Order;
 use App\Models\ProductAvailable;
+use App\Models\PromotionalCode;
+use App\Notifications\Api\Admin\SendOrderStatusNotification;
 use App\Traits\ValidateTrait;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
 
 class OrderController extends Controller
@@ -67,6 +70,21 @@ class OrderController extends Controller
             'note' => 'nullable|string|max:50000',
             'order_payment_method_id' => 'required|integer|exists:order_payment_methods,id',
             'order_status_id' => 'required|integer|exists:order_statuses,id',
+            'promotional_code_id' => [
+                'nullable',
+                'integer',
+                'exists:promotional_codes,id',
+                function ($attribute, $value, $fail) {
+                    $order = Order::find(\request()->get('id'));
+                    if (\request()->filled('promotional_code_id')
+                        && request()->get('promotional_code_id') != $order->promotional_code_id) {
+                        $promotional_code = PromotionalCode::getCodeById(\request()->get('promotional_code_id'));
+                        if ($promotional_code->status == 0) {
+                            return $fail('Этот промокод уже был использован');
+                        }
+                    }
+                }
+            ],
         ]);
         $this->setValidateAttribute([
             'user_id' => 'Пользователь',
@@ -77,7 +95,8 @@ class OrderController extends Controller
             'email' => 'E-Mail',
             'note' => 'Комментарий',
             'order_payment_method_id' => 'Метод оплаты',
-            'order_status_id' => 'Статус'
+            'order_status_id' => 'Статус',
+            'promotional_code_id' => 'Промокод'
         ]);
         $request->validate($this->validate_rules, [], $this->validate_attributes);
 
@@ -86,7 +105,7 @@ class OrderController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Данные были успешно обновлены',
-            'order' => $order
+            'order' => $order,
         ]);
     }
 
@@ -184,6 +203,66 @@ class OrderController extends Controller
             'status' => 'success',
             'message' => 'Статус был успешно удален',
             'order' => $order,
+        ]);
+    }
+
+    public function sendStatus(Request $request) {
+        $order = Order::getOrder($request->order_id);
+        $status = null;
+        $this->setValidateRule([
+            'order_id' => 'required|integer|exists:orders,id',
+            'status_id' => [
+                'required',
+                'integer',
+                'exists:order_history_statuses,id',
+                function ($attribute, $value, $fail) use ($order, &$status) {
+                    $status = $order->historyStatuses->where('id', $value)->first();
+
+                    $order_status = $status->status()->where('id', $status->order_status_id)->first();
+                    $status->setRelation('status', $order_status);
+
+                    if ($status->send_status == 1) {
+                        return $fail('Вы уже отправляли этот статус пользователю');
+                    }
+                }
+            ]
+        ]);
+        $this->setValidateAttribute([
+            'order_id' => 'Заказ',
+            'status_id' => 'Статус'
+        ]);
+        $request->validate($this->validate_rules, [], $this->validate_attributes);
+
+        $email = '';
+        if ($order->email !== null) {
+            $email = $order->email;
+        }
+        elseif ($order->user !== null) {
+            $email = $order->user->email;
+        }
+
+        Notification::route('mail', $email)
+            ->notify(new SendOrderStatusNotification($status, $order->id));
+
+        $status->send_status = true;
+        $status->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Статус был успешно отправлен',
+            'order_status' => $status
+        ]);
+    }
+
+    public function updateReadStatus(Request $request) {
+        $this->validationId();
+        $request->validate($this->validate_rules, [], $this->validate_attributes);
+
+        $order = Order::updateReadStatus();
+
+        return response()->json([
+            'status' => 'success',
+            'order' => $order
         ]);
     }
 }

@@ -150,7 +150,7 @@
                 rules: {
                     name: [
                         {required: true, message: generatingValidationMessage('required'), trigger: ['blur', 'change']},
-                        {max: 255, min: 3, message: generatingValidationMessage('length', [255, 3]), trigger: ['blur', 'change']}
+                        {max: 191, min: 3, message: generatingValidationMessage('length', [255, 3]), trigger: ['blur', 'change']}
                     ],
                     discount: [
                         {required: true, message: generatingValidationMessage('required'), trigger: ['blur', 'change']},

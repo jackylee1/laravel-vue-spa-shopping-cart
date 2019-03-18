@@ -12,11 +12,40 @@
 
                 <input type="hidden" :value="form.user_id">
                 <el-form-item label="Пользователь" v-if="user !== null">
-                    <router-link :to="{ name: 'users-update', params: { id: user.id }}">{{user.name}} (ID {{user.id}})</router-link>
+                    <router-link :to="{ name: 'users-update', params: { id: user.id }}">
+                        {{user.user_surname}} {{user.user_name}} (ID {{user.id}})
+                    </router-link>
                     <el-button type="text"
                                icon="el-icon-delete"
                                @click="deleteUser"></el-button>
                 </el-form-item>
+
+                <template v-if="user !== null && user.discount > 0">
+                    <el-alert :closable="false"
+                              title="Прикрепленный пользователь имеет персональную скилку. Она в приоритете выше скидки на группу."
+                              type="info">
+                    </el-alert>
+                </template>
+
+                <template v-if="user !== null && user.group !== undefined && user.group !== null">
+                    <el-alert :closable="false"
+                              title="Прикреплённый пользователь состоит в Группе пользователей. Её скидка может повлиять на общую сумму заказа"
+                              type="info">
+                    </el-alert>
+                </template>
+
+                <template v-if="user !== null && user.promotional_codes.length">
+                    <el-form-item label="Промокоды пользователя" prop="promotional_code_id">
+                        <el-select v-model="form.promotional_code_id" placeholder="Промокоды пользователя">
+                            <el-option
+                                    v-for="item in this.selectUserPromotionalCodes()"
+                                    :key="item.id"
+                                    :label="item.label"
+                                    :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </template>
 
                 <el-form-item label="Имя" prop="user_name">
                     <el-input type="text" v-model="form.user_name" placeholder="Введите Имя"></el-input>
@@ -42,18 +71,18 @@
                     <el-input type="textarea" v-model="form.note" placeholder="Введите комментарий"></el-input>
                 </el-form-item>
 
-                <el-form-item label="Общая цена заказа" prop="total_price">
+                <el-form-item label="Общая сумма заказа" prop="total_price">
                     <el-input type="text"
                               v-model="form.total_price"
                               :disabled="true"
-                              placeholder="Общая цена заказа"></el-input>
+                              placeholder="Общая сумма заказа"></el-input>
                 </el-form-item>
 
-                <el-form-item label="Общая цена заказа (с учетом всех скидок)" prop="total_discount_price">
+                <el-form-item label="Общая сумма заказа (с учетом всех скидок)" prop="total_discount_price">
                     <el-input type="text"
                               v-model="form.total_discount_price"
                               :disabled="true"
-                              placeholder="Общая цена заказа (с учетом всех скидок)"></el-input>
+                              placeholder="Общая сумма заказа (с учетом всех скидок)"></el-input>
                 </el-form-item>
 
                 <el-form-item label="Статус заказа" prop="order_status_id">
@@ -134,18 +163,6 @@
                     </template>
                 </el-table-column>
                 <el-table-column
-                        label="Цена"
-                        min-width="55">
-                    <template slot-scope="props">
-                        <template v-if="props.row.discount_price !== null && props.row.discount_price > 0">
-                            <p>{{props.row.discount_price}} <strike style="color: red">{{props.row.price}}</strike></p>
-                        </template>
-                        <template v-else>
-                            <p>{{props.row.price}}</p>
-                        </template>
-                    </template>
-                </el-table-column>
-                <el-table-column
                         label="Опции"
                         min-width="150">
                     <template slot-scope="props">
@@ -158,9 +175,33 @@
                     </template>
                 </el-table-column>
                 <el-table-column
-                        label="Количество"
+                        label="Кол."
                         prop="quantity"
                         min-width="45">
+                </el-table-column>
+                <el-table-column
+                        label="Цена"
+                        min-width="55">
+                    <template slot-scope="props">
+                        <template v-if="props.row.product_discount_price !== null && props.row.product_discount_price > 0">
+                            <p>{{props.row.product_discount_price}} <strike style="color: red">{{props.row.product_price}}</strike></p>
+                        </template>
+                        <template v-else>
+                            <p>{{props.row.product_price}}</p>
+                        </template>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        label="Сумма"
+                        min-width="55">
+                    <template slot-scope="props">
+                        <template v-if="props.row.discount_price !== null && props.row.discount_price > 0">
+                            <p>{{props.row.discount_price}} <strike style="color: red">{{props.row.price}}</strike></p>
+                        </template>
+                        <template v-else>
+                            <p>{{props.row.price}}</p>
+                        </template>
+                    </template>
                 </el-table-column>
                 <el-table-column
                         fixed="right"
@@ -214,6 +255,12 @@
                         label="Управление"
                         min-width="70">
                     <template slot-scope="props">
+                        <el-button
+                                v-if="props.row.send_status == 0"
+                                size="mini"
+                                @click.native.prevent="sendStatus(props.row.id)">
+                            <i class="el-icon-message"></i>
+                        </el-button>
                         <el-button
                                 size="mini"
                                 type="danger"
@@ -281,10 +328,10 @@
     import * as helperRouter from '../../../app/helpers/router';
     import * as helperArray from '../../../app/admin/helpers/Array';
 
-    import { PageElementsBreadcrumb, PageElementsAlerts } from '../page/elements';
-    import { ProductsTableSelect } from '../Products';
-    import { UsersTableSelect } from '../Users';
-    import { generatingValidationMessage } from '../../../helpers/generatingValidationMessage';
+    import {PageElementsAlerts, PageElementsBreadcrumb} from '../page/elements';
+    import {ProductsTableSelect} from '../Products';
+    import {UsersTableSelect} from '../Users';
+    import {generatingValidationMessage} from '../../../helpers/generatingValidationMessage';
 
     export default {
         name: 'orders-with-model',
@@ -402,10 +449,66 @@
                 inputQuantity: 0,
                 showBtnAddProductToOrder: false,
                 dialogUserTableVisible: false,
-                user: null,
+                user: null
             }
         },
         methods: {
+            updateReadStatus: function () {
+                if (this.form.read_status === 0) {
+                    ApiOrders.updateReadStatus({
+                        id: this.form.id
+                    }).then((response) => {
+                        if (response.data.status === 'success') {
+                            this.form = response.data.order;
+                            this.oldForm = this.form;
+                        }
+                    });
+                }
+            },
+            selectUserPromotionalCodes: function () {
+                if (this.user !== null) {
+                    let items = this.user.promotional_codes.map(item => {
+                        if (item.promotional_code.status === 1
+                            || item.promotional_code.id === this.form.promotional_code_id) {
+                            return {
+                                id: item.promotional_code_id,
+                                label: `${item.promotional_code.code} (${item.promotional_code.discount}%)`
+                            }
+                        }
+                    }).filter(item => item);
+
+                    if (items.findIndex(item => item.id === null) === -1) {
+                        items.unshift({
+                            id: null,
+                            label: 'Не выбран'
+                        })
+                    }
+
+                    return items;
+                }
+            },
+            sendStatus: function (id) {
+                ApiOrders.sendStatus({
+                    order_id: this.form.id,
+                    status_id: id
+                }).then((response) => {
+                    if (response.data.status === 'success') {
+                        let orderStatus = response.data.order_status;
+                        let indexStatus = this.form.history_statuses.findIndex(item => item.id === id);
+                        this.form.history_statuses[indexStatus] = orderStatus;
+                        this.setDataToStore();
+
+                        this.$notify.success({
+                            offset: 50,
+                            title: 'Запрос успешно выполнен',
+                            message: response.data.message
+                        });
+                    }
+                }).catch((error) => {
+                    this.alerts = error.response.data.errors;
+                    this.typeAlerts = 'error';
+                });
+            },
             deleteUser: function () {
                 this.user = null;
                 this.form.user_id = null;
@@ -419,6 +522,27 @@
             selectUser: function (user) {
                 this.onSubmit();
                 this.user = user;
+
+                if (this.form.user_name.length === 0) {
+                    this.form.user_name = user.user_name;
+                }
+
+                if (this.form.user_surname.length === 0) {
+                    this.form.user_surname = user.user_surname;
+                }
+
+                if (this.form.user_patronymic.length === 0) {
+                    this.form.user_patronymic = user.user_patronymic;
+                }
+
+                if (this.form.email.length === 0) {
+                    this.form.email = user.email;
+                }
+
+                if (this.form.phone.length === 0) {
+                    this.form.phone = user.phone;
+                }
+
                 this.form.user_id = user.id;
                 this.dialogUserTableVisible = false;
             },
@@ -572,6 +696,7 @@
                     this.setUser(data.user_id);
                 }
                 this.form = data;
+                this.updateReadStatus();
                 this.oldForm = _.cloneDeep(this.form);
             },
             setDataToStore: function (data = null) {
@@ -580,6 +705,15 @@
                 if (orders.data) {
                     let index = orders.data.findIndex((item) => item.id === this.currentRoute.params.id);
                     orders.data[index] = currentData;
+
+                    if (currentData.promotional_code_id !== null) {
+                        let promotionalCodes = this.$store.getters.promotionalCodes;
+                        if (promotionalCodes.data !== undefined && promotionalCodes.data.length) {
+                            let index = promotionalCodes.data.findIndex(item => item.id === currentData.promotional_code_id);
+                            promotionalCodes.data[index].status = 0;
+                            this.$store.commit('updatePromotionalCodes', promotionalCodes);
+                        }
+                    }
 
                     this.$store.commit('updateOrders', orders);
                 }
@@ -672,6 +806,9 @@
             },
             'selectedAvailableId': function () {
                 this.checkQuantity();
+            },
+            'user': function () {
+                this.selectUserPromotionalCodes();
             }
         },
         beforeDestroy() {

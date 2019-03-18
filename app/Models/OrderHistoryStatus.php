@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property int $order_id
  * @property int $order_status_id
+ * @property int $send_status
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\OrderHistoryStatus newModelQuery()
@@ -24,12 +26,20 @@ use Illuminate\Database\Eloquent\Model;
  */
 class OrderHistoryStatus extends Model
 {
+    use Cachable;
+
     protected $fillable = [
         'order_id',
-        'order_status_id'
+        'order_status_id',
+        'send_status'
     ];
     protected $casts = [
         'order_id' => 'integer',
-        'order_status_id' => 'integer'
+        'order_status_id' => 'integer',
+        'send_status' => 'integer'
     ];
+
+    public function status() {
+        return $this->hasOne('App\Models\OrderStatus', 'id', 'order_status_id');
+    }
 }

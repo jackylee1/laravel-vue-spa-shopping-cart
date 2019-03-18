@@ -10,9 +10,35 @@
                 style="width: 100%">
             <el-table-column
                     fixed
-                    prop="id"
                     label="ID"
-                    min-width="50">
+                    min-width="35">
+                <template slot-scope="props">
+                    {{props.row.id}} <template v-if="!props.row.read_status"><span style="color: red;">NEW!</span></template>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    label="Заказчик"
+                    min-width="120">
+                <template slot-scope="props">
+                    <template v-if="props.row.user_surname !== null && props.row.user_name !== null && props.row.user_patronymic !== null">
+                        {{props.row.user_surname}}
+                        {{props.row.user_name}}
+                        {{props.row.user_patronymic}}
+                        <br>
+                    </template>
+                    <template v-if="props.row.email !== null">E-Mail: {{props.row.email}}<br></template>
+                    <template v-if="props.row.phone !== null">Телефон: {{props.row.phone}}</template>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    prop="total_price"
+                    label="Сумма заказа"
+                    min-width="80">
+            </el-table-column>
+            <el-table-column
+                    prop="total_discount_price"
+                    label="Сумма заказа (с учетом всех скидок)"
+                    min-width="100">
             </el-table-column>
             <el-table-column
                     fixed="right"

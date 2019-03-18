@@ -9,12 +9,24 @@
                      @keydown.enter="onSubmit"
                      :model="form"
                      label-width="120px">
-                <el-form-item label="Имя" prop="name">
-                    <el-input type="text" v-model="form.name" placeholder="Введите Имя"></el-input>
+                <el-form-item label="Фамилия" prop="user_surname">
+                    <el-input type="text" v-model="form.user_surname" placeholder="Введите Фамилию"></el-input>
+                </el-form-item>
+
+                <el-form-item label="Имя" prop="user_name">
+                    <el-input type="text" v-model="form.user_name" placeholder="Введите Имя"></el-input>
+                </el-form-item>
+
+                <el-form-item label="Отчество" prop="user_patronymic">
+                    <el-input type="text" v-model="form.user_patronymic" placeholder="Введите Отчество"></el-input>
                 </el-form-item>
 
                 <el-form-item label="E-mail" prop="email">
                     <el-input type="email" v-model="form.email" placeholder="Введите E-mail"></el-input>
+                </el-form-item>
+
+                <el-form-item label="Телефон" prop="phone">
+                    <el-input type="text" v-model="form.phone" placeholder="Введите Телефон"></el-input>
                 </el-form-item>
 
                 <el-form-item label="Пароль" prop="password">
@@ -68,6 +80,10 @@
                                 :value="item.id">
                         </el-option>
                     </el-select>
+                </el-form-item>
+
+                <el-form-item label="Персональный процент скидки" prop="discount">
+                    <el-input type="text" v-model="form.discount" placeholder="Персональный процент скидки"></el-input>
                 </el-form-item>
 
                 <PageElementsAlerts :alerts="alerts" :type="typeAlerts"/>
@@ -144,12 +160,24 @@
                 form: this.defaultFormData(),
                 oldForm: null,
                 rules: {
-                    name: [
+                    user_name: [
                         {required: true, message: generatingValidationMessage('required'), trigger: ['blur', 'change']},
-                        {max: 255, min: 3, message: generatingValidationMessage('length', [255, 3]), trigger: ['blur', 'change']}
+                        {max: 191, min: 3, message: generatingValidationMessage('length', [255, 3]), trigger: ['blur', 'change']}
+                    ],
+                    user_surname: [
+                        {required: true, message: generatingValidationMessage('required'), trigger: ['blur', 'change']},
+                        {max: 191, min: 3, message: generatingValidationMessage('length', [255, 3]), trigger: ['blur', 'change']}
+                    ],
+                    user_patronymic: [
+                        {required: true, message: generatingValidationMessage('required'), trigger: ['blur', 'change']},
+                        {max: 191, min: 3, message: generatingValidationMessage('length', [255, 3]), trigger: ['blur', 'change']}
+                    ],
+                    phone: [
+                        {required: true, message: generatingValidationMessage('required'), trigger: ['blur', 'change']},
+                        {max: 191, min: 3, message: generatingValidationMessage('length', [255, 3]), trigger: ['blur', 'change']}
                     ],
                     email: [
-                        {max: 255, min: 3, message: generatingValidationMessage('length', [255, 3]), trigger: ['blur', 'change']},
+                        {max: 191, min: 3, message: generatingValidationMessage('length', [255, 3]), trigger: ['blur', 'change']},
                         {required: true, message: generatingValidationMessage('required'), trigger: ['blur', 'change']},
                         {type: 'email', message: generatingValidationMessage('email'), trigger: ['blur', 'change']}
                     ],
@@ -170,6 +198,10 @@
                     ],
                     group_id: [
                         {type: 'integer', message: generatingValidationMessage('integer')}
+                    ],
+                    discount: [
+                        {required: true, message: generatingValidationMessage('required'), trigger: ['blur', 'change']},
+                        {pattern: /^(?:100|[1-9]?[0-9])$/, message: 'Значение в этом поле должно быть от 0 до 100', trigger: ['blur', 'change']}
                     ],
                 },
                 currentRoute: null,
@@ -233,6 +265,18 @@
                                 title: 'Запрос успешно выполнен',
                                 message: response.message
                             });
+                            if (this.users.data.length) {
+                                let userStore = this.users;
+                                let users = userStore.data.map(user => {
+                                    user.promotional_codes = user.promotional_codes.filter(promotional_code => promotional_code.promotional_code_id !== promotionalCode.id);
+
+                                    return user;
+                                });
+                                userStore.data = users;
+
+                                this.$store.commit('updateUsers', userStore);
+                            }
+
                             this.form.promotional_codes.unshift(response.create_model);
                         }
                         else {
@@ -280,13 +324,16 @@
             defaultFormData: function () {
                 return {
                     id: null,
-                    name: '',
+                    user_name: '',
+                    user_surname: '',
+                    user_patronymic: '',
                     email: '',
                     password: '',
                     password_confirmation: '',
                     status: 'user',
                     description: '',
                     reliability: 1,
+                    discount: 0,
                     group_id: null
                 }
             },

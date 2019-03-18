@@ -27,8 +27,11 @@ class UsersTableSeeder extends Seeder {
         $datetime = \Carbon\Carbon::now();
 
         $data = [
-            'name' => 'admin',
+            'user_name' => 'Name',
+            'user_surname' => 'Surname',
+            'user_patronymic' => 'Patronymic',
             'email' => 'admin@admin',
+            'phone' => '380950000000',
             'password' => Hash::make('admin'),
             'status' => 'administration',
             'like_name' => prepareForLike('admin'),

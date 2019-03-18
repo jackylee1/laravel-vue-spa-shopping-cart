@@ -28,7 +28,7 @@ class UserInGroup extends Model
 
     public $timestamps = false;
     protected $fillable = ['user_id', 'user_group_id'];
-
+    
     public function user() {
         return $this->hasOne('App\User', 'id', 'user_id');
     }

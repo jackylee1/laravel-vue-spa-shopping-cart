@@ -80,7 +80,7 @@
                 rules: {
                     code: [
                         {required: true, message: generatingValidationMessage('required'), trigger: ['blur', 'change']},
-                        {max: 255, min: 3, message: generatingValidationMessage('length', [255, 3]), trigger: ['blur', 'change']}
+                        {max: 191, min: 3, message: generatingValidationMessage('length', [255, 3]), trigger: ['blur', 'change']}
                     ],
                     status: [
                         {required: true, message: generatingValidationMessage('required'), trigger: ['blur', 'change']},
@@ -108,6 +108,9 @@
             },
             selectListPromotionalCodeStatuses: function () {
                 return this.$store.getters.selectDataListPromotionalCodeStatuses;
+            },
+            usersStore: function () {
+                return this.$store.getters.users;
             }
         },
         methods: {
@@ -121,6 +124,21 @@
                 if (promotionalCodes.data) {
                     let index = promotionalCodes.data.findIndex((code) => code.id === this.currentRoute.params.id);
                     promotionalCodes.data[index] = currentData;
+                    if (this.usersStore.data !== undefined && this.usersStore.data.length) {
+                        let usersStore = this.usersStore;
+                        usersStore.data = usersStore.data.map(user => {
+                            if (user.promotional_codes.length) {
+                                user.promotional_codes = user.promotional_codes.map(item => {
+                                    if (item.promotional_code_id === this.form.id) {
+                                        item.promotional_code = currentData;
+                                    }
+                                    return item;
+                                });
+                            }
+                            return user;
+                        });
+                        this.$store.commit('updateUsers', usersStore);
+                    }
                     this.$store.commit('updatePromotionalCodes', promotionalCodes);
                 }
             },

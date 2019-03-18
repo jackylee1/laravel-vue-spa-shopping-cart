@@ -17,6 +17,7 @@ class CreateOrderHistoryStatusesTable extends Migration
             $table->increments('id');
             $table->integer('order_id')->unsigned();
             $table->integer('order_status_id')->unsigned();
+            $table->boolean('send_status')->default(false);
             $table->timestamps();
 
             $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');

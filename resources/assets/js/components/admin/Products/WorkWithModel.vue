@@ -457,15 +457,15 @@
                 rules: {
                     name: [
                         {required: true, message: generatingValidationMessage('required'), trigger: ['blur', 'change']},
-                        {max: 255, min: 3, message: generatingValidationMessage('length', [255, 3]), trigger: ['blur', 'change']}
+                        {max: 191, min: 3, message: generatingValidationMessage('length', [255, 3]), trigger: ['blur', 'change']}
                     ],
                     slug: [
                         {required: true, message: generatingValidationMessage('required'), trigger: ['blur', 'change']},
-                        {max: 255, min: 3, message: generatingValidationMessage('length', [255, 3]), trigger: ['blur', 'change']}
+                        {max: 191, min: 3, message: generatingValidationMessage('length', [255, 3]), trigger: ['blur', 'change']}
                     ],
                     article: [
                         {required: true, message: generatingValidationMessage('required'), trigger: ['blur', 'change']},
-                        {max: 255, min: 1, message: generatingValidationMessage('length', [255, 1]), trigger: ['blur', 'change']}
+                        {max: 191, min: 1, message: generatingValidationMessage('length', [255, 1]), trigger: ['blur', 'change']}
                     ],
                     description: [
                         {required: true, message: generatingValidationMessage('required'), trigger: ['blur', 'change']},

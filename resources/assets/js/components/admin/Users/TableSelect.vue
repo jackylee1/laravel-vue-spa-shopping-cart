@@ -29,16 +29,25 @@
                     fixed
                     prop="id"
                     label="ID"
-                    min-width="50">
+                    min-width="25">
             </el-table-column>
             <el-table-column
-                    prop="name"
+                    prop="user_surname"
+                    label="Фимилия"
+                    min-width="100">
+            </el-table-column>
+            <el-table-column
+                    prop="user_name"
                     label="Имя"
-                    min-width="150">
+                    min-width="100">
+            </el-table-column>
+            <el-table-column
+                    prop="user_patronymic"
+                    label="Отчество"
+                    min-width="100">
             </el-table-column>
             <el-table-column type="expand">
                 <template slot-scope="props">
-                    <p>Имя: {{ props.row.name }}</p>
                     <p>E-mail: {{ props.row.email }}</p>
                     <template v-if="props.row.reliability === 1">
                         <p>Статус надежности: Надежный пользователь</p>

@@ -51,11 +51,24 @@ class User extends Authenticatable implements JWTSubject
         Cachable;
 
     protected $fillable = [
-        'name', 'email', 'password',
+        'status',
+        'description',
+        'user_name',
+        'user_surname',
+        'user_patronymic',
+        'discount',
+        'discount',
+        'email',
+        'phone',
+        'password',
+        'reliability',
+        'discount',
+        'group_id',
     ];
 
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
+        'remember_token',
     ];
 
     protected $with = ['group', 'promotionalCodes'];
@@ -66,6 +79,10 @@ class User extends Authenticatable implements JWTSubject
 
     public function promotionalCodes() {
         return $this->hasMany('App\Models\UserPromotionalCode');
+    }
+
+    public function promotionalCodeUsage() {
+        return $this->hasMany('App\Models\PromotionCodeUsageHistory', 'user_id', 'id');
     }
 
     public function getJWTIdentifier()
@@ -83,7 +100,9 @@ class User extends Authenticatable implements JWTSubject
 
         if (request()->get('q') !== null) {
             $like = prepareForLike(request()->get('q'));
-            $query->whereRaw('lower(name) like ?', ["%{$like}%"])
+            $query->whereRaw('lower(user_name) like ?', ["%{$like}%"])
+                ->orWhereRaw('lower(user_surname) like ?', ["%{$like}%"])
+                ->orWhereRaw('lower(user_patronymic) like ?', ["%{$like}%"])
                 ->orWhereRaw('lower(email) like ?', ["%{$like}%"]);
         }
 
@@ -97,8 +116,11 @@ class User extends Authenticatable implements JWTSubject
     }
 
     private function workWithModel($model) {
-        $model->name = request()->get('name');
+        $model->user_name = request()->get('user_name');
+        $model->user_surname = request()->get('user_surname');
+        $model->user_patronymic = request()->get('user_patronymic');
         $model->email = request()->get('email');
+        $model->phone = request()->get('phone');
         if (request()->get('id') !== 1) {
             $model->status = request()->get('status');
         }
@@ -107,9 +129,8 @@ class User extends Authenticatable implements JWTSubject
         if (request()->get('password') !== null) {
             $model->password = \Hash::make(request()->get('password'));
         }
+        $model->discount = request()->get('discount');
 
-        $model->like_name = getOnlyCharacters(request()->get('name'));
-        $model->like_email = getOnlyCharacters(request()->get('email'));
         $model->save();
 
         if (request()->get('group_id') !== null) {
@@ -143,6 +164,10 @@ class User extends Authenticatable implements JWTSubject
         ])->find($id);
     }
 
+    private function destroyByPromotionalCodeId() {
+        UserPromotionalCode::destroyByPromotionalCodeId(request()->get('promotional_code_id'));
+    }
+
     protected function handlePromotionalCode() {
         $operation = 'add';
         $model = null;
@@ -151,9 +176,10 @@ class User extends Authenticatable implements JWTSubject
 
         if ($user->promotionalCodes->where('promotional_code_id', request()->get('promotional_code_id'))->count() > 0) {
             $operation = 'remove';
-            UserPromotionalCode::destroyByPromotionalCodeId(request()->get('promotional_code_id'));
+            $this->destroyByPromotionalCodeId();
         }
         else {
+            $this->destroyByPromotionalCodeId();
             $model = $user->promotionalCodes()->create([
                 'promotional_code_id' => request()->get('promotional_code_id')
             ]);

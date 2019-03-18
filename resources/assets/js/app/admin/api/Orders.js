@@ -22,6 +22,14 @@ export function deleteStatus(request) {
     return axios.post('/api/admin/orders/delete_status', request);
 }
 
+export function sendStatus(request) {
+    return axios.post('/api/admin/orders/send_status', request);
+}
+
+export function updateReadStatus(request) {
+    return axios.post('/api/admin/orders/update_read_status', request);
+}
+
 export function update(id, request) {
     return axios.patch(`/api/admin/orders/${id}`, request);
 }

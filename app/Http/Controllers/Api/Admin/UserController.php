@@ -37,28 +37,36 @@ class UserController extends Controller
             ]);
         }
         $this->setValidateRule([
-            'name' => 'required|string|max:255',
+            'user_name' => 'required|string|max:191',
+            'user_surname' => 'required|string|max:191',
+            'user_patronymic' => 'required|string|max:191',
+            'phone' => 'required|string|max:191',
             'status' => 'required|string|in:user,administration',
             'description' => 'nullable|string|max:2500',
             'reliability' => 'required|integer|in:0,1',
-            'group_id' => 'nullable|integer|exists:user_groups,id'
+            'group_id' => 'nullable|integer|exists:user_groups,id',
+            'discount' => 'nullable|integer|between:0,100'
         ]);
         $this->setValidateAttribute([
-            'name' => 'Имя',
+            'user_name' => 'Имя',
+            'user_surname' => 'Фамилия',
+            'user_patronymic' => 'Отчество',
             'email' => 'E-mail',
+            'phone' => 'Телефон',
             'password' => 'Пароль',
             'password_confirm' => 'Повторите пароль',
             'status' => 'Статус пользователя',
             'description' => 'Примечание',
             'reliability' => 'Статус надежности',
-            'group_id' => 'Группа пользователей'
+            'group_id' => 'Группа пользователей',
+            'discount' => 'Персональный процент скидки'
         ]);
     }
 
     public function index(Request $request)
     {
         $this->setValidateRule([
-            'q' => 'nullable|string|max:255',
+            'q' => 'nullable|string|max:191',
             'status' => 'nullable|in:all,user,administration'
         ]);
         $this->setValidateAttribute([

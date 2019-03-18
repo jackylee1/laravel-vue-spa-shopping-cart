@@ -49,7 +49,7 @@ class CategoryController extends Controller
 
         $this->setValidateRule([
             'type_id' => 'required|integer|exists:types,id',
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:191',
             'sorting_order' => 'required|integer'
         ]);
 

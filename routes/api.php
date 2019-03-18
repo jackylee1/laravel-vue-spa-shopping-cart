@@ -90,6 +90,8 @@ Route::group([
         Route::post('add_product', 'Api\Admin\OrderController@addProduct');
         Route::post('delete_product', 'Api\Admin\OrderController@deleteProduct');
         Route::post('delete_status', 'Api\Admin\OrderController@deleteStatus');
+        Route::post('send_status', 'Api\Admin\OrderController@sendStatus');
+        Route::post('update_read_status', 'Api\Admin\OrderController@updateReadStatus');
     });
 
     Route::prefix('upload')->group(function () {

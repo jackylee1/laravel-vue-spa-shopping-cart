@@ -34,6 +34,8 @@ class UserPromotionalCode extends Model
 
     protected $fillable = ['user_id', 'promotional_code_id', 'send_status_to_email'];
 
+    protected $with = ['promotionalCode'];
+
     public function promotionalCode() {
         return $this->hasOne('App\Models\PromotionalCode', 'id', 'promotional_code_id');
     }

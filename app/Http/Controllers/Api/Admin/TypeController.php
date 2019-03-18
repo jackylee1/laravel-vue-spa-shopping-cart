@@ -19,13 +19,13 @@ class TypeController extends Controller
     }
 
     private function generateValidate($update = false) {
-        $rules_slug = 'required|string|max:255|unique:types,slug';
+        $rules_slug = 'required|string|max:191|unique:types,slug';
         if ($update) {
             $this->validateForUpdate();
             $rules_slug .= ','.\request()->get('id');
         }
         $this->setValidateRule([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:191',
             'sorting_order' => 'required|integer',
             'slug' => $rules_slug
         ]);
