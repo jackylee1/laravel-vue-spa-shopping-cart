@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Tools\DateTimeTools;
 use App\Tools\Models\ProductTool;
 use Carbon\Carbon;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
@@ -180,11 +181,24 @@ class Product extends Model
             ? number_format((float)request()->get('discount_price'), 2, '.', '')
             : null;
         if (request()->filled('discount_start') && request()->filled('discount_end')) {
-            $model->discount_start = Carbon::parse(request()->get('discount_start'))->toDateTimeString();
-            $model->discount_end = Carbon::parse(request()->get('discount_end'))->toDateTimeString();
+            $start_date = DateTimeTools::explodeRequestDateTime(request()->get('discount_start'));
+            $end_date = DateTimeTools::explodeRequestDateTime(request()->get('discount_end'));
+
+            $model->discount_start = Carbon::parse("{$start_date->date} {$start_date->time}")->toDateTimeString();
+            $model->discount_end = Carbon::parse("{$end_date->date} {$end_date->time}")->toDateTimeString();
+        }
+        else {
+            $model->discount_end = $model->discount_start = null;
         }
         $model->status = request()->get('status');
-        $model->date_inclusion = request()->get('date_inclusion');
+
+        if (request()->filled('date_inclusion')) {
+            $date = DateTimeTools::explodeRequestDateTime(request()->get('date_inclusion'));
+            $model->date_inclusion = Carbon::parse("{$date->date} {$date->time}")->toDateTimeString();
+        }
+        else {
+            $model->date_inclusion = null;
+        }
 
         $model->save();
 

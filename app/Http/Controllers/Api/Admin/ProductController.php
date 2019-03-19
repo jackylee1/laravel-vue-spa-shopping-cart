@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Models\Product;
 use App\Tools\File;
+use App\Tools\DateTimeTools;
 use App\Tools\Image;
 use App\Traits\ImageTrait;
 use App\Traits\ValidateTrait;
@@ -70,8 +71,12 @@ class ProductController extends Controller
             'date_inclusion' => 'nullable|date',
         ]);
         if (request()->filled('discount_start') && request()->filled('discount_end')) {
-            $start = Carbon::parse(request()->get('discount_start'));
-            $end = Carbon::parse(request()->get('discount_end'));
+            $start_date = DateTimeTools::explodeRequestDateTime(request()->get('discount_start'));
+            $end_date = DateTimeTools::explodeRequestDateTime(request()->get('discount_end'));
+
+            $start = Carbon::parse("{$start_date->date} {$start_date->time}");
+            $end = Carbon::parse("{$end_date->date} {$end_date->time}");
+
             $this->setValidateRule([
                 'discount_start' => [
                     function ($attribute, $value, $fail) use ($start, $end) {
