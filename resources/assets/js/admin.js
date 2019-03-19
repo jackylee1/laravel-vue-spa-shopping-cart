@@ -50,7 +50,7 @@ const router = new VueRouter({
 
 Vue.use(VuePageTitle, {
     router,
-    prefix: 'Vue SPA - '
+    prefix: 'Admin Panel - '
 });
 
 initialize(store, router);

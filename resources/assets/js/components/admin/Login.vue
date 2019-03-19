@@ -1,6 +1,6 @@
 <template>
-	<div style="padding-left: 20%;padding-right: 20%;">
-		<div class="ds-block" @keydown.enter="onSubmit">
+	<div style="">
+		<div class="ds-block" style="min-width: 350px; max-width: 750px;margin: auto;" @keydown.enter="onSubmit">
 			<el-form class="ds-source" ref="form" :model="form" label-width="120px">
 				<el-form-item label="E-mail">
 					<el-input type="email" v-model="form.email" placeholder="Введите E-mail"></el-input>

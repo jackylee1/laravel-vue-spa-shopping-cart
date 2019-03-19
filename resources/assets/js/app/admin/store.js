@@ -61,6 +61,14 @@ export default {
                 status: 'all',
                 user_id: null
             },
+            orders: {
+                id: null,
+                user_name: '',
+                user_surname: '',
+                user_patronymic: '',
+                user_id: null,
+                only_new: 0,
+            }
         },
         types: [],
         userGroups: [],
@@ -141,6 +149,9 @@ export default {
         searchProducts: function (state) {
             return state.search.products;
         },
+        searchOrders: function (state) {
+            return state.search.orders;
+        },
         orderStatuses: function (state) {
             return state.orderStatuses;
         },
@@ -208,6 +219,9 @@ export default {
         },
         updateSearchProducts: function (state, payload) {
             state.search.products = payload;
+        },
+        updateSearchOrders: function (state, payload) {
+            state.search.orders = payload;
         },
         updateOrderStatuses: function (state, payload) {
             state.orderStatuses = payload;

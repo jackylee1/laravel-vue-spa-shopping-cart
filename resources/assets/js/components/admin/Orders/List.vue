@@ -2,6 +2,56 @@
     <div>
         <PageElementsBreadcrumb :breadcrumbElements="breadcrumbElements"/>
 
+        <el-form :model="formSearch" class="ds-query-form" label-width="250px">
+            <el-form-item label="ID Заказа">
+                <el-input v-model="formSearch.id"
+                          placeholder="">
+                </el-input>
+            </el-form-item>
+            <el-form-item label="Фамилия">
+                <el-input v-model="formSearch.user_surname"
+                          placeholder="Введите Фамилию">
+                </el-input>
+            </el-form-item>
+            <el-form-item label="Имя">
+                <el-input v-model="formSearch.user_name"
+                          placeholder="Введите Имя">
+                </el-input>
+            </el-form-item>
+            <el-form-item label="Отчество">
+                <el-input v-model="formSearch.user_patronymic"
+                          placeholder="Введите Отчество">
+                </el-input>
+            </el-form-item>
+            <el-form-item label="ID Пользователя">
+                <el-input v-model="formSearch.user_id"
+                          placeholder="Введите ID пользователя">
+                </el-input>
+            </el-form-item>
+            <el-form-item label="Только новые заказы">
+                <el-select
+                           v-model="formSearch.only_new"
+                           placeholder="Только новые заказы">
+                    <el-option
+                            v-for="item in this.selectBoolean"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item>
+                <el-button-group>
+                    <el-button type="default" @click="onResetSearch">
+                        Сбросить
+                    </el-button>
+                    <el-button type="primary" @click="onSubmitSearch">
+                        <i class="el-icon-search"></i> Поиск
+                    </el-button>
+                </el-button-group>
+            </el-form-item>
+        </el-form>
+
         <PageElementsAlerts :alerts="alerts" :type="typeAlert"/>
 
         <el-table
@@ -20,7 +70,16 @@
                     label="Заказчик"
                     min-width="120">
                 <template slot-scope="props">
-                    <template v-if="props.row.user_surname !== null && props.row.user_name !== null && props.row.user_patronymic !== null">
+                    <template v-if="props.row.user_id">
+                        <router-link :to="{ name: 'users-update', params: { id: props.row.user_id }}">
+                            <template v-if="props.row.user_surname !== null && props.row.user_name !== null && props.row.user_patronymic !== null">
+                            {{props.row.user_surname}} {{props.row.user_name}} {{props.row.user_patronymic}} (ID {{props.row.user_id}})
+                            </template>
+                            <template v-else>Страница пользователя (ID {{props.row.user_id}})</template>
+                        </router-link>
+                        <br>
+                    </template>
+                    <template v-else>
                         {{props.row.user_surname}}
                         {{props.row.user_name}}
                         {{props.row.user_patronymic}}
@@ -45,17 +104,19 @@
                     label="Управление"
                     min-width="70">
                 <template slot-scope="props">
-                    <el-button
-                            @click.native.prevent="goToUpdate(props.row.id)"
-                            size="mini">
-                        <i class="el-icon-edit"></i>
-                    </el-button>
-                    <el-button
-                            size="mini"
-                            type="danger"
-                            @click.native.prevent="btnDeleteOrder(props.$index, orders)">
-                        <i class="el-icon-delete"></i>
-                    </el-button>
+                    <el-button-group>
+                        <el-button
+                                @click.native.prevent="goToUpdate(props.row.id)"
+                                size="mini">
+                            <i class="el-icon-edit"></i>
+                        </el-button>
+                        <el-button
+                                size="mini"
+                                type="danger"
+                                @click.native.prevent="btnDeleteOrder(props.$index, orders)">
+                            <i class="el-icon-delete"></i>
+                        </el-button>
+                    </el-button-group>
                 </template>
             </el-table-column>
         </el-table>
@@ -75,8 +136,10 @@
                     :closable="false">
             </el-alert>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">Отмена</el-button>
-                <el-button type="primary" @click="deleteOrder">Подтверждаю</el-button>
+                <el-button-group>
+                    <el-button @click="dialogVisible = false">Отмена</el-button>
+                    <el-button type="primary" @click="deleteOrder">Подтверждаю</el-button>
+                </el-button-group>
             </span>
         </el-dialog>
     </div>
@@ -99,6 +162,9 @@
                 {href: this.$router.resolve({name: 'orders-list'}).href, title: this.$router.currentRoute.meta.title},
             ];
 
+            this.formSearch = this.searchOrders;
+            this.oldFormSearch = _.cloneDeep(this.formSearch);
+
             if (typeof this.ordersInStore.data !== 'undefined' && this.ordersInStore.data.length) {
                 this.orders = this.ordersInStore.data;
                 this.total = this.ordersInStore.total;
@@ -115,7 +181,13 @@
         computed: {
             ordersInStore: function() {
                 return this.$store.getters.orders;
-            }
+            },
+            selectBoolean: function () {
+                return this.$store.getters.selectDataBoolean;
+            },
+            searchOrders: function () {
+                return this.$store.getters.searchOrders;
+            },
         },
         data() {
             return {
@@ -131,6 +203,15 @@
                 typeAlert: 'warning',
                 titleAlert: '',
                 alerts: [],
+                formSearch: {
+                    id: null,
+                    user_name: '',
+                    user_surname: '',
+                    user_patronymic: '',
+                    user_id: null,
+                    only_new: 0,
+                },
+                oldFormSearch: null
             }
         },
         methods: {
@@ -171,7 +252,7 @@
             },
             getOrders: function (page = 1) {
                 this.loading = true;
-                return ApiOrders.get(page).then((response) => {
+                return ApiOrders.get(page, this.formSearch).then((response) => {
                     this.orders = response.data.orders.data;
                     this.total = response.data.orders.total;
                     this.currentPage = response.data.orders.current_page;
@@ -185,6 +266,25 @@
             },
             handleCurrentPageChange: function (page) {
                 this.getOrders(page);
+            },
+            onResetSearch: function () {
+                this.formSearch = {
+                    id: null,
+                    user_name: '',
+                    user_surname: '',
+                    user_patronymic: '',
+                    user_id: null,
+                    only_new: 0,
+                };
+                this.oldFormSearch = this.formSearch;
+                this.$store.commit('updateSearchOrders', this.formSearch);
+
+                this.getOrders(1);
+            },
+            onSubmitSearch: function () {
+                this.getOrders(1);
+                this.oldFormSearch = this.formSearch;
+                this.$store.commit('updateSearchOrders', this.formSearch);
             },
         },
         components: {

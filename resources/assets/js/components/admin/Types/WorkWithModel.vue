@@ -23,9 +23,11 @@
                 <PageElementsAlerts :alerts="alerts" :type="typeAlerts"/>
 
                 <el-form-item>
-                    <el-button v-if="showFilters" type="default" @click="modalWorkWithFilters">Управление фильтрами</el-button>
-                    <el-button v-if="showTree" type="default" @click="modalCreateNode">Добавить категорию</el-button>
-                    <el-button type="primary" @click="onSubmit">{{submitName}}</el-button>
+                    <el-button-group>
+                        <el-button v-if="showFilters" type="default" @click="modalWorkWithFilters">Управление фильтрами</el-button>
+                        <el-button v-if="showTree" type="default" @click="modalCreateNode">Добавить категорию</el-button>
+                        <el-button type="primary" @click="onSubmit">{{submitName}}</el-button>
+                    </el-button-group>
                 </el-form-item>
             </el-form>
         </div>
@@ -45,24 +47,23 @@
                     <span>{{ node.label }}</span>
                     <span>{{ node.data.sorting_order }}</span>
                     <span>
-                        <el-button
-                                type="primary"
-                                @click="modalWorkWithFiltersCategory(node.data)"
-                                size="mini">
-                            <i class="ai-filter" />
-                        </el-button>
-                        <el-button
-                            type="primary"
-                            @click="modalEditNode(node.data)"
-                            size="mini">
-                            <i class="el-icon-edit"></i>
-                        </el-button>
-                        <el-button
-                            type="danger"
-                            size="mini"
-                            @click="modalDeleteNode(node.data)">
-                            <i class="el-icon-delete"></i>
-                        </el-button>
+                        <el-button-group>
+                            <el-button type="primary"
+                                       @click="modalWorkWithFiltersCategory(node.data)"
+                                       size="mini">
+                                <i class="ai-filter"></i>
+                            </el-button>
+                            <el-button type="primary"
+                                       @click="modalEditNode(node.data)"
+                                       size="mini">
+                                <i class="el-icon-edit"></i>
+                            </el-button>
+                            <el-button type="danger"
+                                       size="mini"
+                                       @click="modalDeleteNode(node.data)">
+                                <i class="el-icon-delete"></i>
+                            </el-button>
+                        </el-button-group>
                     </span>
                 </span>
             </el-tree>
@@ -92,8 +93,10 @@
             </el-form>
             <PageElementsAlerts :alerts="modalAlerts" :type="modalTypeAlerts"/>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="visibleDialogWorkWithNode = false">Отмена</el-button>
-                <el-button type="primary" @click="clickWorkWithNode">Сохранить</el-button>
+                <el-button-group>
+                    <el-button @click="visibleDialogWorkWithNode = false">Отмена</el-button>
+                    <el-button type="primary" @click="clickWorkWithNode">Сохранить</el-button>
+                </el-button-group>
             </span>
         </el-dialog>
 
@@ -127,8 +130,10 @@
                     :closable="false">
             </el-alert>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="deleteNodeDialogVisible = false">Отмена</el-button>
-                <el-button type="primary" @click="deleteNode">Подтверждаю</el-button>
+                <el-button-group>
+                    <el-button @click="deleteNodeDialogVisible = false">Отмена</el-button>
+                    <el-button type="primary" @click="deleteNode">Подтверждаю</el-button>
+                </el-button-group>
             </span>
         </el-dialog>
     </div>

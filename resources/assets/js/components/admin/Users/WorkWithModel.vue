@@ -89,10 +89,12 @@
                 <PageElementsAlerts :alerts="alerts" :type="typeAlerts"/>
 
                 <el-form-item>
-                    <el-button type="info"
-                               v-if="currentRoute.name === 'users-update'"
-                               @click="dialogTableVisible = true">Управление промокод</el-button>
-                    <el-button type="primary" @click="onSubmit">{{submitName}}</el-button>
+                    <el-button-group>
+                        <el-button type="info"
+                                   v-if="currentRoute.name === 'users-update'"
+                                   @click="dialogTableVisible = true">Управление промокод</el-button>
+                        <el-button type="primary" @click="onSubmit">{{submitName}}</el-button>
+                    </el-button-group>
                 </el-form-item>
             </el-form>
         </div>

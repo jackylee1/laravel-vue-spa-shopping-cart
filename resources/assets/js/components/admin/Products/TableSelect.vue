@@ -58,12 +58,14 @@
                 </el-select>
             </el-form-item>
             <el-form-item>
-                <el-button type="default" @click="onResetSearch">
-                    Сбросить
-                </el-button>
-                <el-button type="primary" @click="onSubmitSearch">
-                    <i class="el-icon-search"></i> Поиск
-                </el-button>
+                <el-button-group>
+                    <el-button type="default" @click="onResetSearch">
+                        Сбросить
+                    </el-button>
+                    <el-button type="primary" @click="onSubmitSearch">
+                        <i class="el-icon-search"></i> Поиск
+                    </el-button>
+                </el-button-group>
             </el-form-item>
         </el-form>
 

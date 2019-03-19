@@ -22,8 +22,26 @@ class OrderController extends Controller
         ]);
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $this->setValidateRule([
+            'id' => 'nullable|integer',
+            'user_name' => 'nullable|string|max:191',
+            'user_surname' => 'nullable|string|max:191',
+            'user_patronymic' => 'nullable|string|max:191',
+            'user_id' => 'nullable|integer',
+            'only_new' => 'nullable|boolean',
+        ]);
+        $this->setValidateAttribute([
+            'id' => 'ID заказа',
+            'user_name' => 'Имя',
+            'user_surname' => 'Фамилия',
+            'user_patronymic' => 'Отчество',
+            'user_id' => 'ID пользователя',
+            'only_new' => 'Только новые заказы',
+        ]);
+        $request->validate($this->validate_rules, [], $this->validate_attributes);
+
         return response()->json([
             'status' => 'success',
             'orders' => Order::orders()
@@ -59,6 +77,9 @@ class OrderController extends Controller
 
     public function update(Request $request, $id)
     {
+        $order = Order::find(\request()->get('id'));
+        $promotional_code = null;
+
         $this->validationId();
         $this->setValidateRule([
             'user_id' => 'nullable|integer|exists:users,id',
@@ -74,13 +95,28 @@ class OrderController extends Controller
                 'nullable',
                 'integer',
                 'exists:promotional_codes,id',
-                function ($attribute, $value, $fail) {
-                    $order = Order::find(\request()->get('id'));
+                function ($attribute, $value, $fail) use ($order) {
                     if (\request()->filled('promotional_code_id')
                         && request()->get('promotional_code_id') != $order->promotional_code_id) {
                         $promotional_code = PromotionalCode::getCodeById(\request()->get('promotional_code_id'));
                         if ($promotional_code->status == 0) {
-                            return $fail('Этот промокод уже был использован');
+                            return $fail('Промокод который вы выбрали уже был использован');
+                        }
+                    }
+                }
+            ],
+            'input_promotional_code' => [
+                'nullable',
+                'string',
+                'max:191',
+                'exists:promotional_codes,code',
+                function ($attribute, $value, $fail) use ($order, &$promotional_code) {
+                    if (\request()->filled('input_promotional_code')) {
+                        $promotional_code = PromotionalCode::getModelByCode(\request()->get('input_promotional_code'));
+                        if ($promotional_code->id != $order->promotional_code_id) {
+                            if ($promotional_code->status == 0) {
+                                return $fail('Промокод который вы ввели уже был использован');
+                            }
                         }
                     }
                 }
@@ -100,7 +136,7 @@ class OrderController extends Controller
         ]);
         $request->validate($this->validate_rules, [], $this->validate_attributes);
 
-        $order = Order::updateModel();
+        $order = Order::updateModel($promotional_code);
 
         return response()->json([
             'status' => 'success',

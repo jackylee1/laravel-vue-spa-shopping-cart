@@ -36,17 +36,19 @@
                     fixed="right"
                     label="Управление">
                 <template slot-scope="props">
-                    <el-button
-                            @click.native.prevent="goToUpdate(props.row.id)"
-                            size="mini">
-                        <i class="el-icon-edit"></i>
-                    </el-button>
-                    <el-button
-                            size="mini"
-                            type="danger"
-                            @click.native.prevent="btnDeleteSlider(props.$index, sliders)">
-                        <i class="el-icon-delete"></i>
-                    </el-button>
+                    <el-button-group>
+                        <el-button
+                                @click.native.prevent="goToUpdate(props.row.id)"
+                                size="mini">
+                            <i class="el-icon-edit"></i>
+                        </el-button>
+                        <el-button
+                                size="mini"
+                                type="danger"
+                                @click.native.prevent="btnDeleteSlider(props.$index, sliders)">
+                            <i class="el-icon-delete"></i>
+                        </el-button>
+                    </el-button-group>
                 </template>
             </el-table-column>
         </el-table>
@@ -66,11 +68,12 @@
                     :closable="false">
             </el-alert>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">Отмена</el-button>
-                <el-button type="primary" @click="deleteSlider">Подтверждаю</el-button>
+                <el-button-group>
+                    <el-button @click="dialogVisible = false">Отмена</el-button>
+                    <el-button type="primary" @click="deleteSlider">Подтверждаю</el-button>
+                </el-button-group>
             </span>
         </el-dialog>
-
     </div>
 </template>
 

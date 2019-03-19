@@ -63,18 +63,20 @@
                     label="Операции"
                     min-width="150">
                 <template slot-scope="props">
-                    <el-button
-                            :type="btnSelect(props.row.id) ? 'danger' : 'success'"
-                            :icon="btnSelect(props.row.id) ? 'el-icon-close' : 'el-icon-check'" circle
-                            @click="selectPromotionalCode(props.row)">
-                    </el-button>
-                    <template v-if="currentModel === 'users' && btnSelect(props.row.id)">
-                        <el-button v-if="btnSend(props.row.id) && props.row.status"
-                                type="success"
-                                icon="el-icon-message" circle
-                                @click="sendPromotionalCode(props.row.id)">
+                    <el-button-group>
+                        <el-button
+                                :type="btnSelect(props.row.id) ? 'danger' : 'success'"
+                                :icon="btnSelect(props.row.id) ? 'el-icon-close' : 'el-icon-check'" circle
+                                @click="selectPromotionalCode(props.row)">
                         </el-button>
-                    </template>
+                        <template v-if="currentModel === 'users' && btnSelect(props.row.id)">
+                            <el-button v-if="btnSend(props.row.id) && props.row.status"
+                                       type="success"
+                                       icon="el-icon-message" circle
+                                       @click="sendPromotionalCode(props.row.id)">
+                            </el-button>
+                        </template>
+                    </el-button-group>
                 </template>
             </el-table-column>
         </el-table>

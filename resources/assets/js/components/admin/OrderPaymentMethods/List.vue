@@ -29,17 +29,19 @@
                     label="Управление"
                     min-width="70">
                 <template slot-scope="props">
-                    <el-button
-                            @click.native.prevent="goToUpdate(props.row.id)"
-                            size="mini">
-                        <i class="el-icon-edit"></i>
-                    </el-button>
-                    <el-button
-                            size="mini"
-                            type="danger"
-                            @click.native.prevent="btnDeleteOrderPaymentMethod(props.$index, orderPaymentMethods)">
-                        <i class="el-icon-delete"></i>
-                    </el-button>
+                    <el-button-group>
+                        <el-button
+                                @click.native.prevent="goToUpdate(props.row.id)"
+                                size="mini">
+                            <i class="el-icon-edit"></i>
+                        </el-button>
+                        <el-button
+                                size="mini"
+                                type="danger"
+                                @click.native.prevent="btnDeleteOrderPaymentMethod(props.$index, orderPaymentMethods)">
+                            <i class="el-icon-delete"></i>
+                        </el-button>
+                    </el-button-group>
                 </template>
             </el-table-column>
         </el-table>
@@ -54,8 +56,10 @@
                     :closable="false">
             </el-alert>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">Отмена</el-button>
-                <el-button type="primary" @click="deleteOrderPaymentMethod">Подтверждаю</el-button>
+                <el-button-group>
+                    <el-button @click="dialogVisible = false">Отмена</el-button>
+                    <el-button type="primary" @click="deleteOrderPaymentMethod">Подтверждаю</el-button>
+                </el-button-group>
             </span>
         </el-dialog>
     </div>

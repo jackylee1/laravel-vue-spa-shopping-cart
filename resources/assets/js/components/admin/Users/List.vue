@@ -83,19 +83,24 @@
             <el-table-column
                     fixed="right"
                     label="Управление"
-                    min-width="75">
+                    min-width="100">
                 <template slot-scope="props">
-                    <el-button
-                            @click.native.prevent="goToUpdate(props.row.id)"
-                            size="mini">
-                        <i class="el-icon-edit"></i>
-                    </el-button>
-                    <el-button
-                            size="mini"
-                            type="danger"
-                            @click.native.prevent="btnDeleteUser(props.$index, users)">
-                        <i class="el-icon-delete"></i>
-                    </el-button>
+                    <el-button-group>
+                        <el-button @click.native.prevent="userOrders(props.row.id)"
+                                   type="primary"
+                                   size="mini">
+                            <i class="ai-shopping-cart"></i>
+                        </el-button>
+                        <el-button @click.native.prevent="goToUpdate(props.row.id)"
+                                   size="mini">
+                            <i class="el-icon-edit"></i>
+                        </el-button>
+                        <el-button size="mini"
+                                   type="danger"
+                                   @click.native.prevent="btnDeleteUser(props.$index, users)">
+                            <i class="el-icon-delete"></i>
+                        </el-button>
+                    </el-button-group>
                 </template>
             </el-table-column>
         </el-table>
@@ -115,11 +120,12 @@
                     :closable="false">
             </el-alert>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">Отмена</el-button>
-                <el-button type="primary" @click="deleteUser">Подтверждаю</el-button>
+                <el-button-group>
+                    <el-button @click="dialogVisible = false">Отмена</el-button>
+                    <el-button type="primary" @click="deleteUser">Подтверждаю</el-button>
+                </el-button-group>
             </span>
         </el-dialog>
-
     </div>
 </template>
 
@@ -197,6 +203,12 @@
             }
         },
         methods: {
+            userOrders: function (userId) {
+                let formSearch = this.$store.getters.searchOrders;
+                formSearch.user_id = userId;
+                this.$store.commit('updateSearchOrders', formSearch);
+                this.$router.push({name: 'orders-list'});
+            },
             onSubmitSearch: function () {
                 this.getUsers();
                 this.oldFormSearch = this.formSearch;

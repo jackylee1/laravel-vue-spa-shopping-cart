@@ -83,13 +83,15 @@
                 <PageElementsAlerts :alerts="alerts" :type="typeAlerts"/>
 
                 <el-form-item>
-                    <el-button v-if="currentRoute.name === 'products-update'"
-                               type="default"
-                               @click="dialogWorkWithFilter">Добавить в ...</el-button>
-                    <el-button v-if="currentRoute.name === 'products-update'"
-                               type="default"
-                               @click="dialogWorkWithAvailable">Наличие товара</el-button>
-                    <el-button type="primary" @click="onSubmit">{{submitName}}</el-button>
+                    <el-button-group>
+                        <el-button v-if="currentRoute.name === 'products-update'"
+                                   type="default"
+                                   @click="dialogWorkWithFilter">Добавить в ...</el-button>
+                        <el-button v-if="currentRoute.name === 'products-update'"
+                                   type="default"
+                                   @click="dialogWorkWithAvailable">Наличие товара</el-button>
+                        <el-button type="primary" @click="onSubmit">{{submitName}}</el-button>
+                    </el-button-group>
                 </el-form-item>
             </el-form>
         </div>
@@ -185,17 +187,19 @@
                                 label="Управление"
                                 min-width="45">
                             <template slot-scope="props">
-                                <el-button
-                                        @click.native.prevent="dialogUpdateAvailable(props.$index)"
-                                        size="mini">
-                                    <i class="el-icon-edit"></i>
-                                </el-button>
-                                <el-button
-                                        size="mini"
-                                        type="danger"
-                                        @click.native.prevent="removeAvailable(props.$index)">
-                                    <i class="el-icon-delete"></i>
-                                </el-button>
+                                <el-button-group>
+                                    <el-button
+                                            @click.native.prevent="dialogUpdateAvailable(props.$index)"
+                                            size="mini">
+                                        <i class="el-icon-edit"></i>
+                                    </el-button>
+                                    <el-button
+                                            size="mini"
+                                            type="danger"
+                                            @click.native.prevent="removeAvailable(props.$index)">
+                                        <i class="el-icon-delete"></i>
+                                    </el-button>
+                                </el-button-group>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -252,12 +256,14 @@
             </el-alert>
             <PageElementsAlerts :alerts="modalAlerts" :type="modalTypeAlerts"/>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="visibleDialogWorkWithAvailable = false">Отмена</el-button>
-                <el-button type="primary"
-                           v-if="btnInDialogWorkWithAvailable"
-                           @click="handleClockDialogAvailable">
-                    {{btnDialogAvailable}}
-                </el-button>
+                <el-button-group>
+                    <el-button @click="visibleDialogWorkWithAvailable = false">Отмена</el-button>
+                    <el-button type="primary"
+                               v-if="btnInDialogWorkWithAvailable"
+                               @click="handleClockDialogAvailable">
+                        {{btnDialogAvailable}}
+                    </el-button>
+                </el-button-group>
             </span>
         </el-dialog>
 
@@ -297,10 +303,14 @@
             </el-form>
             <PageElementsAlerts :alerts="modalAlerts" :type="modalTypeAlerts"/>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="visibleDialogWorkWithFilters = false">Отмена</el-button>
-                <el-button type="primary"
-                           v-if="btnInDialogWorkWithFilters"
-                           @click="addFilterToProduct">Сохранить</el-button>
+                <el-button-group>
+                    <el-button @click="visibleDialogWorkWithFilters = false">Отмена</el-button>
+                    <el-button type="primary"
+                               v-if="btnInDialogWorkWithFilters"
+                               @click="addFilterToProduct">
+                        Сохранить
+                    </el-button>
+                </el-button-group>
             </span>
         </el-dialog>
 
@@ -329,9 +339,11 @@
             </el-form>
             <PageElementsAlerts :alerts="modalAlerts" :type="modalTypeAlerts"/>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="visibleDialogWorkWithImage = false">Отмена</el-button>
-                <el-button @click="this.openModalCropImage">Редактировать превью</el-button>
-                <el-button type="primary" @click="clickWorkWithImage">Сохранить</el-button>
+                <el-button-group>
+                    <el-button @click="visibleDialogWorkWithImage = false">Отмена</el-button>
+                    <el-button @click="this.openModalCropImage">Редактировать превью</el-button>
+                    <el-button type="primary" @click="clickWorkWithImage">Сохранить</el-button>
+                </el-button-group>
             </span>
         </el-dialog>
 
@@ -349,8 +361,10 @@
                 v-model="imageCroppa"></croppa>
             <PageElementsAlerts :alerts="modalAlerts" :type="modalTypeAlerts"/>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="visibleDialogWorkWithCropImage = false">Отмена</el-button>
-                <el-button type="primary" @click="clickWorkWithCropImage">Сохранить</el-button>
+                <el-button-group>
+                    <el-button @click="visibleDialogWorkWithCropImage = false">Отмена</el-button>
+                    <el-button type="primary" @click="clickWorkWithCropImage">Сохранить</el-button>
+                </el-button-group>
             </span>
         </el-dialog>
     </div>

@@ -63,7 +63,7 @@ class PromotionalCode extends Model
         return PromotionalCode::find($id);
     }
 
-    protected function getModelByCode($code = null) {
+    public static function getModelByCode($code = null) {
         return PromotionalCode::where('code', $code)->first();
     }
 

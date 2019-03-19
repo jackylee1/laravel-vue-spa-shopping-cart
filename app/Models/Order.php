@@ -35,7 +35,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Order whereOrderStatusId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Order wherePaymentMethodId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Order wherePhone($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Order wherePromotionCodeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Order wherePromotionalCodeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Order whereTotalDiscountPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Order whereTotalPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Order whereUpdatedAt($value)
@@ -77,7 +77,7 @@ class Order extends Model
     ];
 
     protected $with = [
-        'products', 'historyStatuses'
+        'products', 'historyStatuses', 'promotionalCode'
     ];
 
     public function user() {
@@ -92,7 +92,7 @@ class Order extends Model
         return $this->hasOne('App\Models\OrderPaymentMethod', 'id', 'order_payment_method_id');
     }
 
-    public function promotionCode() {
+    public function promotionalCode() {
         return $this->hasOne('App\Models\PromotionalCode', 'id', 'promotional_code_id');
     }
 
@@ -157,7 +157,7 @@ class Order extends Model
         return $order;
     }
 
-    protected function updateModel() {
+    protected function updateModel($promotional_code = null) {
         $order = Order::find(request()->get('id'));
 
         $order->user_id = request()->get('user_id');
@@ -179,21 +179,35 @@ class Order extends Model
         $order->promotional_code_id = request()->get('promotion_code_id');
 
         $discount_promotional = 0;
-        if (request()->filled('promotional_code_id')) {
-            $promotional_code = PromotionalCode::getCodeById(request()->get('promotional_code_id'));
+        if (request()->filled('promotional_code_id') || $promotional_code !== null) {
+            if (request()->filled('promotional_code_id')) {
+                $promotional_code = PromotionalCode::getCodeById(request()->get('promotional_code_id'));
+                $promotional_code_id = request()->get('promotional_code_id');
+            }
+            else {
+                $promotional_code_id = $promotional_code->id;
+            }
+
             $discount_promotional = $promotional_code->discount;
 
             $promotional_code->status = 0;
             $promotional_code->save();
 
-            if ($order->user !== null
-                && request()->get('promotional_code_id') != $order->promotional_code_id) {
-                $order->user->promotionalCodeUsage()->create([
-                    'promotional_code_id' => request()->get('promotional_code_id')
-                ]);
+            if ($promotional_code_id != $order->promotional_code_id) {
+                $order->setRelation('promotional_code', $promotional_code);
+
+                if ($order->user !== null) {
+                    $order->user->promotionalCodeUsage()->create([
+                        'promotional_code_id' => $promotional_code_id
+                    ]);
+                }
             }
 
-            $order->promotional_code_id = request()->get('promotional_code_id');
+            $order->promotional_code_id = $promotional_code_id;
+        }
+        else {
+            $order->promotional_code_id = null;
+            $order->setRelation('promotional_code', null);
         }
 
         $order = $this->recalculatePrice($order, $discount_promotional);
@@ -209,6 +223,44 @@ class Order extends Model
 
     protected function orders() {
         $query = Order::query();
+        if (request()->filled('id')) {
+            $query->where('id', request()->get('id'));
+        }
+
+        if (request()->filled('user_name')) {
+            $query->where(function ($query) {
+                $query->whereRaw('lower(user_name) like ?', ['%'. request()->get('user_name') .'%']);
+                $query->orWhereHas('user', function ($query) {
+                    $query->whereRaw('lower(user_name) like ?', ['%'. request()->get('user_name') .'%']);
+                });
+            });
+        }
+
+        if (request()->filled('user_surname')) {
+            $query->where(function ($query) {
+                $query->whereRaw('lower(user_surname) like ?', ['%'. request()->get('user_surname') .'%']);
+                $query->orWhereHas('user', function ($query) {
+                    $query->whereRaw('lower(user_surname) like ?', ['%'. request()->get('user_surname') .'%']);
+                });
+            });
+        }
+
+        if (request()->filled('user_patronymic')) {
+            $query->where(function ($query) {
+                $query->whereRaw('lower(user_patronymic) like ?', ['%'. request()->get('user_patronymic') .'%']);
+                $query->orWhereHas('user', function ($query) {
+                    $query->whereRaw('lower(user_patronymic) like ?', ['%'. request()->get('user_patronymic') .'%']);
+                });
+            });
+        }
+
+        if (request()->filled('user_id')) {
+            $query->where('user_id', request()->get('user_id'));
+        }
+
+        if (request()->filled('only_new') && request()->get('only_new') == 1) {
+            $query->where('read_status', false);
+        }
 
         return $query->orderByDesc('created_at')->paginate();
     }

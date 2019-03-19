@@ -47,6 +47,15 @@
                     </el-form-item>
                 </template>
 
+                <el-form-item v-if="form.promotional_code != null"
+                              label="Промокод который прикреплен к заказу">
+                    {{this.form.promotional_code.code}} ({{this.form.promotional_code.discount}} %)
+                </el-form-item>
+
+                <el-form-item label="Промокод" prop="promotionalCode">
+                    <el-input type="text" v-model="promotionalCode" placeholder="Введите промокод"></el-input>
+                </el-form-item>
+
                 <el-form-item label="Имя" prop="user_name">
                     <el-input type="text" v-model="form.user_name" placeholder="Введите Имя"></el-input>
                 </el-form-item>
@@ -110,15 +119,19 @@
                 <PageElementsAlerts :alerts="alerts" :type="typeAlerts"/>
 
                 <el-form-item>
-                    <el-button type="default" v-if="this.currentRoute.name === 'orders-update'"
-                               @click="modalSelectProducts">
-                        Добавить продукцию
-                    </el-button>
-                    <el-button type="default" v-if="this.currentRoute.name === 'orders-update'"
-                               @click="dialogUserTableVisible = true">
-                        Выбрать пользователя
-                    </el-button>
-                    <el-button type="primary" @click="onSubmit">{{submitName}}</el-button>
+                    <el-button-group>
+                        <el-button type="default"
+                                   v-if="this.currentRoute.name === 'orders-update'"
+                                   @click="modalSelectProducts">
+                            Добавить продукцию
+                        </el-button>
+                        <el-button type="default"
+                                   v-if="this.currentRoute.name === 'orders-update'"
+                                   @click="dialogUserTableVisible = true">
+                            Выбрать пользователя
+                        </el-button>
+                        <el-button type="primary" @click="onSubmit">{{submitName}}</el-button>
+                    </el-button-group>
                 </el-form-item>
             </el-form>
         </div>
@@ -208,17 +221,19 @@
                         label="Управление"
                         min-width="70">
                     <template slot-scope="props">
-                        <el-button
-                                @click.native.prevent="openProduct(props.row.product_id)"
-                                size="mini">
-                            <i class="el-icon-view"></i>
-                        </el-button>
-                        <el-button
-                                @click.native.prevent="deleteProductOrder(props.row.id)"
-                                type="danger"
-                                size="mini">
-                            <i class="el-icon-delete"></i>
-                        </el-button>
+                        <el-button-group>
+                            <el-button
+                                    @click.native.prevent="openProduct(props.row.product_id)"
+                                    size="mini">
+                                <i class="el-icon-view"></i>
+                            </el-button>
+                            <el-button
+                                    @click.native.prevent="deleteProductOrder(props.row.id)"
+                                    type="danger"
+                                    size="mini">
+                                <i class="el-icon-delete"></i>
+                            </el-button>
+                        </el-button-group>
                     </template>
                 </el-table-column>
             </el-table>
@@ -255,18 +270,20 @@
                         label="Управление"
                         min-width="70">
                     <template slot-scope="props">
-                        <el-button
-                                v-if="props.row.send_status == 0"
-                                size="mini"
-                                @click.native.prevent="sendStatus(props.row.id)">
-                            <i class="el-icon-message"></i>
-                        </el-button>
-                        <el-button
-                                size="mini"
-                                type="danger"
-                                @click.native.prevent="deleteStatus(props.row.id)">
-                            <i class="el-icon-delete"></i>
-                        </el-button>
+                        <el-button-group>
+                            <el-button
+                                    v-if="props.row.send_status == 0"
+                                    size="mini"
+                                    @click.native.prevent="sendStatus(props.row.id)">
+                                <i class="el-icon-message"></i>
+                            </el-button>
+                            <el-button
+                                    size="mini"
+                                    type="danger"
+                                    @click.native.prevent="deleteStatus(props.row.id)">
+                                <i class="el-icon-delete"></i>
+                            </el-button>
+                        </el-button-group>
                     </template>
                 </el-table-column>
             </el-table>
@@ -313,7 +330,9 @@
             <span slot="footer" class="dialog-footer">
                 <el-button type="primary"
                            v-if="showBtnAddProductToOrder"
-                           @click="addProductToOrder">Добавить к заказу</el-button>
+                           @click="addProductToOrder">
+                    Добавить к заказу
+                </el-button>
             </span>
         </el-dialog>
     </div>
@@ -449,7 +468,8 @@
                 inputQuantity: 0,
                 showBtnAddProductToOrder: false,
                 dialogUserTableVisible: false,
-                user: null
+                user: null,
+                promotionalCode: null
             }
         },
         methods: {
@@ -742,6 +762,9 @@
                 this.$refs['formWorkWithModel'].validate((valid) => {
                     if (valid) {
                         if (this.currentRoute.name === 'orders-update') {
+                            if (this.promotionalCode !== null) {
+                                this.form.input_promotional_code = this.promotionalCode;
+                            }
                             ApiOrders.update(this.$route.params.id, this.form).then((response) => {
                                 this.$notify.success({
                                     offset: 50,
@@ -809,6 +832,16 @@
             },
             'user': function () {
                 this.selectUserPromotionalCodes();
+            },
+            'form': function () {
+                if (this.form.promotional_code !== null) {
+                    this.promotionalCode = this.form.promotional_code.code;
+                }
+            },
+            'form.promotional_code_id': function (promotionalCodeId) {
+                if (promotionalCodeId === null) {
+                    this.promotionalCode = null;
+                }
             }
         },
         beforeDestroy() {

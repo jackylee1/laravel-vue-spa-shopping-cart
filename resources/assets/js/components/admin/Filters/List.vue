@@ -21,18 +21,18 @@
                     <span>{{ getTypeLabelByValue(node.data.type) }}</span>
                     <span>{{ node.data.sorting_order }}</span>
                     <span>
-                        <el-button
-                                type="primary"
-                                @click="modalEditNode(node.data)"
-                                size="mini">
-                            <i class="el-icon-edit"></i>
-                        </el-button>
-                        <el-button
-                                type="danger"
-                                size="mini"
-                                @click="modalDeleteNode(node.data)">
-                            <i class="el-icon-delete"></i>
-                        </el-button>
+                        <el-button-group>
+                            <el-button type="primary"
+                                       @click="modalEditNode(node.data)"
+                                       size="mini">
+                                <i class="el-icon-edit"></i>
+                            </el-button>
+                            <el-button type="danger"
+                                       size="mini"
+                                       @click="modalDeleteNode(node.data)">
+                                <i class="el-icon-delete"></i>
+                            </el-button>
+                        </el-button-group>
                     </span>
                 </span>
             </el-tree>
@@ -143,8 +143,10 @@
             </el-form>
             <PageElementsAlerts :alerts="modalAlerts" :type="modalTypeAlerts"/>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="visibleDialogWorkWithNode = false">Отмена</el-button>
-                <el-button type="primary" @click="clickWorkWithNode">Сохранить</el-button>
+                <el-button-group>
+                    <el-button @click="visibleDialogWorkWithNode = false">Отмена</el-button>
+                    <el-button type="primary" @click="clickWorkWithNode">Сохранить</el-button>
+                </el-button-group>
             </span>
         </el-dialog>
 

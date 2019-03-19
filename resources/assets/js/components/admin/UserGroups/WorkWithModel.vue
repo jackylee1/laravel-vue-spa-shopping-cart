@@ -86,8 +86,10 @@
                     :closable="false">
             </el-alert>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">Отмена</el-button>
-                <el-button type="primary" @click="deleteUser">Подтверждаю</el-button>
+                <el-button-group>
+                    <el-button @click="dialogVisible = false">Отмена</el-button>
+                    <el-button type="primary" @click="deleteUser">Подтверждаю</el-button>
+                </el-button-group>
             </span>
         </el-dialog>
     </div>
