@@ -125,12 +125,14 @@ class Order extends Model
 
     private function recalculatePrice($order, $discount_promotional = 0) {
         $discount = 0;
-        if ($order->user->discount > 0) {
-            $discount = $order->user->discount;
-        }
-        elseif ($order->user->group !== null) {
-            $user_group = UserGroup::userGroup($order->user->group->user_group_id);
-            $discount = $user_group->discount;
+        if (isset($order->user) && $order->user !== null) {
+            if ($order->user->discount > 0) {
+                $discount = $order->user->discount;
+            }
+            elseif ($order->user->group !== null) {
+                $user_group = UserGroup::userGroup($order->user->group->user_group_id);
+                $discount = $user_group->discount;
+            }
         }
 
         if ($discount_promotional !== 0) {
@@ -149,10 +151,8 @@ class Order extends Model
             }
         });
 
-        if ($discount != 0) {
-            $order->total_price = $total_price;
-            $order->total_discount_price = $total_discount_price;
-        }
+        $order->total_price = $total_price;
+        $order->total_discount_price = $total_discount_price;
 
         return $order;
     }
