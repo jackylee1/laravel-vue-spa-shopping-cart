@@ -89,7 +89,7 @@
                         <el-button @click.native.prevent="userOrders(props.row.id)"
                                    type="primary"
                                    size="mini">
-                            <i class="ai-shopping-cart"></i>
+                            <i class="el-icon-goods"></i>
                         </el-button>
                         <el-button @click.native.prevent="goToUpdate(props.row.id)"
                                    size="mini">
