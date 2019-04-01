@@ -84,17 +84,6 @@
                     </el-select>
                 </el-form-item>
 
-                <el-form-item v-if="workWithNode.show_on_index === 1" label="Вид отображения на главной">
-                    <el-select v-model="workWithNode.type_index" placeholder="Вид отображения на главной" prop="type_index">
-                        <el-option
-                                v-for="item in this.selectFilterIndexTypes"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-
                 <el-form-item v-if="workWithNode.type !== 0" label="Показать в шапке">
                     <el-select v-model="workWithNode.show_on_header" placeholder="Показать в шапке" prop="show_on_header">
                         <el-option
@@ -205,9 +194,6 @@
             selectBoolean: function () {
                 return this.$store.getters.selectDataBoolean;
             },
-            selectFilterIndexTypes: function () {
-                return this.$store.getters.selectDataFilterIndexTypes;
-            },
             getParentFilters: function () {
                 let filters = [];
                 if (this.filters.length) {
@@ -303,7 +289,6 @@
                     show_on_index: 0,
                     show_on_header: 0,
                     show_on_footer: 0,
-                    type_index: 1,
                     image: null,
                     image_preview: null,
                     image_origin: null,

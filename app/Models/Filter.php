@@ -31,7 +31,6 @@ use Nestable\NestableTrait;
  * @property int $show_on_index
  * @property int|null $show_on_header
  * @property int|null $show_on_footer
- * @property int|null $type_index
  * @property string|null $image_origin
  * @property string|null $image_preview
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Filter whereImageOrigin($value)
@@ -60,7 +59,6 @@ class Filter extends Model
         'show_on_index',
         'show_on_header',
         'show_on_footer',
-        'type_index',
         'image_origin',
         'image_preview'
     ];
@@ -72,7 +70,6 @@ class Filter extends Model
         'show_on_index' => 'integer',
         'show_on_header' => 'integer',
         'show_on_footer' => 'integer',
-        'type_index' => 'integer',
     ];
     public $timestamps = false;
     protected $parent = 'parent_id';
@@ -103,7 +100,6 @@ class Filter extends Model
         $model->show_on_index = request()->get('show_on_index');
         $model->show_on_header = request()->get('show_on_header');
         $model->show_on_footer = request()->get('show_on_footer');
-        $model->type_index = request()->get('type_index');
 
         if ($image_origin !== null && $image_preview !== null) {
             $this->deleteImages($model);

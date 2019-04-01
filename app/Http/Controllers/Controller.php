@@ -11,12 +11,14 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    protected $validate_rules,
+    protected $data,
+              $validate_rules,
               $validate_messages,
               $validate_attributes;
 
     public function __construct()
     {
         $this->validate_rules = $this->validate_messages = $this->validate_attributes = [];
+        $this->data = [];
     }
 }

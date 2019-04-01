@@ -33,9 +33,7 @@
 </template>
 
 <script>
-import {
-    PageAside
-} from './page';
+import { PageAside } from './page';
 
 export default {
     name: 'layout',

@@ -10,8 +10,8 @@ export function show(id) {
     return axios.get(`/api/admin/types/${id}`);
 }
 
-export function update(id, request) {
-    return axios.patch(`/api/admin/types/${id}`, request);
+export function update(request) {
+    return axios.post(`/api/admin/types/update`, request);
 }
 
 export function create(request) {

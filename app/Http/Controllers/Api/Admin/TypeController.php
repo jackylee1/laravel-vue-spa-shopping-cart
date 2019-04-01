@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Models\Type;
+use App\Tools\File;
+use App\Tools\Image;
 use App\Traits\ValidateTrait;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -11,6 +13,24 @@ use Illuminate\Support\Facades\Validator;
 class TypeController extends Controller
 {
     use ValidateTrait;
+
+    private $path,
+        $image_origin,
+        $image_preview,
+        $resize_params;
+
+    public function __construct() {
+        parent::__construct();
+
+        $this->path = 'public/images/type/';
+        $this->resize_params = [
+            'width' => 300,
+            'height' => 300,
+            'aspect_ratio' => true,
+            'crop' => false
+        ];
+        $this->image_origin = $this->image_preview = null;
+    }
 
     private function validateForUpdate() {
         $this->setValidateRule([
@@ -27,12 +47,18 @@ class TypeController extends Controller
         $this->setValidateRule([
             'name' => 'required|string|max:191',
             'sorting_order' => 'required|integer',
-            'slug' => $rules_slug
+            'slug' => $rules_slug,
+            'image' => 'nullable|image|max:2048',
+            'show_on_footer' => 'nullable|boolean',
+            'show_on_index' => 'nullable|boolean',
         ]);
         $this->setValidateAttribute([
             'name' => 'Наименование',
             'slug' => 'SEO URL',
-            'sorting_order' => 'Порядок сортировки'
+            'sorting_order' => 'Порядок сортировки',
+            'show_on_index' => 'Показать на главной',
+            'show_on_footer' => 'Показать в футере',
+            'image' => 'Изображение'
         ]);
     }
 
@@ -53,12 +79,30 @@ class TypeController extends Controller
         ]);
     }
 
+    private function uploadImage() {
+        if (request()->hasFile('image')) {
+            $this->image_origin = File::upload(request(), ['file_key' => 'image', 'path_save' => $this->path]);
+            $this->image_preview = File::upload(request(), ['file_key' => 'image', 'path_save' => $this->path]);
+
+            Image::resize(
+                public_path("app/{$this->image_preview->full_path}"),
+                public_path("app/$this->path"),
+                $this->resize_params
+            );
+
+            $this->image_origin = $this->image_origin->file_name;
+            $this->image_preview = $this->image_preview->file_name;
+        }
+    }
+
     public function store(Request $request)
     {
         $this->generateValidate();
         $request->validate($this->validate_rules, [], $this->validate_attributes);
 
-        $type = Type::createModel();
+        $this->uploadImage();
+
+        $type = Type::createModel($this->image_origin, $this->image_preview);
 
         return response()->json([
             'status' => 'success',
@@ -81,12 +125,14 @@ class TypeController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         $this->generateValidate(true);
         $request->validate($this->validate_rules, [], $this->validate_attributes);
 
-        $type = Type::updateModel();
+        $this->uploadImage();
+
+        $type = Type::updateModel($this->image_origin, $this->image_preview);
 
         return response()->json([
             'status' => 'success',

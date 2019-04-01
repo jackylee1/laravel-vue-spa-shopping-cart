@@ -17,6 +17,10 @@ class CreateTypesTable extends Migration
             $table->increments('id');
             $table->char('name');
             $table->char('slug');
+            $table->char('image_origin')->nullable();
+            $table->char('image_preview')->nullable();
+            $table->boolean('show_on_index')->default(false);
+            $table->boolean('show_on_footer')->default(false);
             $table->integer('sorting_order')->default(0);
         });
     }

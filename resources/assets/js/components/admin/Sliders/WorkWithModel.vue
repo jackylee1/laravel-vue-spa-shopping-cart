@@ -224,6 +224,7 @@
                                 let sliders = self.$store.getters.sliders;
                                 if (sliders.data !== undefined && sliders.data.length) {
                                     sliders.data.unshift(response.data.slider);
+                                    sliders.data = helpersArray.sort(sliders.data);
                                     self.$store.commit('updateSliders', sliders);
                                 }
                                 self.$notify.success({

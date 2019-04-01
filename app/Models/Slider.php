@@ -49,6 +49,10 @@ class Slider extends Model
         return Slider::orderBy('sorting_order', 'asc')->paginate(10);
     }
 
+    public static function getAllSliders() {
+        return Slider::orderBy('sorting_order', 'asc')->get();
+    }
+
     protected function getSlider($id) {
         return Slider::find($id);
     }

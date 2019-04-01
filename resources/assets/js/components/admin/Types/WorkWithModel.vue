@@ -9,11 +9,54 @@
                      @keydown.enter="onSubmit"
                      :model="form"
                      label-width="120px">
+
                 <el-form-item label="Наименование" prop="name">
                     <el-input type="text" v-model="form.name" placeholder="Введите Имя"></el-input>
                 </el-form-item>
+
                 <el-form-item label="SEO URL" prop="slug">
                     <el-input type="text" v-model="form.slug" placeholder="SEO URL"></el-input>
+                </el-form-item>
+
+                <el-form-item label="Текущее изображение" v-if="form.image_preview !== null && form.image_preview !== undefined">
+                    <img width="100" height="auto" :src="'/app/public/images/type/'+form.image_preview">
+                </el-form-item>
+
+                <el-form-item label="Изображение" prop="image">
+                    <el-upload
+                            name="image"
+                            :multiple="false"
+                            :show-file-list="false"
+                            :on-change="changeDataInImageField"
+                            :action="'windows.location.href'"
+                            :auto-upload="false">
+                        <el-button slot="trigger" size="small" type="primary">Выбрать изображение</el-button>
+                        <el-button style="margin-left: 10px;" size="small" type="danger" @click="resetImage">Очистить</el-button>
+                        <div class="el-upload__tip" slot="tip">jpg/png/jpeg/gif/ изображения размером не более 2048kb</div>
+                        <div v-if="fileName.length">Выбранное изображение: {{fileName}}</div>
+                    </el-upload>
+                </el-form-item>
+
+                <el-form-item label="Показать на главной">
+                    <el-select v-model="form.show_on_index" placeholder="Показать на главной" prop="show_on_index">
+                        <el-option
+                                v-for="item in this.selectBoolean"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+
+                <el-form-item label="Показать в футере">
+                    <el-select v-model="form.show_on_footer" placeholder="Показать в футере" prop="show_on_footer">
+                        <el-option
+                                v-for="item in this.selectBoolean"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
 
                 <el-form-item label="Порядок сортировки" prop="sorting_order">
@@ -210,6 +253,7 @@
                     children: 'children',
                     label: 'name'
                 },
+                fileName: '',
                 countChangesSlug: 0,
                 showTree: false,
                 showFilters: false,
@@ -244,6 +288,9 @@
             types: function() {
                 return this.$store.getters.types
             },
+            selectBoolean: function () {
+                return this.$store.getters.selectDataBoolean;
+            },
             renderSelectParent: function() {
                 let result = this.categories;
                 if (!result.find((item) => item.id === 1)) {
@@ -256,6 +303,14 @@
             }
         },
         methods: {
+            changeDataInImageField: function(file, fileListt) {
+                this.fileName = file.name;
+                this.form.image = file.raw;
+            },
+            resetImage: function() {
+                this.form.image = null;
+                this.fileName = '';
+            },
             changeOldForm: function(data) {
                 this.oldForm = data;
             },
@@ -453,7 +508,12 @@
                     id: null,
                     name: '',
                     sorting_order: 0,
-                    slug: ''
+                    slug: '',
+                    show_on_index: 0,
+                    show_on_footer: 0,
+                    image: null,
+                    image_preview: null,
+                    image_origin: null,
                 }
             },
             setBreadcrumbElements: function () {
@@ -463,43 +523,53 @@
                     {href: '', title: this.pageTitle}
                 ];
             },
+            getFromData: function (objData) {
+                let formData = new FormData();
+                Object.keys(objData).forEach(key => {
+                    if (objData[key] !== null) {
+                        formData.append(key, objData[key]);
+                    }
+                });
+
+                return formData;
+            },
             onSubmit: function () {
                 this.$refs['formWorkWithModel'].validate((valid) => {
                     if (valid) {
                         if (this.currentRoute.name === 'types-update') {
-                            let self = this;
-                            ApiTypes.update(this.$route.params.id, this.form).then((response) => {
+                            ApiTypes.update(this.getFromData(this.form)).then((response) => {
                                 this.$notify.success({
                                     offset: 50,
                                     title: 'Запрос успешно выполнен',
                                     message: response.data.message
                                 });
 
-                                self.oldForm = response.data.type;
-                                self.setDataToStore(response.data.type);
+                                this.oldForm = response.data.type;
+                                this.form = response.data.type;
+                                this.sortCategories();
+                                this.setDataToStore(response.data.type);
                             }).catch((error) => {
-                                self.alerts = error.response.data.errors;
-                                self.typeAlerts = 'error';
+                                this.alerts = error.response.data.errors;
+                                this.typeAlerts = 'error';
                             });
                         }
                         else {
-                            let self = this;
-                            ApiTypes.create(self.form).then((response) => {
-                                let types = self.types;
+                            ApiTypes.create(this.getFromData(this.form)).then((response) => {
+                                let types = this.types;
                                 if (types.length) {
                                     types.unshift(response.data.type);
 
-                                    self.$store.commit('updateTypes', this.sortTypes(types));
+                                    this.$store.commit('updateTypes', this.sortTypes(types));
                                 }
-                                self.$notify.success({
+                                this.$notify.success({
                                     offset: 50,
                                     title: 'Запрос успешно выполнен',
                                     message: response.data.message
                                 });
-                                self.$router.push({name: 'types-list'});
+                                this.$router.push({name: 'types-list'});
                             }).catch((error) => {
-                                self.alerts = error.response.data.errors;
-                                self.typeAlerts = 'error';
+                                this.alerts = error.response.data.errors;
+                                this.typeAlerts = 'error';
                             });
                         }
                     } else {

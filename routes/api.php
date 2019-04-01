@@ -6,6 +6,10 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('me', 'AuthController@me');
 });
 
+Route::group([], function () {
+    Route::get('index', 'Api\PageController@index');
+});
+
 Route::group([
     'middleware' => ['jwt.auth', 'only-administration'],
     'prefix' => 'admin'
@@ -17,8 +21,9 @@ Route::group([
     ]);
 
     Route::resource('types', 'Api\Admin\TypeController')->only([
-        'index', 'show', 'store', 'update', 'destroy'
+        'index', 'show', 'store', 'destroy'
     ]);
+    Route::post('/types/update', 'Api\Admin\TypeController@update');
     Route::post('/types/handle_filter', 'Api\Admin\TypeController@handleFilter');
 
     Route::post('/user_groups/user_action_handler', 'Api\Admin\UserGroupController@userActionHandler');

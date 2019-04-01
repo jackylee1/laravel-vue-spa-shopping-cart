@@ -27,7 +27,7 @@ class FilterController extends Controller
             'width' => 300,
             'height' => 300,
             'aspect_ratio' => true,
-            'crop' => true
+            'crop' => false
         ];
         $this->image_origin = $this->image_preview = null;
     }
@@ -79,7 +79,6 @@ class FilterController extends Controller
             'show_on_header' => 'nullable|boolean',
             'show_on_footer' => 'nullable|boolean',
             'show_on_index' => 'nullable|boolean',
-            'type_index' => 'nullable|required_with:show_on_index|between:1,2',
         ]);
 
         $this->setValidateAttribute([
@@ -91,7 +90,6 @@ class FilterController extends Controller
             'show_on_header' => 'Показать в шапке',
             'show_on_index' => 'Показать на главной',
             'show_on_footer' => 'Показать в футере',
-            'type_index' => 'Вид отображения на главной',
             'image' => 'Изображение фильтра'
         ]);
     }
