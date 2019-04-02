@@ -4,14 +4,18 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6 sociality">
-                        <div class="social_text">
+                        <div v-if="linkToSocialNetworks.length"
+                             class="social_text">
                             <h2>Следите в социальных сетях</h2>
                         </div>
-                        <div class="social_icons">
-                            <a href="#"><img src="/assets/public/images/socials/youtube.png" alt=""></a>
-                            <a href="#"><img src="/assets/public/images/socials/instagram.png" alt=""></a>
-                            <a href="#"><img src="/assets/public/images/socials/facebook.png" alt=""></a>
-                            <a href="#"><img src="/assets/public/images/socials/telegram.png" alt=""></a>
+                        <div v-if="linkToSocialNetworks.length"
+                             class="social_icons">
+                            <template v-for="link in linkToSocialNetworks">
+                                <a :href="link.url" target="_blank">
+                                    <img :src="'/app/public/images/social_network/'+ link.image_preview"
+                                         :alt="link.url">
+                                </a>
+                            </template>
                         </div>
                     </div>
                     <div class="col-lg-6 searching">
@@ -19,9 +23,25 @@
                             <h2>Подписаться на рассылку</h2>
                             <p>узнавайте первыми про акции и новинки</p>
                         </div>
-                        <form class="form-inline">
-                            <input class="form-control form-control-sm mr-3" type="text" placeholder="Введите Ваш электронный адрес..." aria-label="Search">
-                            <a href="#" class="to_subscribe">ПОДПИСАТЬСЯ</a>
+                        <form @keyup.enter="subscribe"
+                              action="javascript:void(0)"
+                              class="form-inline">
+                            <input v-model="email"
+                                   v-validate="'required|email'"
+                                   data-vv-as="E-Mail"
+                                   name="email"
+                                   class="form-control form-control-sm mr-3"
+                                   type="text"
+                                   placeholder="Введите Ваш электронный адрес..." aria-label="">
+                            <a @click="subscribe" href="javascript:void(0)" class="to_subscribe">ПОДПИСАТЬСЯ</a>
+
+                            <template v-if="verificationErrors.items !== undefined && verificationErrors.items.length">
+                                    <div class="row col-sm-12">
+                                        <div class="alert alert-danger" style="margin-top: 10px;min-width: 100%">
+                                            <span v-for="error in verificationErrors.items">{{ error.msg }}</span>
+                                        </div>
+                                    </div>
+                            </template>
                         </form>
                     </div>
                 </div>
@@ -212,7 +232,68 @@
 </template>
 
 <script>
+    import * as ApiPage from '../../app/public/api/Page';
+    import * as ApiSubscribe from '../../app/public/api/Subscribe';
+
     export default {
         name: 'Footer',
+        mounted() {
+            if (!this.loadIndex) {
+                ApiPage.index().then((res) => {
+                    this.linkToSocialNetworks = res.data.link_to_social_networks;
+
+                    this.$store.commit('updateLinkToSocialNetworks', this.sliders);
+                    this.$store.commit('updateLoadIndex', true);
+                });
+            }
+            else {
+                this.linkToSocialNetworks = this.linkToSocialNetworksStore;
+            }
+        },
+        computed: {
+            linkToSocialNetworksStore: function () {
+                return this.$store.getters.linkToSocialNetworks;
+            },
+            loadIndex: function () {
+                return this.$store.getters.loadIndex;
+            }
+        },
+        data() {
+            return {
+                linkToSocialNetworks: [],
+                email: ''
+            }
+        },
+        methods: {
+            subscribe: function () {
+                this.$validator.validateAll().then((result) => {
+                    if (result) {
+                        let self = this;
+                        ApiSubscribe.create({email: this.email}).then((res) => {
+                            this.$notify({
+                                type: 'success',
+                                title: 'Запрос успешно выполнен',
+                                text: res.data.message
+                            });
+                        }).catch((error) => {
+                            Object.keys(error.response.data.errors).forEach(function (key) {
+                                error.response.data.errors[key].forEach((message) => {
+                                    self.verificationErrors.add({
+                                        field: key,
+                                        msg: message
+                                    });
+                                });
+                            });
+                        });
+                        return;
+                    }
+                    this.$notify({
+                        type: 'error',
+                        title: 'Ошибка при валидации формы',
+                        text: 'Проверте правильность ввода данных'
+                    });
+                });
+            }
+        },
     }
 </script>

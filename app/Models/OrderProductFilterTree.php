@@ -18,6 +18,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\OrderProductFilterTree whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\OrderProductFilterTree whereOrderProductId($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\OrderProductFilterTree disableCache()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\OrderProductFilterTree withCacheCooldownSeconds($seconds)
  */
 class OrderProductFilterTree extends Model
 {

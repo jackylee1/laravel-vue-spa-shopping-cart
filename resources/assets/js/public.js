@@ -8,9 +8,19 @@ import { routes } from './app/public/routes';
 import { Layout } from './components/public';
 import StoreData from './app/public/store';
 import { initialize } from './app/public/helpers/general';
+import VeeValidate, { Validator, ErrorBag } from 'vee-validate';
+import VeeValidateRu from 'vee-validate/dist/locale/ru';
+import Notifications from 'vue-notification';
+
+Vue.use(VeeValidate, {
+    errorBagName: 'verificationErrors'
+});
+Validator.localize('ru', VeeValidateRu);
+const VeeValidateBag = new ErrorBag();
 
 Vue.use(VueRouter);
 Vue.use(Vuex);
+Vue.use(Notifications);
 
 const store = new Vuex.Store(StoreData);
 

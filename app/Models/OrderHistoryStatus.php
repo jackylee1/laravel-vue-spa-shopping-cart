@@ -23,6 +23,10 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\OrderHistoryStatus whereOrderStatusId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\OrderHistoryStatus whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \App\Models\OrderStatus $status
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\OrderHistoryStatus disableCache()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\OrderHistoryStatus whereSendStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\OrderHistoryStatus withCacheCooldownSeconds($seconds)
  */
 class OrderHistoryStatus extends Model
 {

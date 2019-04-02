@@ -12,6 +12,7 @@ import { TextBlockDataList, TextBlockDataWorkWithModel } from "../../components/
 import { OrderStatusesList, OrderStatusesWorkWithModel } from "../../components/admin/OrderStatuses";
 import { OrderPaymentMethodsList, OrderPaymentMethodsWorkWithModel } from "../../components/admin/OrderPaymentMethods";
 import { OrdersList, OrdersWorkWithModel } from "../../components/admin/Orders";
+import { LinkToSocialNetworksList, LinkToSocialNetworksModel } from "../../components/admin/LinkToSocialNetworks";
 
 export const routes = [
     {
@@ -470,6 +471,36 @@ export const routes = [
                     hidden: true,
                     name: 'Обновление данных',
                     title: 'Обновление данных'
+                }
+            },
+            {
+                name: 'link-to-social-networks-list',
+                path: 'link_to_social_networks',
+                component: LinkToSocialNetworksList,
+                meta: {
+                    hidden: false,
+                    name: 'Ссылки на соц.сети',
+                    title: 'Список ссылок на соц.сети'
+                }
+            },
+            {
+                name: 'link-to-social-networks-create',
+                path: 'link_to_social_networks/create',
+                component: LinkToSocialNetworksModel,
+                meta: {
+                    hidden: false,
+                    name: 'Добавить ссылку на соц.сети',
+                    title: 'Добавление ссылки на соц.сети'
+                }
+            },
+            {
+                name: 'link-to-social-networks-update',
+                path: 'link_to_social_networks/:id',
+                component: LinkToSocialNetworksModel,
+                meta: {
+                    hidden: true,
+                    name: 'Обновление данных ссылки на соц.сети',
+                    title: 'Обновление данных ссылки на соц.сети'
                 }
             }
         ]

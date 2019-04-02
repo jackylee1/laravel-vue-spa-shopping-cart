@@ -24,6 +24,16 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\OrderProduct whereProductId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\OrderProduct whereQuantity($value)
  * @mixin \Eloquent
+ * @property int $product_available_id
+ * @property float $product_price
+ * @property float|null $product_discount_price
+ * @property-read \App\Models\ProductAvailable $available
+ * @property-read \App\Models\Product $product
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\OrderProduct disableCache()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\OrderProduct whereProductAvailableId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\OrderProduct whereProductDiscountPrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\OrderProduct whereProductPrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\OrderProduct withCacheCooldownSeconds($seconds)
  */
 class OrderProduct extends Model
 {

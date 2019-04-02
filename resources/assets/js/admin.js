@@ -1,4 +1,5 @@
 require('./bootstrap');
+window.Pusher = require('pusher-js');
 
 import Vue from 'vue';
 import VueRouter from 'vue-router';
@@ -12,7 +13,8 @@ import ElementUI from 'element-ui';
 import tinymce from 'vue-tinymce-editor';
 import FileManager from 'laravel-file-manager';
 import Croppa from 'vue-croppa';
-import VueClipboard from 'vue-clipboard2'
+import VueClipboard from 'vue-clipboard2';
+import Echo from 'laravel-echo'
 
 locale.use(lang);
 VueClipboard.config.autoSetContainer = true;
@@ -40,6 +42,22 @@ if (store.getters.currentUser !== null && store.getters.currentUser.status === '
         store,
         headers: {'Authorization': `Bearer ${store.getters.currentUser.token}`},
         baseUrl: `${window.location.protocol}//${window.location.host}/file-manager/`,
+    });
+
+    window.Echo = new Echo({
+        broadcaster: 'pusher',
+        key: process.env.MIX_PUSHER_APP_KEY,
+        cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+        encrypted: true,
+        auth: {
+            headers: {
+                'Authorization': `Bearer ${store.getters.currentUser.token}`
+            }
+        }
+    });
+
+    window.Echo.private('messages').listen('AdminEvent', (e) => {
+        console.log(e);
     });
 }
 

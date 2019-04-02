@@ -44,6 +44,19 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Order whereUserPatronymic($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Order whereUserSurname($value)
  * @mixin \Eloquent
+ * @property int|null $order_payment_method_id
+ * @property int|null $promotional_code_id
+ * @property int $read_status
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\OrderHistoryStatus[] $historyStatuses
+ * @property-read \App\Models\OrderPaymentMethod $paymentMethod
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\OrderProduct[] $products
+ * @property-read \App\Models\PromotionalCode $promotionalCode
+ * @property-read \App\Models\OrderStatus $status
+ * @property-read \App\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Order disableCache()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Order whereOrderPaymentMethodId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Order whereReadStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Order withCacheCooldownSeconds($seconds)
  */
 class Order extends Model
 {

@@ -25,6 +25,14 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Type disableCache()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Type withCacheCooldownSeconds($seconds)
+ * @property int|null $show_on_index
+ * @property int|null $show_on_footer
+ * @property string|null $image_preview
+ * @property string|null $image_origin
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Type whereImageOrigin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Type whereImagePreview($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Type whereShowOnFooter($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Type whereShowOnIndex($value)
  */
 class Type extends Model
 {

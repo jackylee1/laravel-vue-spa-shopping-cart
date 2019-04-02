@@ -8,6 +8,7 @@ export default {
         isLoggedIn: !!user,
         loadIndex: false,
         sliders: [],
+        linkToSocialNetworks: [],
     },
     getters: {
         sliders(state) {
@@ -16,6 +17,9 @@ export default {
         loadIndex(state) {
             return state.loadIndex;
         },
+        linkToSocialNetworks(state) {
+            return state.linkToSocialNetworks;
+        },
     },
     mutations: {
         updateSliders: function(state, payload) {
@@ -23,6 +27,9 @@ export default {
         },
         updateLoadIndex: function(state, payload) {
             state.loadIndex = payload;
+        },
+        updateLinkToSocialNetworks: function(state, payload) {
+            state.linkToSocialNetworks = payload;
         },
     }
 };

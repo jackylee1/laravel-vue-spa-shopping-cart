@@ -30,10 +30,6 @@ export default {
                 { value: 2, label: 'Выпадающий список (выбор нескольких элементов)' },
                 { value: 0, label: 'Дочерний элемент' }
             ],
-            filterIndexTypes: [
-                { value: 1, label: 'Плитка' },
-                { value: 2, label: 'Изображение' }
-            ],
             boolean: [
                 { value: 0, label: 'Нет' },
                 { value: 1, label: 'Да' }
@@ -81,10 +77,14 @@ export default {
         orderStatuses: [],
         orderPaymentMethods: [],
         orders: [],
+        linkToSocialNetworks: [],
     },
     getters: {
         isLoggedIn(state) {
             return state.isLoggedIn;
+        },
+        linkToSocialNetworks(state) {
+            return state.linkToSocialNetworks;
         },
         currentUser: function (state) {
             return state.currentUser;
@@ -136,9 +136,6 @@ export default {
         },
         selectDataFilterTypes: function (state) {
             return state.selectData.filterTypes;
-        },
-        selectDataFilterIndexTypes: function (state) {
-            return state.selectData.filterIndexTypes;
         },
         selectDataBoolean: function (state) {
             return state.selectData.boolean;
@@ -231,6 +228,9 @@ export default {
         },
         updateOrders: function (state, payload) {
             state.orders = payload;
+        },
+        updateLinkToSocialNetworks: function (state, payload) {
+            state.linkToSocialNetworks = payload;
         }
     },
     actions: {

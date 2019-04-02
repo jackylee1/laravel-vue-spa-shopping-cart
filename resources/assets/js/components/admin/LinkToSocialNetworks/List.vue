@@ -6,7 +6,7 @@
 
         <el-table
                 v-loading="loading"
-                :data="sliders"
+                :data="linkToSocialNetworks"
                 style="width: 100%">
             <el-table-column
                     fixed
@@ -17,15 +17,17 @@
             <el-table-column
                     fixed
                     label="Изображение"
-                    width="120">
+                    width="150">
                 <template slot-scope="props" v-if="props.row.image_preview !== null">
-                    <img width="70px" height="auto" :src="'/app/public/images/slider/'+ props.row.image_preview">
+                    <img width="70px" height="auto" :src="'/app/public/images/social_network/'+ props.row.image_preview">
                 </template>
             </el-table-column>
             <el-table-column
-                    prop="title"
-                    width="200px"
-                    label="Заголовок">
+                    label="Ссылка"
+                    width="300">
+                <template slot-scope="props">
+                    <a target="_blank" :href="props.row.url">{{props.row.url}}</a>
+                </template>
             </el-table-column>
             <el-table-column
                     prop="sorting_order"
@@ -45,18 +47,13 @@
                         <el-button
                                 size="mini"
                                 type="danger"
-                                @click.native.prevent="btnDeleteSlider(props.$index, sliders)">
+                                @click.native.prevent="btnDeleteLink(props.$index, sliders)">
                             <i class="el-icon-delete"></i>
                         </el-button>
                     </el-button-group>
                 </template>
             </el-table-column>
         </el-table>
-
-        <PageElementsPagination :total="total"
-                                :currentPage="currentPage"
-                                :pageSize="pageSize"
-                                v-on:change="handleCurrentPageChange"/>
 
         <el-dialog
                 :title="titleDialog"
@@ -70,7 +67,7 @@
             <span slot="footer" class="dialog-footer">
                 <el-button-group>
                     <el-button @click="dialogVisible = false">Отмена</el-button>
-                    <el-button type="primary" @click="deleteSlider">Подтверждаю</el-button>
+                    <el-button type="primary" @click="deleteLink">Подтверждаю</el-button>
                 </el-button-group>
             </span>
         </el-dialog>
@@ -79,112 +76,91 @@
 
 <script>
     import * as helperRouter from '../../../app/helpers/router';
-    import * as ApiSliders from '../../../app/admin/api/Sliders';
+    import * as ApiLinkToSocialNetworks from '../../../app/admin/api/LinkToSocialNetworks';
 
-    import { PageElementsPagination, PageElementsBreadcrumb, PageElementsAlerts } from '../page/elements';
+    import { PageElementsBreadcrumb, PageElementsAlerts } from '../page/elements';
 
     export default {
-        name: 'products-list',
+        name: 'link-to-social-networks-list',
         mounted () {
             this.breadcrumbElements = [
                 {href: this.$router.resolve({name: 'main'}).href, title: helperRouter.getRouteByName(this.$router, 'main').meta.title},
-                {href: this.$router.resolve({name: 'sliders-list'}).href, title: this.$router.currentRoute.meta.title},
+                {href: this.$router.resolve({name: 'link-to-social-networks-list'}).href, title: this.$router.currentRoute.meta.title},
             ];
-            if (typeof this.slidersStore.data !== 'undefined'
-                && this.slidersStore.data.length) {
-                this.sliders = this.slidersStore.data;
-                this.total = this.slidersStore.total;
-                this.currentPage = this.slidersStore.current_page;
-                this.pageSize = this.slidersStore.per_page;
-
-                helperRouter.updatePage(this.$router, this.currentPage);
-
+            if (typeof this.linkToSocialNetworksStore !== 'undefined'
+                && this.linkToSocialNetworksStore.length) {
+                this.linkToSocialNetworks = this.linkToSocialNetworksStore;
                 this.loading = false;
-
                 return true;
             }
 
-            let page = helperRouter.currentPage(this.$router);
-            this.getSliders((page !== undefined) ? page : 1);
+            this.getLinkToSocialNetworks();
         },
         data() {
             return {
-                sliders: [],
-                currentPage: 0,
-                total: 0,
-                pageSize: 0,
+                linkToSocialNetworks: [],
                 breadcrumbElements: [],
                 loading: true,
                 dialogVisible: false,
                 titleDialog: '',
-                operationsOnSlider: null,
+                operationsOnLinkToSocialNetwork: null,
                 typeAlert: 'warning',
                 titleAlert: '',
                 alerts: [],
             }
         },
         computed: {
-            slidersStore: function () {
-                return this.$store.getters.sliders;
+            linkToSocialNetworksStore: function () {
+                return this.$store.getters.linkToSocialNetworks;
             }
         },
         methods: {
-            deleteSlider: function () {
-                if (this.operationsOnSlider) {
-                    ApiSliders.destroy(this.operationsOnSlider.id).then((response) => {
-                        let sliders = this.slidersStore;
-                        let index = sliders.data.findIndex((item) => item.id === this.operationsOnSlider.id);
-                        sliders.data.splice(index, 1);
-                        this.$store.commit('updateSliders', sliders);
+            deleteLink: function () {
+                if (this.operationsOnLinkToSocialNetwork) {
+                    ApiLinkToSocialNetworks.destroy(this.operationsOnLinkToSocialNetwork.id).then((response) => {
+                        let linkToSocialNetworks = this.linkToSocialNetworksStore;
+                        let index = linkToSocialNetworks.findIndex((item) => item.id === this.operationsOnLinkToSocialNetwork.id);
+                        linkToSocialNetworks.splice(index, 1);
+                        this.$store.commit('updateLinkToSocialNetworks', linkToSocialNetworks);
                         this.dialogVisible = false;
-                        this.operationsOnSlider = null;
+                        this.operationsOnLinkToSocialNetwork = null;
                         this.$notify.success({
                             offset: 50,
-                            title: 'Удаление слайда',
+                            title: 'Удаление ссылки',
                             message: response.data.message
                         });
                     }).catch((error) => {
                         this.$notify.error({
                             offset: 50,
                             title: 'Ошибка',
-                            message: 'при удалении слайда'
+                            message: 'при удалении ссылки'
                         });
                         this.typeAlert = 'error';
                         this.alerts = error.response.data.errors;
                         this.dialogVisible = false;
-                        this.operationsOnSlider = null;
+                        this.operationsOnLinkToSocialNetwork = null;
                     });
                 }
             },
-            btnDeleteSlider: function (index, sliders) {
-                this.operationsOnSlider = sliders[index];
-                this.titleDialog = 'Удаление слайда';
-                this.titleAlert = `Вы дейстительно хотите удалить слайд: ${this.operationsOnSlider.title} (ID: ${this.operationsOnSlider.id})?`;
+            btnDeleteLink: function (index, links) {
+                this.operationsOnLinkToSocialNetwork = links[index];
+                this.titleDialog = 'Удаление ссылки';
+                this.titleAlert = `Вы дейстительно хотите удалить ссылку: ${this.operationsOnLinkToSocialNetwork.url} (ID: ${this.operationsOnLinkToSocialNetwork.id})?`;
                 this.dialogVisible = true;
             },
-            getSliders: function (page = 1) {
+            getLinkToSocialNetworks: function () {
                 this.loading = true;
-                return ApiSliders.get(page).then((response) => {
-                    this.sliders = response.data.sliders.data;
-                    this.total = response.data.sliders.total;
-                    this.currentPage = response.data.sliders.current_page;
-                    this.pageSize = response.data.sliders.per_page;
-                    this.$store.commit('updateSliders', response.data.sliders);
-
-                    helperRouter.updatePage(this.$router, this.currentPage);
-
+                return ApiLinkToSocialNetworks.get().then((response) => {
+                    this.linkToSocialNetworks = response.data.link_to_social_networks;
+                    this.$store.commit('updateLinkToSocialNetworks', this.linkToSocialNetworks);
                     this.loading = false;
                 });
             },
-            handleCurrentPageChange: function (page) {
-                this.getSliders(page);
-            },
             goToUpdate: function (id) {
-                this.$router.push({name: 'sliders-update', params: {id: id}})
+                this.$router.push({name: 'link-to-social-networks-update', params: {id: id}})
             }
         },
         components: {
-            PageElementsPagination,
             PageElementsBreadcrumb,
             PageElementsAlerts
         },

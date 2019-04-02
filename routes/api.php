@@ -8,6 +8,7 @@ Route::group(['prefix' => 'auth'], function () {
 
 Route::group([], function () {
     Route::get('index', 'Api\PageController@index');
+    Route::post('subscribe', 'Api\SubscribeController@store');
 });
 
 Route::group([
@@ -71,6 +72,11 @@ Route::group([
         'index', 'store', 'destroy', 'show'
     ]);
     Route::post('sliders/update', 'Api\Admin\SliderController@update');
+
+    Route::resource('link_to_social_networks', 'Api\Admin\LinkToSocialNetworkController')->only([
+        'index', 'store', 'destroy', 'show'
+    ]);
+    Route::post('link_to_social_networks/update', 'Api\Admin\LinkToSocialNetworkController@update');
 
     Route::resource('text_block_titles', 'Api\Admin\TextBlockTitleController')->only([
         'index', 'show', 'store', 'update', 'destroy'

@@ -18,6 +18,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\OrderPaymentMethod whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\OrderPaymentMethod whereSortingOrder($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\OrderPaymentMethod disableCache()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\OrderPaymentMethod withCacheCooldownSeconds($seconds)
  */
 class OrderPaymentMethod extends Model
 {

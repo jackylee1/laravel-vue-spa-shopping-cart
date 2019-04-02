@@ -21,6 +21,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\OrderStatus whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\OrderStatus whereSortingOrder($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\OrderStatus disableCache()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\OrderStatus whereColor($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\OrderStatus withCacheCooldownSeconds($seconds)
  */
 class OrderStatus extends Model
 {

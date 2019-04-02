@@ -44,6 +44,18 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string $user_name
+ * @property string $user_surname
+ * @property string $user_patronymic
+ * @property int $discount
+ * @property string $phone
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\PromotionCodeUsageHistory[] $promotionalCodeUsage
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User disableCache()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User wherePhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereUserName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereUserPatronymic($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereUserSurname($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User withCacheCooldownSeconds($seconds)
  */
 class User extends Authenticatable implements JWTSubject
 {
