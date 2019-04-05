@@ -7,7 +7,8 @@ Route::group(['prefix' => 'auth'], function () {
 });
 
 Route::group([], function () {
-    Route::get('index', 'Api\PageController@index');
+    Route::post('index', 'Api\PageController@index');
+    Route::post('common', 'Api\PageController@common');
     Route::post('subscribe', 'Api\SubscribeController@store');
 });
 
@@ -97,6 +98,14 @@ Route::group([
     Route::resource('orders', 'Api\Admin\OrderController')->only([
         'index', 'show', 'store', 'update', 'destroy'
     ]);
+
+    Route::resource('subscribes', 'Api\Admin\SubscribeController')->only([
+        'index', 'show', 'store', 'update', 'destroy'
+    ]);
+    Route::post('subscribes/update_read_status', 'Api\Admin\SubscribeController@updateReadStatus');
+
+    Route::post('new_notifications', 'Api\Admin\NotificationController@getNew');
+
     Route::prefix('orders')->group(function () {
         Route::post('add_product', 'Api\Admin\OrderController@addProduct');
         Route::post('delete_product', 'Api\Admin\OrderController@deleteProduct');

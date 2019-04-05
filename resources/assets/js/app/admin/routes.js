@@ -13,6 +13,7 @@ import { OrderStatusesList, OrderStatusesWorkWithModel } from "../../components/
 import { OrderPaymentMethodsList, OrderPaymentMethodsWorkWithModel } from "../../components/admin/OrderPaymentMethods";
 import { OrdersList, OrdersWorkWithModel } from "../../components/admin/Orders";
 import { LinkToSocialNetworksList, LinkToSocialNetworksModel } from "../../components/admin/LinkToSocialNetworks";
+import { SubscribesList, SubscribesWorkWithModel } from "../../components/admin/Subscribes";
 
 export const routes = [
     {
@@ -501,6 +502,48 @@ export const routes = [
                     hidden: true,
                     name: 'Обновление данных ссылки на соц.сети',
                     title: 'Обновление данных ссылки на соц.сети'
+                }
+            }
+        ]
+    },
+    {
+        path: '/admin/subscribes',
+        name: 'subscribes',
+        meta: {
+            requiresAuth: true,
+            hidden: false,
+            name: 'Подписки по E-Mail',
+            title: 'Список подписок по E-Mail'
+        },
+        component: LayoutRouterView,
+        children: [
+            {
+                name: 'subscribes-list',
+                path: '',
+                component: SubscribesList,
+                meta: {
+                    hidden: false,
+                    name: 'Просмотреть',
+                    title: 'Список подписок по E-Mail'
+                }
+            },
+            {
+                name: 'subscribes-create',
+                path: 'create',
+                component: SubscribesWorkWithModel,
+                meta: {
+                    hidden: false,
+                    name: 'Добавить',
+                    title: 'Создать подписку'
+                }
+            },
+            {
+                name: 'subscribes-update',
+                path: ':id',
+                component: SubscribesWorkWithModel,
+                meta: {
+                    hidden: true,
+                    title: 'Обновление данных подписки'
                 }
             }
         ]

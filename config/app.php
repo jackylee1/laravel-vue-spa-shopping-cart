@@ -166,6 +166,7 @@ return [
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
         Alexusmai\LaravelFileManager\FileManagerServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
+        Artesaos\SEOTools\Providers\SEOToolsServiceProvider::class,
     ],
 
     /*

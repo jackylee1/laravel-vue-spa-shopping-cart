@@ -1,6 +1,6 @@
 <template>
     <div>
-        <section class="top-line" >
+        <section id="top_line" class="top-line" >
             <div class="container">
                 <div class="row">
                     <div class="col-sm-6">
@@ -65,9 +65,11 @@
             <div class="container">
                 <div class="row">
                     <div class="col-sm-3 logo">
-                        <a class="navbar-brand logotype" href="index.html">
-                            <img class="navbar_logo" src="/assets/public/images/logo.png" alt="FitClothing">
-                        </a>
+                        <router-link :to="{name: 'index'}">
+                            <a class="navbar-brand logotype" href="">
+                                <img class="navbar_logo" src="/assets/public/images/logo.png" alt="FitClothing">
+                            </a>
+                        </router-link>
                         <p class="slogan">брендовая спортивная одежда</p>
                     </div>
                     <div class="col-sm-7 searching">

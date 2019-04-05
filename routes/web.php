@@ -1,5 +1,4 @@
 <?php
-
 Route::get('preview', '\Alexusmai\LaravelFileManager\Controllers\FileManagerController@preview')->name('fm.preview');
 Route::get('thumbnails', '\Alexusmai\LaravelFileManager\Controllers\FileManagerController@thumbnails')->name('fm.thumbnails');
 Route::get('download', '\Alexusmai\LaravelFileManager\Controllers\FileManagerController@download')->name('fm.download');

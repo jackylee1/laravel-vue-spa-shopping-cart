@@ -45,6 +45,10 @@ export default {
                 q: '',
                 status: 'all'
             },
+            subscribes: {
+                q: '',
+                only_new: 0,
+            },
             products: {
                 q: '',
                 selected_type: null,
@@ -66,6 +70,7 @@ export default {
                 only_new: 0,
             }
         },
+        subscribes: [],
         types: [],
         userGroups: [],
         promotionalCodes: [],
@@ -78,6 +83,8 @@ export default {
         orderPaymentMethods: [],
         orders: [],
         linkToSocialNetworks: [],
+        newSubscribes: 0,
+        loadNotifications: false
     },
     getters: {
         isLoggedIn(state) {
@@ -157,7 +164,19 @@ export default {
         },
         orders: function (state) {
             return state.orders;
-        }
+        },
+        subscribes: function (state) {
+            return state.subscribes;
+        },
+        searchSubscribes: function (state) {
+            return state.search.subscribes;
+        },
+        newSubscribes: function (state) {
+            return state.newSubscribes;
+        },
+        loadNotifications: function (state) {
+            return state.loadNotifications;
+        },
     },
     mutations: {
         login: function (state) {
@@ -231,6 +250,18 @@ export default {
         },
         updateLinkToSocialNetworks: function (state, payload) {
             state.linkToSocialNetworks = payload;
+        },
+        updateSubscribes: function (state, payload) {
+            state.subscribes = payload;
+        },
+        updateSearchSubscribes: function (state, payload) {
+            state.search.subscribes = payload;
+        },
+        updateNewSubscribes: function (state, payload) {
+            state.newSubscribes = payload;
+        },
+        updateLoadNotifications: function (state, payload) {
+            state.loadNotifications = payload;
         }
     },
     actions: {

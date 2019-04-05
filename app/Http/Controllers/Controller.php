@@ -11,8 +11,8 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    protected $data,
-              $validate_rules,
+    protected $validate_rules,
+              $data,
               $validate_messages,
               $validate_attributes;
 

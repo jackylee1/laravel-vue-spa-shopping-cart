@@ -34,6 +34,16 @@ class TextBlockTitle extends Model
     ];
     public $timestamps = false;
 
+    public function dataPage() {
+        return $this->hasMany('App\Models\TextBlockData', 'text_block_title_id', 'id');
+    }
+
+    public static function getTitlesAndData() {
+        return TextBlockTitle::with(['dataPage' => function ($query) {
+            $query->orderBy('sorting_order', 'asc');
+        }])->orderBy('sorting_order', 'asc')->get();
+    }
+
     protected function getTitles() {
         return TextBlockTitle::orderBy('sorting_order', 'asc')->get();
     }

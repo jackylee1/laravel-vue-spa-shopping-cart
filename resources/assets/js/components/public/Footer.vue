@@ -35,10 +35,10 @@
                                    placeholder="Введите Ваш электронный адрес..." aria-label="">
                             <a @click="subscribe" href="javascript:void(0)" class="to_subscribe">ПОДПИСАТЬСЯ</a>
 
-                            <template v-if="verificationErrors.items !== undefined && verificationErrors.items.length">
+                            <template v-if="errors.items !== undefined && errors.items.length">
                                     <div class="row col-sm-12">
                                         <div class="alert alert-danger" style="margin-top: 10px;min-width: 100%">
-                                            <span v-for="error in verificationErrors.items">{{ error.msg }}</span>
+                                            <span v-for="error in errors.items">{{ error.msg }}</span>
                                         </div>
                                     </div>
                             </template>
@@ -51,24 +51,29 @@
         <footer class="desktop_footer">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-2 footer_menu">
-                        <h3>Как купить?</h3>
-                        <ul>
-                            <li><a href="#">Вопрос-ответ</a></li>
-                            <li><a href="#">Доставка и оплата</a></li>
-                            <li><a href="#">Условия возврата</a></li>
-                            <li><a href="#">Как заказать?</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-lg-2 footer_menu">
-                        <h3>О нас</h3>
-                        <ul>
-                            <li><a href="#">Таблицы размеров</a></li>
-                            <li><a href="#">О компании</a></li>
-                            <li><a href="#">Отзывы</a></li>
-                            <li><a href="#">Контакты</a></li>
-                        </ul>
-                    </div>
+                    <template v-for="page in textPages">
+                        <div class="col-lg-2 footer_menu">
+                            <h3>{{page.title}}</h3>
+                            <ul>
+                                <template v-for="dataPage in page.data_page">
+                                    <li>
+                                        <template v-if="dataPage.type === 0">
+                                            <router-link :to="{name: 'text_page', params: {slug: dataPage.slug}}">
+                                                <a href="">
+                                                    {{dataPage.title}}
+                                                </a>
+                                            </router-link>
+                                        </template>
+                                        <template v-else>
+                                            <a :href="dataPage.url">
+                                                {{dataPage.title}}
+                                            </a>
+                                        </template>
+                                    </li>
+                                </template>
+                            </ul>
+                        </div>
+                    </template>
                     <div class="col-lg-2 footer_menu">
                         <h3>Наши контакты</h3>
                         <ul>
@@ -110,59 +115,44 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="accordion" id="accordionExample">
-                            <div class="card">
-                                <div class="card-header" id="headingOne">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <h3 class="collapsed" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                                Как купить?
-                                            </h3>
-                                        </div>
-                                        <div class="col-6">
-                                            <h3 class="righted collapsed" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                                <i class="fas fa-chevron-down"></i>
-                                            </h3>
+                            <template v-for="(page, index) in textPages">
+                                <div class="card">
+                                    <div class="card-header"
+                                         :id="'heading-'+page.id">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <h3 class="collapsed"
+                                                    data-toggle="collapse"
+                                                    :data-target="'#collapse-'+page.id"
+                                                    :aria-expanded="(index === 0) ? 'true': 'false'"
+                                                    :aria-controls="'#collapse-'+page.id">
+                                                    {{page.title}}
+                                                </h3>
+                                            </div>
+                                            <div class="col-6">
+                                                <h3 class="righted collapsed"
+                                                    data-toggle="collapse"
+                                                    :data-target="'#collapse-'+page.id"
+                                                    :aria-expanded="(index === 0) ? 'true': 'false'"
+                                                    :aria-controls="'#collapse-'+page.id">
+                                                    <i class="fas fa-chevron-down"></i>
+                                                </h3>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-
-                                <div id="collapseOne" class="collapse open_it" aria-labelledby="headingOne" data-parent="#accordionExample">
-                                    <div class="card-body">
-                                        <ul>
-                                            <li><a href="#">Вопрос-ответ</a></li>
-                                            <li><a href="#">Доставка и оплата</a></li>
-                                            <li><a href="#">Условия возврата</a></li>
-                                            <li><a href="#">Как заказать?</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-header" id="headingTwo">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <h3 class="collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                                О нас
-                                            </h3>
-                                        </div>
-                                        <div class="col-6">
-                                            <h3 class="righted collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                                <i class="fas fa-chevron-down"></i>
-                                            </h3>
+                                    <div :id="'collapse-'+page.id" class="collapse open_it"
+                                         :aria-labelledby="'heading-'+page.id"
+                                         data-parent="#accordionExample">
+                                        <div class="card-body">
+                                            <ul>
+                                                <template v-for="dataPage in page.data_page">
+                                                    <li><a href="#">{{dataPage.title}}</a></li>
+                                                </template>
+                                            </ul>
                                         </div>
                                     </div>
                                 </div>
-                                <div id="collapseTwo" class="collapse open_it" aria-labelledby="headingTwo" data-parent="#accordionExample">
-                                    <div class="card-body">
-                                        <ul>
-                                            <li><a href="#">Таблицы размеров</a></li>
-                                            <li><a href="#">О компании</a></li>
-                                            <li><a href="#">Отзывы</a></li>
-                                            <li><a href="#">Контакты</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
+                            </template>
                             <div class="card">
                                 <div class="card-header" id="headingThree">
                                     <div class="row">
@@ -178,7 +168,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div id="collapseThree" class="collapse open_it" aria-labelledby="headingThree" data-parent="#accordionExample">
+                                <div id="collapseThree" class="collapse open_it"
+                                     aria-labelledby="headingThree"
+                                     data-parent="#accordionExample">
                                     <div class="card-body">
                                         <ul>
                                             <li>т. (073) 069-6097</li>
@@ -232,35 +224,13 @@
 </template>
 
 <script>
-    import * as ApiPage from '../../app/public/api/Page';
     import * as ApiSubscribe from '../../app/public/api/Subscribe';
 
     export default {
         name: 'Footer',
-        mounted() {
-            if (!this.loadIndex) {
-                ApiPage.index().then((res) => {
-                    this.linkToSocialNetworks = res.data.link_to_social_networks;
-
-                    this.$store.commit('updateLinkToSocialNetworks', this.sliders);
-                    this.$store.commit('updateLoadIndex', true);
-                });
-            }
-            else {
-                this.linkToSocialNetworks = this.linkToSocialNetworksStore;
-            }
-        },
-        computed: {
-            linkToSocialNetworksStore: function () {
-                return this.$store.getters.linkToSocialNetworks;
-            },
-            loadIndex: function () {
-                return this.$store.getters.loadIndex;
-            }
-        },
+        props: ['textPages', 'linkToSocialNetworks'],
         data() {
             return {
-                linkToSocialNetworks: [],
                 email: ''
             }
         },
@@ -275,10 +245,12 @@
                                 title: 'Запрос успешно выполнен',
                                 text: res.data.message
                             });
+                            this.email = '';
+                            this.$validator.reset();
                         }).catch((error) => {
                             Object.keys(error.response.data.errors).forEach(function (key) {
                                 error.response.data.errors[key].forEach((message) => {
-                                    self.verificationErrors.add({
+                                    self.errors.add({
                                         field: key,
                                         msg: message
                                     });
@@ -294,6 +266,6 @@
                     });
                 });
             }
-        },
+        }
     }
 </script>

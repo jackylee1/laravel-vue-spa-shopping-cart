@@ -61,10 +61,14 @@ class Subscribe extends Model
         $query = Subscribe::query();
 
         if (request()->filled('q')) {
-            $query->where('email', 'like', '%'. request()->get('email') .'%');
+            $query->where('email', 'like', '%'. request()->get('q') .'%');
         }
 
         return $query->orderByDesc('created_at')->paginate(10);
+    }
+
+    public static function newSubscribes() {
+        return Subscribe::where('read_status', false)->count();
     }
 
     protected function destroyModel($id) {
