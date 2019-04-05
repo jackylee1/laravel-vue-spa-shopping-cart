@@ -29,3 +29,4 @@ yarn-error.log
 .env.save
 take
 composer.lock
+package-lock.json
