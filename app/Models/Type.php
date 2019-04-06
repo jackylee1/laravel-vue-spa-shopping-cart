@@ -70,8 +70,21 @@ class Type extends Model
         return $this->hasMany('App\Models\Category')->orderBy('sorting_order', 'asc');
     }
 
-    protected function types() {
-        return Type::orderBy('sorting_order', 'asc')->get();
+    public static function types() {
+        return Type::with(['categories' => function ($query) {
+            $query->orderBy('sorting_order', 'asc');
+        }])->with(['filters' => function ($query) {
+            $query->join('filters', function ($join) {
+                $join->on('type_filters.filter_id', '=', 'filters.id');
+            });
+            $query->orderBy('filters.sorting_order', 'asc');
+            $query->addSelect([
+                'type_filters.id',
+                'type_filters.filter_id',
+                'type_filters.type_id',
+                'filters.sorting_order',
+            ]);
+        }])->orderBy('sorting_order', 'asc')->get();
     }
 
     private function workWithModel($model, $image_origin, $image_preview) {

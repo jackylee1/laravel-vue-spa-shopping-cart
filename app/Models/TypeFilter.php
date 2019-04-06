@@ -27,4 +27,8 @@ class TypeFilter extends Model
 
     protected $fillable = ['filter_id', 'type_id'];
     public $timestamps = false;
+
+    public function filter() {
+        return $this->hasOne('App\Models\Filter', 'id', 'filter_id');
+    }
 }

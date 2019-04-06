@@ -10,7 +10,8 @@ export default {
         loadCommon: false,
         sliders: [],
         linkToSocialNetworks: [],
-        textPages: []
+        textPages: [],
+        types: []
     },
     getters: {
         sliders(state) {
@@ -28,6 +29,9 @@ export default {
         linkToSocialNetworks(state) {
             return state.linkToSocialNetworks;
         },
+        types(state) {
+            return state.types;
+        }
     },
     mutations: {
         updateSliders: function(state, payload) {
@@ -45,5 +49,8 @@ export default {
         updateLinkToSocialNetworks: function(state, payload) {
             state.linkToSocialNetworks = payload;
         },
+        updateTypes: function (state, payload) {
+            state.types = payload;
+        }
     }
 };

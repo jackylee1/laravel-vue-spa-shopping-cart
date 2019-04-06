@@ -26,6 +26,7 @@
 
                     this.$store.commit('updateLinkToSocialNetworks', this.linkToSocialNetworks);
                     this.$store.commit('updateTextPages', this.textPages);
+                    this.$store.commit('updateTypes', res.data.types);
 
                     this.$store.commit('updateLoadCommon', true);
                 });

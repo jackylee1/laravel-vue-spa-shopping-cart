@@ -38,6 +38,22 @@ class Category extends Model
         NestableTrait;
 
     public $timestamps = false;
+    protected $fillable = [
+        'type_id',
+        'name',
+        'like_name',
+        'slug',
+        'sorting_order',
+        'parent_id',
+        'show_on_header'
+    ];
+    protected $cats = [
+        'type_id' => 'integer',
+        'sorting_order' => 'integer',
+        'parent_id' => 'integer',
+        'show_on_header' => 'integer'
+    ];
+
     protected $parent = 'parent_id';
 
     private $ids;
@@ -67,6 +83,9 @@ class Category extends Model
         $model->sorting_order = (request()->get('sorting_order') !== null)
                                 ? request()->get('sorting_order')
                                 : null;
+        $model->show_on_header = (request()->filled('show_on_header'))
+            ? request()->get('show_on_header')
+            : 1;
         $model->save();
 
         return $model;

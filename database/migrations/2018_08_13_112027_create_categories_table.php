@@ -20,6 +20,7 @@ class CreateCategoriesTable extends Migration
             $table->char('like_name');
             $table->char('slug');
             $table->integer('sorting_order')->default(0);
+            $table->boolean('show_on_header')->default(true);
             $table->integer('parent_id');
 
             $table->foreign('type_id')->references('id')->on('types')->onDelete('cascade');

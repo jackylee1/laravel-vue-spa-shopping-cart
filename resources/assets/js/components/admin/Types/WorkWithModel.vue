@@ -125,6 +125,26 @@
                 <el-form-item  label="Порядок сортировки" prop="sorting_order">
                     <el-input v-model="workWithNode.sorting_order"></el-input>
                 </el-form-item>
+
+                <template v-if="workWithNode.parent_id === 1">
+                    <el-form-item label="Отображать в шапке">
+                        <el-select v-model="workWithNode.show_on_header" placeholder="" prop="show_on_header">
+                            <el-option
+                                    v-for="item in this.selectBoolean"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-alert
+                            style="margin-bottom: 10px"
+                            title="Если выбрать Нет то при отрисовке категорий в шабке сайта будут видны только подкатегории"
+                            type="info"
+                            :closable="false">
+                    </el-alert>
+                </template>
+
                 <el-select v-model="workWithNode.parent_id" placeholder="Выберите родителя" prop="parent_id">
                     <el-option
                             v-for="item in renderSelectParent"
@@ -292,7 +312,9 @@
                 return this.$store.getters.selectDataBoolean;
             },
             renderSelectParent: function() {
-                let result = this.categories;
+                let result = this.categories.filter((item) => {
+                    return item.parent_id === 1 || item.parent_id === 0;
+                });
                 if (!result.find((item) => item.id === 1)) {
                     result.unshift({
                         'name': 'Корневая категория',
@@ -356,7 +378,9 @@
                 this.workWithNode = {
                     name: '',
                     sorting_order: 0,
-                    slug: ''
+                    slug: '',
+                    parent_id: 1,
+                    show_on_header: 1
                 };
                 this.visibleDialogWorkWithNode = true;
                 this.modalAlerts = [];
@@ -596,6 +620,11 @@
                 this.form = this.defaultFormData();
                 this.setBreadcrumbElements();
                 this.currentRoute = this.$router.currentRoute;
+            },
+            'workWithNode.parent_id': function (val) {
+                if (val === 1) {
+                    this.workWithNode.show_on_header = 1;
+                }
             },
             'workWithNode.name': function (val) {
                 if (val !== undefined) {

@@ -100,10 +100,12 @@
                         </ul>
                     </div>
                     <div class="col-lg-4 footer_logo">
-                        <a class="fl_link" href="index.html">
-                            <img class="navbar_logo" src="/assets/public/images/logo.png" alt="FitClothing">
-                            <p class="slogan">брендовая спортивная одежда</p>
-                        </a>
+                        <router-link :to="{name: 'index'}">
+                            <a class="fl_link" href="/">
+                                <img class="navbar_logo" src="/assets/public/images/logo.png" alt="FitClothing">
+                                <p class="slogan">брендовая спортивная одежда</p>
+                            </a>
+                        </router-link>
                         <p class="copyright">Авторское право FitClothing @2013-2018</p>
                         <p class="author">Разработка и техподдержка - <a href="#">DesignStudio</a></p>
                     </div>
@@ -146,7 +148,14 @@
                                         <div class="card-body">
                                             <ul>
                                                 <template v-for="dataPage in page.data_page">
-                                                    <li><a href="#">{{dataPage.title}}</a></li>
+                                                    <template v-if="dataPage.type === 0">
+                                                        <router-link :to="{name: 'text_page', params: {slug: dataPage.slug}}">
+                                                            <li><a>{{dataPage.title}}</a></li>
+                                                        </router-link>
+                                                    </template>
+                                                    <template v-else>
+                                                         <li><a :href="dataPage.url">{{dataPage.title}}</a></li>
+                                                    </template>
                                                 </template>
                                             </ul>
                                         </div>
