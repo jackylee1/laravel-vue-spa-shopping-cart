@@ -40,7 +40,7 @@
     import Breadcrumbs from "../Breadcrumbs";
     import Products from "./Products";
     import Sort from "./Sort";
-    import Filters from "../index/Filters";
+    import Filters from "./Filters";
 
     export default {
         name: 'CatalogLayout',

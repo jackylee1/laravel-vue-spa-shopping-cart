@@ -1,19 +1,24 @@
 <template>
     <div>
-        <UTP></UTP>
-        <Slider :sliders="sliders"></Slider>
-        <NewProducts></NewProducts>
-        <Banner></Banner>
-        <BestSellers></BestSellers>
-        <CertificatesVideo></CertificatesVideo>
-        <Filters></Filters>
+        <UTP/>
+        <Slider :sliders="sliders"/>
+        <NewProducts/>
+        <Banner/>
+        <BestSellers/>
+        <CertificatesVideo/>
+        <Filters/>
     </div>
 </template>
 
 <script>
     import * as ApiPage from '../../../app/public/api/Page';
-
-    import { Banner, BestSellers, Filters, CertificatesVideo, NewProducts, Slider, UTP } from './';
+    import UTP from "./UTP";
+    import Slider from "./Slider";
+    import NewProducts from "./NewProducts";
+    import Banner from "./Banner";
+    import BestSellers from "./BestSellers";
+    import CertificatesVideo from "./CertificatesVideo";
+    import Filters from "./Filters";
 
     export default {
         name: 'IndexLayout',
@@ -44,10 +49,10 @@
             }
         },
         components: {
-            Banner,
-            BestSellers,
             Filters,
             CertificatesVideo,
+            BestSellers,
+            Banner,
             NewProducts,
             Slider,
             UTP

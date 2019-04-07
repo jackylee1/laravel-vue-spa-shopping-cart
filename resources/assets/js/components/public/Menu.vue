@@ -44,71 +44,44 @@
                                     </li>
                                 </template>
                                 <li class="menu_link"><a class="menu_tab" href="#">Распродажа</a></li>
-                                <li class="menu_link menu_brands"><a class="menu_tab last" href="#">Бренды</a>
-                                    <ul>
-                                        <li class="first_column brands">
-                                            <ul>
-                                                <li><a href="#">
-                                                    <img class="menu_brand_logo" src="/assets/public/images/banners/abr.png" alt="">Abercrombie & Fitch
-                                                </a></li>
-                                                <li><a href="#">
-                                                    <img class="menu_brand_logo" src="/assets/public/images/banners/nike.png" alt="">Nike
-                                                </a></li>
-                                                <li><a href="#">
-                                                    <img class="menu_brand_logo" src="/assets/public/images/banners/guess.png" alt="">Guess
-                                                </a></li>
-                                                <li><a href="#">
-                                                    <img class="menu_brand_logo" src="/assets/public/images/banners/npc.png" alt="">NPC
-                                                </a></li>
-                                            </ul>
+                                <template v-if="filtersOnHeader.length">
+                                    <template v-for="(filter) in this.getTreeFilters(this.filtersOnHeader)">
+                                        <li class="menu_link menu_brands">
+                                            <a class="menu_tab last" href="#">{{filter.name}}</a>
+                                            <template v-if="filter.children !== undefined && filter.children.length">
+                                                <ul>
+                                                    <template v-for="(filtersChunk, index) in _.chunk(filter.children, 4)">
+                                                        <li :class="(index === 0) ? 'first_column brands' : 'second_column brands'">
+                                                            <ul>
+                                                                <template v-for="filterItemChunk in filtersChunk">
+                                                                    <li>
+                                                                        <a href="#">
+                                                                            <img class="menu_brand_logo"
+                                                                                 :src="`/app/public/images/filter/${filterItemChunk.image_preview}`"
+                                                                                 :alt="filterItemChunk.name">
+                                                                            {{filterItemChunk.name}}
+                                                                        </a>
+                                                                    </li>
+                                                                </template>
+                                                            </ul>
+                                                        </li>
+                                                    </template>
+                                                    <li v-if="filter.image_preview !== null" class="sixth_column brands">
+                                                        <ul>
+                                                            <li>
+                                                                <a href="javascript:void(0)">
+                                                                    <img class="menu_img"
+                                                                         :src="`/app/public/images/filter/${filter.image_preview}`"
+                                                                         :alt="filter.name">
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </template>
                                         </li>
-                                        <li class="second_column brands">
-                                            <ul>
-                                                <li><a href="#">
-                                                    <img class="menu_brand_logo" src="/assets/public/images/banners/pws.png" alt="">Power System
-                                                </a></li>
-                                                <li><a href="#">
-                                                    <img class="menu_brand_logo" src="/assets/public/images/banners/ua.png" alt="">Under Armour
-                                                </a></li>
-                                                <li><a href="#">
-                                                    <img class="menu_brand_logo" src="/assets/public/images/banners/harb.png" alt="">Harbinger
-                                                </a></li>
-                                                <li><a href="#">
-                                                    <img class="menu_brand_logo" src="/assets/public/images/banners/holl.png" alt="">Hollister
-                                                </a></li>
-                                            </ul>
-                                        </li>
-                                        <li class="third_column brands">
-                                            <ul>
-                                                <li><a href="#">
-                                                    <img class="menu_brand_logo" src="/assets/public/images/banners/rb.png" alt="">Ray Ban
-                                                </a></li>
-                                                <li><a href="#">
-                                                    <img class="menu_brand_logo" src="/assets/public/images/banners/tb.png" alt="">Title Boxing
-                                                </a></li>
-                                            </ul>
-                                        </li>
-                                        <li class="fourth_column brands">
-                                            <ul>
-                                                <li><a href="#"></a></li>
-                                            </ul>
-                                        </li>
-                                        <li class="fifth_column brands">
-                                            <ul>
-                                                <li><a href="#"></a></li>
-                                            </ul>
-                                        </li>
-                                        <li class="sixth_column brands">
-                                            <ul>
-                                                <li>
-                                                    <a href="#">
-                                                        <img class="menu_img" src="/assets/public/images/banners/womans-1.jpg" alt="">
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </li>
+                                    </template>
+                                </template>
                             </ul>
                         </div>
                     </div>
@@ -124,8 +97,16 @@
     export default {
         name: 'Header',
         computed: {
+            _() {
+                return _;
+            },
             'typesStore': function () {
                 return this.$store.getters.types;
+            },
+            'filtersOnHeader': function () {
+                return this.$store.getters.filters.filter((item) => {
+                    return item.show_on_header === 1;
+                });
             }
         },
         data() {
@@ -141,6 +122,24 @@
             },
             getTreeCategories: function (categories) {
                 return arrayToTree(categories, {
+                    parentProperty: 'parent_id',
+                    customID: 'id'
+                });
+            },
+            getTreeFilters: function (filters) {
+                let tempFilters = filters;
+                filters.forEach((filter) => {
+                    this.$store.getters.filters.forEach((item) => {
+                        if (filter.id === item.parent_id) {
+                            tempFilters.push(item);
+                        }
+                    });
+                });
+                console.log(arrayToTree(tempFilters, {
+                    parentProperty: 'parent_id',
+                    customID: 'id'
+                }));
+                return arrayToTree(tempFilters, {
                     parentProperty: 'parent_id',
                     customID: 'id'
                 });
