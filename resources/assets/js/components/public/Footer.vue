@@ -80,25 +80,38 @@
                             <li>т. (073) 069-6097</li>
                             <li>т. (068) 225-7235</li>
                             <li>info@hmail.com</li>
-                            <li>
-                                <a href="#">
-                                    <img src="/assets/public/assets/public/images/socials/telegram_white.png" alt="">
-                                </a>
-                                <a href="#">
-                                    <img src="/assets/public/assets/public/images/socials/viber_white.png" alt="">
-                                </a>
+                            <li v-if="linkToSocialNetworks.length">
+                                <template v-for="link in linkToSocialNetworks">
+                                    <a :href="link.url" target="_blank">
+                                        <img :src="'/app/public/images/social_network/'+ link.image_preview"
+                                             :alt="link.url">
+                                    </a>
+                                </template>
                             </li>
                         </ul>
                     </div>
-                    <div class="col-lg-2 footer_menu">
+                    <div v-if="types.length" class="col-lg-2 footer_menu">
                         <h3>Топ категории</h3>
                         <ul>
-                            <li><a href="#">Мужская</a></li>
-                            <li><a href="#">Женская</a></li>
-                            <li><a href="#">Новинки</a></li>
-                            <li><a href="#">Распродажа</a></li>
+                            <template v-for="type in types">
+                                <li><a href="#">{{type.name}}</a></li>
+                            </template>
                         </ul>
                     </div>
+
+                    <div v-if="this.filters.length" class="col-lg-2 footer_menu">
+                        <template v-for="filter in this.getTreeFilters(this.filters)">
+                            <template v-if="filter.children !== undefined && filter.children.length">
+                                <h3>{{filter.name}}</h3>
+                                <ul>
+                                    <template v-for="filterChildren in filter.children">
+                                        <li><a href="#">{{filterChildren.name}}</a></li>
+                                    </template>
+                                </ul>
+                            </template>
+                        </template>
+                    </div>
+
                     <div class="col-lg-4 footer_logo">
                         <router-link :to="{name: 'index'}">
                             <a class="fl_link" href="/">
@@ -107,7 +120,7 @@
                             </a>
                         </router-link>
                         <p class="copyright">Авторское право FitClothing @2013-2018</p>
-                        <p class="author">Разработка и техподдержка - <a href="#">DesignStudio</a></p>
+                        <p class="author">Разработка и техподдержка - <a href="javascript:void(0)">DesignStudio</a></p>
                     </div>
                 </div>
             </div>
@@ -235,9 +248,23 @@
 <script>
     import * as ApiSubscribe from '../../app/public/api/Subscribe';
 
+    let arrayToTree = require('array-to-tree');
+
     export default {
         name: 'Footer',
         props: ['textPages', 'linkToSocialNetworks'],
+        computed: {
+            'types': function () {
+                return this.$store.getters.types.filter((item) => {
+                    return item.show_on_footer === 1;
+                });
+            },
+            'filters': function () {
+                return this.$store.getters.filters.filter((item) => {
+                    return item.show_on_footer === 1;
+                });
+            }
+        },
         data() {
             return {
                 email: ''
@@ -273,6 +300,20 @@
                         title: 'Ошибка при валидации формы',
                         text: 'Проверте правильность ввода данных'
                     });
+                });
+            },
+            getTreeFilters: function (filters) {
+                let tempFilters = filters;
+                this.filters.forEach((filter) => {
+                    this.$store.getters.filters.forEach((item) => {
+                        if (filter.id === item.parent_id) {
+                            tempFilters.push(item);
+                        }
+                    });
+                });
+                return arrayToTree(tempFilters, {
+                    parentProperty: 'parent_id',
+                    customID: 'id'
                 });
             }
         }

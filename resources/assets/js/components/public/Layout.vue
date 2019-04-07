@@ -1,6 +1,14 @@
 <template>
     <div>
+        <TopLine/>
+
+        <SubMenu/>
+
+        <SearchCollapse/>
+
         <Header/>
+
+        <Menu/>
 
         <router-view></router-view>
 
@@ -13,8 +21,12 @@
 
 <script>
     import * as ApiCommon from '../../app/public/api/Common';
-
-    import { Header, Footer } from '.';
+    import Footer from "./Footer";
+    import TopLine from "./TopLine";
+    import Header from "./Header";
+    import SubMenu from "./SubMenu";
+    import SearchCollapse from "./SearchCollapse";
+    import Menu from "./Menu";
 
     export default {
         name: 'Layout',
@@ -27,6 +39,7 @@
                     this.$store.commit('updateLinkToSocialNetworks', this.linkToSocialNetworks);
                     this.$store.commit('updateTextPages', this.textPages);
                     this.$store.commit('updateTypes', res.data.types);
+                    this.$store.commit('updateFilters', res.data.filters);
 
                     this.$store.commit('updateLoadCommon', true);
                 });
@@ -54,7 +67,11 @@
             }
         },
         components: {
+            Menu,
+            SearchCollapse,
+            SubMenu,
             Header,
+            TopLine,
             Footer
         }
     }

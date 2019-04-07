@@ -1,5 +1,6 @@
 import { IndexLayout } from "../../components/public/index/";
 import { TextPageLayout } from "../../components/public/text_page/";
+import { CatalogLayout } from "../../components/public/catalog/";
 
 export const routes = [
     {
@@ -8,8 +9,6 @@ export const routes = [
         name: 'index',
         meta: {
             requiresAuth: false,
-            name: 'Главная',
-            title: 'Главная'
         }
     },
     {
@@ -18,8 +17,14 @@ export const routes = [
         name: 'text_page',
         meta: {
             requiresAuth: false,
-            name: '',
-            title: ''
+        }
+    },
+    {
+        path: '/catalog',
+        component: CatalogLayout,
+        name: 'catalog',
+        meta: {
+            requiresAuth: false,
         }
     }
 ];

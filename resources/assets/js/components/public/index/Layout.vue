@@ -6,14 +6,14 @@
         <Banner></Banner>
         <BestSellers></BestSellers>
         <CertificatesVideo></CertificatesVideo>
-        <Brands></Brands>
+        <Filters></Filters>
     </div>
 </template>
 
 <script>
     import * as ApiPage from '../../../app/public/api/Page';
 
-    import { Banner, BestSellers, Brands, CertificatesVideo, NewProducts, Slider, UTP } from './';
+    import { Banner, BestSellers, Filters, CertificatesVideo, NewProducts, Slider, UTP } from './';
 
     export default {
         name: 'IndexLayout',
@@ -46,7 +46,7 @@
         components: {
             Banner,
             BestSellers,
-            Brands,
+            Filters,
             CertificatesVideo,
             NewProducts,
             Slider,

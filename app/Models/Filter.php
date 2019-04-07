@@ -86,8 +86,8 @@ class Filter extends Model
         File::delete($this->path_image, [$model->image_preview, $model->image_origin]);
     }
 
-    protected function getFilters() {
-        return Filter::get();
+    public static function getFilters() {
+        return Filter::orderBy('sorting_order', 'asc')->get();
     }
 
     protected function workWithModel($model, $image_origin, $image_preview) {

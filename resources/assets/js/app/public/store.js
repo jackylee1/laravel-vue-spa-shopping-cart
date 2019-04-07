@@ -11,7 +11,8 @@ export default {
         sliders: [],
         linkToSocialNetworks: [],
         textPages: [],
-        types: []
+        types: [],
+        filters: [],
     },
     getters: {
         sliders(state) {
@@ -31,6 +32,9 @@ export default {
         },
         types(state) {
             return state.types;
+        },
+        filters(state) {
+            return state.filters;
         }
     },
     mutations: {
@@ -51,6 +55,9 @@ export default {
         },
         updateTypes: function (state, payload) {
             state.types = payload;
+        },
+        updateFilters: function (state, payload) {
+            state.filters = payload;
         }
     }
 };
