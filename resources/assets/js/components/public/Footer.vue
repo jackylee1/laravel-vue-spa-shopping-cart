@@ -35,13 +35,7 @@
                                    placeholder="Введите Ваш электронный адрес..." aria-label="">
                             <a @click="subscribe" href="javascript:void(0)" class="to_subscribe">ПОДПИСАТЬСЯ</a>
 
-                            <template v-if="errors.items !== undefined && errors.items.length">
-                                    <div class="row col-sm-12">
-                                        <div class="alert alert-danger" style="margin-top: 10px;min-width: 100%">
-                                            <span v-for="error in errors.items">{{ error.msg }}</span>
-                                        </div>
-                                    </div>
-                            </template>
+                            <Errors/>
                         </form>
                     </div>
                 </div>
@@ -247,11 +241,13 @@
 
 <script>
     import * as ApiSubscribe from '../../app/public/api/Subscribe';
+    import Errors from "./Errors";
 
     let arrayToTree = require('array-to-tree');
 
     export default {
         name: 'Footer',
+        components: {Errors},
         props: ['textPages', 'linkToSocialNetworks'],
         computed: {
             'types': function () {

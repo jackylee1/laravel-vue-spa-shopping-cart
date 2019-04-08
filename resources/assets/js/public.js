@@ -4,7 +4,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Vuex from 'vuex';
 import { routes } from './app/public/routes';
-import { Layout } from './components/public';
+import Layout from './components/public/Layout';
 import StoreData from './app/public/store';
 import { initialize } from './app/public/helpers/general';
 import VeeValidate, { Validator } from 'vee-validate';
@@ -14,7 +14,6 @@ import VueScrollTo from 'vue-scrollto';
 
 Vue.use(VeeValidate);
 Validator.localize('ru', VeeValidateRu);
-
 Vue.use(VueScrollTo);
 Vue.use(VueRouter);
 Vue.use(Vuex);

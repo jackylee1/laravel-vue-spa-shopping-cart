@@ -1,6 +1,6 @@
-import { IndexLayout } from "../../components/public/index/";
-import { TextPageLayout } from "../../components/public/text_page/";
-import { CatalogLayout } from "../../components/public/catalog/";
+import IndexLayout from "../../components/public/index/Layout";
+import TextPageLayout from "../../components/public/text_page/Layout";
+import CatalogLayout from "../../components/public/catalog/Layout"
 
 export const routes = [
     {

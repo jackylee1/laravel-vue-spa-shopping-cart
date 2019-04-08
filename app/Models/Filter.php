@@ -90,6 +90,15 @@ class Filter extends Model
         return Filter::orderBy('sorting_order', 'asc')->get();
     }
 
+    public static function getFiltersById($id) {
+        if (is_array($id)) {
+            return Filter::whereIn('id', $id)->get();
+        }
+        else {
+            return Filter::find($id);
+        }
+    }
+
     protected function workWithModel($model, $image_origin, $image_preview) {
         $model->parent_id = request()->get('parent_id');
         $model->name = request()->get('name');

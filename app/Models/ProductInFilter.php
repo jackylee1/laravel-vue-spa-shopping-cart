@@ -73,4 +73,30 @@ class ProductInFilter extends Model
     protected function destroyModel($id) {
         ProductInFilter::find($id)->delete();
     }
+
+    public static function getProductIdsByFilters($filters, $type_id = null, $category_id = null) {
+        $query = ProductInFilter::query();
+        if ($type_id !== null) {
+            $query->where('type_id', $type_id);
+        }
+        if ($category_id !== null) {
+            $query->where('category_id', $category_id);
+        }
+
+        $models = $query->setEagerLoads([])->whereIn('filter_id', $filters)->get();
+
+        $id_products = [];
+
+        $models->groupBy('product_id')->each(function ($model, $key) use ($filters, &$id_products) {
+            $model_filter_ids = $model->map(function ($item) {
+                return $item->filter_id;
+            });
+            $intersect = $model_filter_ids->intersect(collect($filters));
+            if ($intersect->count() === count($filters)) {
+                $id_products[] = $key;
+            }
+        });
+
+        return $id_products;
+    }
 }

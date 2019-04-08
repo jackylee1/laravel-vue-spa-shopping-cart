@@ -70,6 +70,10 @@ class Type extends Model
         return $this->hasMany('App\Models\Category')->orderBy('sorting_order', 'asc');
     }
 
+    public static function getTypeBySlug($slug) {
+        return Type::where('slug', $slug)->first();
+    }
+
     public static function types() {
         return Type::with(['categories' => function ($query) {
             $query->orderBy('sorting_order', 'asc');

@@ -49,8 +49,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
 <script src="/assets/public/js/megamenu.js"></script>
 <script src="https://unpkg.com/ionicons@4.4.6/dist/ionicons.js"></script>
+
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(window).on('load', function() {
         $(".carousel-inner").swipe( {
             //Generic swipe handler for all directions
             swipeLeft:function(event, direction, distance, duration, fingerCount) {

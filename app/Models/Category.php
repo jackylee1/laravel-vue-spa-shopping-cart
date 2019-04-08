@@ -74,6 +74,10 @@ class Category extends Model
         return $this->hasMany('App\Models\CategoryFilter', 'category_id', 'id');
     }
 
+    public static function getCategoryBySlug($slug) {
+        return Category::where('slug', $slug)->first();
+    }
+
     private function workWithModel($model) {
         $model->parent_id = request()->get('parent_id');
         $model->type_id = request()->get('type_id');

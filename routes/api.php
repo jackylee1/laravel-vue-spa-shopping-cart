@@ -10,6 +10,7 @@ Route::group([], function () {
     Route::post('index', 'Api\PageController@index');
     Route::post('common', 'Api\PageController@common');
     Route::post('subscribe', 'Api\SubscribeController@store');
+    Route::get('products', 'Api\ProductController@products');
 });
 
 Route::group([

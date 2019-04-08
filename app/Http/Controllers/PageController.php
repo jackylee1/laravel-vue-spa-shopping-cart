@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Base\PublicControllerBase;
 use App\Models\LinkToSocialNetwork;
 use App\Models\Slider;
 use App\Traits\DataTrait;
 use Illuminate\Http\Request;
 
-class PageController extends PublicControllerBase
+class PageController extends Controller
 {
     use DataTrait;
 

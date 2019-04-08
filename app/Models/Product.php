@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Model;
 use App\Tools\File;
+use Illuminate\Support\Facades\DB;
 
 /**
  * App\Models\Product
@@ -166,6 +167,114 @@ class Product extends Model
         $product = ProductTool::checkRelevanceDiscount($product);
 
         return $product;
+    }
+
+    private static function queryFilters($query) {
+        $filters = Filter::getFiltersById(array_filter(request()->get('filters')));
+        $filters = $filters->map(function ($filter) {
+            if ($filter->parent_id !== 0) {
+                return $filter->id;
+            }
+        })->filter(function ($filter) {
+            return $filter !== null;
+        });
+
+        if (count($filters) > 0) {
+            $where = [];
+            $filters->map(function ($filter) use (&$where) {
+                array_push($where, ['filter_id', $filter]);
+            });
+
+            dump($where);
+
+            $query->where($where);
+        }
+
+        return $query;
+    }
+
+    public static function getProductsPublic() {
+        $query = Product::query();
+
+        $type_id = null; $category_id = null;
+        if (request()->filled('type')) {
+            $type_id = request()->get('type');
+        }
+        if (request()->filled('category')) {
+            $category_id = request()->get('category');
+        }
+
+        if (request()->filled('filters')) {
+            $filters = Filter::getFiltersById(array_filter(request()->get('filters')));
+            $filters = $filters->map(function ($filter) {
+                if ($filter->parent_id !== 0) {
+                    return $filter->id;
+                }
+            })->filter(function ($filter) {
+                return $filter !== null;
+            });
+            if ($filters->count() > 0) {
+                $id_products = ProductInFilter::getProductIdsByFilters(
+                    $filters,
+                    $type_id,
+                    $category_id
+                );
+
+                $query->whereIn('id', $id_products);
+            }
+            else {
+                $query->whereHas('filters', function ($query) use ($type_id, $category_id) {
+                    if ($type_id !== null) {
+                        $query->where('type_id', $type_id);
+                    }
+                    if ($category_id !== null) {
+                        $query->where('category_id', $category_id);
+                    }
+                });
+            }
+        }
+
+        if (request()->filled('sort')) {
+            switch (request()->get('sort')) {
+                case 'from_cheap_to_expensive':
+                    $query->orderBy('current_price', 'asc');
+                    break;
+
+                case 'from_expensive_to_cheap':
+                    $query->orderByDesc('current_price');
+                    break;
+
+                case 'popular':
+                    break;
+
+                case 'new':
+                    $query->whereBetween('created_at', [Carbon::now()->subDays(5), Carbon::now()]);
+                    break;
+
+                case 'promotional':
+                    $query->where('discount_price', '!=', null)
+                        ->where('discount_start', '<', Carbon::now())
+                        ->where('discount_end', '>', Carbon::now());
+                    break;
+
+                default:
+                    $query->orderByDesc('created_at');
+                    break;
+            }
+        }
+
+        $query->where('status', true);
+        $query->where('date_inclusion', null)->orWhere('date_inclusion', '<', Carbon::now());
+        $query->select([
+            '*',
+            DB::raw('IF(discount_price IS NOT NULL, discount_price, price) as current_price')
+        ]);
+
+        $products = $query->paginate(12);
+
+        ProductTool::checkRelevanceDiscount($products->items());
+
+        return $products;
     }
 
     private function workWithModel($model) {

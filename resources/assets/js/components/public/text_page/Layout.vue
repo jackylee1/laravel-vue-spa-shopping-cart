@@ -12,7 +12,7 @@
 </template>
 
 <script>
-    import { Breadcrumbs } from '../';
+    import Breadcrumbs from "../Breadcrumbs";
 
     export default {
         name: 'TextPageLayout',

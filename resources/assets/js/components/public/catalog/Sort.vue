@@ -23,10 +23,10 @@
 <script>
     export default {
         name: 'Sort',
-        props: ['currentCategory'],
+        props: ['currentCategory', 'selectFilters'],
         data() {
             return {
-                sort: 'all',
+                sort: (this.$route.query.sort !== undefined && this.$route.query.sort !== null) ? this.$route.query.sort : 'all',
                 options: [
                     {value: 'all', name: 'все товары'},
                     {value: 'from_cheap_to_expensive', name: 'от дешевых к дорогим'},
@@ -35,6 +35,12 @@
                     {value: 'new', name: 'новинки'},
                     {value: 'promotional', name: 'акционные'},
                 ]
+            }
+        },
+        watch: {
+            'sort': function (value) {
+                this.$emit('updateSort', value);
+                this.$emit('getProducts', 1, this.selectFilters);
             }
         }
     }

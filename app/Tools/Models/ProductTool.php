@@ -21,6 +21,8 @@ class ProductTool
             if ($discount_end_datetime->lt($current_datetime)) {
                 $product->discount_end = $product->discount_start = $product->discount_price = null;
                 $product->save();
+
+                $product->current_price = $product->price;
             }
         }
         return $product;

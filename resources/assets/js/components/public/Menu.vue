@@ -96,6 +96,11 @@
 
     export default {
         name: 'Header',
+        mounted() {
+            if (this.typesStore.length) {
+                this.types = this.typesStore;
+            }
+        },
         computed: {
             _() {
                 return _;
@@ -111,7 +116,7 @@
         },
         data() {
             return {
-                types: this.typesStore
+                types: []
             }
         },
         methods: {
@@ -135,10 +140,6 @@
                         }
                     });
                 });
-                console.log(arrayToTree(tempFilters, {
-                    parentProperty: 'parent_id',
-                    customID: 'id'
-                }));
                 return arrayToTree(tempFilters, {
                     parentProperty: 'parent_id',
                     customID: 'id'

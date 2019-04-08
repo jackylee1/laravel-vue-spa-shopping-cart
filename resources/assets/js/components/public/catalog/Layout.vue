@@ -3,47 +3,50 @@
         <Breadcrumbs :items="breadcrumbs"/>
 
         <section class="wrapper">
+            <Errors/>
+
             <div class="container">
 
-                <Sort :currentCategory="currentCategory"/>
+                <Sort v-on:getProducts="getProducts"
+                      v-on:updateSort="updateSort"
+                      :currentCategory="currentCategory"
+                      :selectFilters="selectFilters" />
 
-                <Filters/>
+                <Filters :currentType="currentType"
+                         :currentCategory="currentCategory"
+                         v-on:updateSelectFilters="updateSelectFilters"
+                         v-on:getProducts="getProducts"/>
 
-                <div class="row category_items">
+                <Products :products="products"/>
 
-                    <Products/>
-
+                <div v-if="products.length === 0" class="alert alert-info" style="margin-top:20px; width: 100%">
+                    По запросу нет товаров
                 </div>
-                <div class="row paginations">
-                    <div class="col-lg-12">
-                        <nav aria-label="Page navigation">
-                            <ul class="pagination justify-content-center">
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="#" tabindex="-1">Страницы:</a>
-                                </li>
-                                <li class="page-item disabled"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">Показать все</a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
+
+                <Pagination :metaData="metaData"
+                            v-on:getProducts="getProducts"/>
             </div>
         </section>
     </div>
 </template>
 
 <script>
+    import * as ApiProducts from '../../../app/public/api/Products';
+
     import Breadcrumbs from "../Breadcrumbs";
     import Products from "./Products";
     import Sort from "./Sort";
     import Filters from "./Filters";
+    import Errors from "../Errors";
+    import Pagination from "../Pagination";
 
     export default {
         name: 'CatalogLayout',
+        mounted() {
+            if (this.types.length) {
+                this.setTypesAndBreadcrumbs();
+            }
+        },
         computed: {
             types: function () {
                 return this.$store.getters.types;
@@ -54,17 +57,61 @@
                 breadcrumbs: [],
                 currentCategory: {},
                 currentType: {},
+                products: [],
+                selectFilters: [],
+                sort: (this.$route.query.sort !== undefined && this.$route.query.sort !== null) ? this.$route.query.sort : 'all',
+                metaData: {
+                    last_page: null,
+                    current_page: 1,
+                    prev_page_url: null
+                }
             }
         },
         components: {
+            Pagination,
+            Errors,
             Filters,
             Sort,
             Products,
             Breadcrumbs,
         },
-        watch: {
-            'types': function (types) {
-                types.forEach((type) => {
+        methods: {
+            updateSort: function (value) {
+                this.sort = value;
+            },
+            updateSelectFilters: function (value) {
+                this.selectFilters = value;
+            },
+            getProducts: function (page = 1) {
+                ApiProducts.get(page, {
+                    type: this.currentType.id,
+                    category: this.currentCategory.id,
+                    filters: this.selectFilters,
+                    sort: this.sort
+                }).then((res) => {
+                    this.metaData.last_page = res.data.products.last_page;
+                    this.metaData.current_page = res.data.products.current_page;
+                    this.metaData.prev_page_url = res.data.products.prev_page_url;
+
+                    this.$router.push({ query: Object.assign(
+                        {},
+                        this.$route.query, {
+                            filters: this.selectFilters,
+                            sort: this.sort
+                        }
+                    )});
+
+                    this.products = res.data.products.data;
+                }).catch((error) => {
+                    this.$notify({
+                        type: 'error',
+                        title: 'Ошибка',
+                        text: 'при выполнеении запроса'
+                    });
+                });
+            },
+            setTypesAndBreadcrumbs: function () {
+                this.types.forEach((type) => {
                     if (type.slug === this.$route.query.type) {
                         this.currentType = type;
                     }
@@ -79,9 +126,14 @@
                     {title: this.currentType.name, route: `{ "name": "catalog", "query": { "type": "${this.currentType.slug}"} }`},
                     {title: this.currentCategory.name},
                 ];
+            }
+        },
+        watch: {
+            'types': function () {
+                this.setTypesAndBreadcrumbs();
             },
             '$route' (to, from){
-                console.log('change');
+                this.setTypesAndBreadcrumbs();
             }
         }
     }

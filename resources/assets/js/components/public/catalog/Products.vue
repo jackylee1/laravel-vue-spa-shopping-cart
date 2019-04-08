@@ -1,90 +1,159 @@
 <template>
     <div>
-        <div class="col-md-3 col-sm-6 col-6">
-            <div class="thumb-wrapper">
-                <div class="img-box">
-                    <a href="item.html">
-                        <img src="images/items/t-shirt.png" class="img-responsive img-fluid" alt="">
-                    </a>
-                </div>
-                <div class="thumb-content">
-                    <a href="item.html"><h4>Рубашка поло Nike Grey XXL</h4></a>
-                    <p class="item-price"><strike>256 грн</strike><span>198 грн</span></p>
-                    <div class="add_to_cart">
-                        <a href="#" class="btn"><i class="fas fa-shopping-cart"></i>Купить</a>
-                        <a href="#" class="hrt"><i class="far fa-heart"></i></a>
-                    </div>
-                    <div class="quick_view">
-                        <a href="" data-toggle="modal" data-target="#quick_view1"><i class="fa fa-search"></i></a>
-                    </div>
-                </div>
-            </div>
-            <!-- Modal -->
-            <div class="modal fade" id="quick_view1" tabindex="-1" role="dialog" aria-labelledby="quick_view1Title"
-                 aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title" id="quick_view1Title">Быстрый просмотр товара</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-5">
-                                    <img src="images/items/t-shirt.png" class="img-responsive img-fluid" alt="">
+        <template v-if="products.length">
+            <template v-for="(productsChunk, index) in _.chunk(products, 4)">
+                <div class="row category_items">
+                    <template v-for="(product, productIndex) in productsChunk">
+                        <div class="col-md-3 col-sm-6 col-6">
+                            <div class="thumb-wrapper">
+                                <div class="img-box">
+                                    <a href="javascript:void(0)">
+                                        <img v-if="product.main_image !== null"
+                                             :src="`/app/public/images/products/${product.main_image.preview}`"
+                                             :alt="product.name"
+                                             class="img-responsive img-fluid">
+                                    </a>
                                 </div>
-                                <div class="col-7 variations">
-                                    <h5>Рубашка поло Nike Grey XXL</h5>
-                                    <p>Код товара: 524873</p>
-                                    <p class="item-price">Цена: <strike>256 грн.</strike><span>198 грн.</span></p>
-                                    <form class="form-horizontal " method="post" action="">
-                                        <div class="form-group">
-                                            <div class="btn-group btn-group-justified" data-toggle="buttons">
-                                                <label class="btn btn-primary active">
-                                                    <input type="radio" name="options" id="option1" autocomplete="off" checked>S
-                                                </label>
-                                                <label class="btn btn-primary">
-                                                    <input type="radio" name="options" id="option2" autocomplete="off">M
-                                                </label>
-                                                <label class="btn btn-primary">
-                                                    <input type="radio" name="options" id="option3" autocomplete="off">L
-                                                </label>
-                                                <label class="btn btn-primary">
-                                                    <input type="radio" name="options" id="option4" autocomplete="off">XL
-                                                </label>
-                                                <label class="btn btn-primary">
-                                                    <input type="radio" name="options" id="option5" autocomplete="off">XXL
-                                                </label>
-                                                <label class="btn btn-primary">
-                                                    <input type="radio" name="options" id="option6" autocomplete="off">3XL
-                                                </label>
-                                                <label class="btn btn-primary">
-                                                    <input type="radio" name="options" id="option7" autocomplete="off">4XL
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </form>
+                                <div class="thumb-content">
+                                    <a href="javascript:void(0)"><h4>{{product.name}}</h4></a>
+                                    <p class="item-price">
+                                        <template v-if="product.discount_price !== null && product.discount_price > 0">
+                                            <strike>{{product.price}} грн</strike>
+                                            <span>{{product.discount_price}} грн</span>
+                                        </template>
+                                        <template v-else>
+                                            <span>{{product.price}} грн</span>
+                                        </template>
+                                    </p>
                                     <div class="add_to_cart">
-                                        <a href="#" class="btn"><i class="fas fa-shopping-cart"></i>Купить</a>
-                                        <a href="#" class="hrt"><i class="far fa-heart"></i></a>
+                                        <a href="javascript:void(0)" class="btn"><i class="fas fa-shopping-cart"></i>Купить</a>
+                                        <a href="javascript:void(0)" class="hrt"><i class="far fa-heart"></i></a>
                                     </div>
-                                </div>
-                                <div class="col-12 more_details centered">
-                                    <a href="item.html">Просмотеть детали...</a>
+                                    <div class="quick_view">
+                                        <a href="javascript:void(0)"
+                                           @click="quickView(product)"
+                                           data-toggle="modal"
+                                           data-target="#quick_view1">
+                                            <i class="fa fa-search"></i>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        <template v-if="index === 0 && productIndex === 0">
+                            <div class="modal fade"
+                                 id="quick_view1"
+                                 tabindex="-1" role="dialog"
+                                 aria-labelledby="quick_view1Title"
+                                 aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title" id="quick_view1Title">Быстрый просмотр товара</h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">×</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div v-if="quickViewProduct !== null" class="row">
+                                                <div class="col-5">
+                                                    <img v-if="quickViewProduct.main_image !== null"
+                                                         :src="`/app/public/images/products/${quickViewProduct.main_image.preview}`"
+                                                         :alt="quickViewProduct.name"
+                                                         class="img-responsive img-fluid">
+                                                </div>
+                                                <div class="col-7 variations">
+                                                    <h5>{{quickViewProduct.name}}</h5>
+                                                    <p>Код товара: {{quickViewProduct.article}}</p>
+                                                    <p class="item-price">
+                                                        Цена:
+                                                        <template v-if="quickViewProduct.discount_price !== null">
+                                                            <strike>
+                                                                {{quickViewProduct.price}} грн.
+                                                            </strike>
+                                                            <span>{{quickViewProduct.discount_price}} грн.</span>
+                                                        </template>
+                                                        <template v-else>
+                                                            <span>{{quickViewProduct.price}} грн.</span>
+                                                        </template>
+                                                    </p>
+                                                    <div class="form-group">
+                                                        <div class="btn-group btn-group-justified" data-toggle="buttons">
+                                                            <template v-for="(available, index) in quickViewProduct.available">
+                                                                <label @click="changeIdAvailable(available.id)"
+                                                                       :class="(index === 0) ? 'btn btn-primary active' : 'btn btn-primary'">
+                                                                    <input type="radio"
+                                                                           v-model="idAvailable"
+                                                                           :value="available.id"
+                                                                           :id="'option'+(index+1)"
+                                                                           checked>
+                                                                    <template v-for="(filter, indexFilter) in available.filters">
+                                                                        {{ getFilter(filter.filter_id).name }}
+                                                                        <template v-if="indexFilter !== available.filters.length - 1">
+                                                                            +
+                                                                        </template>
+                                                                    </template>
+                                                                </label>
+                                                            </template>
+                                                        </div>
+                                                    </div>
+                                                    <div class="add_to_cart">
+                                                        <a href="javascript:void(0)" class="btn"><i class="fas fa-shopping-cart"></i>Купить</a>
+                                                        <a href="javascript:void(0)" class="hrt"><i class="far fa-heart"></i></a>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 more_details centered">
+                                                    <a href="javascript:void(0)">Просмотеть детали...</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </template>
                 </div>
-            </div>
-        </div>
+            </template>
+        </template>
     </div>
 </template>
 
 <script>
     export default {
-        name: 'Products'
+        name: 'Products',
+        props: ['products'],
+        computed: {
+            _() {
+                return _;
+            },
+            filters: function () {
+                return this.$store.getters.filters;
+            }
+        },
+        data() {
+            return {
+                quickViewProduct: null,
+                idAvailable: null,
+            }
+        },
+        methods: {
+            changeIdAvailable: function (id) {
+                this.idAvailable = id;
+            },
+            quickView: function (product) {
+                this.idAvailable = _.first(product.available).id || null;
+                this.quickViewProduct = product;
+            },
+            getFilter: function (id) {
+                return this.filters.find(item => item.id === id) ||  {
+                    name: null
+                }
+            },
+        },
+        watch: {
+            'idAvailable': function () {
+                console.log(this.idAvailable)
+            }
+        }
     }
 </script>
