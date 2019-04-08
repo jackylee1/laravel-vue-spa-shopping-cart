@@ -124,14 +124,19 @@ class Product extends Model
     }
 
     public function scopeWhereTypeAndCategory($query) {
-        return $query->whereHas('filters', function ($query) {
-            if (request()->filled('type') !== null) {
-                $query->where('type_id', (int)request()->get('type'));
-            }
-            if (request()->filled('category') !== null) {
-                $query->where('category_id', (int)request()->get('category'));
-            }
-        });
+        if (request()->filled('type') !== null || request()->filled('category') !== null) {
+            return $query->whereHas('filters', function ($query) {
+                if (request()->filled('type') !== null) {
+                    $query->where('type_id', (int)request()->get('type'));
+                }
+                if (request()->filled('category') !== null) {
+                    $query->where('category_id', (int)request()->get('category'));
+                }
+            });
+        }
+        else {
+            return $query;
+        }
     }
 
     protected function getProducts() {
@@ -181,7 +186,6 @@ class Product extends Model
     }
 
     public static function getProductsPublic() {
-        dump(request()->all());
         $query = Product::query();
 
         $query->select([

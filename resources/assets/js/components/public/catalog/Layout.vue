@@ -53,8 +53,8 @@
         data() {
             return {
                 breadcrumbs: [],
-                currentCategory: {},
-                currentType: {},
+                currentCategory: null,
+                currentType: null,
                 products: [],
                 sort: (this.$route.query.sort !== undefined && this.$route.query.sort !== null) ? this.$route.query.sort : 'all',
                 metaData: {
@@ -77,24 +77,29 @@
                 this.sort = value;
             },
             getProducts: function (page = 1) {
-                ApiProducts.get(page, {
-                    type: this.currentType.id,
-                    category: this.currentCategory.id,
-                    filters: this.$route.query.filters,
-                    sort: this.sort
-                }).then((res) => {
-                    this.metaData.last_page = res.data.products.last_page;
-                    this.metaData.current_page = res.data.products.current_page;
-                    this.metaData.prev_page_url = res.data.products.prev_page_url;
+                console.log('getProducts | start');
+                if (this.currentCategory !== null) {
+                    ApiProducts.get(page, {
+                        type: this.currentType.id,
+                        category: this.currentCategory.id,
+                        filters: this.$route.query.filters,
+                        sort: this.sort
+                    }).then((res) => {
+                        this.metaData.last_page = res.data.products.last_page;
+                        this.metaData.current_page = res.data.products.current_page;
+                        this.metaData.prev_page_url = res.data.products.prev_page_url;
 
-                    this.products = res.data.products.data;
-                }).catch((error) => {
-                    this.$notify({
-                        type: 'error',
-                        title: 'Ошибка',
-                        text: 'при выполнеении запроса'
+                        this.products = res.data.products.data;
+
+                        console.log('getProducts | load');
+                    }).catch((error) => {
+                        this.$notify({
+                            type: 'error',
+                            title: 'Ошибка',
+                            text: 'при выполнеении запроса'
+                        });
                     });
-                });
+                }
             },
             setTypesAndBreadcrumbs: function () {
                 this.types.forEach((type) => {
@@ -119,8 +124,12 @@
                 this.setTypesAndBreadcrumbs();
             },
             '$route' (to, from){
-                this.getProducts();
                 this.setTypesAndBreadcrumbs();
+            },
+            'currentCategory': function () {
+                if (this.currentCategory !== null) {
+                    this.getProducts();
+                }
             }
         }
     }

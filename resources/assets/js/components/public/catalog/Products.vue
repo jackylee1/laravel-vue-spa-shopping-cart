@@ -141,7 +141,10 @@
                 this.idAvailable = id;
             },
             quickView: function (product) {
-                this.idAvailable = _.first(product.available).id || null;
+                this.idAvailable = _.first(product.available);
+                if (this.idAvailable !== undefined) {
+                    this.idAvailable = this.idAvailable.id;
+                }
                 this.quickViewProduct = product;
             },
             getFilter: function (id) {

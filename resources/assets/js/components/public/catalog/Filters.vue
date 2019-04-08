@@ -22,6 +22,9 @@
     export default {
         name: 'Filters',
         props: ['currentType', 'currentCategory'],
+        mounted() {
+            this.$emit('getProducts');
+        },
         computed: {
             'filters': function () {
                 return this.$store.getters.filters;
@@ -52,11 +55,13 @@
             },
             setSelectFilters: function () {
                 this.selectFilters = [];
+
                 let filters = this.mergeFilters();
+
                 filters.forEach((filter) => {
                     this.selectFilters.push(filter.filter_id);
                 });
-                console.log(this.selectFilters);
+
                 this.setFiltersToUrl();
             },
             mergeFilters: function () {

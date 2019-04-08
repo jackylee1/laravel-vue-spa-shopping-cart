@@ -25,7 +25,7 @@ class SliderController extends Controller
             'width' => 300,
             'height' => 300,
             'aspect_ratio' => true,
-            'crop' => true
+            'crop' => false
         ];
     }
 

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="row titles_top">
+        <div v-if="currentCategory" class="row titles_top">
             <div class="col-md-6 col-12 my-auto">
                 <h1 class="category_title" v-if="currentCategory.name !== undefined">
                     {{currentCategory.name}}
