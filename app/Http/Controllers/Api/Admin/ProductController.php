@@ -26,8 +26,8 @@ class ProductController extends Controller
 
         $this->path = 'public/images/products/';
         $this->resize_params = [
-            'width' => 300,
-            'height' => 300,
+            'width' => 170,
+            'height' => 190,
             'aspect_ratio' => true,
             'crop' => true
         ];
@@ -217,7 +217,7 @@ class ProductController extends Controller
         $image_origin = File::upload($request, ['file_key' => 'image', 'path_save' => $this->path]);
         $image_preview = File::upload($request, ['file_key' => 'image', 'path_save' => $this->path]);
 
-        Image::resize(storage_path("app/$image_preview->full_path"), storage_path("app/$this->path"), $this->resize_params);
+        Image::resize(public_path("app/$image_preview->full_path"), public_path("app/$this->path"), $this->resize_params);
 
         $product_image = Product::createImage($image_origin->file_name, $image_preview->file_name);
 

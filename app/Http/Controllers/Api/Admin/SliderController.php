@@ -71,7 +71,7 @@ class SliderController extends Controller
         $image_origin = File::upload($request, ['file_key' => 'image', 'path_save' => $this->path]);
         $image_preview = File::upload($request, ['file_key' => 'image', 'path_save' => $this->path]);
 
-        Image::resize(storage_path("app/$image_preview->full_path"), storage_path("app/$this->path"), $this->resize_params);
+        Image::resize(public_path("app/$image_preview->full_path"), public_path("app/$this->path"), $this->resize_params);
 
         $slider = Slider::createModel($image_origin->file_name, $image_preview->file_name);
 

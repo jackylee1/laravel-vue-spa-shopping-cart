@@ -92,6 +92,8 @@
 </template>
 
 <script>
+    import * as jquery from '../../app/public/src/jquery';
+
     let arrayToTree = require('array-to-tree');
 
     export default {
@@ -100,6 +102,9 @@
             if (this.typesStore.length) {
                 this.types = this.typesStore;
             }
+        },
+        updated() {
+            jquery.megamenu();
         },
         computed: {
             _() {

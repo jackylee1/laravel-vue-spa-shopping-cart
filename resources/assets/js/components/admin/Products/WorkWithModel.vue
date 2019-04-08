@@ -349,8 +349,9 @@
 
         <el-dialog  style="text-align:center" width="35%" :title="titleDialogWorkWith" :visible.sync="visibleDialogWorkWithCropImage">
             <croppa
-                :width="350"
-                :height="350"
+                :width="cropWidth"
+                :height="cropHeight"
+                :quality="1"
                 :show-remove-button="false"
                 :disable-drag-and-drop="true"
                 :disable-click-to-choose="true"
@@ -358,6 +359,7 @@
                 :prevent-white-space="true"
                 :initial-image="this.initialImageCroppa"
                 initial-position="center"
+                :accept="'image/*'"
                 v-model="imageCroppa"></croppa>
             <PageElementsAlerts :alerts="modalAlerts" :type="modalTypeAlerts"/>
             <span slot="footer" class="dialog-footer">
@@ -446,6 +448,8 @@
                 productImageOnModal: '',
                 currentProductImageOnModal: 'origin',
                 imageCroppa: null,
+                cropWidth: 230,
+                cropHeight: 250,
                 initialImageCroppa: '',
                 visibleDialogWorkWithCropImage: false,
                 titleDialogWorkWith: '',

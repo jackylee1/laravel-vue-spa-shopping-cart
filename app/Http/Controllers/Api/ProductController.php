@@ -19,6 +19,7 @@ class ProductController extends Controller
         DataTrait;
 
     public function products(Request $request) {
+        clock($request->all());
         $this->setValidateRule([
             'type' => 'nullable|integer|exists:types,id',
             'category' => 'nullable|integer|exists:categories,id',

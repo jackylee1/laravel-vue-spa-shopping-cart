@@ -47,7 +47,7 @@
                         <el-button
                                 size="mini"
                                 type="danger"
-                                @click.native.prevent="btnDeleteLink(props.$index, sliders)">
+                                @click.native.prevent="btnDeleteLink(props.$index, linkToSocialNetworks)">
                             <i class="el-icon-delete"></i>
                         </el-button>
                     </el-button-group>

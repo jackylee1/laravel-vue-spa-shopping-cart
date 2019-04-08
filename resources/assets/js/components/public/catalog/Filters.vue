@@ -4,7 +4,8 @@
             <template v-for="(filterRender, index) in this.renderArraySelect">
                 <div class="col-md-2">
                     <p class="text-center">{{filterRender.name}}</p>
-                    <select v-model="selectFilters[index]"
+                    <select @click="changeFilter"
+                            v-model="selectFilters[index]"
                             class="form-control-sm custom-select">
                         <option value=""></option>
                         <template v-for="filterChildren in getChildrenFilters(filterRender)">
@@ -33,17 +34,30 @@
             }
         },
         methods: {
+            changeFilter: function () {
+                this.setFiltersToUrl();
+                this.$emit('getProducts');
+            },
+            setFiltersToUrl: function () {
+                this.$router.push({ query: Object.assign(
+                    {},
+                    this.$route.query, {
+                        filters: this.selectFilters,
+                        sort: (this.$route.query.sort !== undefined
+                            && this.$route.query.sort !== null)
+                            ? this.$route.query.sort
+                            : 'all',
+                    }
+                )});
+            },
             setSelectFilters: function () {
-                if (this.$route.query.filters !== undefined && this.$route.query.filters.length) {
-                    this.selectFilters = _.uniqBy(this.$route.query.filters);
-                }
-                else {
-                    let filters = this.mergeFilters();
-                    filters.forEach((filter) => {
-                        this.selectFilters.push(filter.filter_id);
-                    });
-                    this.selectFilters = _.uniqBy(this.selectFilters);
-                }
+                this.selectFilters = [];
+                let filters = this.mergeFilters();
+                filters.forEach((filter) => {
+                    this.selectFilters.push(filter.filter_id);
+                });
+                console.log(this.selectFilters);
+                this.setFiltersToUrl();
             },
             mergeFilters: function () {
                 let typeFilters = this.sortCurrentFilters(this.currentType.filters);
@@ -88,12 +102,6 @@
             'currentCategory': function () {
                 this.setRenderArray();
                 this.setSelectFilters();
-            },
-            'selectFilters': function () {
-                if (this.selectFilters.length) {
-                    this.$emit('updateSelectFilters', this.selectFilters);
-                    this.$emit('getProducts', 1)
-                }
             },
         },
     }

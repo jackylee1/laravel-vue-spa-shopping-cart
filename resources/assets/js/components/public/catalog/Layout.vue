@@ -9,12 +9,10 @@
 
                 <Sort v-on:getProducts="getProducts"
                       v-on:updateSort="updateSort"
-                      :currentCategory="currentCategory"
-                      :selectFilters="selectFilters" />
+                      :currentCategory="currentCategory"/>
 
                 <Filters :currentType="currentType"
                          :currentCategory="currentCategory"
-                         v-on:updateSelectFilters="updateSelectFilters"
                          v-on:getProducts="getProducts"/>
 
                 <Products :products="products"/>
@@ -58,7 +56,6 @@
                 currentCategory: {},
                 currentType: {},
                 products: [],
-                selectFilters: [],
                 sort: (this.$route.query.sort !== undefined && this.$route.query.sort !== null) ? this.$route.query.sort : 'all',
                 metaData: {
                     last_page: null,
@@ -79,27 +76,16 @@
             updateSort: function (value) {
                 this.sort = value;
             },
-            updateSelectFilters: function (value) {
-                this.selectFilters = value;
-            },
             getProducts: function (page = 1) {
                 ApiProducts.get(page, {
                     type: this.currentType.id,
                     category: this.currentCategory.id,
-                    filters: this.selectFilters,
+                    filters: this.$route.query.filters,
                     sort: this.sort
                 }).then((res) => {
                     this.metaData.last_page = res.data.products.last_page;
                     this.metaData.current_page = res.data.products.current_page;
                     this.metaData.prev_page_url = res.data.products.prev_page_url;
-
-                    this.$router.push({ query: Object.assign(
-                        {},
-                        this.$route.query, {
-                            filters: this.selectFilters,
-                            sort: this.sort
-                        }
-                    )});
 
                     this.products = res.data.products.data;
                 }).catch((error) => {
@@ -133,6 +119,7 @@
                 this.setTypesAndBreadcrumbs();
             },
             '$route' (to, from){
+                this.getProducts();
                 this.setTypesAndBreadcrumbs();
             }
         }

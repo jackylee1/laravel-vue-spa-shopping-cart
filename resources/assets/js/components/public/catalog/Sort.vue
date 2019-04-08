@@ -40,7 +40,7 @@
         watch: {
             'sort': function (value) {
                 this.$emit('updateSort', value);
-                this.$emit('getProducts', 1, this.selectFilters);
+                this.$emit('getProducts', 1);
             }
         }
     }

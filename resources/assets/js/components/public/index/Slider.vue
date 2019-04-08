@@ -18,7 +18,7 @@
                                 <h2>{{item.title}}</h2>
                                 <p v-html="item.description"></p>
                                 <a v-if="item.url !== null"
-                                   :href="item.url.length"
+                                   :href="item.url"
                                    class="more_info">
                                     Подробнее
                                 </a>

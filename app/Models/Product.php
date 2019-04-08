@@ -123,6 +123,17 @@ class Product extends Model
         return $this->hasMany('App\Models\ProductInFilter');
     }
 
+    public function scopeWhereTypeAndCategory($query) {
+        return $query->whereHas('filters', function ($query) {
+            if (request()->filled('type') !== null) {
+                $query->where('type_id', (int)request()->get('type'));
+            }
+            if (request()->filled('category') !== null) {
+                $query->where('category_id', (int)request()->get('category'));
+            }
+        });
+    }
+
     protected function getProducts() {
         $query = Product::query();
         if (request()->filled('q')) {
@@ -169,40 +180,19 @@ class Product extends Model
         return $product;
     }
 
-    private static function queryFilters($query) {
-        $filters = Filter::getFiltersById(array_filter(request()->get('filters')));
-        $filters = $filters->map(function ($filter) {
-            if ($filter->parent_id !== 0) {
-                return $filter->id;
-            }
-        })->filter(function ($filter) {
-            return $filter !== null;
-        });
-
-        if (count($filters) > 0) {
-            $where = [];
-            $filters->map(function ($filter) use (&$where) {
-                array_push($where, ['filter_id', $filter]);
-            });
-
-            dump($where);
-
-            $query->where($where);
-        }
-
-        return $query;
-    }
-
     public static function getProductsPublic() {
+        dump(request()->all());
         $query = Product::query();
 
-        $type_id = null; $category_id = null;
-        if (request()->filled('type')) {
-            $type_id = request()->get('type');
-        }
-        if (request()->filled('category')) {
-            $category_id = request()->get('category');
-        }
+        $query->select([
+            '*',
+            DB::raw('IF(discount_price IS NOT NULL, discount_price, price) as current_price')
+        ]);
+
+        $query->where(function ($query) {
+            $query->where('status', true);
+            $query->where('date_inclusion', null)->orWhere('date_inclusion', '<', Carbon::now());
+        });
 
         if (request()->filled('filters')) {
             $filters = Filter::getFiltersById(array_filter(request()->get('filters')));
@@ -216,22 +206,18 @@ class Product extends Model
             if ($filters->count() > 0) {
                 $id_products = ProductInFilter::getProductIdsByFilters(
                     $filters,
-                    $type_id,
-                    $category_id
+                    (request()->filled('type')) ? request()->get('type') : null,
+                    (request()->filled('category')) ? request()->get('category') : null
                 );
 
                 $query->whereIn('id', $id_products);
             }
             else {
-                $query->whereHas('filters', function ($query) use ($type_id, $category_id) {
-                    if ($type_id !== null) {
-                        $query->where('type_id', $type_id);
-                    }
-                    if ($category_id !== null) {
-                        $query->where('category_id', $category_id);
-                    }
-                });
+                $query->whereTypeAndCategory();
             }
+        }
+        else {
+            $query->whereTypeAndCategory();
         }
 
         if (request()->filled('sort')) {
@@ -262,13 +248,6 @@ class Product extends Model
                     break;
             }
         }
-
-        $query->where('status', true);
-        $query->where('date_inclusion', null)->orWhere('date_inclusion', '<', Carbon::now());
-        $query->select([
-            '*',
-            DB::raw('IF(discount_price IS NOT NULL, discount_price, price) as current_price')
-        ]);
 
         $products = $query->paginate(12);
 
