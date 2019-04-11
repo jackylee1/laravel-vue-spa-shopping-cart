@@ -7,15 +7,19 @@
                         <div class="col-md-3 col-sm-6 col-6">
                             <div class="thumb-wrapper">
                                 <div class="img-box">
-                                    <a href="javascript:void(0)">
-                                        <img v-if="product.main_image !== null"
-                                             :src="`/app/public/images/products/${product.main_image.preview}`"
-                                             :alt="product.name"
-                                             class="img-responsive img-fluid">
-                                    </a>
+                                    <router-link :to="{name: 'product', params: {slug: product.slug}}">
+                                        <a href="javascript:void(0)">
+                                            <img v-if="product.main_image !== null"
+                                                 :src="`/app/public/images/products/${product.main_image.preview}`"
+                                                 :alt="product.name"
+                                                 class="img-responsive img-fluid">
+                                        </a>
+                                    </router-link>
                                 </div>
                                 <div class="thumb-content">
-                                    <a href="javascript:void(0)"><h4>{{product.name}}</h4></a>
+                                    <router-link :to="{ name: 'product', params: {slug: product.slug} }">
+                                        <a href="javascript:void(0)"><h4>{{product.name}}</h4></a>
+                                    </router-link>
                                     <p class="item-price">
                                         <template v-if="product.discount_price !== null && product.discount_price > 0">
                                             <strike>{{product.price}} грн</strike>
@@ -79,22 +83,9 @@
                                                     </p>
                                                     <div class="form-group">
                                                         <div class="btn-group btn-group-justified" data-toggle="buttons">
-                                                            <template v-for="(available, index) in quickViewProduct.available">
-                                                                <label @click="changeIdAvailable(available.id)"
-                                                                       :class="(index === 0) ? 'btn btn-primary active' : 'btn btn-primary'">
-                                                                    <input type="radio"
-                                                                           v-model="idAvailable"
-                                                                           :value="available.id"
-                                                                           :id="'option'+(index+1)"
-                                                                           checked>
-                                                                    <template v-for="(filter, indexFilter) in available.filters">
-                                                                        {{ getFilter(filter.filter_id).name }}
-                                                                        <template v-if="indexFilter !== available.filters.length - 1">
-                                                                            +
-                                                                        </template>
-                                                                    </template>
-                                                                </label>
-                                                            </template>
+                                                            <RenderAvailable :availableModels="quickViewProduct.available"
+                                                                             :idAvailable="idAvailable"
+                                                                             v-on:changeIdAvailable="changeIdAvailable"/>
                                                         </div>
                                                     </div>
                                                     <div class="add_to_cart">
@@ -119,15 +110,14 @@
 </template>
 
 <script>
+    import RenderAvailable from "../product/RenderAvailable";
     export default {
         name: 'Products',
+        components: {RenderAvailable},
         props: ['products'],
         computed: {
             _() {
                 return _;
-            },
-            filters: function () {
-                return this.$store.getters.filters;
             }
         },
         data() {
@@ -146,11 +136,6 @@
                     this.idAvailable = this.idAvailable.id;
                 }
                 this.quickViewProduct = product;
-            },
-            getFilter: function (id) {
-                return this.filters.find(item => item.id === id) ||  {
-                    name: null
-                }
             },
         },
         watch: {

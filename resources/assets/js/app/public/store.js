@@ -13,6 +13,11 @@ export default {
         textPages: [],
         types: [],
         filters: [],
+        products: [],
+        urlPrevious: null,
+        loadFBComments: false,
+        categoryPrevious: null,
+        typePrevious: null,
     },
     getters: {
         sliders(state) {
@@ -35,6 +40,21 @@ export default {
         },
         filters(state) {
             return state.filters;
+        },
+        products(state) {
+            return state.products;
+        },
+        urlPrevious(state) {
+            return state.urlPrevious;
+        },
+        loadFBComments(state) {
+            return state.loadFBComments;
+        },
+        categoryPrevious(state) {
+            return state.categoryPrevious;
+        },
+        typePrevious(state) {
+            return state.typePrevious;
         }
     },
     mutations: {
@@ -58,6 +78,21 @@ export default {
         },
         updateFilters: function (state, payload) {
             state.filters = payload;
-        }
+        },
+        updateProducts: function (state, payload) {
+            state.products = payload;
+        },
+        updateUrlPrevious: function (state, payload) {
+            state.urlPrevious = payload;
+        },
+        updateLoadFBComments: function (state, payload) {
+            state.loadFBComments = payload;
+        },
+        updateCategoryPrevious: function (state, payload) {
+            state.categoryPrevious = payload;
+        },
+        updateTypePrevious: function (state, payload) {
+            state.typePrevious = payload;
+        },
     }
 };

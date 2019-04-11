@@ -24,8 +24,8 @@ class FilterController extends Controller
 
         $this->path = 'public/images/filter/';
         $this->resize_params = [
-            'width' => 300,
-            'height' => 300,
+            'width' => 200,
+            'height' => 100,
             'aspect_ratio' => true,
             'crop' => false
         ];

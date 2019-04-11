@@ -11,12 +11,10 @@ Route::group([], function () {
     Route::post('common', 'Api\PageController@common');
     Route::post('subscribe', 'Api\SubscribeController@store');
     Route::get('products', 'Api\ProductController@products');
+    Route::get('product/view/{slug}', 'Api\ProductController@view');
 });
 
-Route::group([
-    'middleware' => ['jwt.auth', 'only-administration'],
-    'prefix' => 'admin'
-], function () {
+Route::group(['middleware' => ['jwt.auth', 'only-administration'], 'prefix' => 'admin'], function () {
     Route::post('/users/handle_promotional_code', 'Api\Admin\UserController@handlePromotionalCode');
     Route::post('/users/send_promotional_code', 'Api\Admin\UserController@sendPromotionalCode');
     Route::resource('users', 'Api\Admin\UserController')->only([

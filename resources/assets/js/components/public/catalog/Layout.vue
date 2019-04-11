@@ -48,6 +48,12 @@
         computed: {
             types: function () {
                 return this.$store.getters.types;
+            },
+            productsStore: function () {
+                return this.$store.getters.products;
+            },
+            urlPrevious: function () {
+                return this.$store.getters.urlPrevious;
             }
         },
         data() {
@@ -76,8 +82,14 @@
             updateSort: function (value) {
                 this.sort = value;
             },
+            setProducts: function (products) {
+                this.metaData.last_page = products.last_page;
+                this.metaData.current_page = products.current_page;
+                this.metaData.prev_page_url = products.prev_page_url;
+
+                this.products = products.data;
+            },
             getProducts: function (page = 1) {
-                console.log('getProducts | start');
                 if (this.currentCategory !== null) {
                     ApiProducts.get(page, {
                         type: this.currentType.id,
@@ -85,13 +97,9 @@
                         filters: this.$route.query.filters,
                         sort: this.sort
                     }).then((res) => {
-                        this.metaData.last_page = res.data.products.last_page;
-                        this.metaData.current_page = res.data.products.current_page;
-                        this.metaData.prev_page_url = res.data.products.prev_page_url;
+                        this.$store.commit('updateProducts', res.data.products);
 
-                        this.products = res.data.products.data;
-
-                        console.log('getProducts | load');
+                        this.setProducts(res.data.products);
                     }).catch((error) => {
                         this.$notify({
                             type: 'error',
@@ -128,7 +136,16 @@
             },
             'currentCategory': function () {
                 if (this.currentCategory !== null) {
-                    this.getProducts();
+                    this.$store.commit('updateCategoryPrevious', this.currentCategory);
+                    this.$store.commit('updateTypePrevious', this.currentType);
+
+                    if (this.$router.currentRoute.fullPath === this.urlPrevious) {
+                        this.setProducts(this.productsStore);
+                    }
+                    else {
+                        this.$store.commit('updateUrlPrevious', this.$router.currentRoute.fullPath);
+                        this.getProducts();
+                    }
                 }
             }
         }

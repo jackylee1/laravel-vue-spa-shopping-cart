@@ -98,13 +98,18 @@ class Product extends Model
         'mainImage',
         'bestseller',
         'filters',
-        'available'
+        'available',
+        'mainType'
     ];
 
     public $path_image = 'public/images/products/';
 
     public function images() {
         return $this->hasMany('App\Models\ProductImage');
+    }
+
+    public function mainType() {
+        return $this->hasOne('App\Models\ProductMainType', 'product_id', 'id');
     }
 
     public function available() {
@@ -121,6 +126,13 @@ class Product extends Model
 
     public function filters() {
         return $this->hasMany('App\Models\ProductInFilter');
+    }
+
+    public function scopeAllSelectAndCurrentPrice($query) {
+        return $query->select([
+            '*',
+            DB::raw('IF(discount_price IS NOT NULL, discount_price, price) as current_price')
+        ]);
     }
 
     public function scopeWhereTypeAndCategory($query) {
@@ -185,13 +197,23 @@ class Product extends Model
         return $product;
     }
 
+    public static function getProductPublic($slug) {
+        $product = Product::where([
+            ['slug', $slug],
+            ['status', true]
+        ])->with(['images' => function ($q) {
+            $q->orderBy('sorting_order', 'asc');
+        }])->allSelectAndCurrentPrice()->first();
+
+        $product = ProductTool::checkRelevanceDiscount($product);
+
+        return $product;
+    }
+
     public static function getProductsPublic() {
         $query = Product::query();
 
-        $query->select([
-            '*',
-            DB::raw('IF(discount_price IS NOT NULL, discount_price, price) as current_price')
-        ]);
+        $query->allSelectAndCurrentPrice();
 
         $query->where(function ($query) {
             $query->where('status', true);
@@ -293,6 +315,22 @@ class Product extends Model
         }
 
         $model->save();
+
+        if (request()->filled('main_type')) {
+            $type = $model->mainType()->first();
+            if ($type === null) {
+                $model->mainType()->create([
+                    'type_id' => request()->get('main_type')['type_id'],
+                    'category_id' => request()->get('main_type')['category_id'],
+                ]);
+            }
+            else {
+                $type->update([
+                    'type_id' => request()->get('main_type')['type_id'],
+                    'category_id' => request()->get('main_type')['category_id'],
+                ]);
+            }
+        }
 
         return $model;
     }

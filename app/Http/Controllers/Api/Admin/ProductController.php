@@ -69,6 +69,10 @@ class ProductController extends Controller
             'discount_end' => 'nullable|datetime|required_with:discount_price',
             'status' => 'required|boolean',
             'date_inclusion' => 'nullable|date',
+            'main_type' => 'required|array',
+            'main_type.type_id' => 'required|integer|exists:types,id',
+            'main_type.category_id' => 'required|array',
+            'main_type.category_id.*' => 'integer|exists:categories,id',
         ]);
         if (request()->filled('discount_start') && request()->filled('discount_end')) {
             $start_date = DateTimeTools::explodeRequestDateTime(request()->get('discount_start'));
@@ -109,6 +113,9 @@ class ProductController extends Controller
             'discount_end' => 'Дата/время окончания скидки',
             'status' => 'Статус',
             'date_inclusion' => 'Дата включения',
+            'main_type' => 'Дефолтный тип товара',
+            'main_type.type_id' => 'Дефолтный тип товара',
+            'main_type.category_id' => 'Дефолтная категория товара',
         ]);
     }
 

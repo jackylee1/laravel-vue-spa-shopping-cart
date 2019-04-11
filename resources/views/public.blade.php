@@ -23,8 +23,9 @@
     <!-- CSS -->
     <link rel="stylesheet" href="/assets/public/css/bootstrap.css">
     <link rel="stylesheet" href="/assets/public/css/normalize.min.css">
-    <link rel="stylesheet" href="/assets/public/css/style.css">
+    {!! style_ts('/assets/public/css/style.css') !!}
     <link rel="stylesheet" href="/assets/public/css/ionicons.min.css">
+    <link rel="stylesheet" href="/assets/public/css/jquery.fancybox.css">
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
@@ -46,23 +47,10 @@
 <script src="/assets/public/js/vendor/jquery.min.js"></script>
 <script src="/assets/public/js/bootstrap.bundle.js"></script>
 <script src="/assets/public/js/bootstrap.js"></script>
+<script src="/assets/public/js/jquery.fancybox.js"></script>
 <script type="text/javascript" src="/assets/public/js/jquery.touchSwipe.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
 <script src="https://unpkg.com/ionicons@4.4.6/dist/ionicons.js"></script>
-
-<script type="text/javascript">
-    $(window).on('load', function() {
-        $(".carousel-inner").swipe( {
-            //Generic swipe handler for all directions
-            swipeLeft:function(event, direction, distance, duration, fingerCount) {
-                $(this).parent().carousel('next');
-            },
-            swipeRight: function() {
-                $(this).parent().carousel('prev');
-            }
-        });
-    });
-</script>
 
 </body>
 </html>

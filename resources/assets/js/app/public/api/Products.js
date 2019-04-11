@@ -3,3 +3,7 @@ export function get(page = 1, params = {}) {
         params: params
     });
 }
+
+export function view(slug) {
+    return axios.get(`/api/product/view/${slug}`);
+}

@@ -104,7 +104,7 @@
             }
         },
         updated() {
-            jquery.megamenu();
+            jquery.loadScript();
         },
         computed: {
             _() {

@@ -1,0 +1,47 @@
+<template>
+    <div>
+        <template v-for="(available, index) in availableModels">
+            <label @click="changeIdAvailable(available.id)"
+                   :class="(index === 0) ? 'btn btn-primary active' : 'btn btn-primary'">
+                <input type="radio"
+                       v-model="idAvailable"
+                       :value="available.id"
+                       :id="'option'+(index+1)"
+                       checked>
+                <template v-for="(filter, indexFilter) in available.filters">
+                    {{ getFilter(filter.filter_id).name }}
+                    <template v-if="indexFilter !== available.filters.length - 1">
+                        +
+                    </template>
+                </template>
+            </label>
+        </template>
+    </div>
+</template>
+
+<script>
+    export default {
+        name: 'RenderAvailable',
+        props: ['availableModels', 'idAvailable'],
+        computed: {
+            filters: function () {
+                return this.$store.getters.filters;
+            }
+        },
+        mounted() {
+            if (this.availableModels[0] !== undefined) {
+                this.$emit('changeIdAvailable', this.availableModels[0].id);
+            }
+        },
+        methods: {
+            changeIdAvailable: function (id) {
+                this.$emit('changeIdAvailable', id);
+            },
+            getFilter: function (id) {
+                return this.filters.find(item => item.id === id) ||  {
+                    name: null
+                }
+            },
+        }
+    }
+</script>

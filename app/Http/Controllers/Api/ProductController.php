@@ -12,6 +12,7 @@ use App\Traits\DataTrait;
 use App\Traits\ValidateTrait;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
@@ -38,5 +39,39 @@ class ProductController extends Controller
         $this->setData('products', Product::getProductsPublic());
 
         return response()->json($this->data);
+    }
+
+    public function view($slug) {
+        $product = null;
+        $this->setValidateRule([
+            'slug' => [
+                'required',
+                'string',
+                'exists:products,slug',
+                function ($attribute, $value, $fail) use (&$product, $slug) {
+                    if ($slug !== null) {
+                        $product = Product::getProductPublic($slug);
+                        if ($product === null) {
+                            return $fail('По запросу нет продукции');
+                        }
+                    }
+                }
+            ]
+        ]);
+        $this->setValidateAttribute([
+            'slug' => 'URL товара'
+        ]);
+
+        $validator = Validator::make(['slug' => $slug], $this->validate_rules, [], $this->validate_attributes);
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'product' => $product
+        ]);
     }
 }

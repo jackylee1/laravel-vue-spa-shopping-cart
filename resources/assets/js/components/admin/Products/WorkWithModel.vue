@@ -37,6 +37,27 @@
                     </el-input>
                 </el-form-item>
 
+                <el-form-item label="Выберите дефольный тип для этого товара">
+                <el-select v-model="selectedFormType"
+                           placeholder="Выберите тип продукции">
+                    <el-option
+                            v-for="item in types"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id">
+                    </el-option>
+                </el-select>
+                </el-form-item>
+                <el-form-item v-if="selectedFormType !== null" label="Выберите дефолтную категорию для этого товара">
+                    <el-cascader
+                            expand-trigger="hover"
+                            filterable
+                            :options="this.getTreeFormCategories()"
+                            :props="selectProps"
+                            v-model="selectedFormCategory">
+                    </el-cascader>
+                </el-form-item>
+
                 <el-form-item label="Цена" prop="price">
                     <el-input type="text" v-model="form.price" placeholder="Введите Цену"></el-input>
                 </el-form-item>
@@ -546,7 +567,9 @@
                 availableQuantity: 999,
                 availableObject: {},
                 disabledSelectFilters: false,
-                btnDialogAvailable: ''
+                btnDialogAvailable: '',
+                selectedFormType: null,
+                selectedFormCategory: null,
             }
         },
         methods: {
@@ -776,20 +799,28 @@
                     this.filters = response.data.filters;
                 });
             },
+            findTreeCategories: function (selectedType) {
+                let type = this.types.find((item) => item.id === selectedType);
+                let categories = type.categories.map((item) => {
+                    if (item.parent_id === 1) {
+                        item.parent_id = 0;
+                    }
+                    return item;
+                }).filter((item) => {
+                    return item.id !== 1;
+                });
+                categories = arrayToTree(categories);
+
+                return categories;
+            },
+            getTreeFormCategories: function () {
+                if (this.selectedFormType !== null) {
+                    return this.findTreeCategories(this.selectedFormType);
+                }
+            },
             getTreeCategories: function () {
                 if (this.selectedType !== null) {
-                    let type = this.types.find((item) => item.id === this.selectedType);
-                    let categories = type.categories.map((item) => {
-                        if (item.parent_id === 1) {
-                            item.parent_id = 0;
-                        }
-                        return item;
-                    }).filter((item) => {
-                        return item.id !== 1;
-                    });
-                    categories = arrayToTree(categories);
-
-                    return categories;
+                    return this.findTreeCategories(this.selectedType);
                 }
             },
             changeProductImageOnModal: function(image) {
@@ -967,6 +998,13 @@
             },
             setDataWhenCreating: function(product) {
                 this.form = product;
+                if (this.form.main_type === null) {
+                    this.form.main_type = {};
+                }
+                else {
+                    this.selectedFormType = this.form.main_type.type_id;
+                    this.selectedFormCategory = this.form.main_type.category_id;
+                }
                 if (this.form.images.length) {
                     this.form.images.forEach(image => {
                         this.imagesList.push({
@@ -990,6 +1028,7 @@
                 }
             },
             defaultFormData: function () {
+                this.selectedFormType = null;
                 return {
                     id: null,
                     article: '',
@@ -1002,7 +1041,8 @@
                     discount_start: null,
                     discount_end: null,
                     status: 1,
-                    data: null
+                    data: null,
+                    main_type: {}
                 }
             },
             setBreadcrumbElements: function () {
@@ -1127,6 +1167,16 @@
                     });
 
                     this.btnInDialogWorkWithAvailable = (!checkExists);
+                }
+            },
+            'selectedFormType': function () {
+                if (this.form.main_type['type_id'] !== this.selectedFormType) {
+                    this.form.main_type['type_id'] = this.selectedFormType;
+                }
+            },
+            'selectedFormCategory': function () {
+                if (this.form.main_type['category_id'] !== this.selectedFormCategory[this.selectedFormCategory.length - 1]) {
+                    this.form.main_type['category_id'] = this.selectedFormCategory;
                 }
             }
         },

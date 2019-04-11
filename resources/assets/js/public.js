@@ -11,6 +11,7 @@ import VeeValidate, { Validator } from 'vee-validate';
 import VeeValidateRu from 'vee-validate/dist/locale/ru';
 import Notifications from 'vue-notification';
 import VueScrollTo from 'vue-scrollto';
+import Fragment from 'vue-fragment'
 
 Vue.use(VeeValidate);
 Validator.localize('ru', VeeValidateRu);
@@ -18,6 +19,7 @@ Vue.use(VueScrollTo);
 Vue.use(VueRouter);
 Vue.use(Vuex);
 Vue.use(Notifications);
+Vue.use(Fragment.Plugin);
 
 const store = new Vuex.Store(StoreData);
 
