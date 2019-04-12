@@ -459,6 +459,8 @@
                 this.pageTitle = helperRouter.getRouteByName(this.$router, 'products-create').meta.title;
             }
 
+            this.sizeTables = this.sizeTablesStore;
+
             this.setBreadcrumbElements();
         },
         computed: {
@@ -477,7 +479,7 @@
             typesStore: function () {
                 return this.$store.getters.types;
             },
-            sizeTables: function () {
+            sizeTablesStore: function () {
                 if (this.$store.getters.sizeTables.length) {
                     return this.$store.getters.sizeTables;
                 }
@@ -491,6 +493,7 @@
         },
         data() {
             return {
+                sizeTables: [],
                 productImageOnModal: '',
                 currentProductImageOnModal: 'origin',
                 imageCroppa: null,

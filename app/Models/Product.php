@@ -248,7 +248,7 @@ class Product extends Model
         $products = $query->activeForPublic()
             ->with(['mainImage'])
             ->newProducts()
-            ->orderBy('created_at')
+            ->orderByDesc('created_at')
             ->limit(15)->get();
 
         return ProductTool::checkRelevanceDiscount($products);
