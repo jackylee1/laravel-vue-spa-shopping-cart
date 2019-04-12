@@ -2,14 +2,17 @@
     <div>
         <section class="banner">
             <div class="container">
-                <div class="row">
-                    <div class="col-12 col-sm-6 left_banner centered">
-                        <h2>Мужская одежда</h2>
-                        <a href="#" class="btn"><i class="fas fa-shopping-cart"></i>Купить</a>
-                    </div>
-                    <div class="col-12 col-sm-6 right_banner centered">
-                        <h2>Женская одежда</h2>
-                        <a href="#" class="btn"><i class="fas fa-shopping-cart"></i>Купить</a>
+                <div class="row" v-for="typesChunk in _.chunk(indexTypes, 2)">
+                    <div v-for="type in typesChunk"
+                         :style="`background: url(/app/public/images/type/${type.image_origin})`"
+                         class="col-12 col-sm-6 left_banner centered">
+                        <h2>{{type.name}}</h2>
+                        <router-link :to="{ name: 'catalog', query: { type: type.slug } }">
+                            <a href="javascript:void(0)" class="btn">
+                                <i class="fas fa-shopping-cart"></i>
+                                Просмотреть
+                            </a>
+                        </router-link>
                     </div>
                 </div>
             </div>
@@ -24,5 +27,26 @@
 <script>
     export default {
         name: 'Banner',
+        mounted() {
+            this.indexTypes = this.types;
+        },
+        computed: {
+            _: function () {
+                return _;
+            },
+            types: function () {
+                return _.filter(this.$store.getters.types, (item) => item.show_on_index === 1);
+            }
+        },
+        data() {
+            return {
+                indexTypes: this.types
+            }
+        },
+        watch: {
+            'types': function () {
+                this.indexTypes = this.types;
+            }
+        }
     }
 </script>

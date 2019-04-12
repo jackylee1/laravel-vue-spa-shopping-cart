@@ -31,6 +31,8 @@ use Nestable\NestableTrait;
  * @mixin \Eloquent
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Category disableCache()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Category withCacheCooldownSeconds($seconds)
+ * @property int|null $show_on_header
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Category whereShowOnHeader($value)
  */
 class Category extends Model
 {

@@ -88,7 +88,11 @@
                         <h3>Топ категории</h3>
                         <ul>
                             <template v-for="type in types">
-                                <li><a href="#">{{type.name}}</a></li>
+                                <li>
+                                    <router-link :to="{ name: 'catalog', query: { type: type.slug } }">
+                                        <a href="javascript:void(0)">{{type.name}}</a>
+                                    </router-link>
+                                </li>
                             </template>
                         </ul>
                     </div>
@@ -99,7 +103,9 @@
                                 <h3>{{filter.name}}</h3>
                                 <ul>
                                     <template v-for="filterChildren in filter.children">
-                                        <li><a href="#">{{filterChildren.name}}</a></li>
+                                        <li>
+                                            <a href="javascript:void(0)">{{filterChildren.name}}</a>
+                                        </li>
                                     </template>
                                 </ul>
                             </template>
@@ -197,7 +203,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="card">
+                            <div v-if="types.length" class="card">
                                 <div class="card-header" id="headingFour">
                                     <div class="row">
                                         <div class="col-6">
@@ -215,10 +221,11 @@
                                 <div id="collapseFour" class="collapse open_it" aria-labelledby="headingFour" data-parent="#accordionExample">
                                     <div class="card-body">
                                         <ul>
-                                            <li><a href="#">Мужская</a></li>
-                                            <li><a href="#">Женская</a></li>
-                                            <li><a href="#">Новинки</a></li>
-                                            <li><a href="#">Распродажа</a></li>
+                                            <li v-for="type in types">
+                                                <router-link :to="{ name: 'catalog', query: { type: type.slug } }">
+                                                    <a href="javascript:void(0)">{{type.name}}</a>
+                                                </router-link>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>

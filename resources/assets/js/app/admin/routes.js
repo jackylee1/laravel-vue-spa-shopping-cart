@@ -14,6 +14,7 @@ import { OrderPaymentMethodsList, OrderPaymentMethodsWorkWithModel } from "../..
 import { OrdersList, OrdersWorkWithModel } from "../../components/admin/Orders";
 import { LinkToSocialNetworksList, LinkToSocialNetworksModel } from "../../components/admin/LinkToSocialNetworks";
 import { SubscribesList, SubscribesWorkWithModel } from "../../components/admin/Subscribes";
+import { SizeTablesList, SizeTalesWorkWithModel } from "../../components/admin/SizeTables";
 
 export const routes = [
     {
@@ -163,11 +164,40 @@ export const routes = [
             },
             {
                 name: 'products-update',
-                path: ':id',
+                path: 'update/:id',
                 component: ProductsWorkWithModel,
                 meta: {
                     hidden: true,
                     title: 'Обновление данных Продукта'
+                }
+            },
+            {
+                name: 'size-tables-list',
+                path: 'size_tables',
+                component: SizeTablesList,
+                meta: {
+                    hidden: false,
+                    name: 'Таблицы размеров',
+                    title: 'Таблицы размеров'
+                }
+            },
+            {
+                name: 'size-tables-create',
+                path: 'size_tables/create',
+                component: SizeTalesWorkWithModel,
+                meta: {
+                    hidden: false,
+                    name: 'Создать таблицу размеров',
+                    title: 'Создание таблицы размеров'
+                }
+            },
+            {
+                name: 'size-tables-update',
+                path: 'size_tables/:id',
+                component: SizeTalesWorkWithModel,
+                meta: {
+                    hidden: true,
+                    title: 'Обновление данных Таблицы размеров'
                 }
             }
         ]

@@ -1,5 +1,7 @@
 <template>
     <div>
+        <VueLoading :active.sync="isLoading" color="#df1e30"/>
+
         <Breadcrumbs :items="breadcrumbs"/>
 
         <section class="item_card">
@@ -36,7 +38,7 @@
                     <Comments/>
                 </template>
 
-                <RecommendedProducts/>
+                <!-- <RecommendedProducts/> -->
             </div>
         </section>
     </div>
@@ -53,24 +55,32 @@
     import FilterImages from "./FilterImages";
     import AvailableAndControl from "./AvailableAndControl";
     import Breadcrumbs from "../Breadcrumbs";
+    import VueLoading from "vue-loading-overlay/src/js/Component";
 
     export default {
         name: 'ProductLayout',
-        components: {Breadcrumbs, AvailableAndControl, FilterImages, Images, RecommendedProducts, Description, Comments},
+        components: {
+            VueLoading,
+            Breadcrumbs, AvailableAndControl, FilterImages, Images, RecommendedProducts, Description, Comments},
         created() {
             jquery.loadScript();
         },
         mounted() {
             if (this.products.data !== undefined && this.products.data.length) {
                 this.product = this.products.data.find((item) => item.slug === this.$router.currentRoute.params.slug);
+                this.isLoading = false;
+                this.handleSetBreadcrumbs();
             }
             else {
                 ApiProducts.view(this.$router.currentRoute.params.slug).then((res) => {
                     if (res.data.status === 'success') {
                         this.product = res.data.product;
+                        setTimeout(() => {
+                            this.isLoading = false;
+                        }, 800);
                     }
                 }).catch((error) => {
-
+                    this.isLoading = true;
                 });
             }
 
@@ -88,34 +98,56 @@
             },
             'typePrevious': function () {
                 return this.$store.getters.typePrevious;
+            },
+            'urlPrevious': function () {
+                return this.$store.getters.urlPrevious;
             }
         },
         data() {
             return {
                 product: null,
-                breadcrumbs: []
+                breadcrumbs: [],
+                isLoading: true,
+                dataLoad: []
             }
         },
         methods: {
             setBreadcrumbs: function (typeId, categoryId) {
                 let type = this.types.find((item) => item.id === typeId);
                 if (type !== undefined) {
-                    this.breadcrumbs.push({'title': type.name});
+                    this.breadcrumbs.push({
+                        title: type.name,
+                        route: `{ "name": "catalog", "query": { "type": "${type.slug}"} }`
+                    });
                 }
 
-                if (Array.isArray(categoryId)) {
-                    categoryId = this.product.main_type.category_id[this.product.main_type.category_id.length - 1];
-                }
-
-                type.categories.forEach((item) => {
-                    if (item.id === categoryId) {
-                        this.breadcrumbs.push({
-                            'title': item.name,
-                            'route': `{ "name": "catalog", "query": { "type": "${type.slug}", "category": "${item.slug}"} }`
-                        });
+                if (categoryId !== null) {
+                    if (Array.isArray(categoryId)) {
+                        categoryId = this.product.main_type.category_id[this.product.main_type.category_id.length - 1];
                     }
-                });
-                this.breadcrumbs.push({'title': this.product.name});
+
+                    type.categories.forEach((item) => {
+                        if (item.id === categoryId) {
+                            if (this.urlPrevious !== null) {
+                                this.breadcrumbs.push({
+                                    'title': item.name,
+                                    'url': this.urlPrevious
+                                });
+                            }
+                            else {
+                                this.breadcrumbs.push({
+                                    'title': item.name,
+                                    'route': `{ "name": "catalog", "query": { "type": "${type.slug}", "category": "${item.slug}"} }`
+                                });
+                            }
+
+                        }
+                    });
+                }
+
+                if (this.product !== null) {
+                    this.breadcrumbs.push({'title': this.product.name});
+                }
             },
             handleSetBreadcrumbs: function () {
                 if (this.breadcrumbs.length === 0
@@ -126,18 +158,31 @@
                     && this.product.main_type.type_id !== undefined) {
                     this.setBreadcrumbs(this.product.main_type.type_id, this.product.main_type.category_id);
                 }
-                else if (this.typePrevious !== null && this.categoryPrevious !== null) {
-                    this.setBreadcrumbs(this.typePrevious.id, this.categoryPrevious.id);
+                else {
+                    let typeId = null;
+                    let categoryId = null;
+                    if (this.typePrevious !== null) {
+                        typeId = this.typePrevious.id;
+                    }
+                    if (this.categoryPrevious !== null) {
+                        categoryId = this.categoryPrevious.id;
+                    }
+                    this.setBreadcrumbs(typeId, categoryId);
                 }
             }
         },
         watch: {
             'types': function () {
-                this.handleSetBreadcrumbs();
+                this.dataLoad.push(true);
             },
             'product': function () {
-                this.handleSetBreadcrumbs();
+                this.dataLoad.push(true);
             },
+            'dataLoad': function (value) {
+                if (value.length >= 2) {
+                    this.handleSetBreadcrumbs();
+                }
+            }
         }
     }
 </script>

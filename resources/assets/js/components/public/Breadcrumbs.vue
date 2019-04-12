@@ -17,6 +17,9 @@
                                             <template v-if="item.route_name !== undefined">
                                                 <router-link :to="{ name: item.route_name }"><a href="">{{item.title}}</a></router-link>
                                             </template>
+                                            <template v-else-if="item.url !== undefined">
+                                                <a href="javascript:void(0)" @click="routerBack">{{item.title}}</a>
+                                            </template>
                                             <template v-else-if="item.route !== undefined">
                                                 <a href="javascript:void(0)" @click="routerPush(item.route)">{{item.title}}</a>
                                             </template>
@@ -47,6 +50,9 @@
         methods: {
             routerPush: function (route) {
                 this.$router.push(JSON.parse(route));
+            },
+            routerBack: function () {
+                this.$router.go(-1);
             }
         }
     }

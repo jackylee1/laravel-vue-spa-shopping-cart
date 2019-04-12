@@ -82,6 +82,10 @@ Route::group(['middleware' => ['jwt.auth', 'only-administration'], 'prefix' => '
         'index', 'show', 'store', 'update', 'destroy'
     ]);
 
+    Route::resource('size_tables', 'Api\Admin\SizeTableController')->only([
+        'index', 'show', 'store', 'update', 'destroy'
+    ]);
+
     Route::resource('text_block_data', 'Api\Admin\TextBlockDataController')->only([
         'index', 'show', 'store', 'update', 'destroy'
     ]);

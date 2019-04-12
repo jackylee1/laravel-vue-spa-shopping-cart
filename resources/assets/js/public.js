@@ -11,7 +11,9 @@ import VeeValidate, { Validator } from 'vee-validate';
 import VeeValidateRu from 'vee-validate/dist/locale/ru';
 import Notifications from 'vue-notification';
 import VueScrollTo from 'vue-scrollto';
-import Fragment from 'vue-fragment'
+import Fragment from 'vue-fragment';
+import VueLoading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
 
 Vue.use(VeeValidate);
 Validator.localize('ru', VeeValidateRu);
@@ -20,6 +22,9 @@ Vue.use(VueRouter);
 Vue.use(Vuex);
 Vue.use(Notifications);
 Vue.use(Fragment.Plugin);
+Vue.use(VueLoading, {
+    color: 'red'
+});
 
 const store = new Vuex.Store(StoreData);
 

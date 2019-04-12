@@ -1,10 +1,13 @@
 <template>
     <div>
-        <div v-if="currentCategory" class="row titles_top">
+        <div class="row titles_top">
             <div class="col-md-6 col-12 my-auto">
-                <h1 class="category_title" v-if="currentCategory.name !== undefined">
-                    {{currentCategory.name}}
-                </h1>
+                <template v-if="currentCategory !== null">
+                    <h1 class="category_title">{{currentCategory.name}}</h1>
+                </template>
+                <template v-else-if="currentType !== null">
+                    <h1 class="category_title">{{currentType.name}}</h1>
+                </template>
             </div>
             <div class="col-md-3 col-6 sort righted my-auto">
                 <p>Сортировка:</p>
@@ -23,7 +26,7 @@
 <script>
     export default {
         name: 'Sort',
-        props: ['currentCategory', 'selectFilters'],
+        props: ['currentCategory', 'currentType', 'selectFilters'],
         data() {
             return {
                 sort: (this.$route.query.sort !== undefined && this.$route.query.sort !== null) ? this.$route.query.sort : 'all',
@@ -39,8 +42,9 @@
         },
         watch: {
             'sort': function (value) {
+                this.$router.push({ query: Object.assign({}, this.$route.query, { sort: value }) });
+
                 this.$emit('updateSort', value);
-                this.$emit('getProducts', 1);
             }
         }
     }

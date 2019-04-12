@@ -6,6 +6,7 @@
                     <div class="menu-container d-flex justify-content-center">
                         <div class="menu">
                             <ul>
+                                <li class="menu_link"><a class="menu_tab" @click="openLink('index')" href="javascript:void(0)">Главная</a></li>
                                 <li class="menu_link"><a class="menu_tab" href="#">Новинки</a></li>
                                 <template v-for="type in this.types">
                                     <li class="menu_link">
@@ -104,7 +105,7 @@
             }
         },
         updated() {
-            jquery.loadScript();
+            jquery.createMenu();
         },
         computed: {
             _() {
@@ -149,6 +150,9 @@
                     parentProperty: 'parent_id',
                     customID: 'id'
                 });
+            },
+            openLink: function (name) {
+                return this.$router.push({name: name});
             }
         },
         watch: {

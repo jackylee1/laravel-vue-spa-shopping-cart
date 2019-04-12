@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="row">
+        <div v-if="product.size_table !== null" class="row">
             <div class="col-sm-6 variants">
             </div>
             <div class="col-sm-6 tablecell">
@@ -20,7 +20,7 @@
                 </form>
             </div>
             <div class="col-md-4 size_table_link">
-                <a href="#size_table">Таблица размеров</a>
+                <a v-if="product.size_table !== null" href="#size_table">Таблица размеров</a>
             </div>
         </div>
         <div class="row by_it">

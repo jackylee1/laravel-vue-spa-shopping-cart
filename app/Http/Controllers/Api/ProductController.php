@@ -20,12 +20,22 @@ class ProductController extends Controller
         DataTrait;
 
     public function products(Request $request) {
-        clock($request->all());
+        if ($request->filled('filters')) {
+            if (is_array($request->get('filters'))) {
+                $this->setValidateRule([
+                    'filters' => 'array',
+                    'filters.*' => 'integer|exists:filters,id|nullable',
+                ]);
+            }
+            else {
+                $this->setValidateRule([
+                    'filters' => 'string|exists:filters,id',
+                ]);
+            }
+        }
         $this->setValidateRule([
             'type' => 'nullable|integer|exists:types,id',
             'category' => 'nullable|integer|exists:categories,id',
-            'filters' => 'nullable|array',
-            'filters.*' => 'integer|exists:filters,id|nullable',
             'sort' => 'nullable|in:all,from_cheap_to_expensive,from_expensive_to_cheap,popular,new,promotional'
         ]);
         $this->setValidateAttribute([

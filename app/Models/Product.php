@@ -61,6 +61,9 @@ use Illuminate\Support\Facades\DB;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product whereDiscountEnd($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product whereDiscountPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product whereDiscountStart($value)
+ * @property-read \App\Models\ProductMainType $mainType
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product allSelectAndCurrentPrice()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product whereTypeAndCategory()
  */
 class Product extends Model
 {
@@ -99,7 +102,8 @@ class Product extends Model
         'bestseller',
         'filters',
         'available',
-        'mainType'
+        'mainType',
+        'sizeTable'
     ];
 
     public $path_image = 'public/images/products/';
@@ -124,6 +128,10 @@ class Product extends Model
         return $this->hasOne('App\Models\ProductBestseller');
     }
 
+    public function sizeTable() {
+        return $this->hasOne('App\Models\ProductSizeTable', 'product_id', 'id');
+    }
+
     public function filters() {
         return $this->hasMany('App\Models\ProductInFilter');
     }
@@ -136,12 +144,12 @@ class Product extends Model
     }
 
     public function scopeWhereTypeAndCategory($query) {
-        if (request()->filled('type') !== null || request()->filled('category') !== null) {
+        if (request()->filled('type') || request()->filled('category')) {
             return $query->whereHas('filters', function ($query) {
-                if (request()->filled('type') !== null) {
+                if (request()->filled('type')) {
                     $query->where('type_id', (int)request()->get('type'));
                 }
-                if (request()->filled('category') !== null) {
+                if (request()->filled('category')) {
                     $query->where('category_id', (int)request()->get('category'));
                 }
             });
@@ -149,6 +157,18 @@ class Product extends Model
         else {
             return $query;
         }
+    }
+
+    public function scopeActiveForPublic($query) {
+        return $query->where(function ($query) {
+            $query->where('status', true);
+            $query->where('date_inclusion', null)->orWhere('date_inclusion', '<', Carbon::now());
+            $query->whereTypeAndCategory();
+        });
+    }
+
+    public function scopeNewProducts($query) {
+        return $query->whereBetween('created_at', [Carbon::now()->subDays(5), Carbon::now()]);
     }
 
     protected function getProducts() {
@@ -210,18 +230,41 @@ class Product extends Model
         return $product;
     }
 
+    public static function getNewProducts() {
+        $query = Product::query();
+        $query->select([
+            'id',
+            'slug',
+            'name',
+            'discount_price',
+            'price',
+            'created_at',
+            'status',
+            'date_inclusion',
+            'main_image',
+            DB::raw('IF(discount_price IS NOT NULL, discount_price, price) as current_price')
+        ]);
+
+        $products = $query->activeForPublic()
+            ->with(['mainImage'])
+            ->newProducts()
+            ->orderBy('created_at')
+            ->limit(15)->get();
+
+        return ProductTool::checkRelevanceDiscount($products);
+    }
+
+
     public static function getProductsPublic() {
         $query = Product::query();
 
         $query->allSelectAndCurrentPrice();
 
-        $query->where(function ($query) {
-            $query->where('status', true);
-            $query->where('date_inclusion', null)->orWhere('date_inclusion', '<', Carbon::now());
-        });
+        $query->activeForPublic();
 
         if (request()->filled('filters')) {
-            $filters = Filter::getFiltersById(array_filter(request()->get('filters')));
+            $request_filters = (is_array(request()->get('filters'))) ? request()->get('filters') : [request()->get('filters')];
+            $filters = Filter::getFiltersById(array_filter($request_filters));
             $filters = $filters->map(function ($filter) {
                 if ($filter->parent_id !== 0) {
                     return $filter->id;
@@ -229,6 +272,7 @@ class Product extends Model
             })->filter(function ($filter) {
                 return $filter !== null;
             });
+
             if ($filters->count() > 0) {
                 $id_products = ProductInFilter::getProductIdsByFilters(
                     $filters,
@@ -241,9 +285,6 @@ class Product extends Model
             else {
                 $query->whereTypeAndCategory();
             }
-        }
-        else {
-            $query->whereTypeAndCategory();
         }
 
         if (request()->filled('sort')) {
@@ -260,7 +301,7 @@ class Product extends Model
                     break;
 
                 case 'new':
-                    $query->whereBetween('created_at', [Carbon::now()->subDays(5), Carbon::now()]);
+                    $query->newProducts();
                     break;
 
                 case 'promotional':
@@ -330,6 +371,15 @@ class Product extends Model
                     'category_id' => request()->get('main_type')['category_id'],
                 ]);
             }
+        }
+
+        if (request()->filled('size_table')) {
+            $model->sizeTable()->firstOrCreate([
+                'size_table_id' => request()->get('size_table')['size_table_id']
+            ]);
+        }
+        else {
+            $model->sizeTable()->delete();
         }
 
         return $model;

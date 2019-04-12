@@ -1,6 +1,6 @@
 <template>
     <div>
-        <template v-if="products.length">
+        <template v-if="products !== undefined && products.length">
             <template v-for="(productsChunk, index) in _.chunk(products, 4)">
                 <div class="row category_items">
                     <template v-for="(product, productIndex) in productsChunk">
@@ -21,13 +21,10 @@
                                         <a href="javascript:void(0)"><h4>{{product.name}}</h4></a>
                                     </router-link>
                                     <p class="item-price">
-                                        <template v-if="product.discount_price !== null && product.discount_price > 0">
+                                        <template v-if="product.discount_price !== null">
                                             <strike>{{product.price}} грн</strike>
-                                            <span>{{product.discount_price}} грн</span>
                                         </template>
-                                        <template v-else>
-                                            <span>{{product.price}} грн</span>
-                                        </template>
+                                        <span>{{product.current_price}} грн</span>
                                     </p>
                                     <div class="add_to_cart">
                                         <a href="javascript:void(0)" class="btn"><i class="fas fa-shopping-cart"></i>Купить</a>

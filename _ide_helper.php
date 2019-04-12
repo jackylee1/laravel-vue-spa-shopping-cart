@@ -3,7 +3,7 @@
 
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.7.28 on 2019-03-11 12:11:03.
+ * Generated for Laravel 5.7.28 on 2019-04-12 08:15:24.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -9408,7 +9408,7 @@ namespace Illuminate\Support\Facades {
          *  * $default
          *
          * @param string|null $default The default format
-         * @return string The request format
+         * @return string|null The request format
          * @static 
          */ 
         public static function getRequestFormat($default = 'html')
@@ -10221,8 +10221,7 @@ namespace Illuminate\Support\Facades {
          */ 
         public static function validate($rules, $params = null)
         {
-                        /** @var \Illuminate\Http\Request $instance */
-                        return $instance->__invoke($rules, $params);
+                        return \Illuminate\Http\Request::validate($rules, $params);
         }
         
         /**
@@ -10230,10 +10229,9 @@ namespace Illuminate\Support\Facades {
          *
          * @static 
          */ 
-        public static function hasValidSignature($absolute = null)
+        public static function hasValidSignature($absolute = true)
         {
-                        /** @var \Illuminate\Http\Request $instance */
-                        return $instance->__invoke($absolute);
+                        return \Illuminate\Http\Request::hasValidSignature($absolute);
         }
          
     }
@@ -14496,606 +14494,1402 @@ namespace Intervention\Image\Facades {
  
 }
 
-namespace Barryvdh\Debugbar { 
+namespace Clockwork\Support\Laravel { 
 
     /**
      * 
      *
-     * @method static void alert(string $message)
-     * @method static void critical(string $message)
-     * @method static void debug(string $message)
-     * @method static void emergency(string $message)
-     * @method static void error(string $message)
-     * @method static void info(string $message)
-     * @method static void log(string $message)
-     * @method static void notice(string $message)
-     * @method static void warning(string $message)
-     * @see \Barryvdh\Debugbar\LaravelDebugbar
      */ 
     class Facade {
         
         /**
-         * Enable the Debugbar and boot, if not already booted.
+         * Add a new data source
          *
          * @static 
          */ 
-        public static function enable()
+        public static function addDataSource($dataSource)
         {
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->enable();
+                        /** @var \Clockwork\Clockwork $instance */
+                        return $instance->addDataSource($dataSource);
         }
         
         /**
-         * Boot the debugbar (add collectors, renderer and listener)
+         * Return array of all added data sources
          *
          * @static 
          */ 
-        public static function boot()
+        public static function getDataSources()
         {
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->boot();
+                        /** @var \Clockwork\Clockwork $instance */
+                        return $instance->getDataSources();
         }
         
         /**
-         * 
+         * Return the request object
          *
          * @static 
          */ 
-        public static function shouldCollect($name, $default = false)
+        public static function getRequest()
         {
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->shouldCollect($name, $default);
+                        /** @var \Clockwork\Clockwork $instance */
+                        return $instance->getRequest();
         }
         
         /**
-         * Adds a data collector
+         * Set a custom request object
          *
-         * @param \Barryvdh\Debugbar\DataCollectorInterface $collector
-         * @throws DebugBarException
-         * @return \Barryvdh\Debugbar\LaravelDebugbar 
          * @static 
          */ 
-        public static function addCollector($collector)
+        public static function setRequest($request)
         {
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->addCollector($collector);
+                        /** @var \Clockwork\Clockwork $instance */
+                        return $instance->setRequest($request);
         }
         
         /**
-         * Handle silenced errors
-         *
-         * @param $level
-         * @param $message
-         * @param string $file
-         * @param int $line
-         * @param array $context
-         * @throws \ErrorException
-         * @static 
-         */ 
-        public static function handleError($level, $message, $file = '', $line = 0, $context = array())
-        {
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->handleError($level, $message, $file, $line, $context);
-        }
-        
-        /**
-         * Starts a measure
-         *
-         * @param string $name Internal name, used to stop the measure
-         * @param string $label Public name
-         * @static 
-         */ 
-        public static function startMeasure($name, $label = null)
-        {
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->startMeasure($name, $label);
-        }
-        
-        /**
-         * Stops a measure
-         *
-         * @param string $name
-         * @static 
-         */ 
-        public static function stopMeasure($name)
-        {
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->stopMeasure($name);
-        }
-        
-        /**
-         * Adds an exception to be profiled in the debug bar
-         *
-         * @param \Exception $e
-         * @deprecated in favor of addThrowable
-         * @static 
-         */ 
-        public static function addException($e)
-        {
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->addException($e);
-        }
-        
-        /**
-         * Adds an exception to be profiled in the debug bar
-         *
-         * @param \Exception $e
-         * @static 
-         */ 
-        public static function addThrowable($e)
-        {
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->addThrowable($e);
-        }
-        
-        /**
-         * Returns a JavascriptRenderer for this instance
-         *
-         * @param string $baseUrl
-         * @param string $basePathng
-         * @return \Barryvdh\Debugbar\JavascriptRenderer 
-         * @static 
-         */ 
-        public static function getJavascriptRenderer($baseUrl = null, $basePath = null)
-        {
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->getJavascriptRenderer($baseUrl, $basePath);
-        }
-        
-        /**
-         * Modify the response and inject the debugbar (or data in headers)
-         *
-         * @param \Symfony\Component\HttpFoundation\Request $request
-         * @param \Symfony\Component\HttpFoundation\Response $response
-         * @return \Symfony\Component\HttpFoundation\Response 
-         * @static 
-         */ 
-        public static function modifyResponse($request, $response)
-        {
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->modifyResponse($request, $response);
-        }
-        
-        /**
-         * Check if the Debugbar is enabled
-         *
-         * @return boolean 
-         * @static 
-         */ 
-        public static function isEnabled()
-        {
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->isEnabled();
-        }
-        
-        /**
-         * Collects the data from the collectors
-         *
-         * @return array 
-         * @static 
-         */ 
-        public static function collect()
-        {
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->collect();
-        }
-        
-        /**
-         * Injects the web debug toolbar into the given Response.
-         *
-         * @param \Symfony\Component\HttpFoundation\Response $response A Response instance
-         * Based on https://github.com/symfony/WebProfilerBundle/blob/master/EventListener/WebDebugToolbarListener.php
-         * @static 
-         */ 
-        public static function injectDebugbar($response)
-        {
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->injectDebugbar($response);
-        }
-        
-        /**
-         * Disable the Debugbar
+         * Add data from all data sources to request
          *
          * @static 
          */ 
-        public static function disable()
+        public static function resolveRequest()
         {
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->disable();
-        }
-        
-        /**
-         * Adds a measure
-         *
-         * @param string $label
-         * @param float $start
-         * @param float $end
-         * @static 
-         */ 
-        public static function addMeasure($label, $start, $end)
-        {
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->addMeasure($label, $start, $end);
-        }
-        
-        /**
-         * Utility function to measure the execution of a Closure
-         *
-         * @param string $label
-         * @param \Closure $closure
-         * @static 
-         */ 
-        public static function measure($label, $closure)
-        {
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->measure($label, $closure);
-        }
-        
-        /**
-         * Collect data in a CLI request
-         *
-         * @return array 
-         * @static 
-         */ 
-        public static function collectConsole()
-        {
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->collectConsole();
-        }
-        
-        /**
-         * Adds a message to the MessagesCollector
-         * 
-         * A message can be anything from an object to a string
-         *
-         * @param mixed $message
-         * @param string $label
-         * @static 
-         */ 
-        public static function addMessage($message, $label = 'info')
-        {
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->addMessage($message, $label);
-        }
-        
-        /**
-         * Checks if a data collector has been added
-         *
-         * @param string $name
-         * @return boolean 
-         * @static 
-         */ 
-        public static function hasCollector($name)
-        {
-            //Method inherited from \DebugBar\DebugBar            
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->hasCollector($name);
-        }
-        
-        /**
-         * Returns a data collector
-         *
-         * @param string $name
-         * @return \DebugBar\DataCollectorInterface 
-         * @throws DebugBarException
-         * @static 
-         */ 
-        public static function getCollector($name)
-        {
-            //Method inherited from \DebugBar\DebugBar            
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->getCollector($name);
-        }
-        
-        /**
-         * Returns an array of all data collectors
-         *
-         * @return \DebugBar\array[DataCollectorInterface] 
-         * @static 
-         */ 
-        public static function getCollectors()
-        {
-            //Method inherited from \DebugBar\DebugBar            
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->getCollectors();
-        }
-        
-        /**
-         * Sets the request id generator
-         *
-         * @param \DebugBar\RequestIdGeneratorInterface $generator
-         * @return \Barryvdh\Debugbar\LaravelDebugbar 
-         * @static 
-         */ 
-        public static function setRequestIdGenerator($generator)
-        {
-            //Method inherited from \DebugBar\DebugBar            
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->setRequestIdGenerator($generator);
+                        /** @var \Clockwork\Clockwork $instance */
+                        return $instance->resolveRequest();
         }
         
         /**
          * 
          *
-         * @return \DebugBar\RequestIdGeneratorInterface 
          * @static 
          */ 
-        public static function getRequestIdGenerator()
+        public static function extendRequest($request = null)
         {
-            //Method inherited from \DebugBar\DebugBar            
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->getRequestIdGenerator();
+                        /** @var \Clockwork\Clockwork $instance */
+                        return $instance->extendRequest($request);
         }
         
         /**
-         * Returns the id of the current request
+         * Store request via storage object
          *
-         * @return string 
          * @static 
          */ 
-        public static function getCurrentRequestId()
+        public static function storeRequest()
         {
-            //Method inherited from \DebugBar\DebugBar            
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->getCurrentRequestId();
+                        /** @var \Clockwork\Clockwork $instance */
+                        return $instance->storeRequest();
         }
         
         /**
-         * Sets the storage backend to use to store the collected data
+         * Return the storage object
          *
-         * @param \DebugBar\StorageInterface $storage
-         * @return \Barryvdh\Debugbar\LaravelDebugbar 
-         * @static 
-         */ 
-        public static function setStorage($storage = null)
-        {
-            //Method inherited from \DebugBar\DebugBar            
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->setStorage($storage);
-        }
-        
-        /**
-         * 
-         *
-         * @return \DebugBar\StorageInterface 
          * @static 
          */ 
         public static function getStorage()
         {
-            //Method inherited from \DebugBar\DebugBar            
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
+                        /** @var \Clockwork\Clockwork $instance */
                         return $instance->getStorage();
         }
         
         /**
-         * Checks if the data will be persisted
+         * Set a custom storage object
          *
-         * @return boolean 
          * @static 
          */ 
-        public static function isDataPersisted()
+        public static function setStorage($storage)
         {
-            //Method inherited from \DebugBar\DebugBar            
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->isDataPersisted();
+                        /** @var \Clockwork\Clockwork $instance */
+                        return $instance->setStorage($storage);
         }
         
         /**
-         * Sets the HTTP driver
+         * Return the authenticator object
          *
-         * @param \DebugBar\HttpDriverInterface $driver
-         * @return \Barryvdh\Debugbar\LaravelDebugbar 
          * @static 
          */ 
-        public static function setHttpDriver($driver)
+        public static function getAuthenticator()
         {
-            //Method inherited from \DebugBar\DebugBar            
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->setHttpDriver($driver);
+                        /** @var \Clockwork\Clockwork $instance */
+                        return $instance->getAuthenticator();
         }
         
         /**
-         * Returns the HTTP driver
+         * Set a custom authenticator object
+         *
+         * @static 
+         */ 
+        public static function setAuthenticator($authenticator)
+        {
+                        /** @var \Clockwork\Clockwork $instance */
+                        return $instance->setAuthenticator($authenticator);
+        }
+        
+        /**
+         * Return the log instance
+         *
+         * @static 
+         */ 
+        public static function getLog()
+        {
+                        /** @var \Clockwork\Clockwork $instance */
+                        return $instance->getLog();
+        }
+        
+        /**
+         * Set a custom log instance
+         *
+         * @static 
+         */ 
+        public static function setLog($log)
+        {
+                        /** @var \Clockwork\Clockwork $instance */
+                        return $instance->setLog($log);
+        }
+        
+        /**
+         * Return the timeline instance
+         *
+         * @static 
+         */ 
+        public static function getTimeline()
+        {
+                        /** @var \Clockwork\Clockwork $instance */
+                        return $instance->getTimeline();
+        }
+        
+        /**
+         * Set a custom timeline instance
+         *
+         * @static 
+         */ 
+        public static function setTimeline($timeline)
+        {
+                        /** @var \Clockwork\Clockwork $instance */
+                        return $instance->setTimeline($timeline);
+        }
+        
+        /**
+         * Shortcut methods for the current log instance
+         *
+         * @static 
+         */ 
+        public static function log($level, $message, $context = array())
+        {
+                        /** @var \Clockwork\Clockwork $instance */
+                        return $instance->log($level, $message, $context);
+        }
+        
+        /**
          * 
-         * If no http driver where defined, a PhpHttpDriver is automatically created
          *
-         * @return \DebugBar\HttpDriverInterface 
          * @static 
          */ 
-        public static function getHttpDriver()
+        public static function emergency($message, $context = array())
         {
-            //Method inherited from \DebugBar\DebugBar            
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->getHttpDriver();
+                        /** @var \Clockwork\Clockwork $instance */
+                        return $instance->emergency($message, $context);
         }
         
         /**
-         * Returns collected data
          * 
-         * Will collect the data if none have been collected yet
-         *
-         * @return array 
-         * @static 
-         */ 
-        public static function getData()
-        {
-            //Method inherited from \DebugBar\DebugBar            
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->getData();
-        }
-        
-        /**
-         * Returns an array of HTTP headers containing the data
-         *
-         * @param string $headerName
-         * @param integer $maxHeaderLength
-         * @return array 
-         * @static 
-         */ 
-        public static function getDataAsHeaders($headerName = 'phpdebugbar', $maxHeaderLength = 4096, $maxTotalHeaderLength = 250000)
-        {
-            //Method inherited from \DebugBar\DebugBar            
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->getDataAsHeaders($headerName, $maxHeaderLength, $maxTotalHeaderLength);
-        }
-        
-        /**
-         * Sends the data through the HTTP headers
-         *
-         * @param bool $useOpenHandler
-         * @param string $headerName
-         * @param integer $maxHeaderLength
-         * @return \Barryvdh\Debugbar\LaravelDebugbar 
-         * @static 
-         */ 
-        public static function sendDataInHeaders($useOpenHandler = null, $headerName = 'phpdebugbar', $maxHeaderLength = 4096)
-        {
-            //Method inherited from \DebugBar\DebugBar            
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->sendDataInHeaders($useOpenHandler, $headerName, $maxHeaderLength);
-        }
-        
-        /**
-         * Stacks the data in the session for later rendering
          *
          * @static 
          */ 
-        public static function stackData()
+        public static function alert($message, $context = array())
         {
-            //Method inherited from \DebugBar\DebugBar            
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->stackData();
+                        /** @var \Clockwork\Clockwork $instance */
+                        return $instance->alert($message, $context);
         }
         
         /**
-         * Checks if there is stacked data in the session
+         * 
          *
-         * @return boolean 
          * @static 
          */ 
-        public static function hasStackedData()
+        public static function critical($message, $context = array())
         {
-            //Method inherited from \DebugBar\DebugBar            
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->hasStackedData();
+                        /** @var \Clockwork\Clockwork $instance */
+                        return $instance->critical($message, $context);
         }
         
         /**
-         * Returns the data stacked in the session
+         * 
          *
-         * @param boolean $delete Whether to delete the data in the session
-         * @return array 
          * @static 
          */ 
-        public static function getStackedData($delete = true)
+        public static function error($message, $context = array())
         {
-            //Method inherited from \DebugBar\DebugBar            
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->getStackedData($delete);
+                        /** @var \Clockwork\Clockwork $instance */
+                        return $instance->error($message, $context);
         }
         
         /**
-         * Sets the key to use in the $_SESSION array
+         * 
          *
-         * @param string $ns
-         * @return \Barryvdh\Debugbar\LaravelDebugbar 
          * @static 
          */ 
-        public static function setStackDataSessionNamespace($ns)
+        public static function warning($message, $context = array())
         {
-            //Method inherited from \DebugBar\DebugBar            
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->setStackDataSessionNamespace($ns);
+                        /** @var \Clockwork\Clockwork $instance */
+                        return $instance->warning($message, $context);
         }
         
         /**
-         * Returns the key used in the $_SESSION array
+         * 
+         *
+         * @static 
+         */ 
+        public static function notice($message, $context = array())
+        {
+                        /** @var \Clockwork\Clockwork $instance */
+                        return $instance->notice($message, $context);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function info($message, $context = array())
+        {
+                        /** @var \Clockwork\Clockwork $instance */
+                        return $instance->info($message, $context);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function debug($message, $context = array())
+        {
+                        /** @var \Clockwork\Clockwork $instance */
+                        return $instance->debug($message, $context);
+        }
+        
+        /**
+         * Shortcut methods for the current timeline instance
+         *
+         * @static 
+         */ 
+        public static function startEvent($name, $description, $time = null)
+        {
+                        /** @var \Clockwork\Clockwork $instance */
+                        return $instance->startEvent($name, $description, $time);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function endEvent($name)
+        {
+                        /** @var \Clockwork\Clockwork $instance */
+                        return $instance->endEvent($name);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function addDatabaseQuery($query, $bindings = array(), $duration = null, $data = array())
+        {
+                        /** @var \Clockwork\Clockwork $instance */
+                        return $instance->addDatabaseQuery($query, $bindings, $duration, $data);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function addCacheQuery($type, $key, $value = null, $duration = null, $data = array())
+        {
+                        /** @var \Clockwork\Clockwork $instance */
+                        return $instance->addCacheQuery($type, $key, $value, $duration, $data);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function addEvent($event, $eventData = null, $time = null, $data = array())
+        {
+                        /** @var \Clockwork\Clockwork $instance */
+                        return $instance->addEvent($event, $eventData, $time, $data);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function addRoute($method, $uri, $action, $data = array())
+        {
+                        /** @var \Clockwork\Clockwork $instance */
+                        return $instance->addRoute($method, $uri, $action, $data);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function addEmail($subject, $to, $from = null, $headers = array())
+        {
+                        /** @var \Clockwork\Clockwork $instance */
+                        return $instance->addEmail($subject, $to, $from, $headers);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function addView($name, $data = array())
+        {
+                        /** @var \Clockwork\Clockwork $instance */
+                        return $instance->addView($name, $data);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function addSubrequest($url, $id, $data = array())
+        {
+                        /** @var \Clockwork\Clockwork $instance */
+                        return $instance->addSubrequest($url, $id, $data);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function subrequest($url, $id, $path = null)
+        {
+                        /** @var \Clockwork\Clockwork $instance */
+                        return $instance->subrequest($url, $id, $path);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function setAuthenticatedUser($username, $id = null, $data = array())
+        {
+                        /** @var \Clockwork\Clockwork $instance */
+                        return $instance->setAuthenticatedUser($username, $id, $data);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function userData($key = null)
+        {
+                        /** @var \Clockwork\Clockwork $instance */
+                        return $instance->userData($key);
+        }
+         
+    }
+ 
+}
+
+namespace Artesaos\SEOTools\Facades { 
+
+    /**
+     * 
+     *
+     */ 
+    class SEOMeta {
+        
+        /**
+         * Generates meta tags.
+         *
+         * @param bool $minify
+         * @return string 
+         * @static 
+         */ 
+        public static function generate($minify = false)
+        {
+                        /** @var \Artesaos\SEOTools\SEOMeta $instance */
+                        return $instance->generate($minify);
+        }
+        
+        /**
+         * Sets the title.
+         *
+         * @param string $title
+         * @param bool $appendDefault
+         * @return \Artesaos\SEOTools\MetaTagsContract 
+         * @static 
+         */ 
+        public static function setTitle($title, $appendDefault = true)
+        {
+                        /** @var \Artesaos\SEOTools\SEOMeta $instance */
+                        return $instance->setTitle($title, $appendDefault);
+        }
+        
+        /**
+         * Sets the default title tag.
+         *
+         * @param string $default
+         * @return \Artesaos\SEOTools\MetaTagsContract 
+         * @static 
+         */ 
+        public static function setTitleDefault($default)
+        {
+                        /** @var \Artesaos\SEOTools\SEOMeta $instance */
+                        return $instance->setTitleDefault($default);
+        }
+        
+        /**
+         * Sets the separator for the title tag.
+         *
+         * @param string $separator
+         * @return \Artesaos\SEOTools\MetaTagsContract 
+         * @static 
+         */ 
+        public static function setTitleSeparator($separator)
+        {
+                        /** @var \Artesaos\SEOTools\SEOMeta $instance */
+                        return $instance->setTitleSeparator($separator);
+        }
+        
+        /**
+         * 
+         *
+         * @param string $description
+         * @return \Artesaos\SEOTools\MetaTagsContract 
+         * @static 
+         */ 
+        public static function setDescription($description)
+        {
+                        /** @var \Artesaos\SEOTools\SEOMeta $instance */
+                        return $instance->setDescription($description);
+        }
+        
+        /**
+         * Sets the list of keywords, you can send an array or string separated with commas
+         * also clears the previously set keywords.
+         *
+         * @param string|array $keywords
+         * @return \Artesaos\SEOTools\MetaTagsContract 
+         * @static 
+         */ 
+        public static function setKeywords($keywords)
+        {
+                        /** @var \Artesaos\SEOTools\SEOMeta $instance */
+                        return $instance->setKeywords($keywords);
+        }
+        
+        /**
+         * Add a keyword.
+         *
+         * @param string|array $keyword
+         * @return \Artesaos\SEOTools\MetaTagsContract 
+         * @static 
+         */ 
+        public static function addKeyword($keyword)
+        {
+                        /** @var \Artesaos\SEOTools\SEOMeta $instance */
+                        return $instance->addKeyword($keyword);
+        }
+        
+        /**
+         * Remove a metatag.
+         *
+         * @param string $key
+         * @return \Artesaos\SEOTools\MetaTagsContract 
+         * @static 
+         */ 
+        public static function removeMeta($key)
+        {
+                        /** @var \Artesaos\SEOTools\SEOMeta $instance */
+                        return $instance->removeMeta($key);
+        }
+        
+        /**
+         * Add a custom meta tag.
+         *
+         * @param string|array $meta
+         * @param string $value
+         * @param string $name
+         * @return \Artesaos\SEOTools\MetaTagsContract 
+         * @static 
+         */ 
+        public static function addMeta($meta, $value = null, $name = 'name')
+        {
+                        /** @var \Artesaos\SEOTools\SEOMeta $instance */
+                        return $instance->addMeta($meta, $value, $name);
+        }
+        
+        /**
+         * Sets the canonical URL.
+         *
+         * @param string $url
+         * @return \Artesaos\SEOTools\MetaTagsContract 
+         * @static 
+         */ 
+        public static function setCanonical($url)
+        {
+                        /** @var \Artesaos\SEOTools\SEOMeta $instance */
+                        return $instance->setCanonical($url);
+        }
+        
+        /**
+         * Sets the AMP html URL.
+         *
+         * @param string $url
+         * @return \Artesaos\SEOTools\MetaTagsContract 
+         * @static 
+         */ 
+        public static function setAmpHtml($url)
+        {
+                        /** @var \Artesaos\SEOTools\SEOMeta $instance */
+                        return $instance->setAmpHtml($url);
+        }
+        
+        /**
+         * Sets the prev URL.
+         *
+         * @param string $url
+         * @return \Artesaos\SEOTools\MetaTagsContract 
+         * @static 
+         */ 
+        public static function setPrev($url)
+        {
+                        /** @var \Artesaos\SEOTools\SEOMeta $instance */
+                        return $instance->setPrev($url);
+        }
+        
+        /**
+         * Sets the next URL.
+         *
+         * @param string $url
+         * @return \Artesaos\SEOTools\MetaTagsContract 
+         * @static 
+         */ 
+        public static function setNext($url)
+        {
+                        /** @var \Artesaos\SEOTools\SEOMeta $instance */
+                        return $instance->setNext($url);
+        }
+        
+        /**
+         * Add an alternate language.
+         *
+         * @param string $lang language code in ISO 639-1 format
+         * @param string $url
+         * @return \Artesaos\SEOTools\MetaTagsContract 
+         * @static 
+         */ 
+        public static function addAlternateLanguage($lang, $url)
+        {
+                        /** @var \Artesaos\SEOTools\SEOMeta $instance */
+                        return $instance->addAlternateLanguage($lang, $url);
+        }
+        
+        /**
+         * Add alternate languages.
+         *
+         * @param array $languages
+         * @return \Artesaos\SEOTools\MetaTagsContract 
+         * @static 
+         */ 
+        public static function addAlternateLanguages($languages)
+        {
+                        /** @var \Artesaos\SEOTools\SEOMeta $instance */
+                        return $instance->addAlternateLanguages($languages);
+        }
+        
+        /**
+         * Sets the meta robots.
+         *
+         * @param string $robots
+         * @return \Artesaos\SEOTools\MetaTagsContract 
+         * @static 
+         */ 
+        public static function setRobots($robots)
+        {
+                        /** @var \Artesaos\SEOTools\SEOMeta $instance */
+                        return $instance->setRobots($robots);
+        }
+        
+        /**
+         * Takes the title formatted for display.
          *
          * @return string 
          * @static 
          */ 
-        public static function getStackDataSessionNamespace()
+        public static function getTitle()
         {
-            //Method inherited from \DebugBar\DebugBar            
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->getStackDataSessionNamespace();
+                        /** @var \Artesaos\SEOTools\SEOMeta $instance */
+                        return $instance->getTitle();
         }
         
         /**
-         * Sets whether to only use the session to store stacked data even
-         * if a storage is enabled
+         * Takes the default title.
          *
-         * @param boolean $enabled
-         * @return \Barryvdh\Debugbar\LaravelDebugbar 
+         * @return string 
          * @static 
          */ 
-        public static function setStackAlwaysUseSessionStorage($enabled = true)
+        public static function getDefaultTitle()
         {
-            //Method inherited from \DebugBar\DebugBar            
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->setStackAlwaysUseSessionStorage($enabled);
+                        /** @var \Artesaos\SEOTools\SEOMeta $instance */
+                        return $instance->getDefaultTitle();
         }
         
         /**
-         * Checks if the session is always used to store stacked data
-         * even if a storage is enabled
+         * takes the title that was set.
          *
-         * @return boolean 
+         * @return string 
          * @static 
          */ 
-        public static function isStackAlwaysUseSessionStorage()
+        public static function getTitleSession()
         {
-            //Method inherited from \DebugBar\DebugBar            
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->isStackAlwaysUseSessionStorage();
+                        /** @var \Artesaos\SEOTools\SEOMeta $instance */
+                        return $instance->getTitleSession();
+        }
+        
+        /**
+         * takes the title that was set.
+         *
+         * @return string 
+         * @static 
+         */ 
+        public static function getTitleSeparator()
+        {
+                        /** @var \Artesaos\SEOTools\SEOMeta $instance */
+                        return $instance->getTitleSeparator();
+        }
+        
+        /**
+         * Get the Meta keywords.
+         *
+         * @return array 
+         * @static 
+         */ 
+        public static function getKeywords()
+        {
+                        /** @var \Artesaos\SEOTools\SEOMeta $instance */
+                        return $instance->getKeywords();
+        }
+        
+        /**
+         * Get all metatags.
+         *
+         * @return array 
+         * @static 
+         */ 
+        public static function getMetatags()
+        {
+                        /** @var \Artesaos\SEOTools\SEOMeta $instance */
+                        return $instance->getMetatags();
+        }
+        
+        /**
+         * Get the Meta description.
+         *
+         * @return string|null 
+         * @static 
+         */ 
+        public static function getDescription()
+        {
+                        /** @var \Artesaos\SEOTools\SEOMeta $instance */
+                        return $instance->getDescription();
+        }
+        
+        /**
+         * Get the canonical URL.
+         *
+         * @return string 
+         * @static 
+         */ 
+        public static function getCanonical()
+        {
+                        /** @var \Artesaos\SEOTools\SEOMeta $instance */
+                        return $instance->getCanonical();
+        }
+        
+        /**
+         * Get the AMP html URL.
+         *
+         * @return string 
+         * @static 
+         */ 
+        public static function getAmpHtml()
+        {
+                        /** @var \Artesaos\SEOTools\SEOMeta $instance */
+                        return $instance->getAmpHtml();
+        }
+        
+        /**
+         * Get the prev URL.
+         *
+         * @return string 
+         * @static 
+         */ 
+        public static function getPrev()
+        {
+                        /** @var \Artesaos\SEOTools\SEOMeta $instance */
+                        return $instance->getPrev();
+        }
+        
+        /**
+         * Get the next URL.
+         *
+         * @return string 
+         * @static 
+         */ 
+        public static function getNext()
+        {
+                        /** @var \Artesaos\SEOTools\SEOMeta $instance */
+                        return $instance->getNext();
+        }
+        
+        /**
+         * Get alternate languages.
+         *
+         * @return array 
+         * @static 
+         */ 
+        public static function getAlternateLanguages()
+        {
+                        /** @var \Artesaos\SEOTools\SEOMeta $instance */
+                        return $instance->getAlternateLanguages();
+        }
+        
+        /**
+         * Get meta robots.
+         *
+         * @return string 
+         * @static 
+         */ 
+        public static function getRobots()
+        {
+                        /** @var \Artesaos\SEOTools\SEOMeta $instance */
+                        return $instance->getRobots();
+        }
+        
+        /**
+         * Reset all data.
+         *
+         * @return void 
+         * @static 
+         */ 
+        public static function reset()
+        {
+                        /** @var \Artesaos\SEOTools\SEOMeta $instance */
+                        $instance->reset();
+        }
+         
+    }
+
+    /**
+     * 
+     *
+     */ 
+    class OpenGraph {
+        
+        /**
+         * Generates open graph tags.
+         *
+         * @param bool $minify
+         * @return string 
+         * @static 
+         */ 
+        public static function generate($minify = false)
+        {
+                        /** @var \Artesaos\SEOTools\OpenGraph $instance */
+                        return $instance->generate($minify);
+        }
+        
+        /**
+         * Add or update property.
+         *
+         * @param string $key key of property
+         * @param string|array $value value of property
+         * @return \Artesaos\SEOTools\OpenGraphContract 
+         * @static 
+         */ 
+        public static function addProperty($key, $value)
+        {
+                        /** @var \Artesaos\SEOTools\OpenGraph $instance */
+                        return $instance->addProperty($key, $value);
+        }
+        
+        /**
+         * Set article properties.
+         *
+         * @param array $attributes opengraph article attributes
+         * @return \Artesaos\SEOTools\OpenGraphContract 
+         * @static 
+         */ 
+        public static function setArticle($attributes = array())
+        {
+                        /** @var \Artesaos\SEOTools\OpenGraph $instance */
+                        return $instance->setArticle($attributes);
+        }
+        
+        /**
+         * Set profile properties.
+         *
+         * @param array $attributes opengraph profile attributes
+         * @return \Artesaos\SEOTools\OpenGraphContract 
+         * @static 
+         */ 
+        public static function setProfile($attributes = array())
+        {
+                        /** @var \Artesaos\SEOTools\OpenGraph $instance */
+                        return $instance->setProfile($attributes);
+        }
+        
+        /**
+         * Set book properties.
+         *
+         * @param array $attributes opengraph book attributes
+         * @return \Artesaos\SEOTools\OpenGraphContract 
+         * @static 
+         */ 
+        public static function setBook($attributes = array())
+        {
+                        /** @var \Artesaos\SEOTools\OpenGraph $instance */
+                        return $instance->setBook($attributes);
+        }
+        
+        /**
+         * Set music song properties.
+         *
+         * @param array $attributes opengraph music.song attributes
+         * @return \Artesaos\SEOTools\OpenGraphContract 
+         * @static 
+         */ 
+        public static function setMusicSong($attributes = array())
+        {
+                        /** @var \Artesaos\SEOTools\OpenGraph $instance */
+                        return $instance->setMusicSong($attributes);
+        }
+        
+        /**
+         * Set music album properties.
+         *
+         * @param array $attributes opengraph music.album attributes
+         * @return \Artesaos\SEOTools\OpenGraphContract 
+         * @static 
+         */ 
+        public static function setMusicAlbum($attributes = array())
+        {
+                        /** @var \Artesaos\SEOTools\OpenGraph $instance */
+                        return $instance->setMusicAlbum($attributes);
+        }
+        
+        /**
+         * Set music playlist properties.
+         *
+         * @param array $attributes opengraph music.playlist attributes
+         * @return \Artesaos\SEOTools\OpenGraphContract 
+         * @static 
+         */ 
+        public static function setMusicPlaylist($attributes = array())
+        {
+                        /** @var \Artesaos\SEOTools\OpenGraph $instance */
+                        return $instance->setMusicPlaylist($attributes);
+        }
+        
+        /**
+         * Set music radio station properties.
+         *
+         * @param array $attributes opengraph music.radio_station attributes
+         * @return \Artesaos\SEOTools\OpenGraphContract 
+         * @static 
+         */ 
+        public static function setMusicRadioStation($attributes = array())
+        {
+                        /** @var \Artesaos\SEOTools\OpenGraph $instance */
+                        return $instance->setMusicRadioStation($attributes);
+        }
+        
+        /**
+         * Set video movie properties.
+         *
+         * @param array $attributes opengraph video.movie attributes
+         * @return \Artesaos\SEOTools\OpenGraphContract 
+         * @static 
+         */ 
+        public static function setVideoMovie($attributes = array())
+        {
+                        /** @var \Artesaos\SEOTools\OpenGraph $instance */
+                        return $instance->setVideoMovie($attributes);
+        }
+        
+        /**
+         * Set video episode properties.
+         *
+         * @param array $attributes opengraph video.episode attributes
+         * @return \Artesaos\SEOTools\OpenGraphContract 
+         * @static 
+         */ 
+        public static function setVideoEpisode($attributes = array())
+        {
+                        /** @var \Artesaos\SEOTools\OpenGraph $instance */
+                        return $instance->setVideoEpisode($attributes);
+        }
+        
+        /**
+         * Set video episode properties.
+         *
+         * @param array $attributes opengraph video.other attributes
+         * @return \Artesaos\SEOTools\OpenGraphContract 
+         * @static 
+         */ 
+        public static function setVideoOther($attributes = array())
+        {
+                        /** @var \Artesaos\SEOTools\OpenGraph $instance */
+                        return $instance->setVideoOther($attributes);
+        }
+        
+        /**
+         * Set video episode properties.
+         *
+         * @param array $attributes opengraph video.tv_show attributes
+         * @return \Artesaos\SEOTools\OpenGraphContract 
+         * @static 
+         */ 
+        public static function setVideoTVShow($attributes = array())
+        {
+                        /** @var \Artesaos\SEOTools\OpenGraph $instance */
+                        return $instance->setVideoTVShow($attributes);
+        }
+        
+        /**
+         * Add video properties.
+         *
+         * @param string $source url of video source
+         * @param array $attributes opengraph video attributes
+         * @return \Artesaos\SEOTools\OpenGraphContract 
+         * @static 
+         */ 
+        public static function addVideo($source = null, $attributes = array())
+        {
+                        /** @var \Artesaos\SEOTools\OpenGraph $instance */
+                        return $instance->addVideo($source, $attributes);
+        }
+        
+        /**
+         * Add audio properties.
+         *
+         * @param string $source url for audio source
+         * @param array $attributes opengraph audio attributes
+         * @return \Artesaos\SEOTools\OpenGraphContract 
+         * @static 
+         */ 
+        public static function addAudio($source = null, $attributes = array())
+        {
+                        /** @var \Artesaos\SEOTools\OpenGraph $instance */
+                        return $instance->addAudio($source, $attributes);
+        }
+        
+        /**
+         * Set place properties.
+         *
+         * @param array $attributes opengraph place attributes
+         * @return \Artesaos\SEOTools\OpenGraphContract 
+         * @static 
+         */ 
+        public static function setPlace($attributes = array())
+        {
+                        /** @var \Artesaos\SEOTools\OpenGraph $instance */
+                        return $instance->setPlace($attributes);
+        }
+        
+        /**
+         * Set product properties.
+         *
+         * @param array $attributes opengraph product attributes
+         * @return \Artesaos\SEOTools\OpenGraphContract 
+         * @static 
+         */ 
+        public static function setProduct($attributes = array())
+        {
+                        /** @var \Artesaos\SEOTools\OpenGraph $instance */
+                        return $instance->setProduct($attributes);
+        }
+        
+        /**
+         * Remove property.
+         *
+         * @param string $key key
+         * @return \Artesaos\SEOTools\OpenGraphContract 
+         * @static 
+         */ 
+        public static function removeProperty($key)
+        {
+                        /** @var \Artesaos\SEOTools\OpenGraph $instance */
+                        return $instance->removeProperty($key);
+        }
+        
+        /**
+         * Add image to properties.
+         *
+         * @param mixed $source URL of image source
+         * @param array $attributes Object type attributes
+         * @return \Artesaos\SEOTools\OpenGraphContract 
+         * @static 
+         */ 
+        public static function addImage($source = null, $attributes = array())
+        {
+                        /** @var \Artesaos\SEOTools\OpenGraph $instance */
+                        return $instance->addImage($source, $attributes);
+        }
+        
+        /**
+         * Add images to properties.
+         *
+         * @param array $urls array of image urls
+         * @return \Artesaos\SEOTools\OpenGraphContract 
+         * @static 
+         */ 
+        public static function addImages($urls)
+        {
+                        /** @var \Artesaos\SEOTools\OpenGraph $instance */
+                        return $instance->addImages($urls);
+        }
+        
+        /**
+         * Define type property.
+         *
+         * @param string $type set the opengraph type
+         * @return \Artesaos\SEOTools\OpenGraphContract 
+         * @static 
+         */ 
+        public static function setType($type = null)
+        {
+                        /** @var \Artesaos\SEOTools\OpenGraph $instance */
+                        return $instance->setType($type);
+        }
+        
+        /**
+         * Define title property.
+         *
+         * @param string $title set the opengraph title
+         * @return \Artesaos\SEOTools\OpenGraphContract 
+         * @static 
+         */ 
+        public static function setTitle($title = null)
+        {
+                        /** @var \Artesaos\SEOTools\OpenGraph $instance */
+                        return $instance->setTitle($title);
+        }
+        
+        /**
+         * Define description property.
+         *
+         * @param string $description set the opengraph description
+         * @return \Artesaos\SEOTools\OpenGraphContract 
+         * @static 
+         */ 
+        public static function setDescription($description = null)
+        {
+                        /** @var \Artesaos\SEOTools\OpenGraph $instance */
+                        return $instance->setDescription($description);
+        }
+        
+        /**
+         * Define url property.
+         *
+         * @param string $url set the opengraph url
+         * @return \Artesaos\SEOTools\OpenGraphContract 
+         * @static 
+         */ 
+        public static function setUrl($url)
+        {
+                        /** @var \Artesaos\SEOTools\OpenGraph $instance */
+                        return $instance->setUrl($url);
+        }
+        
+        /**
+         * Define site_name property.
+         *
+         * @param string $name set the site_name
+         * @return \Artesaos\SEOTools\OpenGraphContract 
+         * @static 
+         */ 
+        public static function setSiteName($name)
+        {
+                        /** @var \Artesaos\SEOTools\OpenGraph $instance */
+                        return $instance->setSiteName($name);
+        }
+         
+    }
+
+    /**
+     * 
+     *
+     */ 
+    class TwitterCard {
+        
+        /**
+         * 
+         *
+         * @param bool $minify
+         * @return string 
+         * @static 
+         */ 
+        public static function generate($minify = false)
+        {
+                        /** @var \Artesaos\SEOTools\TwitterCards $instance */
+                        return $instance->generate($minify);
         }
         
         /**
          * 
          *
+         * @param string $key
+         * @param string|array $value
+         * @return \Artesaos\SEOTools\TwitterCardsContract 
          * @static 
          */ 
-        public static function offsetSet($key, $value)
+        public static function addValue($key, $value)
         {
-            //Method inherited from \DebugBar\DebugBar            
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->offsetSet($key, $value);
+                        /** @var \Artesaos\SEOTools\TwitterCards $instance */
+                        return $instance->addValue($key, $value);
         }
         
         /**
          * 
          *
+         * @param string $title
+         * @return \Artesaos\SEOTools\TwitterCardsContract 
          * @static 
          */ 
-        public static function offsetGet($key)
+        public static function setTitle($title)
         {
-            //Method inherited from \DebugBar\DebugBar            
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->offsetGet($key);
+                        /** @var \Artesaos\SEOTools\TwitterCards $instance */
+                        return $instance->setTitle($title);
         }
         
         /**
          * 
          *
+         * @param string $type
+         * @return \Artesaos\SEOTools\TwitterCardsContract 
          * @static 
          */ 
-        public static function offsetExists($key)
+        public static function setType($type)
         {
-            //Method inherited from \DebugBar\DebugBar            
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->offsetExists($key);
+                        /** @var \Artesaos\SEOTools\TwitterCards $instance */
+                        return $instance->setType($type);
         }
         
         /**
          * 
          *
+         * @param string $site
+         * @return \Artesaos\SEOTools\TwitterCardsContract 
          * @static 
          */ 
-        public static function offsetUnset($key)
+        public static function setSite($site)
         {
-            //Method inherited from \DebugBar\DebugBar            
-                        /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
-                        return $instance->offsetUnset($key);
+                        /** @var \Artesaos\SEOTools\TwitterCards $instance */
+                        return $instance->setSite($site);
+        }
+        
+        /**
+         * 
+         *
+         * @param string $description
+         * @return \Artesaos\SEOTools\TwitterCardsContract 
+         * @static 
+         */ 
+        public static function setDescription($description)
+        {
+                        /** @var \Artesaos\SEOTools\TwitterCards $instance */
+                        return $instance->setDescription($description);
+        }
+        
+        /**
+         * 
+         *
+         * @param string $url
+         * @return \Artesaos\SEOTools\TwitterCardsContract 
+         * @static 
+         */ 
+        public static function setUrl($url)
+        {
+                        /** @var \Artesaos\SEOTools\TwitterCards $instance */
+                        return $instance->setUrl($url);
+        }
+        
+        /**
+         * 
+         *
+         * @param string|array $image
+         * @return \Artesaos\SEOTools\TwitterCardsContract 
+         * @deprecated use setImage($image) instead
+         * @static 
+         */ 
+        public static function addImage($image)
+        {
+                        /** @var \Artesaos\SEOTools\TwitterCards $instance */
+                        return $instance->addImage($image);
+        }
+        
+        /**
+         * 
+         *
+         * @param string|array $images
+         * @return \Artesaos\SEOTools\TwitterCardsContract 
+         * @deprecated use setImage($image) instead
+         * @static 
+         */ 
+        public static function setImages($images)
+        {
+                        /** @var \Artesaos\SEOTools\TwitterCards $instance */
+                        return $instance->setImages($images);
+        }
+        
+        /**
+         * 
+         *
+         * @param $image
+         * @return \Artesaos\SEOTools\TwitterCardsContract 
+         * @static 
+         */ 
+        public static function setImage($image)
+        {
+                        /** @var \Artesaos\SEOTools\TwitterCards $instance */
+                        return $instance->setImage($image);
+        }
+         
+    }
+
+    /**
+     * 
+     *
+     */ 
+    class SEOTools {
+        
+        /**
+         * 
+         *
+         * @return \Artesaos\SEOTools\Contracts\MetaTags 
+         * @static 
+         */ 
+        public static function metatags()
+        {
+                        /** @var \Artesaos\SEOTools\SEOTools $instance */
+                        return $instance->metatags();
+        }
+        
+        /**
+         * 
+         *
+         * @return \Artesaos\SEOTools\Contracts\OpenGraph 
+         * @static 
+         */ 
+        public static function opengraph()
+        {
+                        /** @var \Artesaos\SEOTools\SEOTools $instance */
+                        return $instance->opengraph();
+        }
+        
+        /**
+         * 
+         *
+         * @return \Artesaos\SEOTools\Contracts\TwitterCards 
+         * @static 
+         */ 
+        public static function twitter()
+        {
+                        /** @var \Artesaos\SEOTools\SEOTools $instance */
+                        return $instance->twitter();
+        }
+        
+        /**
+         * Setup title for all seo providers.
+         *
+         * @param string $title
+         * @param bool $appendDefault
+         * @return \Artesaos\SEOTools\Contracts\SEOTools 
+         * @static 
+         */ 
+        public static function setTitle($title, $appendDefault = true)
+        {
+                        /** @var \Artesaos\SEOTools\SEOTools $instance */
+                        return $instance->setTitle($title, $appendDefault);
+        }
+        
+        /**
+         * Setup description for all seo providers.
+         *
+         * @param $description
+         * @return \Artesaos\SEOTools\Contracts\SEOTools 
+         * @static 
+         */ 
+        public static function setDescription($description)
+        {
+                        /** @var \Artesaos\SEOTools\SEOTools $instance */
+                        return $instance->setDescription($description);
+        }
+        
+        /**
+         * Sets the canonical URL.
+         *
+         * @param string $url
+         * @return \Artesaos\SEOTools\Contracts\SEOTools 
+         * @static 
+         */ 
+        public static function setCanonical($url)
+        {
+                        /** @var \Artesaos\SEOTools\SEOTools $instance */
+                        return $instance->setCanonical($url);
+        }
+        
+        /**
+         * 
+         *
+         * @param array|string $urls
+         * @return \Artesaos\SEOTools\Contracts\SEOTools 
+         * @static 
+         */ 
+        public static function addImages($urls)
+        {
+                        /** @var \Artesaos\SEOTools\SEOTools $instance */
+                        return $instance->addImages($urls);
+        }
+        
+        /**
+         * Get current title from metatags.
+         *
+         * @param bool $session
+         * @return string 
+         * @static 
+         */ 
+        public static function getTitle($session = false)
+        {
+                        /** @var \Artesaos\SEOTools\SEOTools $instance */
+                        return $instance->getTitle($session);
+        }
+        
+        /**
+         * Generate from all seo providers.
+         *
+         * @param bool $minify
+         * @return string 
+         * @static 
+         */ 
+        public static function generate($minify = false)
+        {
+                        /** @var \Artesaos\SEOTools\SEOTools $instance */
+                        return $instance->generate($minify);
         }
          
     }
@@ -18659,7 +19453,15 @@ namespace  {
 
     class Image extends \Intervention\Image\Facades\Image {}
 
-    class Debugbar extends \Barryvdh\Debugbar\Facade {}
+    class Clockwork extends \Clockwork\Support\Laravel\Facade {}
+
+    class SEOMeta extends \Artesaos\SEOTools\Facades\SEOMeta {}
+
+    class OpenGraph extends \Artesaos\SEOTools\Facades\OpenGraph {}
+
+    class Twitter extends \Artesaos\SEOTools\Facades\TwitterCard {}
+
+    class SEO extends \Artesaos\SEOTools\Facades\SEOTools {}
 
     class Nestable extends \Nestable\Facades\NestableService {}
 

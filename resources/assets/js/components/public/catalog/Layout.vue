@@ -1,15 +1,17 @@
 <template>
     <div>
+        <VueLoading :active.sync="isLoading" color="#df1e30"></VueLoading>
+
         <Breadcrumbs :items="breadcrumbs"/>
 
         <section class="wrapper">
             <Errors/>
 
             <div class="container">
-
                 <Sort v-on:getProducts="getProducts"
                       v-on:updateSort="updateSort"
-                      :currentCategory="currentCategory"/>
+                      :currentCategory="currentCategory"
+                      :currentType="currentType"/>
 
                 <Filters :currentType="currentType"
                          :currentCategory="currentCategory"
@@ -17,12 +19,12 @@
 
                 <Products :products="products"/>
 
-                <div v-if="products.length === 0" class="alert alert-info" style="margin-top:20px; width: 100%">
+                <div v-if="products !== undefined && products.length === 0" class="alert alert-info" style="margin-top:20px; width: 100%">
                     По запросу нет товаров
                 </div>
 
-                <Pagination :metaData="metaData"
-                            v-on:getProducts="getProducts"/>
+                <Pagination :pagination="pagination"
+                            v-on:pageChange="getProducts"/>
             </div>
         </section>
     </div>
@@ -37,13 +39,30 @@
     import Filters from "./Filters";
     import Errors from "../Errors";
     import Pagination from "../Pagination";
+    import VueLoading from "vue-loading-overlay/src/js/Component";
 
     export default {
         name: 'CatalogLayout',
         mounted() {
+            this.$scrollTo('#top_line', 650);
+
             if (this.types.length) {
                 this.setTypesAndBreadcrumbs();
             }
+
+            this.$watch(vm => [vm.currentType, vm.currentCategory], val => {
+                let intervalId = setInterval(() => {
+                    let checkType = this.intervalTypeCategory[0] === this.currentType;
+                    let checkCategory = this.intervalTypeCategory[1] === this.currentCategory;
+                    if (checkType && checkCategory) {
+                        this.getProducts(this.$route.query.page);
+                        clearInterval(intervalId);
+                    }
+                    else {
+                        this.intervalTypeCategory = [this.currentType, this.currentCategory];
+                    }
+                }, 500);
+            });
         },
         computed: {
             types: function () {
@@ -54,6 +73,9 @@
             },
             urlPrevious: function () {
                 return this.$store.getters.urlPrevious;
+            },
+            watchProps: function () {
+                return [this.currentCategory, this.currentType].join();
             }
         },
         data() {
@@ -61,16 +83,20 @@
                 breadcrumbs: [],
                 currentCategory: null,
                 currentType: null,
+                isLoading: false,
+                isFullPage: true,
                 products: [],
                 sort: (this.$route.query.sort !== undefined && this.$route.query.sort !== null) ? this.$route.query.sort : 'all',
-                metaData: {
-                    last_page: null,
-                    current_page: 1,
-                    prev_page_url: null
-                }
+                pagination: {
+                    currentPage: 1,
+                    totalPages: 1,
+                    count: 1
+                },
+                intervalTypeCategory: []
             }
         },
         components: {
+            VueLoading,
             Pagination,
             Errors,
             Filters,
@@ -83,49 +109,75 @@
                 this.sort = value;
             },
             setProducts: function (products) {
-                this.metaData.last_page = products.last_page;
-                this.metaData.current_page = products.current_page;
-                this.metaData.prev_page_url = products.prev_page_url;
+                this.pagination.currentPage = products.current_page;
+                this.pagination.totalPages = products.last_page;
+                this.pagination.count = products.total;
 
                 this.products = products.data;
+
+                this.isLoading = false;
             },
             getProducts: function (page = 1) {
-                if (this.currentCategory !== null) {
-                    ApiProducts.get(page, {
-                        type: this.currentType.id,
-                        category: this.currentCategory.id,
-                        filters: this.$route.query.filters,
-                        sort: this.sort
-                    }).then((res) => {
-                        this.$store.commit('updateProducts', res.data.products);
+                this.$router.push({ query: Object.assign({}, this.$route.query, { page: page }) });
 
-                        this.setProducts(res.data.products);
-                    }).catch((error) => {
-                        this.$notify({
-                            type: 'error',
-                            title: 'Ошибка',
-                            text: 'при выполнеении запроса'
+                this.isLoading = true;
+                if (this.$router.currentRoute.fullPath === this.urlPrevious) {
+                    this.setProducts(this.productsStore);
+                }
+                else {
+                    setTimeout(() => {
+                        this.$store.commit('updateCategoryPrevious', this.currentCategory);
+                        this.$store.commit('updateTypePrevious', this.currentType);
+
+                        this.$store.commit('updateUrlPrevious', this.$router.currentRoute.fullPath);
+
+                        ApiProducts.get(page, {
+                            type: (this.currentType !== null) ? this.currentType.id : null,
+                            category: (this.currentCategory !== null) ? this.currentCategory.id : null,
+                            filters: this.$route.query.filters,
+                            sort: this.sort
+                        }).then((res) => {
+                            this.$store.commit('updateProducts', res.data.products);
+
+                            this.setProducts(res.data.products);
+                        }).catch((error) => {
+                            this.$notify({
+                                type: 'error',
+                                title: 'Ошибка',
+                                text: 'при выполнеении запроса'
+                            });
                         });
-                    });
+                    }, 800);
                 }
             },
             setTypesAndBreadcrumbs: function () {
+                this.breadcrumbs = [];
+                let tempType = null;
+                let tempCategory = null;
                 this.types.forEach((type) => {
                     if (type.slug === this.$route.query.type) {
-                        this.currentType = type;
+                        tempType = type;
                     }
                     type.categories.forEach((category) => {
                         if (category.slug === this.$route.query.category) {
-                            this.currentCategory = category;
+                            tempCategory = category;
                         }
                     });
                 });
+                [this.currentType, this.currentCategory] = [tempType, tempCategory];
 
-                this.breadcrumbs = [
-                    {title: this.currentType.name, route: `{ "name": "catalog", "query": { "type": "${this.currentType.slug}"} }`},
-                    {title: this.currentCategory.name},
-                ];
-            }
+                if (this.currentType !== null) {
+                    this.breadcrumbs.push({
+                        title: this.currentType.name,
+                        route: `{ "name": "catalog", "query": { "type": "${this.currentType.slug}"} }`
+                    });
+                }
+                if (this.currentCategory !== null) {
+                    this.breadcrumbs.push({
+                        title: this.currentCategory.name
+                    });
+                }
+            },
         },
         watch: {
             'types': function () {
@@ -133,20 +185,6 @@
             },
             '$route' (to, from){
                 this.setTypesAndBreadcrumbs();
-            },
-            'currentCategory': function () {
-                if (this.currentCategory !== null) {
-                    this.$store.commit('updateCategoryPrevious', this.currentCategory);
-                    this.$store.commit('updateTypePrevious', this.currentType);
-
-                    if (this.$router.currentRoute.fullPath === this.urlPrevious) {
-                        this.setProducts(this.productsStore);
-                    }
-                    else {
-                        this.$store.commit('updateUrlPrevious', this.$router.currentRoute.fullPath);
-                        this.getProducts();
-                    }
-                }
             }
         }
     }

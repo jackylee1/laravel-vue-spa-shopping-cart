@@ -1,29 +1,29 @@
 <template>
-    <div v-if="metaData.last_page > 1" class="row paginations">
+    <div v-if="this.shouldShowPagination()">
         <div class="col-lg-12">
             <nav aria-label="Page navigation">
                 <ul class="pagination justify-content-center">
-                    <li :class="(metaData.prev_page_url === null) ? 'page-item disabled' : 'page-item'">
+                    <li :class="(pagination.currentPage === 1) ? 'page-item disabled' : 'page-item'">
                         <a href="javascript:void(0)"
                            class="page-link"
-                           @click="handleClick(metaData.current_page-1)">
+                           @click="pageClicked( pagination.currentPage - 1 )">
                             Предыдущая
                         </a>
                     </li>
                     <li class="page-item"
-                        v-for="page in metaData.last_page"
+                        v-for="page in this.pageLinks()"
                         :key="page"
-                        :class="(metaData.current_page === page) ? 'page-item disabled' : 'page-item'">
+                        :class="(isActive(page) || page === '...') ? 'page-item disabled' : 'page-item'">
                         <a class="page-link"
-                           @click.prevent="handleClick(page)"
+                           @click="pageClicked(page)"
                            href="javascript:void(0)">
                             {{ page }}
                         </a>
                     </li>
-                    <li :class="(metaData.current_page === metaData.last_page) ? 'page-item disabled': 'page-item'">
+                    <li :class="(pagination.currentPage === this.pagination.totalPages) ? 'page-item disabled': 'page-item'">
                         <a href="javascript:void(0)"
                            class="page-link"
-                           @click="handleClick(metaData.current_page+1)">
+                           @click="pageClicked( pagination.currentPage + 1 )">
                             Следующая
                         </a>
                     </li>
@@ -35,12 +35,74 @@
 <script>
     export default {
         name: 'Pagination',
-        props: ['metaData'],
+        props: ['pagination'],
         methods: {
-            handleClick(page) {
-                this.$emit('getProducts', page);
+            pageLinks: function () {
+                if (this.pagination.totalPages === undefined) {
+                    return [];
+                }
+
+                const arr = [];
+                let preDots = false;
+                let postDots = false;
+
+                for (let i = 1; i <= this.pagination.totalPages; i++) {
+                    if (this.pagination.totalPages <= 10) {
+                        arr.push(i);
+                    } else {
+                        if (i === 1) {
+                            arr.push(i);
+                        } else if (i === this.pagination.totalPages) {
+                            arr.push(i);
+                        } else if (
+                            (i > this.pagination.currentPage - 4 && i < this.pagination.currentPage + 4) ||
+                            (i < 4 && this.pagination.currentPage < 4) ||
+                            (i > this.pagination.totalPages - 4 && this.pagination.currentPage > this.pagination.totalPages - 4)) {
+                            arr.push(i);
+                        } else if (i < this.pagination.currentPage && !preDots) {
+                            arr.push('...');
+                            preDots = true;
+                        } else if (i > this.pagination.currentPage && !postDots) {
+                            arr.push('...');
+                            postDots = true;
+                        }
+                    }
+                }
+
+                return arr;
+            },
+
+            shouldShowPagination: function () {
+                if (this.pagination.totalPages === undefined) {
+                    return false;
+                }
+
+                if (this.pagination.count === 0) {
+                    return false;
+                }
+
+                return this.pagination.totalPages > 1;
+            },
+
+            isActive: function (page) {
+                const currentPage = this.pagination.currentPage || 1;
+
+                return currentPage === page;
+            },
+
+            pageClicked: function (page) {
+                if (page === '...' ||
+                    page === this.pagination.currentPage ||
+                    page > this.pagination.totalPages ||
+                    page < 1) {
+                    return;
+                }
+
+
+
+                this.$emit('pageChange', page);
                 this.$scrollTo('#top_line', 450);
-            }
-        }
-    }
+            },
+        },
+    };
 </script>

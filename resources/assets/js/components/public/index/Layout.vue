@@ -1,11 +1,17 @@
 <template>
     <div>
         <UTP/>
+
         <Slider :sliders="sliders"/>
-        <NewProducts/>
+
+        <NewProducts :products="newProducts"/>
+
         <Banner/>
+
         <BestSellers/>
+
         <CertificatesVideo/>
+
         <Filters/>
     </div>
 </template>
@@ -23,6 +29,7 @@
     export default {
         name: 'IndexLayout',
         mounted() {
+            this.$scrollTo('#top_line', 650);
             if (!this.loadIndex) {
                 ApiPage.index().then((res) => {
                     this.sliders = res.data.sliders;
@@ -41,6 +48,9 @@
             },
             loadIndex: function () {
                 return this.$store.getters.loadIndex;
+            },
+            newProducts: function () {
+                return this.$store.getters.newProducts;
             }
         },
         data() {

@@ -114,8 +114,8 @@ class ProductController extends Controller
             'status' => 'Статус',
             'date_inclusion' => 'Дата включения',
             'main_type' => 'Дефолтный тип товара',
-            'main_type.type_id' => 'Дефолтный тип товара',
-            'main_type.category_id' => 'Дефолтная категория товара',
+            'main_type.type_id' => 'Тип товара для «хлебных крошек»',
+            'main_type.category_id' => 'Категория для «хлебных крошек»',
         ]);
     }
 

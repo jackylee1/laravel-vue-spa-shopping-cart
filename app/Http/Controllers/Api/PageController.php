@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Filter;
 use App\Models\LinkToSocialNetwork;
+use App\Models\Product;
+use App\Models\SizeTable;
 use App\Models\Slider;
 use App\Models\TextBlockTitle;
 use App\Models\Type;
@@ -20,6 +22,8 @@ class PageController extends Controller
         $this->setData('text_pages', TextBlockTitle::getTitlesAndData());
         $this->setData('types', Type::types());
         $this->setData('filters', Filter::getFilters());
+        $this->setData('size_tables', SizeTable::getSizes());
+        $this->setData('new_products', Product::getNewProducts());
 
         return response()->json($this->data);
     }

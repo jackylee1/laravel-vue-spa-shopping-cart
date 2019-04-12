@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TextBlockTitle disableCache()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TextBlockTitle withCacheCooldownSeconds($seconds)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\TextBlockData[] $dataPage
  */
 class TextBlockTitle extends Model
 {

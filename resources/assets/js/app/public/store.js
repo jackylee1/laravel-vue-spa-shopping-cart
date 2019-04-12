@@ -18,43 +18,51 @@ export default {
         loadFBComments: false,
         categoryPrevious: null,
         typePrevious: null,
+        sizeTables: [],
+        newProducts: [],
     },
     getters: {
-        sliders(state) {
+        sliders: function (state) {
             return state.sliders;
         },
-        textPages(state) {
+        textPages: function (state) {
             return state.textPages;
         },
-        loadIndex(state) {
+        loadIndex: function (state) {
             return state.loadIndex;
         },
-        loadCommon(state) {
+        loadCommon: function (state) {
             return state.loadCommon;
         },
-        linkToSocialNetworks(state) {
+        linkToSocialNetworks: function (state) {
             return state.linkToSocialNetworks;
         },
-        types(state) {
+        types: function (state) {
             return state.types;
         },
-        filters(state) {
+        filters: function (state) {
             return state.filters;
         },
-        products(state) {
+        products: function (state) {
             return state.products;
         },
-        urlPrevious(state) {
+        urlPrevious: function (state) {
             return state.urlPrevious;
         },
-        loadFBComments(state) {
+        loadFBComments: function (state) {
             return state.loadFBComments;
         },
-        categoryPrevious(state) {
+        categoryPrevious: function (state) {
             return state.categoryPrevious;
         },
-        typePrevious(state) {
+        typePrevious: function (state) {
             return state.typePrevious;
+        },
+        sizeTables: function (state) {
+            return state.sizeTables;
+        },
+        newProducts: function (state) {
+            return state.newProducts;
         }
     },
     mutations: {
@@ -93,6 +101,12 @@ export default {
         },
         updateTypePrevious: function (state, payload) {
             state.typePrevious = payload;
+        },
+        updateSizeTables: function (state, payload) {
+            state.sizeTables = payload;
+        },
+        updateNewProducts: function (state, payload) {
+            state.newProducts = payload;
         },
     }
 };

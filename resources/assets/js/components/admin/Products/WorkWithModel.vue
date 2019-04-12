@@ -37,18 +37,19 @@
                     </el-input>
                 </el-form-item>
 
-                <el-form-item label="Выберите дефольный тип для этого товара">
-                <el-select v-model="selectedFormType"
-                           placeholder="Выберите тип продукции">
-                    <el-option
-                            v-for="item in types"
-                            :key="item.id"
-                            :label="item.name"
-                            :value="item.id">
-                    </el-option>
-                </el-select>
+                <el-form-item label="Выберите тип товара для «хлебных крошек»">
+                    <el-select v-model="selectedFormType"
+                               placeholder="Выберите тип">
+                        <el-option
+                                v-for="item in types"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
-                <el-form-item v-if="selectedFormType !== null" label="Выберите дефолтную категорию для этого товара">
+
+                <el-form-item v-if="selectedFormType !== null" label="Выберите категорию для «хлебных крошек»">
                     <el-cascader
                             expand-trigger="hover"
                             filterable
@@ -56,6 +57,18 @@
                             :props="selectProps"
                             v-model="selectedFormCategory">
                     </el-cascader>
+                </el-form-item>
+
+                <el-form-item label="Выберите таблицу размеров">
+                    <el-select v-model="selectedSizeTable"
+                               placeholder="Выберите таблицу размеров">
+                        <el-option
+                                v-for="item in this.sizeTables"
+                                :key="item.id"
+                                :label="item.title"
+                                :value="item.id">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
 
                 <el-form-item label="Цена" prop="price">
@@ -396,6 +409,7 @@
 <script>
     import * as ApiProducts from '../../../app/admin/api/Products';
     import * as ApiProductImages from '../../../app/admin/api/ProductImages';
+    import * as ApiSizeTables from '../../../app/admin/api/SizeTables';
     import * as ApiFilters from '../../../app/admin/api/Filters';
     import * as ApiTypes from '../../../app/admin/api/Types';
     import * as helperRouter from '../../../app/helpers/router';
@@ -463,6 +477,17 @@
             typesStore: function () {
                 return this.$store.getters.types;
             },
+            sizeTables: function () {
+                if (this.$store.getters.sizeTables.length) {
+                    return this.$store.getters.sizeTables;
+                }
+                else {
+                    return ApiSizeTables.get().then((res) => {
+                        this.$store.commit('updateSizeTables', res.data.size_tables);
+                        return res.data.size_tables;
+                    })
+                }
+            }
         },
         data() {
             return {
@@ -570,6 +595,7 @@
                 btnDialogAvailable: '',
                 selectedFormType: null,
                 selectedFormCategory: null,
+                selectedSizeTable: null,
             }
         },
         methods: {
@@ -998,6 +1024,13 @@
             },
             setDataWhenCreating: function(product) {
                 this.form = product;
+                if (this.form.size_table === null) {
+                    this.form.size_table = {};
+                }
+                else {
+                    this.selectedSizeTable = this.form.size_table.size_table_id;
+                }
+
                 if (this.form.main_type === null) {
                     this.form.main_type = {};
                 }
@@ -1005,6 +1038,7 @@
                     this.selectedFormType = this.form.main_type.type_id;
                     this.selectedFormCategory = this.form.main_type.category_id;
                 }
+
                 if (this.form.images.length) {
                     this.form.images.forEach(image => {
                         this.imagesList.push({
@@ -1167,6 +1201,11 @@
                     });
 
                     this.btnInDialogWorkWithAvailable = (!checkExists);
+                }
+            },
+            'selectedSizeTable': function () {
+                if (this.form.size_table['size_table_id'] !== this.selectedSizeTable) {
+                    this.form.size_table['size_table_id'] = this.selectedSizeTable;
                 }
             },
             'selectedFormType': function () {

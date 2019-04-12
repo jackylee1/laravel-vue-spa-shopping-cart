@@ -27,8 +27,8 @@ class CreateProductsTable extends Migration
             $table->dateTime('discount_start')->nullable();
             $table->dateTime('discount_end')->nullable();
             $table->integer('main_image')->nullable();
-            $table->date('date_inclusion')->nullable(); //дата включения
-            $table->boolean('status')->default(false);
+            $table->date('date_inclusion')->nullable();
+            $table->boolean('status')->default(true);
 
             $table->timestamps();
         });

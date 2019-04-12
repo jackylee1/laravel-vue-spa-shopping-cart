@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TypeFilter disableCache()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TypeFilter withCacheCooldownSeconds($seconds)
+ * @property-read \App\Models\Filter $filter
  */
 class TypeFilter extends Model
 {

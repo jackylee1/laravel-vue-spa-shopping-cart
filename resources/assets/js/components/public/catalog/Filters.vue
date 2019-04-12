@@ -23,11 +23,14 @@
         name: 'Filters',
         props: ['currentType', 'currentCategory'],
         mounted() {
-            this.$emit('getProducts');
+            this.$emit('getProducts', this.$router.currentRoute.query.page);
         },
         computed: {
             'filters': function () {
                 return this.$store.getters.filters;
+            },
+            watchProps: function () {
+                return [this.currentCategory, this.currentType, this.$route.query.sort].join();
             }
         },
         data() {
@@ -45,7 +48,7 @@
                 this.$router.push({ query: Object.assign(
                     {},
                     this.$route.query, {
-                        filters: this.selectFilters,
+                        filters: _.filter(this.selectFilters, (item) => item !== undefined),
                         sort: (this.$route.query.sort !== undefined
                             && this.$route.query.sort !== null)
                             ? this.$route.query.sort
@@ -65,8 +68,15 @@
                 this.setFiltersToUrl();
             },
             mergeFilters: function () {
-                let typeFilters = this.sortCurrentFilters(this.currentType.filters);
-                let categoryFilters = this.sortCurrentFilters(this.currentCategory.filters);
+                let typeFilters = [];
+                let categoryFilters = [];
+
+                if (this.currentType !== null) {
+                    typeFilters = this.sortCurrentFilters(this.currentType.filters);
+                }
+                if (this.currentCategory !== null) {
+                    categoryFilters = this.sortCurrentFilters(this.currentCategory.filters);
+                }
 
                 return _.unionBy(typeFilters, categoryFilters, 'filter_id')
             },
@@ -104,10 +114,10 @@
             }
         },
         watch: {
-            'currentCategory': function () {
+            watchProps: function () {
                 this.setRenderArray();
                 this.setSelectFilters();
-            },
+            }
         },
     }
 </script>

@@ -84,7 +84,8 @@ export default {
         orders: [],
         linkToSocialNetworks: [],
         newSubscribes: 0,
-        loadNotifications: false
+        loadNotifications: false,
+        sizeTables: []
     },
     getters: {
         isLoggedIn(state) {
@@ -177,6 +178,9 @@ export default {
         loadNotifications: function (state) {
             return state.loadNotifications;
         },
+        sizeTables: function (state) {
+            return state.sizeTables;
+        },
     },
     mutations: {
         login: function (state) {
@@ -262,6 +266,9 @@ export default {
         },
         updateLoadNotifications: function (state, payload) {
             state.loadNotifications = payload;
+        },
+        updateSizeTables: function (state, payload) {
+            state.sizeTables = payload;
         }
     },
     actions: {

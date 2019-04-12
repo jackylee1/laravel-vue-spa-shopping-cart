@@ -40,6 +40,8 @@
                     this.$store.commit('updateTextPages', this.textPages);
                     this.$store.commit('updateTypes', res.data.types);
                     this.$store.commit('updateFilters', res.data.filters);
+                    this.$store.commit('updateSizeTables', res.data.size_tables);
+                    this.$store.commit('updateNewProducts', res.data.new_products);
 
                     this.$store.commit('updateLoadCommon', true);
                 });
