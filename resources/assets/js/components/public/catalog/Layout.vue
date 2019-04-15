@@ -52,6 +52,8 @@
             }
 
             this.$watch(vm => [vm.currentType, vm.currentCategory], val => {
+                this.$scrollTo('#top_line', 650);
+
                 let intervalId = setInterval(() => {
                     let checkType = this.intervalTypeCategory[0] === this.currentType;
                     let checkCategory = this.intervalTypeCategory[1] === this.currentCategory;
@@ -127,13 +129,11 @@
             },
             getProducts: function (page = 1) {
                 console.log('getProducts | call method');
+
                 this.$router.push({ query: Object.assign({}, this.$route.query, { page: page }) });
 
                 this.isLoading = true;
-                console.log('this.urlPrevious');
-                console.log(this.urlPrevious);
-                console.log('this.$router.currentRoute.fullPath');
-                console.log(this.$router.currentRoute.fullPath);
+
                 if (this.$router.currentRoute.fullPath === this.urlPrevious) {
                     this.setProducts(this.productsStore);
                 }
@@ -211,6 +211,7 @@
         },
         beforeDestroy() {
             this.$store.commit('updateSearchByText', null);
+            this.$router.currentRoute.query.text = null;
         }
     }
 </script>

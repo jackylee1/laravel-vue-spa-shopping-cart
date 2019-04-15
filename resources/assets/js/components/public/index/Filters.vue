@@ -9,7 +9,8 @@
                     <div v-if="filter.children !== undefined && filter.children.length" class="row brands_images">
                         <div class="col-12">
                             <template v-for="filterChildren in filter.children">
-                                <a href="#">
+                                <a @click="productsByFilter(filterChildren)"
+                                   href="javascript:void(0)">
                                     <img :src="`/app/public/images/filter/${filterChildren.image_preview}`"
                                          :alt="filterChildren.name"
                                          class="brand_logo">
@@ -35,7 +36,8 @@
                                             <template v-for="filterItemsChunk in _.chunk(filterChildrenChunk, 2)">
                                                 <div class="col-6">
                                                     <template v-for="filterItemChunk in filterItemsChunk">
-                                                        <a href="#">
+                                                        <a @click="productsByFilter(filterItemChunk)"
+                                                           href="javascript:void(0)">
                                                             <img :src="`/app/public/images/filter/${filterItemChunk.image_preview}`"
                                                                  :alt="filterItemChunk.name"
                                                                  class="brand_logo">
@@ -68,6 +70,12 @@
                 return this.$store.getters.filters.filter((item) => {
                     return item.show_on_index === 1;
                 });
+            },
+            treeAllFilters: function () {
+                return arrayToTree(this.$store.getters.filters, {
+                    parentProperty: 'parent_id',
+                    customID: 'id'
+                });
             }
         },
         methods: {
@@ -84,6 +92,22 @@
                     parentProperty: 'parent_id',
                     customID: 'id'
                 });
+            },
+            productsByFilter: function (filter) {
+                let filters;
+                filters = [];
+                this.treeAllFilters.forEach((item) => {
+                    if (item.type === 1) {
+                        if (filter.parent_id === item.id) {
+                            filters.push(filter.id);
+                        }
+                        else {
+                            filters.push(item.id);
+                        }
+                    }
+                });
+
+                this.$router.push({name: 'catalog', query: { filters: filters }});
             }
         }
     }

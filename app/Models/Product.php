@@ -262,43 +262,44 @@ class Product extends Model
 
         $query->activeForPublic();
 
-        if (request()->filled('text')) {
-            $like_data = getLikeData(request()->get('text'));
+        $query->where(function ($query) {
+            if (request()->filled('text')) {
+                $like_data = getLikeData(request()->get('text'));
 
-            $query->whereRaw('lower(like_name) like ?', ["%{$like_data['str']}%"])
-                ->orWhereRaw('lower(like_name) like ?', ["%{$like_data['add_spaces']}%"])
-                ->orWhereRaw('lower(like_name) like ?', ["%{$like_data['clear_spaces']}%"])
-                ->orWhereRaw('lower(like_name) like ?', ["%{$like_data['like']}%"]);
-            $query->orWhereRaw('lower(like_preview_description) like ?', ["%{$like_data['str']}%"])
-                ->orWhereRaw('lower(like_preview_description) like ?', ["%{$like_data['add_spaces']}%"])
-                ->orWhereRaw('lower(like_preview_description) like ?', ["%{$like_data['clear_spaces']}%"])
-                ->orWhereRaw('lower(like_preview_description) like ?', ["%{$like_data['like']}%"]);
-        }
+                $query->whereRaw('lower(like_name) like ?', ["%{$like_data['str']}%"])
+                    ->orWhereRaw('lower(like_name) like ?', ["%{$like_data['add_spaces']}%"])
+                    ->orWhereRaw('lower(like_name) like ?', ["%{$like_data['clear_spaces']}%"])
+                    ->orWhereRaw('lower(like_name) like ?', ["%{$like_data['like']}%"]);
+                $query->orWhereRaw('lower(like_preview_description) like ?', ["%{$like_data['str']}%"])
+                    ->orWhereRaw('lower(like_preview_description) like ?', ["%{$like_data['add_spaces']}%"])
+                    ->orWhereRaw('lower(like_preview_description) like ?', ["%{$like_data['clear_spaces']}%"])
+                    ->orWhereRaw('lower(like_preview_description) like ?', ["%{$like_data['like']}%"]);
+            }
+            if (request()->filled('filters')) {
+                $request_filters = (is_array(request()->get('filters'))) ? request()->get('filters') : [request()->get('filters')];
+                $filters = Filter::getFiltersById(array_filter($request_filters));
+                $filters = $filters->map(function ($filter) {
+                    if ($filter->parent_id !== 0) {
+                        return $filter->id;
+                    }
+                })->filter(function ($filter) {
+                    return $filter !== null;
+                });
 
-        if (request()->filled('filters')) {
-            $request_filters = (is_array(request()->get('filters'))) ? request()->get('filters') : [request()->get('filters')];
-            $filters = Filter::getFiltersById(array_filter($request_filters));
-            $filters = $filters->map(function ($filter) {
-                if ($filter->parent_id !== 0) {
-                    return $filter->id;
+                if ($filters->count() > 0) {
+                    $id_products = ProductInFilter::getProductIdsByFilters(
+                        $filters,
+                        (request()->filled('type')) ? request()->get('type') : null,
+                        (request()->filled('category')) ? request()->get('category') : null
+                    );
+
+                    $query->whereIn('id', $id_products);
                 }
-            })->filter(function ($filter) {
-                return $filter !== null;
-            });
-
-            if ($filters->count() > 0) {
-                $id_products = ProductInFilter::getProductIdsByFilters(
-                    $filters,
-                    (request()->filled('type')) ? request()->get('type') : null,
-                    (request()->filled('category')) ? request()->get('category') : null
-                );
-
-                $query->whereIn('id', $id_products);
+                else {
+                    $query->whereTypeAndCategory();
+                }
             }
-            else {
-                $query->whereTypeAndCategory();
-            }
-        }
+        });
 
         if (request()->filled('sort')) {
             switch (request()->get('sort')) {

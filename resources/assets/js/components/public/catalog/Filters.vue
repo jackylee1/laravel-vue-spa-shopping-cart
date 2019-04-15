@@ -61,11 +61,19 @@
             },
             setSelectFilters: function () {
                 this.selectFilters = [];
+                let queryFilters = this.$router.currentRoute.query.filters;
 
-                let filters = this.mergeFilters();
+                let filters = (queryFilters !== undefined && queryFilters.length > 0) ? queryFilters : this.mergeFilters();
 
-                filters.forEach((filter) => {
-                    this.selectFilters.push(filter.filter_id);
+                filters.forEach((filter, index) => {
+                    if (queryFilters !== undefined
+                        && queryFilters[index] !== undefined
+                        && filter.filter_id !== parseInt(queryFilters[index])) {
+                        this.selectFilters.push(queryFilters[index]);
+                    }
+                    else {
+                        this.selectFilters.push(filter.filter_id);
+                    }
                 });
 
                 this.setFiltersToUrl();
@@ -90,7 +98,6 @@
                         }
                     });
                     typeFilters = _.filter(typeFilters, (item) => item !== undefined);
-                    console.log(typeFilters);
                 }
 
                 return _.unionBy(typeFilters, categoryFilters, 'filter_id')
