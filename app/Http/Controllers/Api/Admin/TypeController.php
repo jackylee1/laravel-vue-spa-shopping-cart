@@ -27,7 +27,7 @@ class TypeController extends Controller
             'width' => 300,
             'height' => 300,
             'aspect_ratio' => true,
-            'crop' => false
+            'crop' => true
         ];
         $this->image_origin = $this->image_preview = null;
     }

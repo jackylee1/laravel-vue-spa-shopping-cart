@@ -262,6 +262,19 @@ class Product extends Model
 
         $query->activeForPublic();
 
+        if (request()->filled('text')) {
+            $like_data = getLikeData(request()->get('text'));
+
+            $query->whereRaw('lower(like_name) like ?', ["%{$like_data['str']}%"])
+                ->orWhereRaw('lower(like_name) like ?', ["%{$like_data['add_spaces']}%"])
+                ->orWhereRaw('lower(like_name) like ?', ["%{$like_data['clear_spaces']}%"])
+                ->orWhereRaw('lower(like_name) like ?', ["%{$like_data['like']}%"]);
+            $query->orWhereRaw('lower(like_preview_description) like ?', ["%{$like_data['str']}%"])
+                ->orWhereRaw('lower(like_preview_description) like ?', ["%{$like_data['add_spaces']}%"])
+                ->orWhereRaw('lower(like_preview_description) like ?', ["%{$like_data['clear_spaces']}%"])
+                ->orWhereRaw('lower(like_preview_description) like ?', ["%{$like_data['like']}%"]);
+        }
+
         if (request()->filled('filters')) {
             $request_filters = (is_array(request()->get('filters'))) ? request()->get('filters') : [request()->get('filters')];
             $filters = Filter::getFiltersById(array_filter($request_filters));

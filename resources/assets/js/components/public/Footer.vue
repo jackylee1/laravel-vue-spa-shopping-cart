@@ -35,7 +35,7 @@
                                    placeholder="Введите Ваш электронный адрес..." aria-label="">
                             <a @click="subscribe" href="javascript:void(0)" class="to_subscribe">ПОДПИСАТЬСЯ</a>
 
-                            <Errors/>
+                            <VeeErrors/>
                         </form>
                     </div>
                 </div>
@@ -249,12 +249,13 @@
 <script>
     import * as ApiSubscribe from '../../app/public/api/Subscribe';
     import Errors from "./Errors";
+    import VeeErrors from "./VeeErrors";
 
     let arrayToTree = require('array-to-tree');
 
     export default {
         name: 'Footer',
-        components: {Errors},
+        components: {VeeErrors, Errors},
         props: ['textPages', 'linkToSocialNetworks'],
         computed: {
             'types': function () {

@@ -5,9 +5,10 @@
         <Breadcrumbs :items="breadcrumbs"/>
 
         <section class="wrapper">
-            <Errors/>
-
             <div class="container">
+                <Errors :type="typeAlerts"
+                        :alerts="alerts"/>
+
                 <Sort v-on:getProducts="getProducts"
                       v-on:updateSort="updateSort"
                       :currentCategory="currentCategory"
@@ -63,6 +64,8 @@
                     }
                 }, 500);
             });
+
+            this.$store.commit('updateSearchByText', this.$router.currentRoute.query.text);
         },
         computed: {
             types: function () {
@@ -76,6 +79,9 @@
             },
             watchProps: function () {
                 return [this.currentCategory, this.currentType].join();
+            },
+            searchByText: function () {
+                return this.$store.getters.searchByText;
             }
         },
         data() {
@@ -92,7 +98,9 @@
                     totalPages: 1,
                     count: 1
                 },
-                intervalTypeCategory: []
+                intervalTypeCategory: [],
+                typeAlerts: 'danger',
+                alerts: null
             }
         },
         components: {
@@ -118,9 +126,14 @@
                 this.isLoading = false;
             },
             getProducts: function (page = 1) {
+                console.log('getProducts | call method');
                 this.$router.push({ query: Object.assign({}, this.$route.query, { page: page }) });
 
                 this.isLoading = true;
+                console.log('this.urlPrevious');
+                console.log(this.urlPrevious);
+                console.log('this.$router.currentRoute.fullPath');
+                console.log(this.$router.currentRoute.fullPath);
                 if (this.$router.currentRoute.fullPath === this.urlPrevious) {
                     this.setProducts(this.productsStore);
                 }
@@ -135,19 +148,23 @@
                             type: (this.currentType !== null) ? this.currentType.id : null,
                             category: (this.currentCategory !== null) ? this.currentCategory.id : null,
                             filters: this.$route.query.filters,
-                            sort: this.sort
+                            sort: this.sort,
+                            text: this.$store.getters.searchByText
                         }).then((res) => {
+                            console.log('getProducts | api response');
+
                             this.$store.commit('updateProducts', res.data.products);
 
                             this.setProducts(res.data.products);
                         }).catch((error) => {
+                            this.alerts = error.response.data.errors;
                             this.$notify({
                                 type: 'error',
                                 title: 'Ошибка',
                                 text: 'при выполнеении запроса'
                             });
                         });
-                    }, 800);
+                    }, 1200);
                 }
             },
             setTypesAndBreadcrumbs: function () {
@@ -184,8 +201,16 @@
                 this.setTypesAndBreadcrumbs();
             },
             '$route' (to, from){
+                this.$router.push({ query: Object.assign({}, this.$route.query, { text: this.searchByText }) });
+
                 this.setTypesAndBreadcrumbs();
+            },
+            'sort': function () {
+                this.getProducts();
             }
+        },
+        beforeDestroy() {
+            this.$store.commit('updateSearchByText', null);
         }
     }
 </script>

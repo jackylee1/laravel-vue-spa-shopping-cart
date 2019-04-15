@@ -12,9 +12,14 @@
                         <p class="slogan">брендовая спортивная одежда</p>
                     </div>
                     <div class="col-sm-7 searching">
-                        <form class="form-inline ">
-                            <input class="form-control form-control-sm mr-3" type="text" placeholder="Введите поисковое слово в этом поле..." aria-label="Search">
-                            <i class="fas fa-search" aria-hidden="true"></i>
+                        <form class="form-inline" action="javascript:void(0)" v-on:keyup.enter="getProducts">
+                            <input v-model="textSearch"
+                                   class="form-control form-control-sm mr-3" type="text"
+                                   placeholder="Введите поисковое слово в этом поле..."
+                                   aria-label="Поиск">
+                            <i class="fas fa-search"
+                               @click="getProducts"
+                               aria-hidden="true"></i>
                         </form>
                     </div>
                     <div class="col-sm-1">
@@ -110,6 +115,32 @@
 
 <script>
     export default {
-        name: 'Header'
+        name: 'Header',
+        mounted() {
+            this.textSearch = this.searchByText;
+        },
+        computed: {
+            searchByText: function () {
+                return this.$store.getters.searchByText;
+            },
+        },
+        data() {
+            return {
+                textSearch: null
+            }
+        },
+        methods: {
+            getProducts: function () {
+                this.$store.commit('updateSearchByText', this.textSearch);
+                this.$router.push({ query: Object.assign({}, this.$route.query, { text: this.textSearch }) });
+
+                this.$emit('getProducts');
+            }
+        },
+        watch: {
+            'searchByText': function (value) {
+                this.textSearch = value;
+            }
+        }
     }
 </script>

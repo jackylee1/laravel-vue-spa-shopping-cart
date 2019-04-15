@@ -20,6 +20,7 @@ export default {
         typePrevious: null,
         sizeTables: [],
         newProducts: [],
+        searchByText: null,
     },
     getters: {
         sliders: function (state) {
@@ -63,6 +64,9 @@ export default {
         },
         newProducts: function (state) {
             return state.newProducts;
+        },
+        searchByText: function (state) {
+            return state.searchByText;
         }
     },
     mutations: {
@@ -108,5 +112,8 @@ export default {
         updateNewProducts: function (state, payload) {
             state.newProducts = payload;
         },
+        updateSearchByText: function (state, payload) {
+            state.searchByText = payload;
+        }
     }
 };

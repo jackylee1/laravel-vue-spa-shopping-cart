@@ -34,6 +34,7 @@ class ProductController extends Controller
             }
         }
         $this->setValidateRule([
+            'text' => 'nullable|string|max:1500',
             'type' => 'nullable|integer|exists:types,id',
             'category' => 'nullable|integer|exists:categories,id',
             'sort' => 'nullable|in:all,from_cheap_to_expensive,from_expensive_to_cheap,popular,new,promotional'
@@ -42,7 +43,8 @@ class ProductController extends Controller
             'type' => 'Тип продукции',
             'category' => 'Категория',
             'filters' => 'Фильтра',
-            'sort' => 'Сортировка'
+            'sort' => 'Сортировка',
+            'text' => 'Текст поиска'
         ]);
         $request->validate($this->validate_rules, [], $this->validate_attributes);
 

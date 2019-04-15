@@ -6,7 +6,7 @@
 
         <SearchCollapse/>
 
-        <Header/>
+        <Header v-on:getProducts="handleGetProducts"/>
 
         <Menu/>
 
@@ -66,6 +66,19 @@
             return {
                 linkToSocialNetworks: [],
                 textPages: [],
+            }
+        },
+        methods: {
+            handleGetProducts: function () {
+                if (this.$router.currentRoute.name === 'catalog') {
+                    let index = this.$children.findIndex((item) => item.$vnode.tag === 'vue-component-5-CatalogLayout');
+                    if (index !== -1) {
+                        this.$children[index].getProducts();
+                    }
+                }
+                else {
+                    this.$router.push({name: 'catalog', query: { text: this.$store.getters.searchByText } })
+                }
             }
         },
         components: {

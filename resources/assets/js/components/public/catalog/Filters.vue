@@ -23,6 +23,9 @@
         name: 'Filters',
         props: ['currentType', 'currentCategory'],
         mounted() {
+            this.setRenderArray();
+            this.setSelectFilters();
+
             this.$emit('getProducts', this.$router.currentRoute.query.page);
         },
         computed: {
@@ -30,7 +33,7 @@
                 return this.$store.getters.filters;
             },
             watchProps: function () {
-                return [this.currentCategory, this.currentType, this.$route.query.sort].join();
+                return [this.currentCategory, this.currentType, this.$route.query.sort, this.filters].join();
             }
         },
         data() {
@@ -76,6 +79,18 @@
                 }
                 if (this.currentCategory !== null) {
                     categoryFilters = this.sortCurrentFilters(this.currentCategory.filters);
+                }
+
+                if (this.currentCategory === null && this.currentType === null) {
+                    typeFilters = this.filters.map((filter) => {
+                        if (filter.type === 1) {
+                            return {
+                                filter_id: filter.id
+                            };
+                        }
+                    });
+                    typeFilters = _.filter(typeFilters, (item) => item !== undefined);
+                    console.log(typeFilters);
                 }
 
                 return _.unionBy(typeFilters, categoryFilters, 'filter_id')
