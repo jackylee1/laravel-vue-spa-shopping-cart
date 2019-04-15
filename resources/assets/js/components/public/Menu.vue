@@ -56,7 +56,8 @@
                                                             <ul>
                                                                 <template v-for="filterItemChunk in filtersChunk">
                                                                     <li>
-                                                                        <a href="#">
+                                                                        <a @click="productsByFilter(filterItemChunk)"
+                                                                           href="javascript:void(0)">
                                                                             <img class="menu_brand_logo"
                                                                                  :src="`/app/public/images/filter/${filterItemChunk.image_preview}`"
                                                                                  :alt="filterItemChunk.name">
@@ -93,12 +94,14 @@
 </template>
 
 <script>
+    import mixinProducts from '../../app/public/mixins/Products';
     import * as jquery from '../../app/public/src/jquery';
 
     let arrayToTree = require('array-to-tree');
 
     export default {
         name: 'Header',
+        mixins: [mixinProducts],
         mounted() {
             if (this.typesStore.length) {
                 this.types = this.typesStore;

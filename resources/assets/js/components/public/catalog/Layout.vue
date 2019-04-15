@@ -55,14 +55,14 @@
                 this.$scrollTo('#top_line', 650);
 
                 let intervalId = setInterval(() => {
-                    let checkType = this.intervalTypeCategory[0] === this.currentType;
-                    let checkCategory = this.intervalTypeCategory[1] === this.currentCategory;
+                    let checkType = this.intervalData[0] === this.currentType;
+                    let checkCategory = this.intervalData[1] === this.currentCategory;
                     if (checkType && checkCategory) {
                         this.getProducts(this.$route.query.page);
                         clearInterval(intervalId);
                     }
                     else {
-                        this.intervalTypeCategory = [this.currentType, this.currentCategory];
+                        this.intervalData = [this.currentType, this.currentCategory];
                     }
                 }, 500);
             });
@@ -100,7 +100,7 @@
                     totalPages: 1,
                     count: 1
                 },
-                intervalTypeCategory: [],
+                intervalData: [],
                 typeAlerts: 'danger',
                 alerts: null
             }

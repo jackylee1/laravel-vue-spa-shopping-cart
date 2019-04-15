@@ -58,10 +58,13 @@
 </template>
 
 <script>
+    import mixinProducts from '../../../app/public/mixins/Products';
+
     let arrayToTree = require('array-to-tree');
 
     export default {
         name: 'Filters',
+        mixins: [mixinProducts],
         computed: {
             _() {
                 return _;
@@ -69,12 +72,6 @@
             'filters': function () {
                 return this.$store.getters.filters.filter((item) => {
                     return item.show_on_index === 1;
-                });
-            },
-            treeAllFilters: function () {
-                return arrayToTree(this.$store.getters.filters, {
-                    parentProperty: 'parent_id',
-                    customID: 'id'
                 });
             }
         },
@@ -93,22 +90,6 @@
                     customID: 'id'
                 });
             },
-            productsByFilter: function (filter) {
-                let filters;
-                filters = [];
-                this.treeAllFilters.forEach((item) => {
-                    if (item.type === 1) {
-                        if (filter.parent_id === item.id) {
-                            filters.push(filter.id);
-                        }
-                        else {
-                            filters.push(item.id);
-                        }
-                    }
-                });
-
-                this.$router.push({name: 'catalog', query: { filters: filters }});
-            }
         }
     }
 </script>

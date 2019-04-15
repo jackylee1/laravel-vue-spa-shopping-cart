@@ -104,7 +104,8 @@
                                 <ul>
                                     <template v-for="filterChildren in filter.children">
                                         <li>
-                                            <a href="javascript:void(0)">{{filterChildren.name}}</a>
+                                            <a @click="productsByFilter(filterChildren)"
+                                               href="javascript:void(0)">{{filterChildren.name}}</a>
                                         </li>
                                     </template>
                                 </ul>
@@ -247,6 +248,7 @@
 </template>
 
 <script>
+    import mixinProducts from '../../app/public/mixins/Products';
     import * as ApiSubscribe from '../../app/public/api/Subscribe';
     import Errors from "./Errors";
     import VeeErrors from "./VeeErrors";
@@ -255,6 +257,7 @@
 
     export default {
         name: 'Footer',
+        mixins: [mixinProducts],
         components: {VeeErrors, Errors},
         props: ['textPages', 'linkToSocialNetworks'],
         computed: {

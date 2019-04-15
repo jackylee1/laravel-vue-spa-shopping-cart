@@ -71,7 +71,7 @@
         methods: {
             handleGetProducts: function () {
                 if (this.$router.currentRoute.name === 'catalog') {
-                    let index = this.$children.findIndex((item) => item.$vnode.tag === 'vue-component-5-CatalogLayout');
+                    let index = this.$children.findIndex((item) => item.$vnode.tag.includes('CatalogLayout'));
                     if (index !== -1) {
                         this.$children[index].getProducts();
                     }
