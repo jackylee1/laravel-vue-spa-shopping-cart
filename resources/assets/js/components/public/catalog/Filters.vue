@@ -33,13 +33,19 @@
                 return this.$store.getters.filters;
             },
             watchProps: function () {
-                return [this.currentCategory, this.currentType, this.$route.query.sort, this.filters].join();
+                return [
+                    this.currentCategory,
+                    this.currentType,
+                    this.$route.query.sort,
+                    this.filters
+                ].join();
             }
         },
         data() {
             return {
                 selectFilters: [],
-                renderArraySelect: []
+                renderArraySelect: [],
+                intervalData: [],
             }
         },
         methods: {

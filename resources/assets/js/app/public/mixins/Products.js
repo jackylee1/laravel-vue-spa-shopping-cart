@@ -24,7 +24,13 @@ export default {
                 }
             });
 
-            this.$router.push({name: 'catalog', query: { filters: filters }});
+            if (this.$router.currentRoute.name === 'catalog') {
+                this.$router.push({name: 'catalog', query: { filters: filters }});
+                this.$parent.handleGetProducts();
+            }
+            else {
+                this.$router.push({name: 'catalog', query: { filters: filters }});
+            }
         }
     }
 }
