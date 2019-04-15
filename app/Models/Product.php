@@ -159,6 +159,22 @@ class Product extends Model
         }
     }
 
+    public function scopeSearchByText($query) {
+        if (request()->filled('text')) {
+            $like_data = getLikeData(request()->get('text'));
+
+            return $query->whereRaw('lower(like_name) like ?', ["%{$like_data['str']}%"])
+                ->orWhereRaw('lower(like_name) like ?', ["%{$like_data['add_spaces']}%"])
+                ->orWhereRaw('lower(like_name) like ?', ["%{$like_data['clear_spaces']}%"])
+                ->orWhereRaw('lower(like_name) like ?', ["%{$like_data['like']}%"])
+
+                ->orWhereRaw('lower(like_preview_description) like ?', ["%{$like_data['str']}%"])
+                ->orWhereRaw('lower(like_preview_description) like ?', ["%{$like_data['add_spaces']}%"])
+                ->orWhereRaw('lower(like_preview_description) like ?', ["%{$like_data['clear_spaces']}%"])
+                ->orWhereRaw('lower(like_preview_description) like ?', ["%{$like_data['like']}%"]);
+        }
+    }
+
     public function scopeActiveForPublic($query) {
         return $query->where(function ($query) {
             $query->where('status', true);
@@ -262,44 +278,36 @@ class Product extends Model
 
         $query->activeForPublic();
 
-        $query->where(function ($query) {
-            if (request()->filled('text')) {
-                $like_data = getLikeData(request()->get('text'));
+        if (request()->filled('filters')) {
+            $request_filters = (is_array(request()->get('filters'))) ? request()->get('filters') : [request()->get('filters')];
+            $filters = Filter::getFiltersById(array_filter($request_filters));
+            $filters = $filters->map(function ($filter) {
+                if ($filter->parent_id !== 0) {
+                    return $filter->id;
+                }
+            })->filter(function ($filter) {
+                return $filter !== null;
+            });
 
-                $query->whereRaw('lower(like_name) like ?', ["%{$like_data['str']}%"])
-                    ->orWhereRaw('lower(like_name) like ?', ["%{$like_data['add_spaces']}%"])
-                    ->orWhereRaw('lower(like_name) like ?', ["%{$like_data['clear_spaces']}%"])
-                    ->orWhereRaw('lower(like_name) like ?', ["%{$like_data['like']}%"]);
-                $query->orWhereRaw('lower(like_preview_description) like ?', ["%{$like_data['str']}%"])
-                    ->orWhereRaw('lower(like_preview_description) like ?', ["%{$like_data['add_spaces']}%"])
-                    ->orWhereRaw('lower(like_preview_description) like ?', ["%{$like_data['clear_spaces']}%"])
-                    ->orWhereRaw('lower(like_preview_description) like ?', ["%{$like_data['like']}%"]);
-            }
-            if (request()->filled('filters')) {
-                $request_filters = (is_array(request()->get('filters'))) ? request()->get('filters') : [request()->get('filters')];
-                $filters = Filter::getFiltersById(array_filter($request_filters));
-                $filters = $filters->map(function ($filter) {
-                    if ($filter->parent_id !== 0) {
-                        return $filter->id;
-                    }
-                })->filter(function ($filter) {
-                    return $filter !== null;
-                });
+            if ($filters->count() > 0) {
+                $id_products = ProductInFilter::getProductIdsByFilters(
+                    $filters,
+                    (request()->filled('type')) ? request()->get('type') : null,
+                    (request()->filled('category')) ? request()->get('category') : null
+                );
 
-                if ($filters->count() > 0) {
-                    $id_products = ProductInFilter::getProductIdsByFilters(
-                        $filters,
-                        (request()->filled('type')) ? request()->get('type') : null,
-                        (request()->filled('category')) ? request()->get('category') : null
-                    );
-
+                $query->where(function ($query) use ($id_products) {
                     $query->whereIn('id', $id_products);
-                }
-                else {
-                    $query->whereTypeAndCategory();
-                }
+                    $query->searchByText();
+                });
             }
-        });
+            else {
+                $query->where(function ($query) {
+                    $query->whereTypeAndCategory();
+                    $query->searchByText();
+                });
+            }
+        }
 
         if (request()->filled('sort')) {
             switch (request()->get('sort')) {
