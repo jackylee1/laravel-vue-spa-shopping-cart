@@ -27,7 +27,7 @@
             <div class="col-4 by_it_form">
                 <div class="input-group spinner">
                     <input type="text" class="form-control"
-                           :value="valueQuantity"
+                           v-model="valueQuantity"
                            :min="minQuantity"
                            :max="maxQuantity">
                     <div class="input-group-btn-vertical">
@@ -47,7 +47,11 @@
         </div>
         <div class="row like_it">
             <div class="col-md-12 like_it_icon my-auto">
-                <a href="#" class="hrt"><i class="far fa-heart"></i> Добавить в избранное</a>
+                <a @click="productAddToFavorite(product.id)"
+                   href="javascript:void(0)" class="hrt">
+                    <i class="far fa-heart"></i>
+                    Добавить в избранное
+                </a>
             </div>
         </div>
     </div>
@@ -55,9 +59,12 @@
 
 <script>
     import RenderAvailable from "./RenderAvailable";
+    import mixinFavorite from '../../../app/public/mixins/Favorite';
+
     export default {
         name: 'AvailableAndControl',
-        props: ['product'],
+        props: ['product', 'alerts'],
+        mixins: [mixinFavorite],
         data() {
             return {
                 idAvailable: null,

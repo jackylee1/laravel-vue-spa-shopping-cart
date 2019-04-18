@@ -7,7 +7,7 @@
                         <div class="menu">
                             <ul>
                                 <li class="menu_link"><a class="menu_tab" @click="openLink('index')" href="javascript:void(0)">Главная</a></li>
-                                <li class="menu_link"><a class="menu_tab" href="#">Новинки</a></li>
+                                <li class="menu_link"><a class="menu_tab" @click="openLink('new')" href="javascript:void(0)">Новинки</a></li>
                                 <template v-for="type in this.types">
                                     <li class="menu_link">
                                         <a class="menu_tab" href="javascript:void(0)">{{type.name}}</a>
@@ -44,7 +44,7 @@
                                         </ul>
                                     </li>
                                 </template>
-                                <li class="menu_link"><a class="menu_tab" href="#">Распродажа</a></li>
+                                <li class="menu_link"><a class="menu_tab" @click="openLink('promotional')" href="javascript:void(0)">Распродажа</a></li>
                                 <template v-if="filtersOnHeader.length">
                                     <template v-for="(filter) in this.getTreeFilters(this.filtersOnHeader)">
                                         <li class="menu_link menu_brands">
@@ -155,6 +155,10 @@
                 });
             },
             openLink: function (name) {
+                if (name === 'new' || name === 'promotional') {
+                    return this.$router.push({name: 'catalog', query: { sort: name }});
+                }
+
                 return this.$router.push({name: name});
             }
         },

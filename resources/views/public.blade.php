@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="/assets/public/css/bootstrap.css">
     <link rel="stylesheet" href="/assets/public/css/normalize.min.css">
     {!! style_ts('/assets/public/css/style.css') !!}
+    {!! style_ts('/assets/public/css/account.css') !!}
     <link rel="stylesheet" href="/assets/public/css/ionicons.min.css">
     <link rel="stylesheet" href="/assets/public/css/jquery.fancybox.css">
 

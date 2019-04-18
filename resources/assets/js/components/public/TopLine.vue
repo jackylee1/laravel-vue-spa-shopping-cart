@@ -17,7 +17,20 @@
                     </div>
                     <div class="col-sm-6">
                         <div class="authotisation">
-                            <a class="acount" href="#">Мой аккаунт</a> <a class="login" href="#">Вход/Регистрация</a>
+                            <template v-if="isLoggedIn">
+                                <router-link :to="{name: 'user_information'}">
+                                    <a class="acount"
+                                       href="javascript:void(0)">
+                                        Мой аккаунт
+                                    </a>
+                                </router-link>
+                            </template>
+                            <template v-else>
+                                <a class="login"
+                                   href="#">
+                                    Вход/Регистрация
+                                </a>
+                            </template>
                         </div>
                     </div>
                 </div>
@@ -28,6 +41,11 @@
 
 <script>
     export default {
-        name: 'TopLine'
+        name: 'TopLine',
+        computed: {
+            isLoggedIn: function () {
+                return this.$store.getters.isLoggedIn;
+            }
+        }
     }
 </script>

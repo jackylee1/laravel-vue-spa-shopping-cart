@@ -32,9 +32,15 @@
         name: 'Layout',
         mounted() {
             if (!this.loadCommon) {
-                ApiCommon.get().then((res) => {
+                ApiCommon.get({
+                    cart_key: localStorage.getItem('cart_key'),
+                    favorite_key: localStorage.getItem('favorite_key'),
+                }).then((res) => {
                     this.linkToSocialNetworks = res.data.link_to_social_networks;
                     this.textPages = res.data.text_pages;
+
+                    localStorage.setItem('cart_key', res.data.cart.key);
+                    localStorage.setItem('favorite_key', res.data.favorite.key);
 
                     this.$store.commit('updateLinkToSocialNetworks', this.linkToSocialNetworks);
                     this.$store.commit('updateTextPages', this.textPages);
@@ -42,6 +48,8 @@
                     this.$store.commit('updateFilters', res.data.filters);
                     this.$store.commit('updateSizeTables', res.data.size_tables);
                     this.$store.commit('updateNewProducts', res.data.new_products);
+                    this.$store.commit('updateCart', res.data.cart);
+                    this.$store.commit('updateFavorite', res.data.favorite);
 
                     this.$store.commit('updateLoadCommon', true);
                 });

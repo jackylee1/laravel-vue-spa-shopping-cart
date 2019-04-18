@@ -27,8 +27,15 @@
                                         <span>{{product.current_price}} грн</span>
                                     </p>
                                     <div class="add_to_cart">
-                                        <a href="javascript:void(0)" class="btn"><i class="fas fa-shopping-cart"></i>Купить</a>
-                                        <a href="javascript:void(0)" class="hrt"><i class="far fa-heart"></i></a>
+                                        <router-link :to="{ name: 'product', params: {slug: product.slug} }">
+                                            <a href="javascript:void(0)" class="btn">
+                                                <i class="fas fa-shopping-cart"></i>Купить
+                                            </a>
+                                        </router-link>
+                                        <a @click="productAddToFavorite(product.id)"
+                                           href="javascript:void(0)" class="hrt">
+                                            <i class="far fa-heart"></i>
+                                        </a>
                                     </div>
                                     <div class="quick_view">
                                         <a href="javascript:void(0)"
@@ -86,12 +93,19 @@
                                                         </div>
                                                     </div>
                                                     <div class="add_to_cart">
-                                                        <a href="javascript:void(0)" class="btn"><i class="fas fa-shopping-cart"></i>Купить</a>
-                                                        <a href="javascript:void(0)" class="hrt"><i class="far fa-heart"></i></a>
+                                                        <a href="javascript:void(0)" class="btn">
+                                                            <i class="fas fa-shopping-cart"></i>
+                                                            Купить
+                                                        </a>
+                                                        <a @click="productAddToFavorite(quickViewProduct.id)"
+                                                           href="javascript:void(0)" class="hrt">
+                                                            <i class="far fa-heart"></i>
+                                                        </a>
                                                     </div>
                                                 </div>
                                                 <div class="col-12 more_details centered">
-                                                    <a href="javascript:void(0)">Просмотеть детали...</a>
+                                                    <a @click="viewProduct(quickViewProduct.slug)"
+                                                       href="javascript:void(0)">Просмотеть детали...</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -107,9 +121,12 @@
 </template>
 
 <script>
+    import mixinFavorite from '../../../app/public/mixins/Favorite';
     import RenderAvailable from "../product/RenderAvailable";
+
     export default {
         name: 'Products',
+        mixins: [mixinFavorite],
         components: {RenderAvailable},
         props: ['products'],
         computed: {
@@ -134,6 +151,11 @@
                 }
                 this.quickViewProduct = product;
             },
+            viewProduct: function (slug) {
+                $('#quick_view1').modal('hide');
+                $('.modal-backdrop').removeClass('modal-backdrop');
+                this.$router.push({ name: 'product', params: { slug: slug } });
+            }
         },
         watch: {
             'idAvailable': function () {

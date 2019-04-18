@@ -1,3 +1,3 @@
-export function get() {
-    return axios.post('/api/common');
+export function get(request = {}) {
+    return axios.post('/api/common', request);
 }

@@ -2,6 +2,8 @@ import IndexLayout from "../../components/public/index/Layout";
 import TextPageLayout from "../../components/public/text_page/Layout";
 import CatalogLayout from "../../components/public/catalog/Layout";
 import ProductLayout from "../../components/public/product/Layout";
+import InformationLayout from "../../components/public/user/Information";
+import FavoriteLayout from "../../components/public/user/Favorite";
 
 export const routes = [
     {
@@ -32,6 +34,27 @@ export const routes = [
         path: '/product/:slug',
         component: ProductLayout,
         name: 'product',
+        meta: {
+            requiresAuth: false,
+        }
+    },
+    {
+        path: '/user',
+        component: InformationLayout,
+        name: 'user_information',
+        meta: {
+            requiresAuth: true,
+        }
+    },
+    {
+        path: '/user/favorite',
+        component: FavoriteLayout,
+        name: 'user_favorite'
+    },
+    {
+        path: '/login',
+        component: IndexLayout,
+        name: 'login',
         meta: {
             requiresAuth: false,
         }

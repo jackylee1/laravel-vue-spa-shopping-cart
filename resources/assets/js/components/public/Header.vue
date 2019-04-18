@@ -23,9 +23,14 @@
                         </form>
                     </div>
                     <div class="col-sm-1">
-                        <a href="#">
-                            <img class="heart" src="/assets/public/images/cart/heart_white.png" alt="Heart">
-                        </a>
+                        <router-link :to="{ name: 'user_favorite' }">
+                            <a href="javascript:void(0)">
+                                <img class="heart" src="/assets/public/images/cart/heart_white.png" alt="Heart">
+                                <span v-if="countFavoriteProducts > 0" class="badge">
+                                {{countFavoriteProducts}}
+                            </span>
+                            </a>
+                        </router-link>
                     </div>
                     <div class="col-sm-1">
                         <div class="dropdown">
@@ -118,15 +123,23 @@
         name: 'Header',
         mounted() {
             this.textSearch = this.searchByText;
+
+            if (this.favoriteStore !== null) {
+                this.countFavoriteProducts = this.favoriteStore.products.length;
+            }
         },
         computed: {
             searchByText: function () {
                 return this.$store.getters.searchByText;
             },
+            favoriteStore: function () {
+                return this.$store.getters.favorite;
+            }
         },
         data() {
             return {
-                textSearch: null
+                textSearch: null,
+                countFavoriteProducts: 0
             }
         },
         methods: {
@@ -135,11 +148,20 @@
                 this.$router.push({ query: Object.assign({}, this.$route.query, { text: this.textSearch }) });
 
                 this.$emit('getProducts');
+            },
+            setCountFavoriteProducts: function () {
+                this.countFavoriteProducts = this.favoriteStore.products.length;
             }
         },
         watch: {
             'searchByText': function (value) {
                 this.textSearch = value;
+            },
+            'favoriteStore': function () {
+                this.setCountFavoriteProducts();
+            },
+            'favoriteStore.products': function () {
+                this.setCountFavoriteProducts();
             }
         }
     }

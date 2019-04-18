@@ -27,9 +27,14 @@
     export default {
         name: 'Sort',
         props: ['currentCategory', 'currentType', 'selectFilters'],
+        mounted() {
+            if (this.$route.query.sort !== undefined && this.$route.query.sort !== null) {
+                this.sort = this.$route.query.sort;
+            }
+        },
         data() {
             return {
-                sort: (this.$route.query.sort !== undefined && this.$route.query.sort !== null) ? this.$route.query.sort : 'all',
+                sort: 'all',
                 options: [
                     {value: 'all', name: 'все товары'},
                     {value: 'from_cheap_to_expensive', name: 'от дешевых к дорогим'},
@@ -41,6 +46,9 @@
             }
         },
         watch: {
+            '$route.query.sort': function (value) {
+                this.sort = value;
+            },
             'sort': function (value) {
                 this.$router.push({ query: Object.assign({}, this.$route.query, { sort: value }) });
 

@@ -12,7 +12,19 @@ Route::group([], function () {
     Route::post('subscribe', 'Api\SubscribeController@store');
     Route::get('products', 'Api\ProductController@products');
     Route::get('product/view/{slug}', 'Api\ProductController@view');
+
+    Route::prefix('favorite')->group(function () {
+        Route::post('/', 'Api\FavoriteController@store');
+        Route::post('/destroy', 'Api\FavoriteController@destroy');
+    });
 });
+
+Route::group(['middleware' => ['jwt.auth']], function () {
+    Route::resource('user', 'Api\UserController')->only([
+        'update'
+    ]);
+});
+
 
 Route::group(['middleware' => ['jwt.auth', 'only-administration'], 'prefix' => 'admin'], function () {
     Route::post('/users/handle_promotional_code', 'Api\Admin\UserController@handlePromotionalCode');

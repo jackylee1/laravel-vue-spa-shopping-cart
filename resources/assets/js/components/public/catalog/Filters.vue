@@ -71,16 +71,18 @@
 
                 let filters = (queryFilters !== undefined && queryFilters.length > 0) ? queryFilters : this.mergeFilters();
 
-                filters.forEach((filter, index) => {
-                    if (queryFilters !== undefined
-                        && queryFilters[index] !== undefined
-                        && filter.filter_id !== parseInt(queryFilters[index])) {
-                        this.selectFilters.push(queryFilters[index]);
-                    }
-                    else {
-                        this.selectFilters.push(filter.filter_id);
-                    }
-                });
+                if (filters.length) {
+                    filters.forEach((filter, index) => {
+                        if (queryFilters !== undefined
+                            && queryFilters[index] !== undefined
+                            && filter.filter_id !== parseInt(queryFilters[index])) {
+                            this.selectFilters.push(queryFilters[index]);
+                        }
+                        else {
+                            this.selectFilters.push(filter.filter_id);
+                        }
+                    });
+                }
 
                 this.setFiltersToUrl();
             },

@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+use Propaganistas\LaravelPhone\PhoneNumber;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,6 +16,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(191);
+
+        PhoneNumber::make('0950000000', 'UA');
+        PhoneNumber::make('380950000000', 'UA');
+        PhoneNumber::make('80950000000', 'UA');
     }
 
     /**

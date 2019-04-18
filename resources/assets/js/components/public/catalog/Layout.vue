@@ -7,6 +7,7 @@
         <section class="wrapper">
             <div class="container">
                 <Errors :type="typeAlerts"
+                        v-on:clearAlerts="clearAlerts"
                         :alerts="alerts"/>
 
                 <Sort v-on:getProducts="getProducts"
@@ -33,7 +34,7 @@
 
 <script>
     import * as ApiProducts from '../../../app/public/api/Products';
-
+    import mixinAlerts from '../../../app/public/mixins/Alerts';
     import Breadcrumbs from "../Breadcrumbs";
     import Products from "./Products";
     import Sort from "./Sort";
@@ -44,6 +45,7 @@
 
     export default {
         name: 'CatalogLayout',
+        mixins: [mixinAlerts],
         mounted() {
             this.$scrollTo('#top_line', 650);
 
@@ -52,6 +54,8 @@
             }
 
             this.$watch(vm => [vm.currentType, vm.currentCategory], val => {
+                this.isLoading = true;
+
                 this.$scrollTo('#top_line', 650);
 
                 let intervalId = setInterval(() => {
@@ -100,9 +104,7 @@
                     totalPages: 1,
                     count: 1
                 },
-                intervalData: [],
-                typeAlerts: 'danger',
-                alerts: null
+                intervalData: []
             }
         },
         components: {
@@ -130,9 +132,9 @@
             getProducts: function (page = 1) {
                 console.log('getProducts | call method');
 
-                this.$router.push({ query: Object.assign({}, this.$route.query, { page: page }) });
-
                 this.isLoading = true;
+
+                this.$router.push({ query: Object.assign({}, this.$route.query, { page: page }) });
 
                 if (this.$router.currentRoute.fullPath === this.urlPrevious) {
                     this.setProducts(this.productsStore);

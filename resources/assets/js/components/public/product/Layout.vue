@@ -6,6 +6,10 @@
 
         <section class="item_card">
             <div class="container">
+                <Errors :type="typeAlerts"
+                        v-on:clearAlerts="clearAlerts"
+                        :alerts="alerts"/>
+
                 <template v-if="product !== null">
                     <div class="row">
                         <Images :product="product"/>
@@ -22,7 +26,8 @@
                                 <span class="red_price">{{product.current_price}} <span class="currency">грн</span></span>
                             </h3>
 
-                            <AvailableAndControl :product="product"/>
+                            <AvailableAndControl :product="product"
+                                                 :alerts="alerts"/>
                         </div>
                     </div>
                     <div class="row description_title">
@@ -46,7 +51,7 @@
 
 <script>
     import * as jquery from '../../../app/public/src/jquery';
-
+    import mixinAlerts from '../../../app/public/mixins/Alerts';
     import * as ApiProducts from '../../../app/public/api/Products';
     import Comments from "./Comments";
     import Description from "./Description";
@@ -56,10 +61,13 @@
     import AvailableAndControl from "./AvailableAndControl";
     import Breadcrumbs from "../Breadcrumbs";
     import VueLoading from "vue-loading-overlay/src/js/Component";
+    import Errors from "../Errors";
 
     export default {
         name: 'ProductLayout',
+        mixins: [mixinAlerts],
         components: {
+            Errors,
             VueLoading,
             Breadcrumbs, AvailableAndControl, FilterImages, Images, RecommendedProducts, Description, Comments},
         created() {
@@ -68,20 +76,17 @@
         mounted() {
             if (this.products.data !== undefined && this.products.data.length) {
                 this.product = this.products.data.find((item) => item.slug === this.$router.currentRoute.params.slug);
-                this.isLoading = false;
+
+                if (this.product === undefined) {
+                    return this.productView();
+                }
+
                 this.handleSetBreadcrumbs();
+
+                this.isLoading = false;
             }
             else {
-                ApiProducts.view(this.$router.currentRoute.params.slug).then((res) => {
-                    if (res.data.status === 'success') {
-                        this.product = res.data.product;
-                        setTimeout(() => {
-                            this.isLoading = false;
-                        }, 800);
-                    }
-                }).catch((error) => {
-                    this.isLoading = true;
-                });
+                this.productView();
             }
 
             this.$scrollTo('#top_line', 650);
@@ -108,10 +113,22 @@
                 product: null,
                 breadcrumbs: [],
                 isLoading: true,
-                dataLoad: []
+                dataLoad: [],
             }
         },
         methods: {
+            productView: function () {
+                ApiProducts.view(this.$router.currentRoute.params.slug).then((res) => {
+                    if (res.data.status === 'success') {
+                        this.product = res.data.product;
+                        setTimeout(() => {
+                            this.isLoading = false;
+                        }, 800);
+                    }
+                }).catch((error) => {
+                    this.isLoading = true;
+                });
+            },
             setBreadcrumbs: function (typeId, categoryId) {
                 let type = this.types.find((item) => item.id === typeId);
                 if (type !== undefined) {

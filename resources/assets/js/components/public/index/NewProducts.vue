@@ -40,8 +40,13 @@
                                                                 <span>{{product.current_price}} грн</span>
                                                             </p>
                                                             <div class="add_to_cart">
-                                                                <a href="#" class="btn"><i class="fas fa-shopping-cart"></i>Купить</a>
-                                                                <a href="#" class="hrt"><i class="far fa-heart"></i></a>
+                                                                <router-link :to="{ name: 'product', params: {slug: product.slug} }">
+                                                                    <a href="javascript:void(0)" class="btn">
+                                                                        <i class="fas fa-shopping-cart"></i>Купить
+                                                                    </a>
+                                                                </router-link>
+                                                                <a @click="productAddToFavorite(product.id)"
+                                                                   href="javascript:void(0)" class="hrt"><i class="far fa-heart"></i></a>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -84,7 +89,9 @@
                             </p>
                             <div class="add_to_cart">
                                 <a href="#" class="btn"><i class="fas fa-shopping-cart"></i>Купить</a>
-                                <a href="#" class="hrt"><i class="far fa-heart"></i></a>
+                                <a @click="productAddToFavorite(product.id)"
+                                   href="javascript:void(0)" class="hrt">
+                                    <i class="far fa-heart"></i></a>
                             </div>
                         </div>
                     </div>
@@ -95,9 +102,12 @@
 </template>
 
 <script>
+    import mixinFavorite from '../../../app/public/mixins/Favorite';
+
     export default {
         name: 'NewProducts',
         props: ['products'],
+        mixins: [mixinFavorite],
         computed: {
             _() {
                 return _;

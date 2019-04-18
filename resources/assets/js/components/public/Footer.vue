@@ -1,6 +1,6 @@
 <template>
     <div>
-        <section class="social">
+        <section v-if="currentRouteName !== 'user_information'" class="social">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6 sociality">
@@ -274,7 +274,8 @@
         },
         data() {
             return {
-                email: ''
+                email: '',
+                currentRouteName: this.$router.currentRoute.name
             }
         },
         methods: {
@@ -322,6 +323,11 @@
                     parentProperty: 'parent_id',
                     customID: 'id'
                 });
+            }
+        },
+        watch: {
+            '$route': function (route) {
+                this.currentRouteName = route.name;
             }
         }
     }

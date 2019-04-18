@@ -21,8 +21,16 @@ export default {
         sizeTables: [],
         newProducts: [],
         searchByText: null,
+        cart: null,
+        favorite: null
     },
     getters: {
+        currentUser: function (state) {
+            return state.currentUser;
+        },
+        isLoggedIn(state) {
+            return state.isLoggedIn;
+        },
         sliders: function (state) {
             return state.sliders;
         },
@@ -67,9 +75,21 @@ export default {
         },
         searchByText: function (state) {
             return state.searchByText;
+        },
+        cart: function (state) {
+            return state.cart;
+        },
+        favorite: function (state) {
+            return state.favorite;
         }
     },
     mutations: {
+        loginSuccess: function (state, payload) {
+            state.isLoggedIn = true;
+            state.currentUser = Object.assign({}, payload.user, {token: payload.access_token});
+
+            localStorage.setItem('user', JSON.stringify(state.currentUser));
+        },
         updateSliders: function(state, payload) {
             state.sliders = payload;
         },
@@ -114,6 +134,12 @@ export default {
         },
         updateSearchByText: function (state, payload) {
             state.searchByText = payload;
+        },
+        updateCart: function (state, payload) {
+            state.cart = payload;
+        },
+        updateFavorite: function (state, payload) {
+            state.favorite = payload;
         }
     }
 };

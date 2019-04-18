@@ -64,6 +64,10 @@ use Illuminate\Support\Facades\DB;
  * @property-read \App\Models\ProductMainType $mainType
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product allSelectAndCurrentPrice()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product whereTypeAndCategory()
+ * @property-read \App\Models\ProductSizeTable $sizeTable
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product activeForPublic()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product newProducts()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product searchByText()
  */
 class Product extends Model
 {
