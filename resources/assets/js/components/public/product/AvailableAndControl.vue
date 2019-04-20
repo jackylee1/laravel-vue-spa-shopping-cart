@@ -31,13 +31,13 @@
                            :min="minQuantity"
                            :max="maxQuantity">
                     <div class="input-group-btn-vertical">
-                        <button class="btn btn-default" type="button">+</button>
-                        <button class="btn btn-default" type="button">-</button>
+                        <button @click="incValueQuantity()" class="btn btn-default" type="button">+</button>
+                        <button @click="descValueQuantity()" class="btn btn-default" type="button">-</button>
                     </div>
                 </div>
             </div>
             <div class="col-8 add_to_cart my-auto">
-                <a href="#"><i class="fas fa-shopping-cart"></i>КУПИТЬ</a>
+                <a @click="addProductToCart()" href="javascript:void(0)"><i class="fas fa-shopping-cart"></i>КУПИТЬ</a>
             </div>
         </div>
         <div class="row by_it">
@@ -60,43 +60,12 @@
 <script>
     import RenderAvailable from "./RenderAvailable";
     import mixinFavorite from '../../../app/public/mixins/Favorite';
+    import mixinCart from '../../../app/public/mixins/Cart';
 
     export default {
         name: 'AvailableAndControl',
         props: ['product', 'alerts'],
-        mixins: [mixinFavorite],
-        data() {
-            return {
-                idAvailable: null,
-                maxQuantity: 999,
-                valueQuantity: 1,
-                minQuantity: 1
-            }
-        },
-        methods: {
-            changeIdAvailable: function (id) {
-                this.idAvailable = id;
-            },
-        },
-        watch: {
-            'idAvailable': function () {
-                let available = this.product.available.find((item) => item.id === this.idAvailable);
-                this.maxQuantity = available.quantity;
-                console.log(this.maxQuantity);
-            },
-            'valueQuantity': function () {
-                console.log(this.valueQuantity);
-                if (this.valueQuantity > this.maxQuantity) {
-                    this.valueQuantity = this.maxQuantity;
-
-                    this.$notify({
-                        type: 'info',
-                        title: 'Максимальное количество',
-                        text: `по этим параметрам равно: ${this.maxQuantity}`
-                    });
-                }
-            }
-        },
+        mixins: [mixinFavorite, mixinCart],
         components: {RenderAvailable}
     }
 </script>

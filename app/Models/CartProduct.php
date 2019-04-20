@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 /**
  * App\Models\CartProduct
@@ -39,4 +40,23 @@ class CartProduct extends Model
         'product_available_id' => 'integer',
         'quantity' => 'integer'
     ];
+
+    protected $with = ['product'];
+
+    public function product() {
+        return $this->hasOne('App\Models\Product', 'id', 'product_id')->addSelect([
+            'products.id',
+            'products.article',
+            'products.slug',
+            'products.name',
+            'products.price',
+            'products.discount_price',
+            'products.discount_start',
+            'products.discount_end',
+            'products.main_image',
+            'products.status',
+            'products.date_inclusion',
+            DB::raw('IF(discount_price IS NOT NULL, discount_price, price) as current_price')
+        ])->activeForPublic();
+    }
 }

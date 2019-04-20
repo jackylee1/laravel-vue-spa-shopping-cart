@@ -51,6 +51,17 @@
                     this.$store.commit('updateCart', res.data.cart);
                     this.$store.commit('updateFavorite', res.data.favorite);
 
+                    if (res.data.user !== undefined) {
+                        let token = null;
+                        if (this.$store.getters.currentUser !== null) {
+                            token = this.$store.getters.currentUser.token;
+                        }
+                        this.$store.commit('loginSuccess', {
+                            user: res.data.user,
+                            access_token: token
+                        });
+                    }
+
                     this.$store.commit('updateLoadCommon', true);
                 });
             }

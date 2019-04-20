@@ -34,6 +34,10 @@ class UserGroup extends Model
 
     protected $fillable = ['name', 'like_name', 'discount'];
 
+    protected $casts = [
+        'discount' => 'integer'
+    ];
+
     public function users() {
         return $this->hasMany('App\Models\UserInGroup');
     }

@@ -10,7 +10,7 @@
                         v-on:clearAlerts="clearAlerts"
                         :alerts="alerts"/>
 
-                <template v-if="product !== null">
+                <template v-if="product !== null && product !== undefined">
                     <div class="row">
                         <Images :product="product"/>
 
@@ -21,13 +21,14 @@
                             <p>Код товара:<span class="code">{{product.article}}</span></p>
                             <h3>
                                 <template v-if="product.discount_price !== null">
-                                    <strike>{{product.price}} <span class="currency">грн</span></strike>
+                                    <strike>{{price}} <span class="currency">грн</span></strike>
                                 </template>
-                                <span class="red_price">{{product.current_price}} <span class="currency">грн</span></span>
+                                <span class="red_price">{{currentPrice}} <span class="currency">грн</span></span>
                             </h3>
 
                             <AvailableAndControl :product="product"
-                                                 :alerts="alerts"/>
+                                                 :alerts="alerts"
+                                                 v-on:setProductPrice="setProductPrice"/>
                         </div>
                     </div>
                     <div class="row description_title">
@@ -81,6 +82,9 @@
                     return this.productView();
                 }
 
+                this.price = this.product.price;
+                this.currentPrice = this.product.current_price;
+
                 this.handleSetBreadcrumbs();
 
                 this.isLoading = false;
@@ -114,13 +118,22 @@
                 breadcrumbs: [],
                 isLoading: true,
                 dataLoad: [],
+                price: 0,
+                currentPrice: 0
             }
         },
         methods: {
+            setProductPrice: function (quantity = 1) {
+                this.price = this.product.price * quantity;
+                this.currentPrice = this.product.current_price * quantity;
+            },
             productView: function () {
                 ApiProducts.view(this.$router.currentRoute.params.slug).then((res) => {
                     if (res.data.status === 'success') {
                         this.product = res.data.product;
+                        this.price = this.product.price;
+                        this.currentPrice = this.product.current_price;
+
                         setTimeout(() => {
                             this.isLoading = false;
                         }, 800);

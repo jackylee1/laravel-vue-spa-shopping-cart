@@ -17,6 +17,12 @@ Route::group([], function () {
         Route::post('/', 'Api\FavoriteController@store');
         Route::post('/destroy', 'Api\FavoriteController@destroy');
     });
+
+    Route::prefix('cart')->group(function () {
+        Route::post('add_product', 'Api\CartController@addProduct');
+        Route::post('delete_product', 'Api\CartController@deleteProduct');
+        Route::post('update_quantity_product', 'Api\CartController@updateQuantityProduct');
+    });
 });
 
 Route::group(['middleware' => ['jwt.auth']], function () {

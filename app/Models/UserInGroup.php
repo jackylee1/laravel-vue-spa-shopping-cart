@@ -28,6 +28,12 @@ class UserInGroup extends Model
 
     public $timestamps = false;
     protected $fillable = ['user_id', 'user_group_id'];
+
+    protected $with = ['userGroup'];
+
+    public function userGroup() {
+        return $this->hasOne('App\Models\UserGroup', 'id', 'user_group_id');
+    }
     
     public function user() {
         return $this->hasOne('App\User', 'id', 'user_id');

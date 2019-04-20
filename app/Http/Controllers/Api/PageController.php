@@ -58,6 +58,10 @@ class PageController extends Controller
         $this->setData('cart', Cart::getItem());
         $this->setData('favorite', Favorite::getItem());
 
+        if (auth()->check()) {
+            $this->setData('user', auth()->user());
+        }
+
         return response()->json($this->data);
     }
 

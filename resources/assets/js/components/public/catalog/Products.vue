@@ -93,7 +93,9 @@
                                                         </div>
                                                     </div>
                                                     <div class="add_to_cart">
-                                                        <a href="javascript:void(0)" class="btn">
+                                                        <a @click="addProductToCart()"
+                                                           href="javascript:void(0)"
+                                                           class="btn">
                                                             <i class="fas fa-shopping-cart"></i>
                                                             Купить
                                                         </a>
@@ -122,11 +124,12 @@
 
 <script>
     import mixinFavorite from '../../../app/public/mixins/Favorite';
+    import mixinCart from '../../../app/public/mixins/Cart';
     import RenderAvailable from "../product/RenderAvailable";
 
     export default {
         name: 'Products',
-        mixins: [mixinFavorite],
+        mixins: [mixinFavorite, mixinCart],
         components: {RenderAvailable},
         props: ['products'],
         computed: {
@@ -137,29 +140,22 @@
         data() {
             return {
                 quickViewProduct: null,
-                idAvailable: null,
+                product: null
             }
         },
         methods: {
-            changeIdAvailable: function (id) {
-                this.idAvailable = id;
-            },
             quickView: function (product) {
                 this.idAvailable = _.first(product.available);
                 if (this.idAvailable !== undefined) {
                     this.idAvailable = this.idAvailable.id;
                 }
                 this.quickViewProduct = product;
+                this.product = product;
             },
             viewProduct: function (slug) {
                 $('#quick_view1').modal('hide');
                 $('.modal-backdrop').removeClass('modal-backdrop');
                 this.$router.push({ name: 'product', params: { slug: slug } });
-            }
-        },
-        watch: {
-            'idAvailable': function () {
-                console.log(this.idAvailable)
             }
         }
     }

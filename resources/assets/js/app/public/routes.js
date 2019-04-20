@@ -4,6 +4,7 @@ import CatalogLayout from "../../components/public/catalog/Layout";
 import ProductLayout from "../../components/public/product/Layout";
 import InformationLayout from "../../components/public/user/Information";
 import FavoriteLayout from "../../components/public/user/Favorite";
+import CartLayout from "../../components/public/cart/Layout";
 
 export const routes = [
     {
@@ -58,5 +59,13 @@ export const routes = [
         meta: {
             requiresAuth: false,
         }
-    }
+    },
+    {
+        path: '/cart',
+        component: CartLayout,
+        name: 'cart',
+        meta: {
+            requiresAuth: false,
+        }
+    },
 ];

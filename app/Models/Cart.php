@@ -57,7 +57,7 @@ class Cart extends Model
     protected $with = ['products'];
 
     public function products() {
-        return $this->hasMany('App\Models\CartProduct', 'cart_id', 'id');
+        return $this->hasMany('App\Models\CartProduct', 'cart_id', 'id')->orderByDesc('id');
     }
 
     private static function getWhereQuery() {
@@ -79,5 +79,25 @@ class Cart extends Model
         $cart = self::firstOrCreateModel();
 
         return $cart->fresh();
+    }
+
+    protected function addProduct() {
+        $cart = self::getItem();
+
+        return $cart->products()->create([
+            'product_id' => request()->get('product_id'),
+            'product_available_id' => request()->get('product_available_id'),
+            'quantity' => request()->get('quantity'),
+        ])->fresh();
+    }
+
+    protected function deleteProduct() {
+        self::getItem()->products()->where('id', request()->get('id'))->delete();
+    }
+
+    protected function updateQuantityProduct() {
+        self::getItem()->products()->where('id', request()->get('id'))->first()->update([
+            'quantity' => request()->get('quantity')
+        ]);
     }
 }
