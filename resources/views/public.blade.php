@@ -33,6 +33,14 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
           crossorigin="anonymous">
     <link href="https://unpkg.com/ionicons@4.4.6/dist/css/ionicons.min.css" rel="stylesheet">
+
+    <style type="text/css">
+        .fb_iframe_widget span, iframe.fb_iframe_widget_lift,
+        .fb_iframe_widget iframe {
+            width: 100% !important;
+            min-height: 300px !important;
+        }
+    </style>
 </head>
 
 <body>

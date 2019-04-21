@@ -27,8 +27,8 @@
             }
             else {
                 setTimeout(() => {
-                    FB.XFBML.parse(document.getElementById('fb_comments'));
-                }, 3000);
+                    FB.XFBML.parse();
+                }, 2000);
             }
         },
         methods: {
