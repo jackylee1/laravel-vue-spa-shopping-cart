@@ -46,7 +46,7 @@
                     this.$router.push({path: '/admin'});
                 }).catch((error) => {
                     this.$store.commit('loginFailed', {error});
-                    this.error = 'E-mail или Пароль верны';
+                    this.error = 'Вы ввели неверный E-mail или Пароль';
                 })
 			},
 

@@ -1,6 +1,7 @@
 require('./bootstrap');
 
 import Vue from 'vue';
+import VueCookies from 'vue-cookies';
 import VueRouter from 'vue-router';
 import Vuex from 'vuex';
 import { routes } from './app/public/routes';
@@ -15,6 +16,7 @@ import Fragment from 'vue-fragment';
 import VueLoading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
 
+Vue.use(VueCookies);
 Vue.use(VeeValidate);
 Validator.localize('ru', VeeValidateRu);
 Vue.use(VueScrollTo);

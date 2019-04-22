@@ -13,11 +13,17 @@ export function login(credentials) {
 }
 
 export function getLocalUser() {
-    const userStr = localStorage.getItem('user');
+    let user = localStorage.getItem('user');
+    let jsonParse = true;
 
-    if (!userStr) {
+    if (user === null) {
+        user = window.$cookies.get('user');
+        jsonParse = false;
+    }
+
+    if (!user) {
         return null;
     }
 
-    return JSON.parse(userStr);
+    return (jsonParse) ? JSON.parse(user) : user;
 }

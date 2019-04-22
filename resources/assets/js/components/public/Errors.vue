@@ -4,13 +4,13 @@
             <template v-if="alerts instanceof Object">
                 <template v-for="errors in alerts">
                     <template v-for="message in errors">
-                        <strong>{{message}}</strong><br>
+                        <p>{{message}}</p>
                     </template>
                 </template>
             </template>
 
-            <template v-else="alerts instanceof String">
-                <strong>{{alerts}}</strong>
+            <template v-if="typeof alerts === 'string'">
+                <p>{{alerts}}</p>
             </template>
         </div>
     </div>

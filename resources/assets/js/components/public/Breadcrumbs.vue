@@ -1,6 +1,6 @@
 <template>
     <div>
-        <section v-if="items !== undefined && items.length" class="breadcrumbs">
+        <section v-if="items !== undefined" class="breadcrumbs">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">

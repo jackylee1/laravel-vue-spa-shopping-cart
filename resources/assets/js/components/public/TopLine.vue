@@ -26,10 +26,12 @@
                                 </router-link>
                             </template>
                             <template v-else>
-                                <a class="login"
-                                   href="#">
-                                    Вход/Регистрация
-                                </a>
+                                <router-link :to="{ name: 'login' }">
+                                    <a class="login"
+                                       href="javascript:void(0)">
+                                        Вход/Регистрация
+                                    </a>
+                                </router-link>
                             </template>
                         </div>
                     </div>

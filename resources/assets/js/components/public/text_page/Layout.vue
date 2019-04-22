@@ -1,11 +1,17 @@
 <template>
-    <div v-if="textPage !== null">
+    <div>
         <Breadcrumbs :items="breadcrumbs"/>
 
         <section class="item_card">
             <div class="container">
-                <h1 class="text-center">{{textPage.title}}</h1>
-                <div v-html="textPage.description"></div>
+                <Errors :type="typeAlerts"
+                        v-on:clearAlerts="clearAlerts"
+                        :alerts="alerts"/>
+
+                <template v-if="textPage !== null">
+                    <h1 class="text-center">{{textPage.title}}</h1>
+                    <div v-html="textPage.description"></div>
+                </template>
             </div>
         </section>
     </div>
@@ -13,9 +19,12 @@
 
 <script>
     import Breadcrumbs from "../Breadcrumbs";
+    import mixinAlerts from '../../../app/public/mixins/Alerts';
+    import Errors from "../Errors";
 
     export default {
         name: 'TextPageLayout',
+        mixins: [mixinAlerts],
         mounted() {
             this.setData();
         },
@@ -34,6 +43,7 @@
             }
         },
         components: {
+            Errors,
             Breadcrumbs
         },
         methods: {
@@ -46,9 +56,19 @@
                             this.textPage = page.data_page[index];
                         }
                     });
-                    this.breadcrumbs = [
-                        {'title': this.textPage.title}
-                    ];
+                    if (this.textPage !== null) {
+                        this.breadcrumbs = [
+                            {'title': this.textPage.title}
+                        ];
+                    }
+                    else {
+                        this.alerts = 'Текстовая страницы с таким адресом не существует';
+                        this.$notify({
+                            type: 'error',
+                            title: 'Ошибка',
+                            text: 'при получении текстовой страницы'
+                        });
+                    }
                 }
             }
         },

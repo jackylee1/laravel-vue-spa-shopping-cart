@@ -7,6 +7,7 @@ use App\Models\UserPromotionalCode;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
@@ -212,5 +213,16 @@ class User extends Authenticatable implements JWTSubject
 
     protected function getPromotionalCodes() {
         return User::find(request()->get('user_id'))->promotionalCodes()->get();
+    }
+
+    protected function registration() {
+        return User::create([
+            'user_name' => request()->get('name'),
+            'user_surname' => request()->get('surname'),
+            'user_patronymic' => request()->get('patronymic'),
+            'email' => request()->get('email'),
+            'phone' => request()->get('phone'),
+            'password' => Hash::make(request()->get('password'))
+        ])->fresh();
     }
 }

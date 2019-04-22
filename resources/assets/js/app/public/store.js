@@ -88,7 +88,19 @@ export default {
             state.isLoggedIn = true;
             state.currentUser = Object.assign({}, payload.user, {token: payload.access_token});
 
-            localStorage.setItem('user', JSON.stringify(state.currentUser));
+            if (payload.remember) {
+                localStorage.setItem('user', JSON.stringify(state.currentUser));
+            }
+            else {
+                window.$cookies.set('user', state.currentUser);
+            }
+        },
+        logout: function (state) {
+            localStorage.removeItem('user');
+            window.$cookies.remove('user');
+
+            state.isLoggedIn = false;
+            state.currentUser = null;
         },
         updateSliders: function(state, payload) {
             state.sliders = payload;

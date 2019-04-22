@@ -69,6 +69,7 @@ class AuthController extends Controller
             'access_token' => $token,
             'user' => $this->guard()->user(),
             'token_type' => 'bearer',
+            'remember' => (request()->filled('remember') && request()->get('remember')) ? true : false,
             'expires_in' => auth('api')->factory()->getTTL() * 60
         ]);
     }

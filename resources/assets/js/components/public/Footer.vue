@@ -1,6 +1,6 @@
 <template>
     <div>
-        <section v-if="currentRouteName !== 'user_information'" class="social">
+        <section v-if="showSocialLinks" class="social">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6 sociality">
@@ -270,6 +270,11 @@
                 return this.$store.getters.filters.filter((item) => {
                     return item.show_on_footer === 1;
                 });
+            },
+            showSocialLinks: function () {
+                return this.currentRouteName !== 'user_information'
+                    && this.currentRouteName !== 'login'
+                    && this.currentRouteName !== 'registration';
             }
         },
         data() {

@@ -23,6 +23,10 @@ Route::group([], function () {
         Route::post('delete_product', 'Api\CartController@deleteProduct');
         Route::post('update_quantity_product', 'Api\CartController@updateQuantityProduct');
     });
+
+    Route::prefix('user')->group(function () {
+        Route::post('registration', 'Api\UserController@registration');
+    });
 });
 
 Route::group(['middleware' => ['jwt.auth']], function () {

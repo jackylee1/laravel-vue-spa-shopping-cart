@@ -139,7 +139,13 @@
                         }, 800);
                     }
                 }).catch((error) => {
-                    this.isLoading = true;
+                    this.alerts = error.response.data.errors;
+                    this.$notify({
+                        type: 'error',
+                        title: 'Ошибка',
+                        text: 'при получении товара'
+                    });
+                    this.isLoading = false;
                 });
             },
             setBreadcrumbs: function (typeId, categoryId) {

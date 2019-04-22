@@ -6,7 +6,7 @@
 
         <section class="wrapper">
             <div class="container">
-                <Errors :type="typeAlerts"
+                <Errors  style="margin-top: 10px" :type="typeAlerts"
                         v-on:clearAlerts="clearAlerts"
                         :alerts="alerts"/>
 
@@ -165,6 +165,7 @@
                                 title: 'Ошибка',
                                 text: 'при выполнеении запроса'
                             });
+                            this.isLoading = false;
                         });
                     }, 1200);
                 }

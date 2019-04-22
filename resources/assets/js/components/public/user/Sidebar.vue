@@ -14,6 +14,12 @@
                     <a href="javascript:void(0)"> <i class="fas fa-list-alt"></i>Список избранного</a>
                 </router-link>
             </li>
+            <template v-if="this.isLoggedIn">
+                <li>
+                    <a @click="logout"
+                       href="javascript:void(0)"><i class="fas fa-sign-out-alt"></i>Выйти</a>
+                </li>
+            </template>
         </ul>
     </div>
 </template>
@@ -24,6 +30,12 @@
         computed: {
             isLoggedIn: function () {
                 return this.$store.getters.isLoggedIn;
+            }
+        },
+        methods: {
+            logout: function () {
+                this.$store.commit('logout');
+                this.$router.push({ name: 'login' });
             }
         }
     }

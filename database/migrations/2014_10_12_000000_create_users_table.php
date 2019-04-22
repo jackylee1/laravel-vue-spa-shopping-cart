@@ -29,8 +29,6 @@ class CreateUsersTable extends Migration
              * 1 - надежный
              * 2 - не надежный
              */
-            $table->char('like_name');
-            $table->char('like_email');
             $table->rememberToken();
             $table->timestamps();
         });

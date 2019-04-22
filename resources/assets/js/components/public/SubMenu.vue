@@ -10,14 +10,18 @@
                         </ul>
                     </div>
                     <div class="col-2 heart my-auto">
-                        <a href="#">
-                            <img src="/assets/public/assets/public/images/cart/heart.png" alt="">
-                        </a>
+                        <router-link :to="{ name: 'user_favorite' }">
+                            <a href="javascript:void(0)">
+                                <img src="/assets/public/assets/public/images/cart/heart.png" alt="">
+                            </a>
+                        </router-link>
                     </div>
                     <div class="col-2 carte my-auto">
-                        <a href="checkout.html">
-                            <img src="/assets/public/assets/public/images/cart/cart.png" alt="">
-                        </a>
+                        <router-link :to="{ name: 'cart' }">
+                            <a href="javascript:void(0)">
+                                <img src="/assets/public/assets/public/images/cart/cart.png" alt="">
+                            </a>
+                        </router-link>
                     </div>
                     <div class="col-2 search my-auto">
                         <a data-toggle="collapse" href="#collapseSubmenu" role="button" aria-expanded="false" aria-controls="collapseSubmenu">

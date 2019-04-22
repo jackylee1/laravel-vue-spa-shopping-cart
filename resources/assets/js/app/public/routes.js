@@ -5,6 +5,8 @@ import ProductLayout from "../../components/public/product/Layout";
 import InformationLayout from "../../components/public/user/Information";
 import FavoriteLayout from "../../components/public/user/Favorite";
 import CartLayout from "../../components/public/cart/Layout";
+import LoginAndRegistrationLayout from "../../components/public/user/LoginAndRegistration";
+import NotFound from "../../components/public/text_page/NotFound";
 
 export const routes = [
     {
@@ -53,14 +55,6 @@ export const routes = [
         name: 'user_favorite'
     },
     {
-        path: '/login',
-        component: IndexLayout,
-        name: 'login',
-        meta: {
-            requiresAuth: false,
-        }
-    },
-    {
         path: '/cart',
         component: CartLayout,
         name: 'cart',
@@ -68,4 +62,28 @@ export const routes = [
             requiresAuth: false,
         }
     },
+    {
+        path: '/login',
+        component: LoginAndRegistrationLayout,
+        name: 'login',
+        meta: {
+            requiresAuth: false,
+        }
+    },
+    {
+        path: '/registration',
+        component: LoginAndRegistrationLayout,
+        name: 'registration',
+        meta: {
+            requiresAuth: false,
+        }
+    },
+    {
+        path: '/404',
+        name: '404',
+        component: NotFound,
+    }, {
+        path: '*',
+        redirect: '/404'
+    }
 ];

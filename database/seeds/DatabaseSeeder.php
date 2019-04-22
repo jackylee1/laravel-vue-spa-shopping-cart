@@ -34,8 +34,6 @@ class UsersTableSeeder extends Seeder {
             'phone' => '380950000000',
             'password' => Hash::make('admin'),
             'status' => 'administration',
-            'like_name' => prepareForLike('admin'),
-            'like_email' => prepareForLike('admin@admin'),
             'created_at' => $datetime,
             'updated_at' => $datetime
         ];

@@ -193,7 +193,12 @@ export default {
             state.loading = false;
             state.currentUser = Object.assign({}, payload.user, {token: payload.access_token});
 
-            localStorage.setItem("user", JSON.stringify(state.currentUser));
+            if (payload.remember) {
+                localStorage.setItem('user', JSON.stringify(state.currentUser));
+            }
+            else {
+                window.$cookies.set('user', state.currentUser);
+            }
         },
         loginFailed: function (state, payload) {
             state.loading = false;
@@ -201,6 +206,8 @@ export default {
         },
         logout: function (state) {
             localStorage.removeItem('user');
+            window.$cookies.remove('user');
+
             state.isLoggedIn = false;
             state.currentUser = null;
         },
