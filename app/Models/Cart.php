@@ -96,8 +96,11 @@ class Cart extends Model
     }
 
     protected function updateQuantityProduct() {
-        self::getItem()->products()->where('id', request()->get('id'))->first()->update([
+        $cart_product = self::getItem()->products()->where('id', request()->get('id'))->first();
+        $cart_product->update([
             'quantity' => request()->get('quantity')
         ]);
+
+        return $cart_product;
     }
 }

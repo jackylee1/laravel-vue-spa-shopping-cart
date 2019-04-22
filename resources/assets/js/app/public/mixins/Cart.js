@@ -20,10 +20,14 @@ export default {
             minQuantity: 1,
             cartProducts: [],
             totalPrice: null,
-            totalPriceUserGroup: null
+            totalPriceDiscount: null
         }
     },
     methods: {
+        setPrices: function () {
+            this.setTotalPrice();
+            this.setTotalPriceDiscount();
+        },
         changeIdAvailable: function (id) {
             this.idAvailable = id;
         },
@@ -99,6 +103,8 @@ export default {
                         text: 'был успешно обновлены'
                     });
 
+                    this.setPrices();
+
                     return true;
                 }
             }).catch((error) => {
@@ -112,10 +118,33 @@ export default {
                 return false;
             });
         },
-        setTotalPriceUserGroup: function () {
-            this.totalPriceUserGroup = null;
-            if (this.currentUser !== null && this.currentUser.group !== null) {
-                this.totalPriceUserGroup = this.totalPrice * ((100 - this.currentUser.group.user_group.discount) / 100);
+        setTotalPriceDiscount: function () {
+            this.totalPriceDiscount = null;
+            if (this.currentUser !== null) {
+                let discount = 0;
+                if (this.currentUser.discount !== null && this.currentUser.discount > 0) {
+                    discount = this.currentUser.discount;
+                }
+                else if (this.currentUser.group !== null) {
+                    discount = this.currentUser.group.user_group.discount;
+                }
+                if (discount > 0) {
+                    let price = 0;
+                    let discountPrice = 0;
+
+                    this.cartProducts.forEach((product) => {
+                        if (product.product.discount_price === null) {
+                            price += product.product.price * product.quantity;
+                        }
+                        else {
+                            discountPrice += product.product.discount_price * product.quantity;
+                        }
+                    });
+
+                    if (price > 0) {
+                        this.totalPriceDiscount = (price * ((100 - discount) / 100)) + discountPrice;
+                    }
+                }
             }
         },
         setTotalPrice: function () {
@@ -161,12 +190,10 @@ export default {
         },
         'cart': function () {
             this.cartProducts = this.cart.products;
-            this.setTotalPrice();
-            this.setTotalPriceUserGroup();
+            this.setPrices();
         },
         'cart.products': function () {
-            this.setTotalPrice();
-            this.setTotalPriceUserGroup();
+            this.setPrices();
         }
     },
 }

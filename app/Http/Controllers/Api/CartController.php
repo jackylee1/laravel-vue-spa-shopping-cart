@@ -76,8 +76,11 @@ class CartController extends Controller
         ]);
         $request->validate($this->validate_rules, [], $this->validate_attributes);
 
-        Cart::updateQuantityProduct();
+        $cart_product = Cart::updateQuantityProduct();
 
-        return response()->json(['status' => 'success']);
+        return response()->json([
+            'status' => 'success',
+            'cart_product' => $cart_product
+        ]);
     }
 }

@@ -35,9 +35,11 @@
                         <tbody>
                         <tr v-for="product in cartProducts">
                             <th scope="row c_foto">
-                                <img v-if="product.product.main_image !== null"
-                                     :src="`/app/public/images/products/${product.product.main_image.preview}`"
-                                     :alt="product.product.name">
+                                <router-link :to="{name: 'product', params: {slug: product.product.slug}}">
+                                    <img v-if="product.product.main_image !== null"
+                                         :src="`/app/public/images/products/${product.product.main_image.preview}`"
+                                         :alt="product.product.name">
+                                </router-link>
                             </th>
                             <td class="lefted description_item">
                                 <router-link :to="{name: 'product', params: {slug: product.product.slug}}">
@@ -103,35 +105,60 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="row cart_description_mobile">
+                <div v-for="product in cartProducts" class="row cart_description_mobile">
                     <div class="col-5">
-                        <img src="images/items/t-shirt.png" alt="">
+                        <router-link :to="{name: 'product', params: {slug: product.product.slug}}">
+                            <img v-if="product.product.main_image !== null"
+                                 :src="`/app/public/images/products/${product.product.main_image.preview}`"
+                                 :alt="product.product.name">
+                        </router-link>
                     </div>
                     <div class="col-7 item_in_cart">
-                        <a href="#" class="bold">Рубашка поло Nike Grey XXL </a>
-                        <p>Размер: XXL</p>
-                        <p>Цвет: Серый</p>
-                        <p><strike>256 грн </strike> 198 грн</p>
+                        <router-link :to="{name: 'product', params: {slug: product.product.slug}}">
+                            <a href="javascript:void(0)" class="bold">{{product.product.name}}</a>
+                        </router-link>
+                        <template v-for="filter in getAvailable(product.product_available_id, product.product).filters">
+                            <p v-html="getParentAndSelectFilter(filter.filter_id)"></p>
+                        </template>
+                        <p>Цена:
+                            <strike v-if="product.product.discount_price !== null">
+                                {{product.product.price}} грн
+                            </strike>
+                            {{product.product.current_price}} грн
+                        </p>
+                        <p>Сумма
+                            <strike v-if="product.product.discount_price !== null">
+                                {{product.product.price * product.quantity}} грн
+                            </strike>
+                            {{product.product.current_price * product.quantity}} грн
+                        </p>
                         <div class="input-group spinner">
-                            <input type="text" class="form-control" value="1" min="1" max="100">
+                            <input type="text" class="form-control"
+                                   v-model="product.quantity"
+                                   disabled>
                             <div class="input-group-btn-vertical">
-                                <button class="btn btn-default" type="button">+</button>
-                                <button class="btn btn-default" type="button">-</button>
+                                <button @click="btnChangeCartQuantity(product, 'inc')"
+                                        class="btn btn-default"
+                                        type="button">+</button>
+                                <button @click="btnChangeCartQuantity(product, 'desc')"
+                                        class="btn btn-default"
+                                        type="button">-</button>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <hr>
+
                 <div v-if="totalPrice > 0" class="row lets_checkout">
                     <div class="col-12">
                         <p class="items_sum_text">
                             ТОВАРОВ НА СУММУ:
                             <span class="items_sum_numb">{{totalPrice}} грн</span>
                         </p>
-                        <p v-if="totalPriceUserGroup !== null" class="items_sum_text">
-                            С учетом скидки группы пользователей:
-                            <span class="items_sum_numb">{{totalPriceUserGroup}} грн</span>
+                        <p v-if="totalPriceDiscount !== null" class="items_sum_text">
+                            С учетом персональной скидки или скидки группы пользователей:
+                            <span class="items_sum_numb">{{totalPriceDiscount}} грн</span>
                         </p>
                         <a href="#">ОФОРМИТЬ ЗАКАЗ</a>
                     </div>
@@ -157,8 +184,7 @@
             });
             if (this.cart !== null && this.cart.products.length > 0) {
                 this.cartProducts = this.cart.products;
-                this.setTotalPrice();
-                this.setTotalPriceUserGroup();
+                this.setPrices();
             }
         },
         data() {
@@ -194,9 +220,6 @@
                                 product.quantity += 1;
                             }
                         }
-
-                        this.setTotalPrice();
-                        this.setTotalPriceUserGroup();
                     });
 
                 }
