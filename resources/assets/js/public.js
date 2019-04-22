@@ -2,6 +2,7 @@ require('./bootstrap');
 
 import Vue from 'vue';
 import VueCookies from 'vue-cookies';
+import vSelect from 'vue-select';
 import VueRouter from 'vue-router';
 import Vuex from 'vuex';
 import { routes } from './app/public/routes';
@@ -15,6 +16,7 @@ import VueScrollTo from 'vue-scrollto';
 import Fragment from 'vue-fragment';
 import VueLoading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
+import 'vue-select/dist/vue-select.css';
 
 Vue.use(VueCookies);
 Vue.use(VeeValidate);
@@ -27,6 +29,7 @@ Vue.use(Fragment.Plugin);
 Vue.use(VueLoading, {
     color: 'red'
 });
+Vue.component('v-select', vSelect);
 
 const store = new Vuex.Store(StoreData);
 

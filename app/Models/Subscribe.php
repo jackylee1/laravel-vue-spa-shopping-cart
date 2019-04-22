@@ -47,6 +47,12 @@ class Subscribe extends Model
         return $this->workWithModel(new Subscribe());
     }
 
+    public static function firstOrCreateModel($email) {
+        return Subscribe::firstOrCreate([
+            'email' => $email
+        ]);
+    }
+
     protected function updateModel($id) {
         return $this->workWithModel($this->getSubscribe($id));
     }

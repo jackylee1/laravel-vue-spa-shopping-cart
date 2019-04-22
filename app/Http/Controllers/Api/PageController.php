@@ -6,6 +6,7 @@ use App\Models\Cart;
 use App\Models\Favorite;
 use App\Models\Filter;
 use App\Models\LinkToSocialNetwork;
+use App\Models\OrderPaymentMethod;
 use App\Models\Product;
 use App\Models\SizeTable;
 use App\Models\Slider;
@@ -57,6 +58,7 @@ class PageController extends Controller
         $this->setData('new_products', Product::getNewProducts());
         $this->setData('cart', Cart::getItem());
         $this->setData('favorite', Favorite::getItem());
+        $this->setData('payment_methods', OrderPaymentMethod::methods());
 
         if (auth()->check()) {
             $this->setData('user', auth()->user());

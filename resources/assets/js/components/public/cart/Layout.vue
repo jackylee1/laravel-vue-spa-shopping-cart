@@ -160,7 +160,7 @@
                             С учетом персональной скидки или скидки группы пользователей:
                             <span class="items_sum_numb">{{totalPriceDiscount}} грн</span>
                         </p>
-                        <a href="#">ОФОРМИТЬ ЗАКАЗ</a>
+                        <a @click="openCheckout" href="javascript:void(0)">ОФОРМИТЬ ЗАКАЗ</a>
                     </div>
                 </div>
             </div>
@@ -193,6 +193,9 @@
             }
         },
         methods: {
+            openCheckout: function () {
+                this.$router.push({ name: 'checkout' });
+            },
             btnChangeCartQuantity: function (product, operation) {
                 let oldQuantity = product.quantity;
 

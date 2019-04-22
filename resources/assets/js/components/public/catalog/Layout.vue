@@ -1,6 +1,6 @@
 <template>
     <div>
-        <VueLoading :active.sync="isLoading" color="#df1e30"></VueLoading>
+        <VueLoading :active.sync="isLoading" color="#df1e30"/>
 
         <Breadcrumbs :items="breadcrumbs"/>
 

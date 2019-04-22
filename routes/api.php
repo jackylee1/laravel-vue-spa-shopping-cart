@@ -22,6 +22,13 @@ Route::group([], function () {
         Route::post('add_product', 'Api\CartController@addProduct');
         Route::post('delete_product', 'Api\CartController@deleteProduct');
         Route::post('update_quantity_product', 'Api\CartController@updateQuantityProduct');
+        Route::post('update', 'Api\CartController@update');
+    });
+
+    Route::prefix('nova_poshta')->group(function () {
+        Route::post('areas', 'Api\NovaPoshtaAreaController@get');
+        Route::post('cities', 'Api\NovaPoshtaCityController@get');
+        Route::post('warehouses', 'Api\NovaPoshtaWarehouseController@get');
     });
 
     Route::prefix('user')->group(function () {

@@ -274,6 +274,7 @@
             showSocialLinks: function () {
                 return this.currentRouteName !== 'user_information'
                     && this.currentRouteName !== 'login'
+                    && this.currentRouteName !== 'checkout'
                     && this.currentRouteName !== 'registration';
             }
         },

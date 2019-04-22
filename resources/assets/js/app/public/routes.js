@@ -5,6 +5,8 @@ import ProductLayout from "../../components/public/product/Layout";
 import InformationLayout from "../../components/public/user/Information";
 import FavoriteLayout from "../../components/public/user/Favorite";
 import CartLayout from "../../components/public/cart/Layout";
+import CheckoutLayout from "../../components/public/cart/Checkout";
+import ConfirmLayout from "../../components/public/cart/Confirm";
 import LoginAndRegistrationLayout from "../../components/public/user/LoginAndRegistration";
 import NotFound from "../../components/public/text_page/NotFound";
 
@@ -58,6 +60,22 @@ export const routes = [
         path: '/cart',
         component: CartLayout,
         name: 'cart',
+        meta: {
+            requiresAuth: false,
+        }
+    },
+    {
+        path: '/checkout',
+        component: CheckoutLayout,
+        name: 'checkout',
+        meta: {
+            requiresAuth: false,
+        }
+    },
+    {
+        path: '/conform',
+        component: ConfirmLayout,
+        name: 'confirm',
         meta: {
             requiresAuth: false,
         }

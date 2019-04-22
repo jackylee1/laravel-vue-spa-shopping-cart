@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Subscribe;
 use App\Traits\ValidateTrait;
 use App\User;
 use Illuminate\Http\Request;
@@ -110,6 +111,11 @@ class UserController extends Controller
         $request->validate($this->validate_rules, $this->validate_messages, $this->validate_attributes);
 
         $user = User::registration();
+
+        if ($request->filled('subscribe') && $request->subscribe) {
+            $subscribe = Subscribe::firstOrCreateModel($user->email);
+        }
+
         $token = auth('api')->attempt(['email' => $user->email, 'password' => $request->password]);
 
         return response()->json([

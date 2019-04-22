@@ -50,6 +50,7 @@
                     this.$store.commit('updateNewProducts', res.data.new_products);
                     this.$store.commit('updateCart', res.data.cart);
                     this.$store.commit('updateFavorite', res.data.favorite);
+                    this.$store.commit('updatePaymentMethods', res.data.payment_methods);
 
                     if (res.data.user !== undefined) {
                         let token = null;

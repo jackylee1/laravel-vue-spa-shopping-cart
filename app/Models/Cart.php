@@ -42,16 +42,22 @@ class Cart extends Model
         'key',
         'user_id',
         'user_promotional_id',
+        'order_payment_method_id',
         'user_name',
         'user_surname',
         'user_patronymic',
         'phone',
-        'email'
+        'email',
+        'delivery',
+        'area_id',
+        'city_id',
+        'warehouse_id'
     ];
 
     protected $casts = [
         'user_id' => 'integer',
         'user_promotional_id' => 'integer',
+        'order_payment_method_id' => 'integer',
     ];
 
     protected $with = ['products'];
@@ -102,5 +108,27 @@ class Cart extends Model
         ]);
 
         return $cart_product;
+    }
+
+    protected function updateModel() {
+        $model = self::firstOrCreateModel();
+
+        $data = [
+            'user_id' => (auth()->check()) ? auth()->user()->id : null,
+            'order_payment_method_id' => request()->get('order_payment_method_id'),
+            'user_name' => request()->get('user_name'),
+            'user_surname' => request()->get('user_surname'),
+            'user_patronymic' => request()->get('user_patronymic'),
+            'phone' => request()->get('phone'),
+            'email' => request()->get('email'),
+            'delivery' => request()->get('delivery'),
+            'area_id' => request()->get('area_id'),
+            'city_id' => request()->get('city_id'),
+            'warehouse_id' => request()->get('warehouse_id'),
+        ];
+
+        $model->update($data);
+
+        return $model->fresh();
     }
 }

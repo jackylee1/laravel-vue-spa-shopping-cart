@@ -22,7 +22,11 @@ export default {
         newProducts: [],
         searchByText: null,
         cart: null,
-        favorite: null
+        favorite: null,
+        paymentMethods: [],
+        areas: [],
+        cities: [],
+        warehouses: [],
     },
     getters: {
         currentUser: function (state) {
@@ -81,6 +85,18 @@ export default {
         },
         favorite: function (state) {
             return state.favorite;
+        },
+        paymentMethods: function (state) {
+            return state.paymentMethods;
+        },
+        areas: function (state) {
+            return state.areas;
+        },
+        cities: function (state) {
+            return state.cities;
+        },
+        warehouses: function (state) {
+            return state.warehouses;
         }
     },
     mutations: {
@@ -152,6 +168,18 @@ export default {
         },
         updateFavorite: function (state, payload) {
             state.favorite = payload;
+        },
+        updatePaymentMethods: function (state, payload) {
+            return state.paymentMethods = payload;
+        },
+        updateAreas: function (state, payload) {
+            state.areas = payload;
+        },
+        updateCities: function (state, payload) {
+            state.cities = payload;
+        },
+        updateWarehouses: function (state, payload) {
+            state.warehouses = payload;
         }
     }
 };

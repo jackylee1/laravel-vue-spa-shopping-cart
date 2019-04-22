@@ -50,7 +50,7 @@ class OrderPaymentMethod extends Model
         return $this->workWithModel(OrderPaymentMethod::find($id));
     }
 
-    protected function methods() {
+    public static function methods() {
         return OrderPaymentMethod::orderBy('sorting_order', 'asc')->get();
     }
 
