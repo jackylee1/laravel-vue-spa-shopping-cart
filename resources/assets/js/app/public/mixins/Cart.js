@@ -12,6 +12,12 @@ export default {
             return this.$store.getters.currentUser;
         }
     },
+    mounted() {
+        if (this.cart !== null) {
+            this.cartProducts = this.cart.products;
+            this.setPrices();
+        }
+    },
     data() {
         return {
             idAvailable: null,
@@ -24,6 +30,13 @@ export default {
         }
     },
     methods: {
+        notAvailable: function () {
+            if (this.idAvailable === null) {
+                this.alerts = 'Товара нет в наличии';
+                return true;
+            }
+            return false;
+        },
         setPrices: function () {
             this.setTotalPrice();
             this.setTotalPriceDiscount();
@@ -32,9 +45,15 @@ export default {
             this.idAvailable = id;
         },
         incValueQuantity: function () {
+            if (this.notAvailable()) {
+                return false;
+            }
             this.valueQuantity += 1;
         },
         descValueQuantity: function () {
+            if (this.notAvailable()) {
+                return false;
+            }
             this.valueQuantity -= 1;
         },
         deleteProductFromCart: function (id) {
@@ -64,6 +83,9 @@ export default {
             });
         },
         addProductToCart: function () {
+            if (this.notAvailable()) {
+                return false;
+            }
             ApiCart.addProduct({
                 cart_key: this.cart.key,
                 product_id: this.product.id,
@@ -120,38 +142,53 @@ export default {
         },
         setTotalPriceDiscount: function () {
             this.totalPriceDiscount = null;
+            let discount = 0;
+
             if (this.currentUser !== null) {
-                let discount = 0;
                 if (this.currentUser.discount !== null && this.currentUser.discount > 0) {
                     discount = this.currentUser.discount;
                 }
                 else if (this.currentUser.group !== null) {
                     discount = this.currentUser.group.user_group.discount;
                 }
-                if (discount > 0) {
-                    let price = 0;
-                    let discountPrice = 0;
+            }
 
-                    this.cartProducts.forEach((product) => {
+            if (this.cart.promotional_code !== null) {
+                let sumDiscount = discount + this.cart.promotional_code.discount;
+                discount = (sumDiscount > 100) ? 100 : sumDiscount;
+            }
+
+            if (discount > 0) {
+                let price = 0;
+                let discountPrice = 0;
+
+                this.cartProducts.forEach((product) => {
+                    let available = this.getAvailable(product.product_available_id, product.product);
+                    if (available.quantity > 0) {
                         if (product.product.discount_price === null) {
                             price += product.product.price * product.quantity;
                         }
                         else {
                             discountPrice += product.product.discount_price * product.quantity;
                         }
-                    });
-
-                    if (price > 0) {
-                        this.totalPriceDiscount = (price * ((100 - discount) / 100)) + discountPrice;
                     }
+                });
+
+                if (price > 0) {
+                    this.totalPriceDiscount = discount === 100 ? 0 : (price * ((100 - discount) / 100)) + discountPrice;
                 }
             }
         },
         setTotalPrice: function () {
             this.totalPrice = null;
-            this.cart.products.forEach((item) => {
-                this.totalPrice += item.product.current_price * item.quantity;
-            });
+            if (this.cart !== null) {
+                this.cart.products.forEach((item) => {
+                    let available = this.getAvailable(item.product_available_id, item.product);
+                    if (available.quantity > 0) {
+                        this.totalPrice += item.product.current_price * item.quantity;
+                    }
+                });
+            }
         },
         getAvailable: function(availableId, product) {
             return product.available.find((item) => item.id === availableId);
@@ -173,10 +210,10 @@ export default {
             }
         },
         'valueQuantity': function () {
-            if (this.valueQuantity < 1) {
-                this.valueQuantity = 1;
+            if (this.valueQuantity < 0) {
+                this.valueQuantity = 0;
             }
-            else if (this.valueQuantity > this.maxQuantity) {
+            if (this.valueQuantity > this.maxQuantity) {
                 this.valueQuantity = this.maxQuantity;
 
                 this.$notify({
@@ -193,6 +230,9 @@ export default {
             this.setPrices();
         },
         'cart.products': function () {
+            this.setPrices();
+        },
+        'cart.promotional_code': function () {
             this.setPrices();
         }
     },

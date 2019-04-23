@@ -35,13 +35,23 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Cart whereUserSurname($value)
  * @mixin \Eloquent
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\CartProduct[] $products
+ * @property int|null $order_payment_method_id
+ * @property int|null $delivery
+ * @property string|null $area_id
+ * @property string|null $city_id
+ * @property string|null $warehouse_id
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Cart whereAreaId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Cart whereCityId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Cart whereDelivery($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Cart whereOrderPaymentMethodId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Cart whereWarehouseId($value)
  */
 class Cart extends Model
 {
     protected $fillable = [
         'key',
         'user_id',
-        'user_promotional_id',
+        'user_promotional_code_id',
         'order_payment_method_id',
         'user_name',
         'user_surname',
@@ -51,19 +61,48 @@ class Cart extends Model
         'delivery',
         'area_id',
         'city_id',
-        'warehouse_id'
+        'warehouse_id',
+        'note'
     ];
 
     protected $casts = [
         'user_id' => 'integer',
-        'user_promotional_id' => 'integer',
+        'user_promotional_code_id' => 'integer',
         'order_payment_method_id' => 'integer',
+        'delivery' => 'integer',
     ];
 
-    protected $with = ['products'];
+    protected $with = [
+        'products',
+        'npArea',
+        'npCity',
+        'npWarehouse',
+        'paymentMethod',
+        'promotionalCode'
+    ];
+
+    public function promotionalCode() {
+        return $this->hasOne('App\Models\PromotionalCode', 'id', 'user_promotional_code_id');
+    }
 
     public function products() {
         return $this->hasMany('App\Models\CartProduct', 'cart_id', 'id')->orderByDesc('id');
+    }
+
+    public function npArea() {
+        return $this->hasOne('App\Models\NovaPoshtaArea', 'ref', 'area_id');
+    }
+
+    public function npCity() {
+        return $this->hasOne('App\Models\NovaPoshtaCity', 'ref', 'city_id');
+    }
+
+    public function npWarehouse() {
+        return $this->hasOne('App\Models\NovaPoshtaWarehouse', 'ref', 'warehouse_id');
+    }
+
+    public function paymentMethod() {
+        return $this->hasOne('App\Models\OrderPaymentMethod', 'id', 'order_payment_method_id');
     }
 
     private static function getWhereQuery() {
@@ -78,7 +117,9 @@ class Cart extends Model
     }
 
     public static function firstOrCreateModel() {
-        return Cart::firstOrCreate(self::getWhereQuery());
+        $cart = Cart::firstOrCreate(self::getWhereQuery());
+
+        return $cart;
     }
 
     public static function getItem() {
@@ -113,6 +154,10 @@ class Cart extends Model
     protected function updateModel() {
         $model = self::firstOrCreateModel();
 
+        if ($model->email !== null) {
+            Subscribe::firstOrCreateModel($model->email);
+        }
+
         $data = [
             'user_id' => (auth()->check()) ? auth()->user()->id : null,
             'order_payment_method_id' => request()->get('order_payment_method_id'),
@@ -125,10 +170,21 @@ class Cart extends Model
             'area_id' => request()->get('area_id'),
             'city_id' => request()->get('city_id'),
             'warehouse_id' => request()->get('warehouse_id'),
+            'note' => request()->get('note')
         ];
 
         $model->update($data);
 
         return $model->fresh();
+    }
+
+    protected function updatePromotionalCode($promotional_code_id) {
+        $cart = self::firstOrCreateModel();
+
+        $cart->user_promotional_code_id = $promotional_code_id;
+
+        $cart->save();
+
+        return $cart->fresh();
     }
 }

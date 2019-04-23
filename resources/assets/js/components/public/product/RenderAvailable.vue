@@ -1,6 +1,6 @@
 <template>
     <div>
-        <template v-for="(available, index) in availableModels">
+        <template v-for="(available, index) in _.filter(availableModels, (item) => item.quantity > 0)">
             <label @click="changeIdAvailable(available.id)"
                    :class="(index === 0) ? 'btn btn-primary active' : 'btn btn-primary'">
                 <input type="radio"
@@ -24,13 +24,19 @@
         name: 'RenderAvailable',
         props: ['availableModels', 'idAvailable'],
         computed: {
+            _() {
+                return _;
+            },
             filters: function () {
                 return this.$store.getters.filters;
             }
         },
         mounted() {
-            if (this.availableModels[0] !== undefined) {
-                this.$emit('changeIdAvailable', this.availableModels[0].id);
+            if (this.availableModels.length > 0) {
+                let available = _.find(this.availableModels, function (x) { return x.quantity > 0 });
+                if (available !== null && available !== undefined) {
+                    this.$emit('changeIdAvailable', available.id);
+                }
             }
         },
         methods: {

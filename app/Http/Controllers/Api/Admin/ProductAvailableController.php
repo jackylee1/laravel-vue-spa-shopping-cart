@@ -16,7 +16,7 @@ class ProductAvailableController extends Controller
             'product_id' => 'required|integer|exists:products,id',
             'filters' => 'required|array',
             'filters.*' => 'integer|exists:filters,id',
-            'quantity' => 'required|integer|between:1,999999'
+            'quantity' => 'required|integer|between:0,999999'
         ]);
         $this->setValidateAttribute([
             'filters' => 'Фильтра',
@@ -34,10 +34,9 @@ class ProductAvailableController extends Controller
     }
 
     public function updateQuantity(Request $request) {
-        \Debugbar::info($request->all());
         $this->setValidateRule([
             'id' => 'required|integer|exists:product_availables,id',
-            'quantity' => 'required|integer|between:1,999999'
+            'quantity' => 'required|integer|between:0,999999'
         ]);
         $this->setValidateAttribute([
             'quantity' => 'Количество'

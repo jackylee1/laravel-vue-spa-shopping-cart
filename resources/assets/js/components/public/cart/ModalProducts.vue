@@ -55,8 +55,8 @@
                                 </h5>
                             </div>
                             <div class="col-12 righted">
-                                <h5 v-if="totalPriceDiscount !== null" class="item_sum">
-                                    <span>С учетом персональной скидки или скидки группы пользователей:</span> {{totalPriceDiscount}} грн
+                                <h5 v-if="totalPriceDiscount > 0" class="item_sum">
+                                    <span>Сумма с учетом пользовательских скидок:</span> {{totalPriceDiscount}} грн
                                 </h5>
                             </div>
                         </div>

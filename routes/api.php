@@ -23,6 +23,11 @@ Route::group([], function () {
         Route::post('delete_product', 'Api\CartController@deleteProduct');
         Route::post('update_quantity_product', 'Api\CartController@updateQuantityProduct');
         Route::post('update', 'Api\CartController@update');
+        Route::post('update_promotional_code', 'Api\CartController@updatePromotionalCode');
+    });
+
+    Route::prefix('order')->group(function () {
+        Route::post('create', 'Api\OrderController@create');
     });
 
     Route::prefix('nova_poshta')->group(function () {

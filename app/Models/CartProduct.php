@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\DB;
  * @mixin \Eloquent
  * @property int $cart_id
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CartProduct whereCartId($value)
+ * @property-read \App\Models\Product $product
  */
 class CartProduct extends Model
 {

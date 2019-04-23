@@ -247,6 +247,8 @@
             }
         },
         mounted() {
+            this.$scrollTo('#top_line', 650);
+
             if (this.cartStorage !== null) {
                 setTimeout(() => {
                     this.cart = this.cartStorage;
@@ -323,7 +325,7 @@
 
                                 setTimeout(() => {
                                     this.$router.push({name: 'confirm'});
-                                }, 1500)
+                                }, 1000)
                             }
                         }).catch((error) => {
                             this.alerts = error.response.data.errors;
@@ -350,19 +352,19 @@
                 }
             },
             setUserData: function () {
-                if (this.cart.user_name === null) {
+                if (this.cart.user_name === null && this.currentUser !== null) {
                     this.cart.user_name = this.currentUser.user_name;
                 }
-                if (this.cart.user_surname === null) {
+                if (this.cart.user_surname === null && this.currentUser !== null) {
                     this.cart.user_surname = this.currentUser.user_surname;
                 }
-                if (this.cart.user_patronymic === null) {
+                if (this.cart.user_patronymic === null && this.currentUser !== null) {
                     this.cart.user_patronymic = this.currentUser.user_patronymic;
                 }
-                if (this.cart.phone === null) {
+                if (this.cart.phone === null && this.currentUser !== null) {
                     this.cart.phone = this.currentUser.phone;
                 }
-                if (this.cart.email === null) {
+                if (this.cart.email === null && this.currentUser !== null) {
                     this.cart.email = this.currentUser.email;
                 }
             }

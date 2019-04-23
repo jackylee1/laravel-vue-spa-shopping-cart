@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\Cart;
 use App\Models\NovaPoshtaArea;
 use App\Models\ProductAvailable;
+use App\Models\PromotionalCode;
 use App\Traits\ValidateTrait;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -92,12 +93,13 @@ class CartController extends Controller
             'user_name' => 'required|string|max:50',
             'user_surname' => 'nullable|string|max:50',
             'user_patronymic' => 'nullable|string|max:50',
-            'phone' => 'required|phone:UA',
-            'email' => 'nullable|email',
+            'phone' => 'required|phone:UA|max:191',
+            'email' => 'nullable|email|max:191',
             'subscribe' => 'nullable|boolean',
             'delivery' => 'required|in:1',
-            'area_id' => 'required|string',
-            'city_id' => 'required|string',
+            'area_id' => 'required|string|max:191',
+            'city_id' => 'required|string|max:191',
+            'note' => 'nullable|string|max:2000',
             'warehouse_id' => [
                 'required',
                 'string',
@@ -130,11 +132,54 @@ class CartController extends Controller
             'delivery' => 'Способ доставки',
             'area_id' => 'Область',
             'city_id' => 'Населенный пункт',
-            'warehouse_id' => 'Отделение'
+            'warehouse_id' => 'Отделение',
+            'note' => 'Комментарий к заказу'
         ]);
         $request->validate($this->validate_rules, [], $this->validate_attributes);
 
         $cart = Cart::updateModel();
+
+        return response()->json([
+            'status' => 'success',
+            'cart' => $cart
+        ]);
+    }
+
+    public function updatePromotionalCode(Request $request) {
+        $promotional_code = null;
+
+        $this->setValidateRule([
+            'cart_key' => 'required|string|exists:carts,key',
+            'code' => [
+                'nullable',
+                'string',
+                function ($attribute, $value, $fail) use (&$promotional_code) {
+                    if (\request()->filled('code')) {
+                        $promotional_code = PromotionalCode::getModelByCode(\request()->get('code'));
+                        if ($promotional_code !== null) {
+                            if (!$promotional_code->status) {
+                                return $fail('Указанный промо-код был использован или перешел в статус не активного кода');
+                            }
+                        }
+                        else {
+                            return $fail('Промо-код введен не верно.');
+                        }
+                    }
+                }
+            ]
+        ]);
+        $this->setValidateAttribute([
+            'cart_key' => 'Ключ к корзине',
+            'code' => 'Промо-код',
+        ]);
+        $request->validate($this->validate_rules, [], $this->validate_attributes);
+
+        $promotional_code_id = null;
+        if ($promotional_code !== null) {
+            $promotional_code_id = $promotional_code->id;
+        }
+
+        $cart = Cart::updatePromotionalCode($promotional_code_id);
 
         return response()->json([
             'status' => 'success',

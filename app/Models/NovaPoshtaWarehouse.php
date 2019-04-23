@@ -5,6 +5,28 @@ namespace App\Models;
 use App\Tools\Api\Delivery\NovaPoshta;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\Models\NovaPoshtaWarehouse
+ *
+ * @property int $id
+ * @property string $ref
+ * @property string $city_ref
+ * @property string $site_key
+ * @property string $type_of_warehouse
+ * @property string $number
+ * @property string|null $description
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaWarehouse newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaWarehouse newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaWarehouse query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaWarehouse whereCityRef($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaWarehouse whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaWarehouse whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaWarehouse whereNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaWarehouse whereRef($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaWarehouse whereSiteKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaWarehouse whereTypeOfWarehouse($value)
+ * @mixin \Eloquent
+ */
 class NovaPoshtaWarehouse extends Model
 {
     public $timestamps = false;

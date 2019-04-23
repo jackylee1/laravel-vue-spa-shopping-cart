@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserInGroup disableCache()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserInGroup withCacheCooldownSeconds($seconds)
+ * @property-read \App\Models\UserGroup $userGroup
  */
 class UserInGroup extends Model
 {

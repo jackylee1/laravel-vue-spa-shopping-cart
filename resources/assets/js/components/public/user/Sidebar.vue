@@ -25,6 +25,9 @@
 </template>
 
 <script>
+    import * as ApiCommon from '../../../app/public/api/Common';
+    import * as ApiUser from '../../../app/public/api/User';
+
     export default {
         name: 'Sidebar',
         computed: {
@@ -34,8 +37,21 @@
         },
         methods: {
             logout: function () {
-                this.$store.commit('logout');
-                this.$router.push({ name: 'login' });
+                ApiUser.logout().then((res) => {
+                    this.$store.commit('logout');
+                    this.$router.push({name: 'login'});
+
+                    ApiCommon.get({
+                        cart_key: localStorage.getItem('cart_key'),
+                        favorite_key: localStorage.getItem('favorite_key'),
+                    }).then((res) => {
+                        localStorage.setItem('cart_key', res.data.cart.key);
+                        localStorage.setItem('favorite_key', res.data.favorite.key);
+
+                        this.$store.commit('updateFavorite', res.data.favorite);
+                        this.$store.commit('updateCart', res.data.cart);
+                    });
+                });
             }
         }
     }

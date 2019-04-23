@@ -90,7 +90,9 @@ class Order extends Model
     ];
 
     protected $with = [
-        'products', 'historyStatuses', 'promotionalCode'
+        'products',
+        'historyStatuses',
+        'promotionalCode'
     ];
 
     public function user() {
@@ -117,8 +119,8 @@ class Order extends Model
         return $this->hasMany('App\Models\OrderHistoryStatus', 'order_id', 'id');
     }
 
-    protected function createModel($note = null) {
-        $order = new $this;
+    public static function createModel($note = null) {
+        $order = new Order();
 
         $default_order_status = OrderStatus::getDefault();
         if ($default_order_status === null) {
@@ -136,7 +138,7 @@ class Order extends Model
         return $order->fresh();
     }
 
-    private function recalculatePrice($order, $discount_promotional = 0) {
+    protected function recalculatePrice($order, $discount_promotional = 0) {
         $discount = 0;
         if (isset($order->user) && $order->user !== null) {
             if ($order->user->discount > 0) {

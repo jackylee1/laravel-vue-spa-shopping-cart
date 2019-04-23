@@ -5,6 +5,29 @@ namespace App\Models;
 use App\Tools\Api\Delivery\NovaPoshta;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\Models\NovaPoshtaCity
+ *
+ * @property int $id
+ * @property string $ref
+ * @property string $area
+ * @property string $settlement_type
+ * @property string $city_id
+ * @property string|null $description
+ * @property string|null $settlement_type_description
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\NovaPoshtaWarehouse[] $warehouses
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaCity newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaCity newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaCity query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaCity whereArea($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaCity whereCityId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaCity whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaCity whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaCity whereRef($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaCity whereSettlementType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaCity whereSettlementTypeDescription($value)
+ * @mixin \Eloquent
+ */
 class NovaPoshtaCity extends Model
 {
     protected $fillable = [

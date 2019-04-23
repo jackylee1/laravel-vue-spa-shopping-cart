@@ -92,6 +92,11 @@
                                                                              v-on:changeIdAvailable="changeIdAvailable"/>
                                                         </div>
                                                     </div>
+
+                                                    <Errors  style="margin-top: 10px" :type="typeAlerts"
+                                                             v-on:clearAlerts="clearAlerts"
+                                                             :alerts="alerts"/>
+
                                                     <div class="add_to_cart">
                                                         <a @click="addProductToCart()"
                                                            href="javascript:void(0)"
@@ -126,11 +131,13 @@
     import mixinFavorite from '../../../app/public/mixins/Favorite';
     import mixinCart from '../../../app/public/mixins/Cart';
     import RenderAvailable from "../product/RenderAvailable";
+    import mixinAlerts from '../../../app/public/mixins/Alerts';
+    import Errors from "../Errors";
 
     export default {
         name: 'Products',
-        mixins: [mixinFavorite, mixinCart],
-        components: {RenderAvailable},
+        mixins: [mixinFavorite, mixinCart, mixinAlerts],
+        components: {Errors, RenderAvailable},
         props: ['products'],
         computed: {
             _() {

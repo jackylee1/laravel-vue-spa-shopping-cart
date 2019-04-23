@@ -13,3 +13,7 @@ export function updateQuantityProduct(request = {}) {
 export function update(request) {
     return axios.post('/api/cart/update', request);
 }
+
+export function updatePromotionalCode(request) {
+    return axios.post('/api/cart/update_promotional_code', request);
+}

@@ -197,7 +197,7 @@ export default {
                 localStorage.setItem('user', JSON.stringify(state.currentUser));
             }
             else {
-                window.$cookies.set('user', state.currentUser);
+                window.$cookies.set('user', state.currentUser, 0);
             }
         },
         loginFailed: function (state, payload) {

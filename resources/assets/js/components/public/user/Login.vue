@@ -70,6 +70,7 @@
 
 <script>
     import { login } from '../../../helpers/auth';
+    import * as ApiCommon from '../../../app/public/api/Common';
     import mixinAlerts from '../../../app/public/mixins/Alerts';
     import Errors from "../Errors";
 
@@ -92,7 +93,18 @@
                     if (result) {
                         login(this.form).then((res) => {
                             this.$store.commit('loginSuccess', res);
-                            this.$router.push({ name: 'user_information'});
+                            ApiCommon.get({
+                                cart_key: localStorage.getItem('cart_key'),
+                                favorite_key: localStorage.getItem('favorite_key'),
+                            }).then((res) => {
+                                localStorage.setItem('cart_key', res.data.cart.key);
+                                localStorage.setItem('favorite_key', res.data.favorite.key);
+
+                                this.$store.commit('updateCart', res.data.cart);
+                                this.$store.commit('updateFavorite', res.data.favorite);
+
+                                this.$router.push({ name: 'user_information'});
+                            });
                         }).catch((error) => {
                             this.alerts = 'Вы ввели неверный E-mail или Пароль';
                         })

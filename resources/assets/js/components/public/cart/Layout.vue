@@ -53,6 +53,12 @@
                                 <template v-for="filter in getAvailable(product.product_available_id, product.product).filters">
                                     <p v-html="getParentAndSelectFilter(filter.filter_id)"></p>
                                 </template>
+                                <template v-if="getAvailable(product.product_available_id, product.product).quantity < product.quantity">
+                                    <div class="alert alert-danger" style="margin-top: 5px;padding: 5px;">
+                                        Нет в наличии. По этим параметрам в наличии: {{getAvailable(product.product_available_id, product.product).quantity}} единиц товара<br>
+                                        Если в момент создания заказа товар будет оставаться в корзине - он не попадет в заказ.
+                                    </div>
+                                </template>
                                 <br><br>
                                 <a @click="productAddToFavorite(product.product.id)"
                                    href="javascript:void(0)" class="hrt">
@@ -156,8 +162,8 @@
                             ТОВАРОВ НА СУММУ:
                             <span class="items_sum_numb">{{totalPrice}} грн</span>
                         </p>
-                        <p v-if="totalPriceDiscount !== null" class="items_sum_text">
-                            С учетом персональной скидки или скидки группы пользователей:
+                        <p v-if="totalPriceDiscount > 0" class="items_sum_text">
+                            Сумма с учетом пользовательских скидок:
                             <span class="items_sum_numb">{{totalPriceDiscount}} грн</span>
                         </p>
                         <a @click="openCheckout" href="javascript:void(0)">ОФОРМИТЬ ЗАКАЗ</a>
@@ -179,6 +185,8 @@
         name: 'CartLayout',
         mixins: [mixinCart, mixinAlerts, mixinFavorite],
         mounted() {
+            this.$scrollTo('#top_line', 650);
+
             this.breadcrumbs.push({
                 title: 'Корзина'
             });

@@ -5,6 +5,23 @@ namespace App\Models;
 use App\Tools\Api\Delivery\NovaPoshta;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\Models\NovaPoshtaArea
+ *
+ * @property int $id
+ * @property string $ref
+ * @property string $area_center
+ * @property string|null $description
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\NovaPoshtaCity[] $cities
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaArea newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaArea newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaArea query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaArea whereAreaCenter($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaArea whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaArea whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaArea whereRef($value)
+ * @mixin \Eloquent
+ */
 class NovaPoshtaArea extends Model
 {
     protected $fillable = [

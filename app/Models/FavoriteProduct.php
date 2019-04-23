@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\FavoriteProduct whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\FavoriteProduct whereProductId($value)
  * @mixin \Eloquent
+ * @property-read \App\Models\Product $product
  */
 class FavoriteProduct extends Model
 {

@@ -7,6 +7,11 @@
                 <a href="#size_table">Таблица размеров</a>
             </div>
         </div>
+
+        <Errors :type="typeAlerts"
+                v-on:clearAlerts="clearAlerts"
+                :alerts="alerts"/>
+
         <div class="row">
             <div class="col-md-12 variations">
                 <form class="form-horizontal " method="post" action="">
@@ -61,11 +66,13 @@
     import RenderAvailable from "./RenderAvailable";
     import mixinFavorite from '../../../app/public/mixins/Favorite';
     import mixinCart from '../../../app/public/mixins/Cart';
+    import mixinAlerts from '../../../app/public/mixins/Alerts';
+    import Errors from "../Errors";
 
     export default {
         name: 'AvailableAndControl',
-        props: ['product', 'alerts'],
-        mixins: [mixinFavorite, mixinCart],
-        components: {RenderAvailable}
+        props: ['product'],
+        mixins: [mixinFavorite, mixinCart, mixinAlerts],
+        components: {Errors, RenderAvailable}
     }
 </script>

@@ -28,6 +28,7 @@ class CreateCartsTable extends Migration
             $table->char('user_patronymic')->nullable();
             $table->char('phone')->nullable();
             $table->char('email')->nullable();
+            $table->text('note')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')
