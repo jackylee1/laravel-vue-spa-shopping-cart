@@ -12,21 +12,21 @@
                 <p v-if="cart.np_area !== undefined && cart.np_area !== null">
                     Область:
                     <span class="delivery_data">
-                                    {{cart.np_area.description}}
-                                </span>
+                        {{cart.np_area.description}}
+                    </span>
                 </p>
 
                 <p v-if="cart.np_city !== undefined && cart.np_city !== null">
                     Населенный пункт:
                     <span class="delivery_data">
-                                    {{cart.np_city.description}}
-                                </span>
+                        {{cart.np_city.description}}
+                    </span>
                 </p>
 
                 <p v-if="cart.np_warehouse !== undefined && cart.np_warehouse !== null">
-                                <span class="delivery_data">
-                                    {{cart.np_warehouse.description}}
-                                </span>
+                    <span class="delivery_data">
+                        {{cart.np_warehouse.description}}
+                    </span>
                 </p>
             </template>
 
@@ -56,6 +56,7 @@
                     </div>
                 </div>
             </form>
+
             <div class="confirm righted">
                 <a @click="createOrder"
                    href="javascript:void(0)">
@@ -72,6 +73,11 @@
     export default {
         name: 'InformationCart',
         props: ['cart'],
+        computed: {
+            orders: function () {
+                return this.$store.getters.orders;
+            }
+        },
         methods: {
             createOrder: function () {
                 this.$validator.validateAll('form-note').then((result) => {
@@ -85,20 +91,25 @@
                                     if (res.data.status === 'success') {
                                         this.$store.commit('updateCart', res.data.cart);
                                         this.alerts = 'Заказ успешно создан. В ближайшее время с Вами свяжется администрация сайта.';
-                                        this.typeAlert = 'success';
+                                        this.typeAlerts = 'success';
                                         this.$notify({
                                             type: 'success',
                                             title: 'Заказ успешно создан',
                                             text: 'В ближайшее время с Вами свяжется администрация сайта.'
                                         });
 
+                                        if (this.orders.data !== undefined) {
+                                            let order = this.orders;
+                                            order.data.unshift(res.data.order);
+                                            this.$store.commit('updateOrders', order);
+                                        }
                                         setTimeout(() => {
-                                            this.$router.push({name: 'cart'});
+                                            this.$router.push({name: 'view_order', params: {id: res.data.order.id}});
                                         }, 2000);
                                     }
                                 }).catch((error) => {
                                     this.alerts = error.response.data.errors;
-                                    this.typeAlert = 'danger';
+                                    this.typeAlerts = 'danger';
                                     this.$notify({
                                         type: 'error',
                                         title: 'Ошибка',
@@ -108,7 +119,7 @@
                             }
                         }).catch((error) => {
                             this.alerts = error.response.data.errors;
-                            this.typeAlert = 'danger';
+                            this.typeAlerts = 'danger';
                             this.$notify({
                                 type: 'error',
                                 title: 'Ошибка',

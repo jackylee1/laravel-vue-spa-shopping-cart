@@ -113,7 +113,7 @@
                     }
                 }).catch((error) => {
                     this.alerts = error.response.data.errors;
-                    this.typeAlert = 'danger';
+                    this.typeAlerts = 'danger';
                     this.$notify({
                         type: 'error',
                         title: 'Ошибка',

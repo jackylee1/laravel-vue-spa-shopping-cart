@@ -87,7 +87,7 @@ class OrderController extends Controller
             'user_surname' => 'nullable|string|max:191',
             'user_patronymic' => 'nullable|string|max:191',
             'phone' => 'required|string|max:191',
-            'email' => 'required|email|max:191',
+            'email' => 'nullable|email|max:191',
             'note' => 'nullable|string|max:50000',
             'order_payment_method_id' => 'required|integer|exists:order_payment_methods,id',
             'order_status_id' => 'required|integer|exists:order_statuses,id',

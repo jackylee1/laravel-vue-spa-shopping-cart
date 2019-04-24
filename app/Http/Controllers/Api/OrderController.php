@@ -47,6 +47,9 @@ class OrderController extends Controller
         $order->phone = $cart->phone;
         $order->email = $cart->email;
         $order->delivery_method = $cart->delivery;
+        $order->area_id = $cart->area_id;
+        $order->city_id = $cart->city_id;
+        $order->warehouse_id = $cart->warehouse_id;
         $order->order_payment_method_id = $cart->order_payment_method_id;
         $order->promotional_code_id = $cart->user_promotional_code_id;
 
@@ -65,7 +68,7 @@ class OrderController extends Controller
                 ->where('id', $cart_product->product_available_id)
                 ->first();
 
-            if ($available->quantity > $cart_product->quantity) {
+            if ($available !== null && $available->quantity > $cart_product->quantity) {
                 $price = $product->price * $cart_product->quantity;
                 $discount_price = $product->discount_price * $cart_product->quantity;
 
@@ -100,7 +103,103 @@ class OrderController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'cart' => Cart::firstOrCreateModel()
+            'cart' => Cart::firstOrCreateModel(),
+            'order' => Order::getOrder($order->id)
+        ]);
+    }
+
+    public function getOrders() {
+        return response()->json([
+            'orders' => Order::getOrdersPublic()
+        ]);
+    }
+
+    public function view(Request $request) {
+        $order = null;
+        $this->setValidateRule([
+            'order_id' => [
+                'required',
+                'integer',
+                function ($attribute, $value, $fail) use ($request, &$order) {
+                    if ($request->filled('order_id')) {
+                        $order = Order::getOrder($request->order_id, true);
+                        if ($order === null) {
+                            return $fail('У Вас нет доступа к указанному заказу');
+                        }
+                    }
+                }
+            ]
+        ]);
+        $this->setValidateAttribute([
+            'order_id' => 'ID Заказа'
+        ]);
+        $request->validate($this->validate_rules, [], $this->validate_attributes);
+
+        return response()->json([
+            'status' => 'success',
+            'order' => $order
+        ]);
+    }
+
+    public function byInOneClick(Request $request) {
+        $this->setValidateRule([
+            'product_id' => 'required|integer|exists:products,id',
+            'quantity' => 'required|integer|min:1',
+            'available_id' => 'required|integer|exists:product_availables,id',
+            'phone' => 'required|phone:UA'
+        ]);
+        $this->setValidateAttribute([
+            'product_id' => 'ID продукции',
+            'quantity' => 'Количество',
+            'available_id' => 'ID характеристик',
+            'phone' => 'Телефон'
+        ]);
+        $request->validate($this->validate_rules, [], $this->validate_attributes);
+
+        $order = Order::createModel('Заказ в один клик');
+        if (auth()->check()) {
+            $order->user_id = auth()->user()->id;
+        }
+        $order->phone = $request->phone;
+
+        $save_product = [];
+
+        $product = Product::getProduct($request->product_id);
+        $available = $product->available()
+            ->where('id', $request->available_id)
+            ->first();
+
+        if ($available !== null && $available->quantity > $request->quantity) {
+            $price = $product->price * $request->quantity;
+            $discount_price = $product->discount_price * $request->quantity;
+
+            $save_product = [
+                'product_id' => $product->id,
+                'product_available_id' => $request->available_id,
+                'price' => $price,
+                'discount_price' => $discount_price,
+                'product_price' => $product->price,
+                'product_discount_price' => $product->discount_price,
+                'quantity' => $request->quantity
+            ];
+
+            $available->update([
+                'quantity' => $available->quantity - $request->quantity
+            ]);
+        }
+
+        $order->save();
+
+        $products = $order->products()->create($save_product);
+        $order->setRelation('products', $products);
+
+        $order = Order::recalculatePrice($order, 0);
+
+        $order->save();
+
+        return response()->json([
+            'status' => 'success',
+            'order' => Order::getOrder($order->id)
         ]);
     }
 }

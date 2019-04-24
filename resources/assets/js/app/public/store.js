@@ -27,6 +27,7 @@ export default {
         areas: [],
         cities: [],
         warehouses: [],
+        orders: []
     },
     getters: {
         currentUser: function (state) {
@@ -97,6 +98,9 @@ export default {
         },
         warehouses: function (state) {
             return state.warehouses;
+        },
+        orders: function (state) {
+            return state.orders;
         }
     },
     mutations: {
@@ -180,6 +184,9 @@ export default {
         },
         updateWarehouses: function (state, payload) {
             state.warehouses = payload;
+        },
+        updateOrders: function (state, payload) {
+            state.orders = payload;
         }
     }
 };

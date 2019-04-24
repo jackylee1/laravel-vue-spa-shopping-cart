@@ -234,7 +234,7 @@
                             title: 'Ошибка',
                             message: 'при удалении пользователя'
                         });
-                        this.typeAlert = 'error';
+                        this.typeAlerts = 'error';
                         this.alerts = error.response.data.errors;
                         this.dialogVisible = false;
                         this.operationsOnUser = null;

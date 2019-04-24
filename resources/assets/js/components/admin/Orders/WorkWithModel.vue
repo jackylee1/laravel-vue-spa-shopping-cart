@@ -445,7 +445,6 @@
                     ],
                     email: [
                         {max: 191, min: 3, message: generatingValidationMessage('length', [255, 3]), trigger: ['blur', 'change']},
-                        {required: true, message: generatingValidationMessage('required'), trigger: ['blur', 'change']},
                         {type: 'email', message: generatingValidationMessage('email'), trigger: ['blur', 'change']}
                     ],
                     phone: [

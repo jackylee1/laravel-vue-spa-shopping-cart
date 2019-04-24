@@ -45,6 +45,12 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::resource('user', 'Api\UserController')->only([
         'update'
     ]);
+    Route::get('orders', 'Api\OrderController@getOrders');
+
+    Route::prefix('order')->group(function () {
+        Route::post('/', 'Api\OrderController@view');
+        Route::post('/by_in_one_click', 'Api\OrderController@byInOneClick');
+    });
 });
 
 

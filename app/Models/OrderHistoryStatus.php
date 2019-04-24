@@ -43,6 +43,10 @@ class OrderHistoryStatus extends Model
         'send_status' => 'integer'
     ];
 
+    protected $with = [
+        'status'
+    ];
+
     public function status() {
         return $this->hasOne('App\Models\OrderStatus', 'id', 'order_status_id');
     }

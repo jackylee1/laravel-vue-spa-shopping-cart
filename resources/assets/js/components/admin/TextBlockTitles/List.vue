@@ -123,7 +123,7 @@
                             title: 'Ошибка',
                             message: 'при удалении записи'
                         });
-                        this.typeAlert = 'error';
+                        this.typeAlerts = 'error';
                         this.alerts = error.response.data.errors;
                         this.dialogVisible = false;
                         this.operationsOnModel = null;

@@ -19,11 +19,18 @@
                         <template v-for="filter in getAvailable(product.product_available_id, product.product).filters">
                             <li v-html="getParentAndSelectFilter(filter.filter_id)"></li>
                         </template>
-                        <li>ЦЕНА:
+                        <li>КОЛИЧЕСТВО: {{product.quantity}}</li>
+                        <li v-if="product.quantity > 1">ЦЕНА:
                             <strike v-if="product.product.discount_price !== null">
                                 {{product.product.price}} грн
                             </strike>
                             {{product.product.current_price}} грн
+                        </li>
+                        <li>НА СУММУ:
+                            <strike v-if="product.product.discount_price !== null">
+                                {{product.product.price*product.quantity}} грн
+                            </strike>
+                            {{product.product.current_price*product.quantity}} грн
                         </li>
                     </ul>
                 </div>

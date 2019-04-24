@@ -7,7 +7,9 @@
                         <a href="javascript:void(0)"><i class="fas fa-pen"></i>Информация</a>
                     </router-link>
                 </li>
-                <li><a href="javascript:void(0)"> <i class="fas fa-clipboard-list"></i>Заказы</a></li>
+                <router-link :to="{ name: 'list_orders' }">
+                    <li><a href="javascript:void(0)"> <i class="fas fa-clipboard-list"></i>Заказы</a></li>
+                </router-link>
             </template>
             <li>
                 <router-link :to="{ name: 'user_favorite' }">

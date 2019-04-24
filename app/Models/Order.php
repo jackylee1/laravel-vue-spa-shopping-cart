@@ -72,6 +72,9 @@ class Order extends Model
         'note',
         'order_status_id',
         'delivery_method',
+        'area_id',
+        'city_id',
+        'warehouse_id',
         'order_payment_method_id',
         'promotional_code_id',
         'total_price',
@@ -92,8 +95,24 @@ class Order extends Model
     protected $with = [
         'products',
         'historyStatuses',
-        'promotionalCode'
+        'promotionalCode',
+        'paymentMethod',
+        'npArea',
+        'npCity',
+        'npWarehouse'
     ];
+
+    public function npArea() {
+        return $this->hasOne('App\Models\NovaPoshtaArea', 'ref', 'area_id');
+    }
+
+    public function npCity() {
+        return $this->hasOne('App\Models\NovaPoshtaCity', 'ref', 'city_id');
+    }
+
+    public function npWarehouse() {
+        return $this->hasOne('App\Models\NovaPoshtaWarehouse', 'ref', 'warehouse_id');
+    }
 
     public function user() {
         return $this->hasOne('App\User', 'id', 'user_id');
@@ -232,8 +251,13 @@ class Order extends Model
         return $order;
     }
 
-    protected function getOrder($id) {
-        return $this::find($id);
+    protected function getOrder($id, $check_auth_user = false) {
+        $where = [];
+        $where[] = ['id', $id];
+        if ($check_auth_user) {
+            $where[] = ['user_id', auth()->user()->id];
+        }
+        return $this::where($where)->first();
     }
 
     protected function orders() {
@@ -359,6 +383,19 @@ class Order extends Model
         $order->save();
 
         return $order;
+    }
+
+    protected function getOrdersPublic($limit = 10) {
+        return Order::where('user_id', auth()->user()->id)
+            ->orderByDesc('created_at')
+            ->paginate($limit);
+    }
+
+    protected function checkAccess($order_id) {
+        return Order::where([
+            ['order_id', $order_id],
+            ['user_id', auth()->user()->id]
+        ])->first();
     }
 
     protected function destroyModel($id) {

@@ -124,7 +124,7 @@
                             title: 'Ошибка',
                             message: 'при удалении группы пользователей'
                         });
-                        this.typeAlert = 'error';
+                        this.typeAlerts = 'error';
                         this.alerts = error.response.data.errors;
                         this.dialogVisible = false;
                         this.operationsOnUserGroups = null;

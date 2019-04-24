@@ -4,6 +4,8 @@ import CatalogLayout from "../../components/public/catalog/Layout";
 import ProductLayout from "../../components/public/product/Layout";
 import InformationLayout from "../../components/public/user/Information";
 import FavoriteLayout from "../../components/public/user/Favorite";
+import ListOrdersLayout from "../../components/public/user/ListOrders";
+import ViewOrderLayout from "../../components/public/user/ViewOrder";
 import CartLayout from "../../components/public/cart/Layout";
 import CheckoutLayout from "../../components/public/cart/Checkout";
 import ConfirmLayout from "../../components/public/cart/Confirm";
@@ -55,6 +57,22 @@ export const routes = [
         path: '/user/favorite',
         component: FavoriteLayout,
         name: 'user_favorite'
+    },
+    {
+        path: '/user/orders',
+        component: ListOrdersLayout,
+        name: 'list_orders',
+        meta: {
+            requiresAuth: true,
+        }
+    },
+    {
+        path: '/user/order/:id',
+        component: ViewOrderLayout,
+        name: 'view_order',
+        meta: {
+            requiresAuth: true,
+        }
     },
     {
         path: '/cart',

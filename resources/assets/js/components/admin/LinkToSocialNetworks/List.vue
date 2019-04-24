@@ -135,7 +135,7 @@
                             title: 'Ошибка',
                             message: 'при удалении ссылки'
                         });
-                        this.typeAlert = 'error';
+                        this.typeAlerts = 'error';
                         this.alerts = error.response.data.errors;
                         this.dialogVisible = false;
                         this.operationsOnLinkToSocialNetwork = null;

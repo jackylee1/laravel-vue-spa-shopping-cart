@@ -149,7 +149,7 @@
                             title: 'Ошибка',
                             message: 'при удалении слайда'
                         });
-                        this.typeAlert = 'error';
+                        this.typeAlerts = 'error';
                         this.alerts = error.response.data.errors;
                         this.dialogVisible = false;
                         this.operationsOnSlider = null;

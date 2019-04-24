@@ -28,7 +28,12 @@
                 <a v-if="product.size_table !== null" href="#size_table">Таблица размеров</a>
             </div>
         </div>
-        <div class="row by_it">
+        <div v-if="idAvailable === null" class="row by_it">
+            <div class="alert alert-info">
+                Данного товара нет в наличии
+            </div>
+        </div>
+        <div class="row by_it" v-if="idAvailable !== null">
             <div class="col-4 by_it_form">
                 <div class="input-group spinner">
                     <input type="text" class="form-control"
@@ -45,9 +50,10 @@
                 <a @click="addProductToCart()" href="javascript:void(0)"><i class="fas fa-shopping-cart"></i>КУПИТЬ</a>
             </div>
         </div>
-        <div class="row by_it">
+        <div class="row by_it" v-if="idAvailable !== null">
             <div class="col-12 one_click my-auto">
-                <a href="#">Купить в один клик</a>
+                <a @click="modalByInOneClick"
+                   href="javascript:void(0)">Купить в один клик</a>
             </div>
         </div>
         <div class="row like_it">
@@ -59,6 +65,10 @@
                 </a>
             </div>
         </div>
+
+        <ModalByInOnOneClick :valueQuantity="valueQuantity"
+                             :productId="product.id"
+                             :idAvailable="idAvailable"/>
     </div>
 </template>
 
@@ -68,11 +78,17 @@
     import mixinCart from '../../../app/public/mixins/Cart';
     import mixinAlerts from '../../../app/public/mixins/Alerts';
     import Errors from "../Errors";
+    import ModalByInOnOneClick from "./ModalByInOnOneClick";
 
     export default {
         name: 'AvailableAndControl',
         props: ['product'],
         mixins: [mixinFavorite, mixinCart, mixinAlerts],
-        components: {Errors, RenderAvailable}
+        components: {ModalByInOnOneClick, Errors, RenderAvailable},
+        methods: {
+            modalByInOneClick: function () {
+                $('#modalByInOnOneClick').modal('show');
+            }
+        }
     }
 </script>

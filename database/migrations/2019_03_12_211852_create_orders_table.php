@@ -29,6 +29,10 @@ class CreateOrdersTable extends Migration
             $table->integer('order_payment_method_id')->nullable();
             $table->integer('promotional_code_id')->nullable();
 
+            $table->char('area_id')->nullable();
+            $table->char('city_id')->nullable();
+            $table->char('warehouse_id')->nullable();
+
             $table->float('total_price')->nullable();
             $table->float('total_discount_price')->nullable();
 
