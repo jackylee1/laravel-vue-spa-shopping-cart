@@ -30,7 +30,7 @@ class UsersTableSeeder extends Seeder {
             'user_name' => 'Name',
             'user_surname' => 'Surname',
             'user_patronymic' => 'Patronymic',
-            'email' => 'admin@admin',
+            'email' => 'admin@admin.com',
             'phone' => '380950000000',
             'password' => Hash::make('admin'),
             'status' => 'administration',
