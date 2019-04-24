@@ -45,6 +45,13 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Cart whereDelivery($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Cart whereOrderPaymentMethodId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Cart whereWarehouseId($value)
+ * @property string|null $note
+ * @property-read \App\Models\NovaPoshtaArea $npArea
+ * @property-read \App\Models\NovaPoshtaCity $npCity
+ * @property-read \App\Models\NovaPoshtaWarehouse $npWarehouse
+ * @property-read \App\Models\OrderPaymentMethod $paymentMethod
+ * @property-read \App\Models\PromotionalCode $promotionalCode
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Cart whereNote($value)
  */
 class Cart extends Model
 {

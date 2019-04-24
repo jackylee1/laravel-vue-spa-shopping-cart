@@ -57,6 +57,15 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Order whereOrderPaymentMethodId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Order whereReadStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Order withCacheCooldownSeconds($seconds)
+ * @property string|null $area_id
+ * @property string|null $city_id
+ * @property string|null $warehouse_id
+ * @property-read \App\Models\NovaPoshtaArea $npArea
+ * @property-read \App\Models\NovaPoshtaCity $npCity
+ * @property-read \App\Models\NovaPoshtaWarehouse $npWarehouse
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Order whereAreaId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Order whereCityId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Order whereWarehouseId($value)
  */
 class Order extends Model
 {

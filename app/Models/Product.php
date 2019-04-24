@@ -68,6 +68,7 @@ use Illuminate\Support\Facades\DB;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product activeForPublic()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product newProducts()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product searchByText()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product joinBestseller()
  */
 class Product extends Model
 {
@@ -181,14 +182,25 @@ class Product extends Model
 
     public function scopeActiveForPublic($query) {
         return $query->where(function ($query) {
-            $query->where('status', true);
-            $query->where('date_inclusion', null)->orWhere('date_inclusion', '<', Carbon::now());
+            $query->where('products.status', true);
+            $query->where('products.date_inclusion', null)->orWhere('products.date_inclusion', '<', Carbon::now());
             $query->whereTypeAndCategory();
         });
     }
 
     public function scopeNewProducts($query) {
         return $query->whereBetween('created_at', [Carbon::now()->subDays(5), Carbon::now()]);
+    }
+
+    public function scopeJoinBestseller($query) {
+        return $query->leftJoin('product_bestsellers', function ($join) {
+            $join->on('products.id', '=', 'product_bestsellers.product_id');
+            $join->addSelect([
+                'product_bestsellers.product_id',
+                'product_bestsellers.quantity',
+                'product_bestsellers.id as product_bestseller_id'
+            ]);
+        });
     }
 
     protected function getProducts() {
@@ -274,6 +286,36 @@ class Product extends Model
         return ProductTool::checkRelevanceDiscount($products);
     }
 
+    public static function getBestsellers() {
+        $query = Product::query();
+
+        $id_products = ProductBestseller::getProducts()->toArray();
+
+        $query->whereIn('products.id', $id_products);
+
+        $query->select([
+            'products.id',
+            'products.slug',
+            'products.name',
+            'products.discount_price',
+            'products.price',
+            'products.created_at',
+            'products.status',
+            'products.date_inclusion',
+            'products.main_image',
+            DB::raw('IF(products.discount_price IS NOT NULL, products.discount_price, products.price) as current_price')
+        ]);
+
+        $query->joinBestseller();
+
+        $products = $query->activeForPublic()
+            ->with(['mainImage'])
+            ->orderByDesc('product_bestsellers.quantity')
+            ->limit(15)->get();
+
+        return ProductTool::checkRelevanceDiscount($products);
+    }
+
 
     public static function getProductsPublic() {
         $query = Product::query();
@@ -301,7 +343,7 @@ class Product extends Model
                 );
 
                 $query->where(function ($query) use ($id_products) {
-                    $query->whereIn('id', $id_products);
+                    $query->whereIn('products.id', $id_products);
                     $query->searchByText();
                 });
             }
@@ -316,14 +358,16 @@ class Product extends Model
         if (request()->filled('sort')) {
             switch (request()->get('sort')) {
                 case 'from_cheap_to_expensive':
-                    $query->orderBy('current_price', 'asc');
+                    $query->orderBy('products.current_price', 'asc');
                     break;
 
                 case 'from_expensive_to_cheap':
-                    $query->orderByDesc('current_price');
+                    $query->orderByDesc('products.current_price');
                     break;
 
                 case 'popular':
+                    $query->joinBestseller();
+                    $query->orderByDesc('product_bestsellers.quantity');
                     break;
 
                 case 'new':
@@ -331,13 +375,13 @@ class Product extends Model
                     break;
 
                 case 'promotional':
-                    $query->where('discount_price', '!=', null)
-                        ->where('discount_start', '<', Carbon::now())
-                        ->where('discount_end', '>', Carbon::now());
+                    $query->where('products.discount_price', '!=', null)
+                        ->where('products.discount_start', '<', Carbon::now())
+                        ->where('products.discount_end', '>', Carbon::now());
                     break;
 
                 default:
-                    $query->orderByDesc('created_at');
+                    $query->orderByDesc('products.created_at');
                     break;
             }
         }
@@ -399,7 +443,7 @@ class Product extends Model
             }
         }
 
-        if (request()->filled('size_table')) {
+        if (request()->filled('size_table') && count(request()->get('size_table')) > 0) {
             $model->sizeTable()->firstOrCreate([
                 'size_table_id' => request()->get('size_table')['size_table_id']
             ]);

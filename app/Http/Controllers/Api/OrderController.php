@@ -85,6 +85,11 @@ class OrderController extends Controller
                 $available->update([
                     'quantity' => $available->quantity - request()->get('quantity')
                 ]);
+
+                $bestseller = $product->bestseller()->firstOrCreate([]);
+                $bestseller->update([
+                    'quantity' => $bestseller->quantity + $cart_product->quantity
+                ]);
             }
         });
 
@@ -187,6 +192,11 @@ class OrderController extends Controller
                 'quantity' => $available->quantity - $request->quantity
             ]);
         }
+
+        $bestseller = $product->bestseller()->firstOrCreate([]);
+        $bestseller->update([
+            'quantity' => $bestseller->quantity + $request->quantity
+        ]);
 
         $order->save();
 

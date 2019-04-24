@@ -52,6 +52,8 @@
                     this.$store.commit('updateCart', res.data.cart);
                     this.$store.commit('updateFavorite', res.data.favorite);
                     this.$store.commit('updatePaymentMethods', res.data.payment_methods);
+                    this.$store.commit('updateBestsellerProducts', res.data.bestseller_products);
+                    this.$store.commit('updateUtfRecords', res.data.utf_records);
 
                     if (res.data.user !== undefined) {
                         let token = null;

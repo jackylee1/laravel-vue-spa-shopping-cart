@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateProductBestsellersTable extends Migration
+class CreateUtfRecordsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,10 @@ class CreateProductBestsellersTable extends Migration
      */
     public function up()
     {
-        Schema::create('product_bestsellers', function (Blueprint $table) {
+        Schema::create('utf_records', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('product_id')->unsigned();
-            $table->integer('quantity')->default(0);
-
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->integer('sorting_order')->default(0);
+            $table->char('description');
         });
     }
 
@@ -29,6 +27,6 @@ class CreateProductBestsellersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('product_bestsellers');
+        Schema::dropIfExists('utf_records');
     }
 }

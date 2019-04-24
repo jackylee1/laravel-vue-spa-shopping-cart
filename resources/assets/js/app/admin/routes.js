@@ -15,6 +15,7 @@ import { OrdersList, OrdersWorkWithModel } from "../../components/admin/Orders";
 import { LinkToSocialNetworksList, LinkToSocialNetworksModel } from "../../components/admin/LinkToSocialNetworks";
 import { SubscribesList, SubscribesWorkWithModel } from "../../components/admin/Subscribes";
 import { SizeTablesList, SizeTalesWorkWithModel } from "../../components/admin/SizeTables";
+import { UtfRecordsList, UtfRecordsWorkWithModel } from "../../components/admin/UtfRecords";
 
 export const routes = [
     {
@@ -532,6 +533,36 @@ export const routes = [
                     hidden: true,
                     name: 'Обновление данных ссылки на соц.сети',
                     title: 'Обновление данных ссылки на соц.сети'
+                }
+            },
+            {
+                name: 'utf-records-list',
+                path: 'utf_records',
+                component: UtfRecordsList,
+                meta: {
+                    hidden: false,
+                    name: 'UTF Записи',
+                    title: 'UTF Записи'
+                }
+            },
+            {
+                name: 'utf-records-create',
+                path: 'utf_records/create',
+                component: UtfRecordsWorkWithModel,
+                meta: {
+                    hidden: false,
+                    name: 'Добавить UTF запись',
+                    title: 'Добавление UTF записи'
+                }
+            },
+            {
+                name: 'utf-records-update',
+                path: 'utf_records/:id',
+                component: UtfRecordsWorkWithModel,
+                meta: {
+                    hidden: true,
+                    name: 'Обновление данных UTF записи',
+                    title: 'Обновление данных UTF записи'
                 }
             }
         ]

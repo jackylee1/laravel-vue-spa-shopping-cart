@@ -6,6 +6,8 @@
 
         <NewProducts :products="newProducts"/>
 
+        <BestSellers :products="bestsellerProducts"/>
+
         <Banner/>
 
         <BestSellers/>
@@ -51,6 +53,9 @@
             },
             newProducts: function () {
                 return this.$store.getters.newProducts;
+            },
+            bestsellerProducts: function () {
+                return this.$store.getters.bestsellerProducts;
             }
         },
         data() {

@@ -39,6 +39,8 @@ Route::group([], function () {
     Route::prefix('user')->group(function () {
         Route::post('registration', 'Api\UserController@registration');
     });
+
+    Route::post('/order/by_in_one_click', 'Api\OrderController@byInOneClick');
 });
 
 Route::group(['middleware' => ['jwt.auth']], function () {
@@ -49,7 +51,6 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 
     Route::prefix('order')->group(function () {
         Route::post('/', 'Api\OrderController@view');
-        Route::post('/by_in_one_click', 'Api\OrderController@byInOneClick');
     });
 });
 
@@ -119,6 +120,10 @@ Route::group(['middleware' => ['jwt.auth', 'only-administration'], 'prefix' => '
     Route::post('link_to_social_networks/update', 'Api\Admin\LinkToSocialNetworkController@update');
 
     Route::resource('text_block_titles', 'Api\Admin\TextBlockTitleController')->only([
+        'index', 'show', 'store', 'update', 'destroy'
+    ]);
+
+    Route::resource('utf_records', 'Api\Admin\UtfRecordController')->only([
         'index', 'show', 'store', 'update', 'destroy'
     ]);
 

@@ -12,6 +12,7 @@ use App\Models\SizeTable;
 use App\Models\Slider;
 use App\Models\TextBlockTitle;
 use App\Models\Type;
+use App\Models\UtfRecord;
 use App\Traits\DataTrait;
 use App\Traits\ValidateTrait;
 use Illuminate\Http\Request;
@@ -56,9 +57,11 @@ class PageController extends Controller
         $this->setData('filters', Filter::getFilters());
         $this->setData('size_tables', SizeTable::getSizes());
         $this->setData('new_products', Product::getNewProducts());
+        $this->setData('bestseller_products', Product::getBestsellers());
         $this->setData('cart', Cart::getItem());
         $this->setData('favorite', Favorite::getItem());
         $this->setData('payment_methods', OrderPaymentMethod::methods());
+        $this->setData('utf_records', UtfRecord::getItems());
 
         if (auth()->check()) {
             $this->setData('user', auth()->user());

@@ -27,7 +27,9 @@ export default {
         areas: [],
         cities: [],
         warehouses: [],
-        orders: []
+        orders: [],
+        bestsellerProducts: [],
+        utfRecords: [],
     },
     getters: {
         currentUser: function (state) {
@@ -101,6 +103,12 @@ export default {
         },
         orders: function (state) {
             return state.orders;
+        },
+        bestsellerProducts: function (state) {
+            return state.bestsellerProducts;
+        },
+        utfRecords: function (state) {
+            return state.utfRecords;
         }
     },
     mutations: {
@@ -187,6 +195,12 @@ export default {
         },
         updateOrders: function (state, payload) {
             state.orders = payload;
+        },
+        updateBestsellerProducts: function (state, payload) {
+            state.bestsellerProducts = payload;
+        },
+        updateUtfRecords: function (state, payload) {
+            state.utfRecords = payload;
         }
     }
 };

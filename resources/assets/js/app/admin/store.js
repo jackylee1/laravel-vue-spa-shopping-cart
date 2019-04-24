@@ -85,7 +85,8 @@ export default {
         linkToSocialNetworks: [],
         newSubscribes: 0,
         loadNotifications: false,
-        sizeTables: []
+        sizeTables: [],
+        utfRecords: [],
     },
     getters: {
         isLoggedIn(state) {
@@ -181,6 +182,9 @@ export default {
         sizeTables: function (state) {
             return state.sizeTables;
         },
+        utfRecords: function (state) {
+            return state.utfRecords;
+        }
     },
     mutations: {
         login: function (state) {
@@ -276,6 +280,9 @@ export default {
         },
         updateSizeTables: function (state, payload) {
             state.sizeTables = payload;
+        },
+        updateUtfRecords: function (state, payload) {
+            state.utfRecords = payload;
         }
     },
     actions: {
