@@ -45,7 +45,10 @@ class Type extends Model
         'image_preview',
         'image_origin',
         'show_on_index',
-        'show_on_footer'
+        'show_on_footer',
+        'm_title',
+        'm_description',
+        'm_keywords'
     ];
     protected $casts = [
         'show_on_index' => 'integer',
@@ -104,6 +107,10 @@ class Type extends Model
             $model->image_origin = $image_origin;
             $model->image_preview = $image_preview;
         }
+
+        $model->m_title = request()->get('m_title');
+        $model->m_description = request()->get('m_description');
+        $model->m_keywords = request()->get('m_keywords');
 
         $model->save();
 

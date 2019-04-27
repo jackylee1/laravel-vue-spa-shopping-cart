@@ -51,6 +51,9 @@ class TypeController extends Controller
             'image' => 'nullable|image|max:2048',
             'show_on_footer' => 'nullable|boolean',
             'show_on_index' => 'nullable|boolean',
+            'm_title' => 'nullable|string|max:50000',
+            'm_description' => 'nullable|string|max:50000',
+            'm_keyword' => 'nullable|string|max:50000',
         ]);
         $this->setValidateAttribute([
             'name' => 'Наименование',

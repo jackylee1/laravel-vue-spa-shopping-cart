@@ -51,7 +51,10 @@ class CategoryController extends Controller
             'type_id' => 'required|integer|exists:types,id',
             'name' => 'required|string|max:191',
             'sorting_order' => 'required|integer',
-            'show_on_header' => 'nullable|boolean'
+            'show_on_header' => 'nullable|boolean',
+            'm_title' => 'nullable|string|max:50000',
+            'm_description' => 'nullable|string|max:50000',
+            'm_keyword' => 'nullable|string|max:50000',
         ]);
 
         $this->setValidateAttribute([

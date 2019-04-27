@@ -37,6 +37,23 @@
                     </el-input>
                 </el-form-item>
 
+                <el-form-item label="Meta Заголовок" prop="m_title">
+                    <el-input type="text" v-model="form.m_title" placeholder="Введите Meta Заголовок"></el-input>
+                </el-form-item>
+
+                <el-form-item label="Meta описание" prop="m_description">
+                    <el-input
+                            type="textarea"
+                            :rows="3"
+                            placeholder="Введите Meta описание"
+                            v-model="form.m_description">
+                    </el-input>
+                </el-form-item>
+
+                <el-form-item label="Meta Ключевые слова" prop="m_keywords">
+                    <el-input type="text" v-model="form.m_keywords" placeholder="Введите Meta Ключевые слова"></el-input>
+                </el-form-item>
+
                 <el-form-item label="Выберите тип товара для «хлебных крошек»">
                     <el-select v-model="selectedFormType"
                                placeholder="Выберите тип">
@@ -539,7 +556,6 @@
                         {max: 10000, min: 3, message: generatingValidationMessage('length', [10000, 3]), trigger: ['blur', 'change']}
                     ],
                     preview_description: [
-                        {required: true, message: generatingValidationMessage('required'), trigger: ['blur', 'change']},
                         {max: 2000, min: 3, message: generatingValidationMessage('length', [255, 3]), trigger: ['blur', 'change']}
                     ],
                     price: [
@@ -559,6 +575,15 @@
                     ],
                     date: [
                         {type: 'date', message: generatingValidationMessage('date'), trigger: ['blur', 'change']}
+                    ],
+                    m_title: [
+                        {max: 50000, min: 0, message: generatingValidationMessage('length', [50000, 0]), trigger: ['blur', 'change']}
+                    ],
+                    m_description: [
+                        {max: 50000, min: 0, message: generatingValidationMessage('length', [50000, 0]), trigger: ['blur', 'change']}
+                    ],
+                    m_keywords: [
+                        {max: 50000, min: 0, message: generatingValidationMessage('length', [50000, 0]), trigger: ['blur', 'change']}
                     ],
                 },
                 currentRoute: null,
@@ -1079,7 +1104,10 @@
                     discount_end: null,
                     status: 1,
                     data: null,
-                    main_type: {}
+                    main_type: {},
+                    m_title: '',
+                    m_description: '',
+                    m_keywords: ''
                 }
             },
             setBreadcrumbElements: function () {

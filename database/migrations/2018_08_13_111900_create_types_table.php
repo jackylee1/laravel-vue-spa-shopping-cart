@@ -22,6 +22,10 @@ class CreateTypesTable extends Migration
             $table->boolean('show_on_index')->default(false);
             $table->boolean('show_on_footer')->default(false);
             $table->integer('sorting_order')->default(0);
+
+            $table->text('m_title')->nullable();
+            $table->text('m_description')->nullable();
+            $table->text('m_keywords')->nullable();
         });
     }
 

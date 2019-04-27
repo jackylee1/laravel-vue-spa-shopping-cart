@@ -171,5 +171,8 @@
             }
         },
         components: {Errors, Sidebar},
+        metaInfo: {
+            title: '| Кабинет | Информация'
+        }
     }
 </script>

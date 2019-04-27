@@ -132,6 +132,9 @@
                 });
             }
         },
-        components: {Pagination, Errors, Sidebar}
+        components: {Pagination, Errors, Sidebar},
+        metaInfo: {
+            title: '| Кабинет | Список заказов'
+        }
     }
 </script>

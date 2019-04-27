@@ -37,6 +37,23 @@
                     </el-upload>
                 </el-form-item>
 
+                <el-form-item label="Meta Заголовок" prop="m_title">
+                    <el-input type="text" v-model="form.m_title" placeholder="Введите Meta Заголовок"></el-input>
+                </el-form-item>
+
+                <el-form-item label="Meta описание" prop="m_description">
+                    <el-input
+                            type="textarea"
+                            :rows="3"
+                            placeholder="Введите Meta описание"
+                            v-model="form.m_description">
+                    </el-input>
+                </el-form-item>
+
+                <el-form-item label="Meta Ключевые слова" prop="m_keywords">
+                    <el-input type="text" v-model="form.m_keywords" placeholder="Введите Meta Ключевые слова"></el-input>
+                </el-form-item>
+
                 <el-form-item label="Показать на главной">
                     <el-select v-model="form.show_on_index" placeholder="Показать на главной" prop="show_on_index">
                         <el-option
@@ -122,6 +139,24 @@
                 <el-form-item label="SEO адрес" prop="slug">
                     <el-input v-model="workWithNode.slug"></el-input>
                 </el-form-item>
+
+                <el-form-item label="Meta Заголовок" prop="m_title">
+                    <el-input type="text" v-model="workWithNode.m_title" placeholder="Введите Meta Заголовок"></el-input>
+                </el-form-item>
+
+                <el-form-item label="Meta описание" prop="m_description">
+                    <el-input
+                            type="textarea"
+                            :rows="3"
+                            placeholder="Введите Meta описание"
+                            v-model="workWithNode.m_description">
+                    </el-input>
+                </el-form-item>
+
+                <el-form-item label="Meta Ключевые слова" prop="m_keywords">
+                    <el-input type="text" v-model="workWithNode.m_keywords" placeholder="Введите Meta Ключевые слова"></el-input>
+                </el-form-item>
+
                 <el-form-item  label="Порядок сортировки" prop="sorting_order">
                     <el-input v-model="workWithNode.sorting_order"></el-input>
                 </el-form-item>
@@ -256,7 +291,16 @@
                     sorting_order: [
                         {required: true, message: generatingValidationMessage('required'), trigger: ['blur', 'change']},
                         {pattern: /^\d{1,3}$/, message: 'Значение в этом поле не должно быть от 0 до 999', trigger: ['blur', 'change']}
-                    ]
+                    ],
+                    m_title: [
+                        {max: 50000, min: 0, message: generatingValidationMessage('length', [50000, 0]), trigger: ['blur', 'change']}
+                    ],
+                    m_description: [
+                        {max: 50000, min: 0, message: generatingValidationMessage('length', [50000, 0]), trigger: ['blur', 'change']}
+                    ],
+                    m_keywords: [
+                        {max: 50000, min: 0, message: generatingValidationMessage('length', [50000, 0]), trigger: ['blur', 'change']}
+                    ],
                 },
                 deleteNodeDialogVisible: false,
                 deleteNodeTypeAlert: null,
@@ -292,6 +336,15 @@
                     sorting_order: [
                         {required: true, message: generatingValidationMessage('required'), trigger: ['blur', 'change']},
                         {pattern: /^\d+$/, message: generatingValidationMessage('integer'), trigger: ['blur', 'change']}
+                    ],
+                    m_title: [
+                        {max: 50000, min: 0, message: generatingValidationMessage('length', [50000, 0]), trigger: ['blur', 'change']}
+                    ],
+                    m_description: [
+                        {max: 50000, min: 0, message: generatingValidationMessage('length', [50000, 0]), trigger: ['blur', 'change']}
+                    ],
+                    m_keywords: [
+                        {max: 50000, min: 0, message: generatingValidationMessage('length', [50000, 0]), trigger: ['blur', 'change']}
                     ],
                 },
                 currentRoute: null,
@@ -380,7 +433,10 @@
                     sorting_order: 0,
                     slug: '',
                     parent_id: 1,
-                    show_on_header: 1
+                    show_on_header: 1,
+                    m_title: '',
+                    m_description: '',
+                    m_keywords: ''
                 };
                 this.visibleDialogWorkWithNode = true;
                 this.modalAlerts = [];
@@ -538,6 +594,9 @@
                     image: null,
                     image_preview: null,
                     image_origin: null,
+                    m_title: '',
+                    m_description: '',
+                    m_keywords: ''
                 }
             },
             setBreadcrumbElements: function () {

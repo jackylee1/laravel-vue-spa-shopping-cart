@@ -236,6 +236,9 @@
                 }
             }
         },
-        components: {Errors, Breadcrumbs}
+        components: {Errors, Breadcrumbs},
+        metaInfo: {
+            title: '| Корзина'
+        }
     }
 </script>

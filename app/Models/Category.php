@@ -47,7 +47,10 @@ class Category extends Model
         'slug',
         'sorting_order',
         'parent_id',
-        'show_on_header'
+        'show_on_header',
+        'm_title',
+        'm_description',
+        'm_keywords'
     ];
     protected $cats = [
         'type_id' => 'integer',
@@ -92,6 +95,11 @@ class Category extends Model
         $model->show_on_header = (request()->filled('show_on_header'))
             ? request()->get('show_on_header')
             : 1;
+
+        $model->m_title = request()->get('m_title');
+        $model->m_description = request()->get('m_description');
+        $model->m_keywords = request()->get('m_keywords');
+
         $model->save();
 
         return $model;

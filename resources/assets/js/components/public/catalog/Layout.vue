@@ -104,7 +104,11 @@
                     totalPages: 1,
                     count: 1
                 },
-                intervalData: []
+                intervalData: [],
+                mTitle: '',
+                mDescription: '',
+                mKeywords: '',
+                mImage: '',
             }
         },
         components: {
@@ -117,6 +121,50 @@
             Breadcrumbs,
         },
         methods: {
+            setMetaTags: function () {
+                this.mTitle = this.mDescription = this.mKeywords = this.mImage = '';
+
+                if (this.currentType !== null && this.currentType.m_title !== null) {
+                    this.mTitle += `| ${this.currentType.m_title}`;
+                }
+
+                if (this.currentCategory !== null && this.currentCategory.m_title !== null) {
+                    this.mTitle += `| ${this.currentCategory.m_title}`;
+                }
+
+                let model = (this.currentCategory === null) ? this.currentType : this.currentCategory;
+                if (model !== null) {
+                    this.mDescription = (model.m_description !== null) ? model.m_description : '';
+                    this.mKeywords = (model.m_keywords !== null) ? model.m_keywords : '';
+                }
+                else {
+                    this.mTitle = '| ';
+                    switch (this.sort) {
+                        case 'all':
+                            this.mTitle += 'Все товары';
+                            break;
+                        case 'from_cheap_to_expensive':
+                            this.mTitle += 'От дешевых к дорогим';
+                            break;
+                        case 'from_expensive_to_cheap':
+                            this.mTitle += 'От дорогих к дешевым';
+                            break;
+                        case 'popular':
+                            this.mTitle += 'Популярные';
+                            break;
+                        case 'new':
+                            this.mTitle += 'Новинки';
+                            break;
+                        case 'promotional':
+                            this.mTitle += 'Акционные';
+                            break;
+                    }
+                }
+
+                if (this.currentType !== null && this.currentType.image_preview !== null) {
+                    this.mImage = `${location.protocol + '//' + location.hostname}/app/public/images/type/${this.currentType.image_preview}`;
+                }
+            },
             updateSort: function (value) {
                 this.sort = value;
             },
@@ -197,6 +245,7 @@
                         title: this.currentCategory.name
                     });
                 }
+                this.setMetaTags();
             },
         },
         watch: {
@@ -215,6 +264,30 @@
         beforeDestroy() {
             this.$store.commit('updateSearchByText', null);
             this.$router.currentRoute.query.text = null;
+        },
+        metaInfo() {
+            return {
+                title: this.mTitle,
+                meta: [
+                    { name: 'description', content: this.mDescription },
+                    { name: 'keywords', content: this.mKeywords },
+
+                    {property: 'og:title', content: this.mTitle},
+                    {property: 'og:site_name', content: 'FitClothing'},
+                    {property: 'og:type', content: 'website'},
+                    {property: 'og:url', content: window.location.href},
+                    {property: 'og:image', content: this.mImage},
+                    {property: 'og:description', content: this.mDescription},
+
+                    {name: 'twitter:card', content: 'summary'},
+                    {name: 'twitter:site', content: window.location.href},
+                    {name: 'twitter:title', content: this.mTitle},
+                    {name: 'twitter:description', content: this.mDescription},
+                    {name: 'twitter:image:src', content: this.mImage},
+
+                    { itemprop: 'image', content: this.mImage }
+                ]
+            }
         }
     }
 </script>

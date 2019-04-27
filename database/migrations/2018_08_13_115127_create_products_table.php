@@ -20,8 +20,8 @@ class CreateProductsTable extends Migration
             $table->char('name');
             $table->char('like_name');
             $table->text('description');
-            $table->text('preview_description');
-            $table->text('like_preview_description');
+            $table->text('preview_description')->nullable();
+            $table->text('like_preview_description')->nullable();
             $table->float('price');
             $table->float('discount_price')->nullable();
             $table->dateTime('discount_start')->nullable();
@@ -29,6 +29,10 @@ class CreateProductsTable extends Migration
             $table->integer('main_image')->nullable();
             $table->date('date_inclusion')->nullable();
             $table->boolean('status')->default(true);
+
+            $table->text('m_title')->nullable();
+            $table->text('m_description')->nullable();
+            $table->text('m_keywords')->nullable();
 
             $table->timestamps();
         });

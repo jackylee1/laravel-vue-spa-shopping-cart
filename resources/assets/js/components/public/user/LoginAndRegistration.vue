@@ -37,5 +37,8 @@
             }
         },
         components: {Registration, Breadcrumbs, Login},
+        metaInfo: {
+            title: '| Авторизация и регистрация'
+        }
     }
 </script>

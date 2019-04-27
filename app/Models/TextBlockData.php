@@ -42,7 +42,10 @@ class TextBlockData extends Model
         'url',
         'description',
         'sorting_order',
-        'slug'
+        'slug',
+        'm_title',
+        'm_description',
+        'm_keywords'
     ];
     protected $casts = [
         'text_block_title_id' => 'integer',
@@ -69,6 +72,11 @@ class TextBlockData extends Model
         }
         $model->description = request()->get('description');
         $model->sorting_order = request()->filled('sorting_order') ? request()->get('sorting_order') : 0;
+
+        $model->m_title = request()->get('m_title');
+        $model->m_description = request()->get('m_description');
+        $model->m_keywords = request()->get('m_keywords');
+
         $model->save();
 
         return $model;

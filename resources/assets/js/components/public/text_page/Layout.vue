@@ -39,7 +39,11 @@
         data() {
             return {
                 breadcrumbs: [],
-                textPage: null
+                textPage: null,
+                mTitle: '',
+                mDescription: '',
+                mKeywords: '',
+                mImage: '',
             }
         },
         components: {
@@ -47,6 +51,13 @@
             Breadcrumbs
         },
         methods: {
+            setMetaTags: function () {
+                this.mTitle = this.mDescription = this.mKeywords = this.mImage = '';
+
+                this.mTitle = (this.textPage.m_title !== null) ? `| ${this.textPage.m_title}` : '';
+                this.mDescription = (this.textPage.m_description !== null) ? this.textPage.m_description : '';
+                this.mKeywords = (this.textPage.m_keywords !== null) ? this.textPage.m_keywords : '';
+            },
             setData: function () {
                 if (this.loadCommon) {
                     this.$scrollTo('#top_line', 650);
@@ -60,6 +71,7 @@
                         this.breadcrumbs = [
                             {'title': this.textPage.title}
                         ];
+                        this.setMetaTags();
                     }
                     else {
                         this.alerts = 'Текстовая страницы с таким адресом не существует';
@@ -78,6 +90,28 @@
             },
             '$route.params.slug': function () {
                 this.setData();
+            }
+        },
+        metaInfo() {
+            return {
+                title: this.mTitle,
+                meta: [
+                    { name: 'description', content: this.mDescription },
+                    { name: 'keywords', content: this.mKeywords },
+
+                    {property: 'og:title', content: this.mTitle},
+                    {property: 'og:site_name', content: 'FitClothing'},
+                    {property: 'og:type', content: 'website'},
+                    {property: 'og:url', content: window.location.href},
+                    {property: 'og:description', content: this.mDescription},
+
+                    {name: 'twitter:card', content: 'summary'},
+                    {name: 'twitter:site', content: window.location.href},
+                    {name: 'twitter:title', content: this.mTitle},
+                    {name: 'twitter:description', content: this.mDescription},
+
+                    { itemprop: 'image', content: this.mImage }
+                ]
             }
         }
     }

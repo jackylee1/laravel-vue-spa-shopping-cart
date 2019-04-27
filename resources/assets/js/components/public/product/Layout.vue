@@ -78,6 +78,10 @@
             if (this.products.data !== undefined && this.products.data.length) {
                 this.product = this.products.data.find((item) => item.slug === this.$router.currentRoute.params.slug);
 
+                if (this.product !== undefined) {
+                    this.setMetaTags();
+                }
+
                 if (this.product === undefined) {
                     return this.productView();
                 }
@@ -119,10 +123,24 @@
                 isLoading: true,
                 dataLoad: [],
                 price: 0,
-                currentPrice: 0
+                currentPrice: 0,
+                mTitle: '',
+                mDescription: '',
+                mKeywords: '',
+                mImage: '',
             }
         },
         methods: {
+            setMetaTags: function () {
+                this.mTitle = this.mDescription = this.mKeywords = this.mImage = '';
+
+                this.mTitle = (this.product.m_title !== null) ? `| ${this.product.m_title}` : '';
+                this.mDescription = (this.product.m_description !== null) ? this.product.m_description : '';
+                this.mKeywords = (this.product.m_keywords !== null) ? this.product.m_keywords : '';
+                if (this.product.main_image !== null) {
+                    this.mImage = `${location.protocol+'//'+location.hostname}/app/public/images/products/${this.product.main_image.origin}`;
+                }
+            },
             setProductPrice: function (quantity = 1) {
                 this.price = this.product.price * quantity;
                 this.currentPrice = this.product.current_price * quantity;
@@ -133,6 +151,8 @@
                         this.product = res.data.product;
                         this.price = this.product.price;
                         this.currentPrice = this.product.current_price;
+
+                        this.setMetaTags();
 
                         setTimeout(() => {
                             this.isLoading = false;
@@ -218,6 +238,30 @@
                 if (value.length >= 2) {
                     this.handleSetBreadcrumbs();
                 }
+            }
+        },
+        metaInfo() {
+            return {
+                title: this.mTitle,
+                meta: [
+                    { name: 'description', content: this.mDescription },
+                    { name: 'keywords', content: this.mKeywords },
+
+                    {property: 'og:title', content: this.mTitle},
+                    {property: 'og:site_name', content: 'FitClothing'},
+                    {property: 'og:type', content: 'website'},
+                    {property: 'og:url', content: window.location.href},
+                    {property: 'og:image', content: this.mImage},
+                    {property: 'og:description', content: this.mDescription},
+
+                    {name: 'twitter:card', content: 'summary'},
+                    {name: 'twitter:site', content: window.location.href},
+                    {name: 'twitter:title', content: this.mTitle},
+                    {name: 'twitter:description', content: this.mDescription},
+                    {name: 'twitter:image:src', content: this.mImage},
+
+                    { itemprop: 'image', content: this.mImage }
+                ]
             }
         }
     }

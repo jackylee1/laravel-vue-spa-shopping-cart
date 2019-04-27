@@ -50,7 +50,7 @@ class ProductController extends Controller
         $this->setValidateRule([
             'name' => 'required|string|max:191',
             'description' => 'required|string|max:10000',
-            'preview_description' => 'required|string|max:2000',
+            'preview_description' => 'nullable|string|max:2000',
             'price' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             'discount_price' => [
                 'nullable',
@@ -73,6 +73,9 @@ class ProductController extends Controller
             'main_type.type_id' => 'required|integer|exists:types,id',
             'main_type.category_id' => 'required|array',
             'main_type.category_id.*' => 'integer|exists:categories,id',
+            'm_title' => 'nullable|string|max:50000',
+            'm_description' => 'nullable|string|max:50000',
+            'm_keyword' => 'nullable|string|max:50000',
         ]);
         if (request()->filled('discount_start') && request()->filled('discount_end')) {
             $start_date = DateTimeTools::explodeRequestDateTime(request()->get('discount_start'));

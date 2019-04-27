@@ -15,6 +15,7 @@ import Notifications from 'vue-notification';
 import VueScrollTo from 'vue-scrollto';
 import Fragment from 'vue-fragment';
 import VueLoading from 'vue-loading-overlay';
+import Meta from 'vue-meta';
 import 'vue-loading-overlay/dist/vue-loading.css';
 import 'vue-select/dist/vue-select.css';
 
@@ -30,6 +31,7 @@ Vue.use(VueLoading, {
     color: 'red'
 });
 Vue.component('v-select', vSelect);
+Vue.use(Meta);
 
 const store = new Vuex.Store(StoreData);
 

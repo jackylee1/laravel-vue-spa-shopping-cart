@@ -5,20 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title></title>
-    <meta name="keywords" content="" />
-    <meta name="description" content="" />
-    <link rel="shortcut icon" href="/assets/public/images/favicon.ico" type="img/x-icon">
-
-    <!-- Facebook and Twitter integration -->
-    <meta property="og:title" content=""/>
-    <meta property="og:image" content=""/>
-    <meta property="og:url" content=""/>
-    <meta property="og:site_name" content=""/>
-    <meta property="og:description" content=""/>
-    <meta name="twitter:title" content="" />
-    <meta name="twitter:image" content="" />
-    <meta name="twitter:url" content="" />
-    <meta name="twitter:card" content="" />
 
     <!-- CSS -->
     <link rel="stylesheet" href="/assets/public/css/bootstrap.css">

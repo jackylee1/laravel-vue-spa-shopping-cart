@@ -195,6 +195,9 @@
         mounted() {
             if (this.orders.data !== undefined) {
                 this.order = this.orders.data.find((item) => item.id === this.$router.currentRoute.params.id);
+                if (this.order !== undefined) {
+                    this.setMetaTags();
+                }
                 if (this.order === undefined) {
                     this.getOrder();
                 }
@@ -204,6 +207,10 @@
             }
         },
         methods: {
+            setMetaTags: function () {
+                this.mTitle = '';
+                this.mTitle = `Заказ №${this.order.id}`;
+            },
             pageOrders: function () {
                 this.$router.push({ name: 'list_orders' });
             },
@@ -213,6 +220,7 @@
                 }).then((res) => {
                     if (res.data.status === 'success') {
                         this.order = res.data.order;
+                        this.setMetaTags();
                     }
                 }).catch((error) => {
                     this.alerts = error.response.data.errors;
@@ -226,8 +234,14 @@
         },
         data() {
             return {
-                order: null
+                order: null,
+                mTitle: ''
             }
         },
+        metaInfo() {
+            return {
+                title: `| ${this.mTitle}`
+            }
+        }
     }
 </script>

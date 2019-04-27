@@ -128,6 +128,9 @@
                     this.$router.push({name: 'cart'});
                 }
             }
+        },
+        metaInfo: {
+            title: '| Корзина | Оформление и ввод данных | Подтвержжение заказа'
         }
     }
 </script>

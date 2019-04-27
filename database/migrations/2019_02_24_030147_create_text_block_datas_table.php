@@ -23,6 +23,10 @@ class CreateTextBlockDatasTable extends Migration
             $table->text('description')->nullable();
             $table->integer('sorting_order')->default(0); //порядок сортировке в блоке
 
+            $table->text('m_title')->nullable();
+            $table->text('m_description')->nullable();
+            $table->text('m_keywords')->nullable();
+
             $table->foreign('text_block_title_id')->references('id')->on('text_block_titles')->onDelete('cascade');
         });
     }

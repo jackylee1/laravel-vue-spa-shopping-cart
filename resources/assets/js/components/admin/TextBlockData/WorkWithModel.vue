@@ -36,16 +36,35 @@
                     </el-select>
                 </el-form-item>
 
-                <el-form-item v-if="form.type === 0" label="SEO URL" prop="slug">
-                    <el-input type="text" v-model="form.slug" placeholder="Введите SEO URL"></el-input>
-                </el-form-item>
+                <template v-if="form.type === 0">
+                    <el-form-item label="SEO URL" prop="slug">
+                        <el-input type="text" v-model="form.slug" placeholder="Введите SEO URL"></el-input>
+                    </el-form-item>
 
-                <el-form-item v-if="form.type === 0" label="Описание" prop="description">
-                    <tinymce id="description" v-model="description"
-                             :other_options="optionsTinymce"
-                             v-on:editorChange="this.changeDescription"
-                             v-on:editorInit="initTinymce"></tinymce>
-                </el-form-item>
+                    <el-form-item label="Описание" prop="description">
+                        <tinymce id="description" v-model="description"
+                                 :other_options="optionsTinymce"
+                                 v-on:editorChange="this.changeDescription"
+                                 v-on:editorInit="initTinymce"></tinymce>
+                    </el-form-item>
+
+                    <el-form-item label="Meta Заголовок" prop="m_title">
+                        <el-input type="text" v-model="form.m_title" placeholder="Введите Meta Заголовок"></el-input>
+                    </el-form-item>
+
+                    <el-form-item label="Meta описание" prop="m_description">
+                        <el-input
+                                type="textarea"
+                                :rows="3"
+                                placeholder="Введите Meta описание"
+                                v-model="form.m_description">
+                        </el-input>
+                    </el-form-item>
+
+                    <el-form-item label="Meta Ключевые слова" prop="m_keywords">
+                        <el-input type="text" v-model="form.m_keywords" placeholder="Введите Meta Ключевые слова"></el-input>
+                    </el-form-item>
+                </template>
 
                 <el-form-item v-if="form.type === 1" label="Ссылка" prop="url">
                     <el-input type="text" v-model="form.url" placeholder="Введите ссылку"></el-input>
@@ -133,6 +152,15 @@
                         {required: true, message: generatingValidationMessage('required'), trigger: ['blur', 'change']},
                         {pattern: /^\d{1,3}$/, message: 'Значение в этом поле не должно быть от 0 до 999', trigger: ['blur', 'change']}
                     ],
+                    m_title: [
+                        {max: 50000, min: 0, message: generatingValidationMessage('length', [50000, 0]), trigger: ['blur', 'change']}
+                    ],
+                    m_description: [
+                        {max: 50000, min: 0, message: generatingValidationMessage('length', [50000, 0]), trigger: ['blur', 'change']}
+                    ],
+                    m_keywords: [
+                        {max: 50000, min: 0, message: generatingValidationMessage('length', [50000, 0]), trigger: ['blur', 'change']}
+                    ],
                 },
                 optionsTinymce: {
                     language_url: '/js/tinymce/langs/ru.js'
@@ -206,6 +234,9 @@
                     slug: '',
                     description: '',
                     sorting_order: 0,
+                    m_title: '',
+                    m_keywords: '',
+                    m_description: '',
                 }
             },
             setBreadcrumbElements: function () {

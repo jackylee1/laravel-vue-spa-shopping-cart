@@ -88,7 +88,10 @@ class Product extends Model
         'discount_end',
         'main_image',
         'status',
-        'date_inclusion'
+        'date_inclusion',
+        'm_title',
+        'm_description',
+        'm_keywords'
     ];
 
     protected $casts = [
@@ -424,6 +427,10 @@ class Product extends Model
         else {
             $model->date_inclusion = null;
         }
+
+        $model->m_title = request()->get('m_title');
+        $model->m_description = request()->get('m_description');
+        $model->m_keywords = request()->get('m_keywords');
 
         $model->save();
 

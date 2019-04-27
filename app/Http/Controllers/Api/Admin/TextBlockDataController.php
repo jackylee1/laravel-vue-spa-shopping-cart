@@ -27,7 +27,10 @@ class TextBlockDataController extends Controller
             'type' => 'required|integer|between:0,1',
             'url' => (request()->get('type') == 1) ? 'required|' : 'nullable|' . 'url|max:191',
             'description' => 'nullable|string|max:50000',
-            'sorting_order' => 'required|integer'
+            'sorting_order' => 'required|integer',
+            'm_title' => 'nullable|string|max:50000',
+            'm_description' => 'nullable|string|max:50000',
+            'm_keyword' => 'nullable|string|max:50000',
         ]);
         if (request()->get('type') == 0) {
             $slug_rules = 'required|string|max:191|unique:text_block_datas,slug';

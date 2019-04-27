@@ -74,5 +74,8 @@
             }
         },
         components: {Errors, Sidebar},
+        metaInfo: {
+            title: '| Кабинет | Список избранного'
+        }
     }
 </script>

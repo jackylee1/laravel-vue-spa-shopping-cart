@@ -425,6 +425,9 @@
         beforeDestroy() {
             this.$store.commit('updateCart', this.cart);
         },
-        components: {Errors, Breadcrumbs, Login, VueLoading}
+        components: {Errors, Breadcrumbs, Login, VueLoading},
+        metaInfo: {
+            title: '| Корзина | Оформление и ввод данных'
+        }
     }
 </script>

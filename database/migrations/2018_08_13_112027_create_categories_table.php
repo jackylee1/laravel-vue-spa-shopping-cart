@@ -23,6 +23,10 @@ class CreateCategoriesTable extends Migration
             $table->boolean('show_on_header')->default(true);
             $table->integer('parent_id');
 
+            $table->text('m_title')->nullable();
+            $table->text('m_description')->nullable();
+            $table->text('m_keywords')->nullable();
+
             $table->foreign('type_id')->references('id')->on('types')->onDelete('cascade');
         });
     }
