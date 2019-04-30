@@ -162,6 +162,11 @@ Route::group(['middleware' => ['jwt.auth', 'only-administration'], 'prefix' => '
         Route::post('update_read_status', 'Api\Admin\OrderController@updateReadStatus');
     });
 
+    Route::prefix('settings')->group(function () {
+        Route::post('/', 'Api\Admin\SettingController@get');
+        Route::post('update', 'Api\Admin\SettingController@update');
+    });
+
     Route::prefix('upload')->group(function () {
         Route::post('images', 'Api\Admin\UploadFileController@image');
     });

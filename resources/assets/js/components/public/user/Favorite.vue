@@ -13,17 +13,15 @@
                             <div class="thumb-wrapper">
                                 <div class="img-box">
                                     <router-link :to="{name: 'product', params: {slug: product.product.slug}}">
-                                        <a href="javascript:void(0)">
-                                            <img v-if="product.product.main_image !== null"
-                                                 :src="`/app/public/images/products/${product.product.main_image.preview}`"
-                                                 :alt="product.product.name"
-                                                 class="img-responsive img-fluid">
-                                        </a>
+                                        <img v-if="product.product.main_image !== null"
+                                             :src="`/app/public/images/products/${product.product.main_image.preview}`"
+                                             :alt="product.product.name"
+                                             class="img-responsive img-fluid">
                                     </router-link>
                                 </div>
                                 <div class="thumb-content">
                                     <router-link :to="{ name: 'product', params: {slug: product.product.slug} }">
-                                        <a href="javascript:void(0)"><h4>{{product.product.name}}</h4></a>
+                                        <h4>{{product.product.name}}</h4>
                                     </router-link>
                                     <p class="item-price">
                                         <template v-if="product.product.discount_price !== null">
@@ -32,10 +30,8 @@
                                         <span>{{product.product.current_price}} грн</span>
                                     </p>
                                     <div class="add_to_cart">
-                                        <router-link :to="{ name: 'product', params: {slug: product.product.slug} }">
-                                            <a href="javascript:void(0)" class="btn">
-                                                <i class="fas fa-shopping-cart"></i>Купить
-                                            </a>
+                                        <router-link class="btn" :to="{ name: 'product', params: {slug: product.product.slug} }">
+                                            <i class="fas fa-shopping-cart"></i>Купить
                                         </router-link>
                                         <a @click="productRemoveFromFavorite(product.id)"
                                            href="javascript:void(0)" class="hrt">

@@ -8,6 +8,7 @@ use App\Models\Filter;
 use App\Models\LinkToSocialNetwork;
 use App\Models\OrderPaymentMethod;
 use App\Models\Product;
+use App\Models\Setting;
 use App\Models\SizeTable;
 use App\Models\Slider;
 use App\Models\TextBlockTitle;
@@ -62,6 +63,7 @@ class PageController extends Controller
         $this->setData('favorite', Favorite::getItem());
         $this->setData('payment_methods', OrderPaymentMethod::methods());
         $this->setData('utf_records', UtfRecord::getItems());
+        $this->setData('settings', Setting::getItems());
 
         if (auth()->check()) {
             $this->setData('user', auth()->user());

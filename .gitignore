@@ -2,10 +2,10 @@
 /public/hot
 /public/storage
 /public/app
-/public/js/admin.js
-/public/js/admin.js.map
-/public/js/public.js
-/public/js/public.js.map
+/public/js/app-admin.js
+/public/js/app-admin.js.map
+/public/js/app-public.js
+/public/js/app-public.js.map
 /public/js/manifest.js
 /public/css/app.css
 /public/css/app.css.map

@@ -19,7 +19,7 @@ class KeyTool
     public static function getKeyUser($key) {
         $key = self::getKey($key);
         if ($key == null) {
-            return uniqid();
+            return md5(uniqid(rand(), true));
         }
 
         return $key;

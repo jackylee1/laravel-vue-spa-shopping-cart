@@ -9,8 +9,8 @@
                      @keydown.enter="onSubmit"
                      :model="form"
                      label-width="120px">
-                <el-form-item label="Промокод" prop="code">
-                    <el-input :disabled="true" type="text" v-model="form.code" placeholder="Введите промокод"></el-input>
+                <el-form-item label="Промо-код" prop="code">
+                    <el-input :disabled="true" type="text" v-model="form.code" placeholder="Введите Промо-код"></el-input>
                 </el-form-item>
 
                 <el-form-item label="Процент скидки" prop="discount">

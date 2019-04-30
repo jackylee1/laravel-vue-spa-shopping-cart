@@ -30,6 +30,7 @@ export default {
         orders: [],
         bestsellerProducts: [],
         utfRecords: [],
+        settings: []
     },
     getters: {
         currentUser: function (state) {
@@ -109,6 +110,9 @@ export default {
         },
         utfRecords: function (state) {
             return state.utfRecords;
+        },
+        settings: function (state) {
+            return state.settings;
         }
     },
     mutations: {
@@ -201,6 +205,9 @@ export default {
         },
         updateUtfRecords: function (state, payload) {
             state.utfRecords = payload;
+        },
+        updateSettings: function (state, payload) {
+            state.settings = payload;
         }
     }
 };

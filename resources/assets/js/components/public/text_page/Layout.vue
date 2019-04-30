@@ -43,7 +43,6 @@
                 mTitle: '',
                 mDescription: '',
                 mKeywords: '',
-                mImage: '',
             }
         },
         components: {
@@ -52,7 +51,7 @@
         },
         methods: {
             setMetaTags: function () {
-                this.mTitle = this.mDescription = this.mKeywords = this.mImage = '';
+                this.mTitle = this.mDescription = this.mKeywords = '';
 
                 this.mTitle = (this.textPage.m_title !== null) ? `| ${this.textPage.m_title}` : '';
                 this.mDescription = (this.textPage.m_description !== null) ? this.textPage.m_description : '';
@@ -109,8 +108,6 @@
                     {name: 'twitter:site', content: window.location.href},
                     {name: 'twitter:title', content: this.mTitle},
                     {name: 'twitter:description', content: this.mDescription},
-
-                    { itemprop: 'image', content: this.mImage }
                 ]
             }
         }

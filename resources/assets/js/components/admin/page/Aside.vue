@@ -6,11 +6,14 @@
                     <template v-if="route.name === 'main'">
                         <home-icon class="custom-class"></home-icon>
                     </template>
-                    <template v-if="route.name === 'filters'">
+                    <template v-else-if="route.name === 'filters'">
                         <filter-icon class="custom-class"></filter-icon>
                     </template>
-                    <template v-if="route.name === 'file-manager'">
+                    <template v-else-if="route.name === 'file-manager'">
                         <inbox-icon class="custom-class"></inbox-icon>
+                    </template>
+                    <template v-else-if="route.name === 'settings-update'">
+                        <settings-icon class="custom-class"></settings-icon>
                     </template>
                     {{ route.meta.name }}
                 </el-menu-item>
@@ -19,27 +22,29 @@
                         <template v-if="route.name === 'users' || route.name === 'user-groups'">
                             <users-icon class="custom-class"></users-icon>
                         </template>
-                        <template v-if="route.name === 'orders'">
+                        <template v-else-if="route.name === 'orders'">
                             <shopping-cart-icon class="custom-class"></shopping-cart-icon>
+                            <el-badge :value="(newOrders > 0) ? newOrders : null" class="item">
+                            </el-badge>
                         </template>
-                        <template v-if="route.name === 'subscribes'">
+                        <template v-else-if="route.name === 'subscribes'">
                             <at-sign-icon class="custom-class"></at-sign-icon>
                             <el-badge :value="(newSubscribes > 0) ? newSubscribes : null" class="item">
                             </el-badge>
                         </template>
-                        <template v-if="route.name === 'types'">
+                        <template v-else-if="route.name === 'types'">
                             <box-icon class="custom-class"></box-icon>
                         </template>
-                        <template v-if="route.name === 'promotional-codes'">
+                        <template v-else-if="route.name === 'promotional-codes'">
                             <tag-icon class="custom-class"></tag-icon>
                         </template>
-                        <template v-if="route.name === 'products'">
+                        <template v-else-if="route.name === 'products'">
                             <shopping-bag-icon class="custom-class"></shopping-bag-icon>
                         </template>
-                        <template v-if="route.name === 'sliders'">
+                        <template v-else-if="route.name === 'sliders'">
                             <image-icon class="custom-class"></image-icon>
                         </template>
-                        <template v-if="route.name === 'text-block'">
+                        <template v-else-if="route.name === 'text-block'">
                             <align-left-icon class="custom-class"></align-left-icon>
                         </template>
 
@@ -57,7 +62,7 @@
         HomeIcon, ShoppingBagIcon, UsersIcon,
         BoxIcon, TagIcon, FilterIcon, InboxIcon,
         ImageIcon, AlignLeftIcon, ShoppingCartIcon,
-        AtSignIcon
+        AtSignIcon, SettingsIcon
     } from 'vue-feather-icons'
     import * as ApiNotifications from '../../../app/admin/api/Notifications';
 
@@ -67,10 +72,16 @@
             if (!this.loadNotifications) {
                 ApiNotifications.newNotifications().then((res) => {
                     this.$store.commit('updateNewSubscribes', res.data.new_subscribes);
+                    this.$store.commit('updateNewOrders', res.data.new_orders);
                     this.$store.commit('updateLoadNotifications', true);
 
                     this.newSubscribes = res.data.new_subscribes;
+                    this.newOrders = res.data.new_orders;
                 });
+            }
+            else {
+                this.newSubscribes = this.newSubscribesStore;
+                this.newOrders = this.newOrdersStore;
             }
         },
         computed: {
@@ -84,11 +95,15 @@
             },
             newSubscribesStore: function () {
                 return this.$store.getters.newSubscribes;
+            },
+            newOrdersStore: function () {
+                return this.$store.getters.newOrders;
             }
         },
         data() {
             return {
-                newSubscribes: this.newSubscribesStore
+                newSubscribes: 0,
+                newOrders: 0,
             }
         },
         components: {
@@ -102,11 +117,15 @@
             ImageIcon,
             AlignLeftIcon,
             ShoppingCartIcon,
-            AtSignIcon
+            AtSignIcon,
+            SettingsIcon
         },
         watch: {
             'newSubscribesStore': function (value) {
                 this.newSubscribes = value;
+            },
+            'newOrdersStore': function (value) {
+                this.newOrders = value;
             }
         }
     }

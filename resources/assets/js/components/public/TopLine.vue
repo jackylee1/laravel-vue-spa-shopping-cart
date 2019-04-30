@@ -5,32 +5,24 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="telephone">
-                    <span class="first">
-                        <span class="code">(073) </span>
-                        069-6097
+                    <span class="first" v-if="phone1 !== null">
+                        {{phone1}}
                     </span>
-                            <span class="second">
-                        <span class="code">(068) </span>
-                        225-7235
+                    <span class="second" v-if="phone2 !== null">
+                        {{phone2}}
                     </span>
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="authotisation">
                             <template v-if="isLoggedIn">
-                                <router-link :to="{name: 'user_information'}">
-                                    <a class="acount"
-                                       href="javascript:void(0)">
-                                        Мой аккаунт
-                                    </a>
+                                <router-link class="acount" :to="{name: 'user_information'}">
+                                    Мой аккаунт
                                 </router-link>
                             </template>
                             <template v-else>
-                                <router-link :to="{ name: 'login' }">
-                                    <a class="login"
-                                       href="javascript:void(0)">
-                                        Вход/Регистрация
-                                    </a>
+                                <router-link class="login" :to="{ name: 'login' }">
+                                    Вход/Регистрация
                                 </router-link>
                             </template>
                         </div>
@@ -44,6 +36,7 @@
 <script>
     export default {
         name: 'TopLine',
+        props: ['phone1', 'phone2'],
         computed: {
             isLoggedIn: function () {
                 return this.$store.getters.isLoggedIn;

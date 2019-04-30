@@ -34,12 +34,14 @@
 
 <script>
 import { PageAside } from './page';
+import { leaveEvents } from '../../app/admin/helpers/Events'
 
 export default {
     name: 'layout',
     methods: {
         logout() {
             this.$store.commit('logout');
+            leaveEvents();
             this.$router.push('/admin/login');
         },
         handleSelect(key, keyPath) {

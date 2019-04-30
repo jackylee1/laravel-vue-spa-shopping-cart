@@ -2,17 +2,25 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\AdminEvent;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\PromotionalCode;
+use App\Notifications\PublicNotification\SendCreateOrderNotification;
 use App\Traits\ValidateTrait;
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Notification;
 
 class OrderController extends Controller
 {
     use ValidateTrait;
+
+    private function sendToAdminCreateNotification($order_id) {
+        User::getUser(1)->notify(new \App\Notifications\Admin\SendCreateOrderNotification($order_id));
+    }
 
     public function create(Request $request) {
         $cart = Cart::firstOrCreateModel();
@@ -93,12 +101,12 @@ class OrderController extends Controller
             }
         });
 
-        $order->save();
-
         $products = $order->products()->createMany($products);
         $order->setRelation('products', $products);
 
-        $order = Order::recalculatePrice($order, ($promotional_code !== null) ? $promotional_code->discount: 0);
+        $order->save();
+
+        $order = Order::recalculatePrice($order->fresh(), ($promotional_code !== null) ? $promotional_code->discount: 0);
 
         $order->save();
 
@@ -106,10 +114,20 @@ class OrderController extends Controller
         $cart->products()->delete();
         $cart->save();
 
+        if ($order->email !== null) {
+            Notification::route('mail', $order->email)
+                ->notify(new SendCreateOrderNotification($order));
+
+        }
+
+        $this->sendToAdminCreateNotification($order->id);
+
+        event(new AdminEvent('order', $order));
+
         return response()->json([
             'status' => 'success',
             'cart' => Cart::firstOrCreateModel(),
-            'order' => Order::getOrder($order->id)
+            'order' => $order
         ]);
     }
 
@@ -198,18 +216,24 @@ class OrderController extends Controller
             'quantity' => $bestseller->quantity + $request->quantity
         ]);
 
-        $order->save();
-
         $products = $order->products()->create($save_product);
         $order->setRelation('products', $products);
 
-        $order = Order::recalculatePrice($order, 0);
+        $order->save();
+
+        $order = Order::recalculatePrice($order->fresh());
 
         $order->save();
 
+        $order = Order::getOrder($order->id);
+
+        $this->sendToAdminCreateNotification($order->id);
+
+        event(new AdminEvent('order', $order));
+
         return response()->json([
             'status' => 'success',
-            'order' => Order::getOrder($order->id)
+            'order' => $order
         ]);
     }
 }

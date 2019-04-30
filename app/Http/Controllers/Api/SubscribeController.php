@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Events\AdminEvent;
 use App\Models\Subscribe;
+use App\Notifications\Admin\SendSubscribeNotification;
 use App\Traits\ValidateTrait;
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -23,7 +25,8 @@ class SubscribeController extends Controller
 
         $subscribe = Subscribe::createModel();
 
-        broadcast(new AdminEvent('subscribe', $subscribe));
+        User::getUser(1)->notify(new SendSubscribeNotification($subscribe->id));
+        event(new AdminEvent('subscribe', $subscribe));
 
         return response()->json([
             'status' => 'success',

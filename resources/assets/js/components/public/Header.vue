@@ -4,10 +4,8 @@
             <div class="container">
                 <div class="row">
                     <div class="col-sm-3 logo">
-                        <router-link :to="{name: 'index'}">
-                            <a class="navbar-brand logotype" href="/">
-                                <img class="navbar_logo" src="/assets/public/images/logo.png" alt="FitClothing">
-                            </a>
+                        <router-link class="navbar-brand logotype" :to="{name: 'index'}">
+                            <img class="navbar_logo" src="/assets/public/images/logo.png" alt="FitClothing">
                         </router-link>
                         <p class="slogan">брендовая спортивная одежда</p>
                     </div>
@@ -24,12 +22,10 @@
                     </div>
                     <div class="col-sm-1">
                         <router-link :to="{ name: 'user_favorite' }">
-                            <a href="javascript:void(0)">
-                                <img class="heart" src="/assets/public/images/cart/heart_white.png" alt="Heart">
-                                <span v-if="countFavoriteProducts > 0" class="badge">
+                            <img class="heart" src="/assets/public/images/cart/heart_white.png" alt="Heart">
+                            <span v-if="countFavoriteProducts > 0" class="badge">
                                 {{countFavoriteProducts}}
                             </span>
-                            </a>
                         </router-link>
                     </div>
                     <div class="col-sm-1">

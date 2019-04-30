@@ -23,7 +23,8 @@
 </template>
 
 <script>
-	import {login} from '../../helpers/auth';
+	import { login } from '../../helpers/auth';
+	import { listeningEvents } from '../../app/admin/helpers/Events';
 
 	export default {
 		name: 'login',
@@ -43,6 +44,7 @@
 				this.$store.dispatch('login');
                 login(this.form).then((res) => {
                     this.$store.commit('loginSuccess', res);
+					listeningEvents(this.$store);
                     this.$router.push({path: '/admin'});
                 }).catch((error) => {
                     this.$store.commit('loginFailed', {error});

@@ -1,7 +1,7 @@
 let mix = require('laravel-mix');
 
-mix.js('resources/assets/js/admin.js', 'public/js')
-    .js('resources/assets/js/public.js', 'public/js')
+mix.js('resources/assets/js/app-admin.js', 'public/js')
+    .js('resources/assets/js/app-public.js', 'public/js')
     .sourceMaps(false, 'source-map')
     .sass('resources/assets/sass/app.scss', 'public/css')
     .options({

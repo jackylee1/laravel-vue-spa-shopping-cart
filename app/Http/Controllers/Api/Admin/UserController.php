@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
-use App\Notifications\Api\Admin\SendPromotionalCode;
+use App\Notifications\Admin\SendPromotionalCode;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Traits\ValidateTrait;
@@ -169,10 +169,10 @@ class UserController extends Controller
         $request->validate($this->validate_rules, [], $this->validate_attributes);
 
         $handle = User::handlePromotionalCode();
-        $message = 'Промокод был удален с пользователя';
+        $message = 'Промо-код был удален с пользователя';
         if ($handle['operation'] === 'add') {
             $handle['model']->send_status_to_email = 0;
-            $message = 'Промокод был добавлен к пользователю';
+            $message = 'Промо-код был добавлен к пользователю';
         }
 
         return response()->json([
@@ -193,7 +193,7 @@ class UserController extends Controller
         if ($user === null) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Этот промокод не принадлежит данному пользователю'
+                'message' => 'Этот Промо-код не принадлежит данному пользователю'
             ], 403);
         }
 
@@ -206,7 +206,7 @@ class UserController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => "Промокод отправлен пользователю: {$user->email} на E-mail: {$user->email}"
+            'message' => "Промо-код отправлен пользователю: {$user->email} на E-mail: {$user->email}"
         ]);
     }
 }

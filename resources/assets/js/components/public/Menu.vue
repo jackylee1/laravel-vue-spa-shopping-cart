@@ -6,8 +6,16 @@
                     <div class="menu-container d-flex justify-content-center">
                         <div class="menu">
                             <ul>
-                                <li class="menu_link"><a class="menu_tab" @click="openLink('index')" href="javascript:void(0)">Главная</a></li>
-                                <li class="menu_link"><a class="menu_tab" @click="openLink('new')" href="javascript:void(0)">Новинки</a></li>
+                                <li class="menu_link">
+                                    <a class="menu_tab" @click="openLink('index')" href="javascript:void(0)">
+                                        Главная
+                                    </a>
+                                </li>
+                                <li class="menu_link">
+                                    <a class="menu_tab" @click="openLink('new')" href="javascript:void(0)">
+                                        Новинки
+                                    </a>
+                                </li>
                                 <template v-for="type in this.types">
                                     <li class="menu_link">
                                         <a class="menu_tab" href="javascript:void(0)">{{type.name}}</a>
@@ -20,9 +28,7 @@
                                                             <template v-for="categoryChildren in sortCategories(category.children)">
                                                                 <li>
                                                                     <router-link :to="{ name: 'catalog', query: { type: type.slug, category: categoryChildren.slug } }">
-                                                                        <a href="">
-                                                                            {{categoryChildren.name}}
-                                                                        </a>
+                                                                        {{categoryChildren.name}}
                                                                     </router-link>
                                                                 </li>
                                                             </template>

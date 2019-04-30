@@ -7,11 +7,10 @@
                          :style="`background: url(/app/public/images/type/${type.image_origin})`"
                          class="col-12 col-sm-6 left_banner centered">
                         <h2>{{type.name}}</h2>
-                        <router-link :to="{ name: 'catalog', query: { type: type.slug } }">
-                            <a href="javascript:void(0)" class="btn">
-                                <i class="fas fa-shopping-cart"></i>
-                                Просмотреть
-                            </a>
+                        <router-link class="btn"
+                                     :to="{ name: 'catalog', query: { type: type.slug } }">
+                            <i class="fas fa-shopping-cart"></i>
+                            Просмотреть
                         </router-link>
                     </div>
                 </div>

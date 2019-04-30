@@ -34,7 +34,7 @@ class PromotionalCodeController extends Controller
         ]);
         $this->setValidateAttribute([
             'name' => 'Имя',
-            'code' => 'Промокод',
+            'code' => 'Промо-код',
             'status' => 'Статус'
         ]);
     }
@@ -91,7 +91,7 @@ class PromotionalCodeController extends Controller
         return response()->json([
             'status' => 'success',
             'promotional_code' => $promotional_code,
-            'message' => 'Промокод успешно создан'
+            'message' => 'Промо-код успешно создан'
         ]);
     }
 
@@ -125,7 +125,7 @@ class PromotionalCodeController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Промокод успешно удален',
+            'message' => 'Промо-код успешно удален',
         ]);
     }
 

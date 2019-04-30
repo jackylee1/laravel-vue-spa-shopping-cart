@@ -8,14 +8,16 @@
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
                                     <router-link :to="{ name: 'index' }">
-                                        <a href="">Главная</a>
+                                        Главная
                                     </router-link>
                                 </li>
                                 <template v-for="(item, index) in items">
                                     <template v-if="index !== (items.length-1)">
                                         <li class="breadcrumb-item">
                                             <template v-if="item.route_name !== undefined">
-                                                <router-link :to="{ name: item.route_name }"><a href="">{{item.title}}</a></router-link>
+                                                <router-link :to="{ name: item.route_name }">
+                                                    {{item.title}}
+                                                </router-link>
                                             </template>
                                             <template v-else-if="item.url !== undefined">
                                                 <a href="javascript:void(0)" @click="routerBack">{{item.title}}</a>

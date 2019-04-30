@@ -1,10 +1,12 @@
 <template>
     <div>
-        <TopLine/>
+        <TopLine :phone1="phone1"
+                 :phone2="phone2"/>
 
-        <SubMenu/>
+        <SubMenu :phone1="phone1"
+                 :phone2="phone2"/>
 
-        <SearchCollapse/>
+        <SearchCollapse v-on:getProducts="handleGetProducts"/>
 
         <Header v-on:getProducts="handleGetProducts"/>
 
@@ -13,7 +15,10 @@
         <router-view></router-view>
 
         <Footer :linkToSocialNetworks="linkToSocialNetworks"
-                :textPages="textPages" />
+                :textPages="textPages"
+                :settingEmail="settingEmail"
+                :phone1="phone1"
+                :phone2="phone2"/>
 
         <notifications/>
     </div>
@@ -39,6 +44,9 @@
                 }).then((res) => {
                     this.linkToSocialNetworks = res.data.link_to_social_networks;
                     this.textPages = res.data.text_pages;
+                    this.settingEmail = res.data.settings.find((item) => item.slug === 'email').value;
+                    this.phone1 = res.data.settings.find((item) => item.slug === 'phone1').value;
+                    this.phone2 = res.data.settings.find((item) => item.slug === 'phone2').value;
 
                     localStorage.setItem('cart_key', res.data.cart.key);
                     localStorage.setItem('favorite_key', res.data.favorite.key);
@@ -54,6 +62,7 @@
                     this.$store.commit('updatePaymentMethods', res.data.payment_methods);
                     this.$store.commit('updateBestsellerProducts', res.data.bestseller_products);
                     this.$store.commit('updateUtfRecords', res.data.utf_records);
+                    this.$store.commit('updateSettings', res.data.settings);
 
                     if (res.data.user !== undefined) {
                         let token = null;
@@ -89,6 +98,9 @@
             return {
                 linkToSocialNetworks: [],
                 textPages: [],
+                settingEmail: null,
+                phone1: null,
+                phone2: null
             }
         },
         methods: {

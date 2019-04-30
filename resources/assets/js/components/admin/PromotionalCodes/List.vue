@@ -171,7 +171,7 @@
             listStatuses: function () {
                 let statuses = this.selectListPromotionalCodeStatuses;
                 if (statuses.findIndex((item) => item.value === 'all') === -1) {
-                    statuses.unshift({'label': 'Все промокоды', 'value': 'all'});
+                    statuses.unshift({'label': 'Все Промо-коды', 'value': 'all'});
                 }
                 return statuses;
             },
@@ -218,7 +218,7 @@
             btnDeletePromotionCode: function (index, promotionalCodes) {
                 this.operationsOnPromotionalCode = promotionalCodes[index];
                 this.titleDialog = 'Удаление промокода';
-                this.titleAlert = `Вы дейстительно хотите удалить промокод: ${this.operationsOnPromotionalCode.code}?`;
+                this.titleAlert = `Вы дейстительно хотите удалить Промо-код: ${this.operationsOnPromotionalCode.code}?`;
                 this.dialogVisible = true;
             },
             getPromotionalCodes: function (page = 1) {

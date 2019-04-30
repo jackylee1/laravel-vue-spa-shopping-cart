@@ -224,6 +224,11 @@
 
                         this.$store.commit('updateOrders', order);
                         this.dialogVisible = false;
+
+                        if (!this.operationsOnOrder.read_status) {
+                            this.$store.commit('updateNewOrders', this.$store.getters.newOrders - 1);
+                        }
+
                         this.operationsOnOrder = null;
 
                         this.$notify.success({

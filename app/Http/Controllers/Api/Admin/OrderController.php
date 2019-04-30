@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Models\Order;
 use App\Models\ProductAvailable;
 use App\Models\PromotionalCode;
-use App\Notifications\Api\Admin\SendOrderStatusNotification;
+use App\Notifications\Admin\SendOrderStatusNotification;
 use App\Traits\ValidateTrait;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -100,7 +100,7 @@ class OrderController extends Controller
                         && request()->get('promotional_code_id') != $order->promotional_code_id) {
                         $promotional_code = PromotionalCode::getCodeById(\request()->get('promotional_code_id'));
                         if ($promotional_code->status == 0) {
-                            return $fail('Промокод который вы выбрали уже был использован');
+                            return $fail('Промо-код который вы выбрали уже был использован');
                         }
                     }
                 }
@@ -115,7 +115,7 @@ class OrderController extends Controller
                         $promotional_code = PromotionalCode::getModelByCode(\request()->get('input_promotional_code'));
                         if ($promotional_code->id != $order->promotional_code_id) {
                             if ($promotional_code->status == 0) {
-                                return $fail('Промокод который вы ввели уже был использован');
+                                return $fail('Промо-код который вы ввели уже был использован');
                             }
                         }
                     }
@@ -132,7 +132,7 @@ class OrderController extends Controller
             'note' => 'Комментарий',
             'order_payment_method_id' => 'Метод оплаты',
             'order_status_id' => 'Статус',
-            'promotional_code_id' => 'Промокод'
+            'promotional_code_id' => 'Промо-код'
         ]);
         $request->validate($this->validate_rules, [], $this->validate_attributes);
 
@@ -278,7 +278,7 @@ class OrderController extends Controller
         }
 
         Notification::route('mail', $email)
-            ->notify(new SendOrderStatusNotification($status, $order->id));
+            ->notify(new SendOrderStatusNotification($status, $order->id, $order->user_id));
 
         $status->send_status = true;
         $status->save();

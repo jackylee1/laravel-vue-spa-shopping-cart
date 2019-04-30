@@ -14,7 +14,7 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item v-if="showSwitchUser" label="Промокоды текущего пользователя">
+            <el-form-item v-if="showSwitchUser" label="Промо-коды текущего пользователя">
                 <el-switch  @change="handleSwitchUserChange"
                             v-model="statusSwitchUser"></el-switch>
             </el-form-item>
@@ -37,7 +37,7 @@
             </el-table-column>
             <el-table-column
                     prop="code"
-                    label="Промокод"
+                    label="Промо-код"
                     min-width="150">
             </el-table-column>
             <el-table-column
@@ -140,7 +140,7 @@
             listStatuses: function () {
                 let statuses = this.selectListPromotionalCodeStatuses;
                 if (statuses.findIndex((item) => item.value === 'all') === -1) {
-                    statuses.unshift({'label': 'Все промокоды', 'value': 'all'});
+                    statuses.unshift({'label': 'Все Промо-коды', 'value': 'all'});
                 }
                 return statuses;
             },

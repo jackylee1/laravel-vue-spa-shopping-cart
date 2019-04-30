@@ -53,9 +53,7 @@
                                     <li>
                                         <template v-if="dataPage.type === 0">
                                             <router-link :to="{name: 'text_page', params: {slug: dataPage.slug}}">
-                                                <a href="">
-                                                    {{dataPage.title}}
-                                                </a>
+                                                {{dataPage.title}}
                                             </router-link>
                                         </template>
                                         <template v-else>
@@ -71,9 +69,9 @@
                     <div class="col-lg-2 footer_menu">
                         <h3>Наши контакты</h3>
                         <ul>
-                            <li>т. (073) 069-6097</li>
-                            <li>т. (068) 225-7235</li>
-                            <li>info@hmail.com</li>
+                            <li v-if="phone1 !== null">т. {{phone1}}</li>
+                            <li v-if="phone2 !== null">т. {{phone2}}</li>
+                            <li v-if="settingEmail">{{settingEmail}}</li>
                             <li v-if="linkToSocialNetworks.length">
                                 <template v-for="link in linkToSocialNetworks">
                                     <a :href="link.url" target="_blank">
@@ -90,7 +88,7 @@
                             <template v-for="type in types">
                                 <li>
                                     <router-link :to="{ name: 'catalog', query: { type: type.slug } }">
-                                        <a href="javascript:void(0)">{{type.name}}</a>
+                                        {{type.name}}
                                     </router-link>
                                 </li>
                             </template>
@@ -115,10 +113,8 @@
 
                     <div class="col-lg-4 footer_logo">
                         <router-link :to="{name: 'index'}">
-                            <a class="fl_link" href="/">
-                                <img class="navbar_logo" src="/assets/public/images/logo.png" alt="FitClothing">
-                                <p class="slogan">брендовая спортивная одежда</p>
-                            </a>
+                            <img class="navbar_logo" src="/assets/public/images/logo.png" alt="FitClothing">
+                            <p class="slogan">брендовая спортивная одежда</p>
                         </router-link>
                         <p class="copyright">Авторское право FitClothing @2013-2018</p>
                         <p class="author">Разработка и техподдержка - <a href="javascript:void(0)">DesignStudio</a></p>
@@ -163,9 +159,11 @@
                                             <ul>
                                                 <template v-for="dataPage in page.data_page">
                                                     <template v-if="dataPage.type === 0">
-                                                        <router-link :to="{name: 'text_page', params: {slug: dataPage.slug}}">
-                                                            <li><a>{{dataPage.title}}</a></li>
-                                                        </router-link>
+                                                        <li>
+                                                            <router-link :to="{name: 'text_page', params: {slug: dataPage.slug}}">
+                                                                {{dataPage.title}}
+                                                            </router-link>
+                                                        </li>
                                                     </template>
                                                     <template v-else>
                                                          <li><a :href="dataPage.url">{{dataPage.title}}</a></li>
@@ -196,9 +194,9 @@
                                      data-parent="#accordionExample">
                                     <div class="card-body">
                                         <ul>
-                                            <li>т. (073) 069-6097</li>
-                                            <li>т. (068) 225-7235</li>
-                                            <li>info@hmail.com</li>
+                                            <li v-if="phone1 !== null">т. {{phone1}}</li>
+                                            <li v-if="phone2 !== null">т. {{phone2}}</li>
+                                            <li v-if="settingEmail">{{settingEmail}}</li>
                                             <li><a href="#"><img src="/assets/public/images/socials/telegram.png" alt=""></a> <a href="#"><img src="/assets/public/images/socials/viber.png" alt=""></a></li>
                                         </ul>
                                     </div>
@@ -234,12 +232,12 @@
                         </div>
                     </div>
                     <div class="col-lg-12 footer_logo centered">
-                        <a class="fl_link" href="index.html">
+                        <router-link class="fl_link" :to="{ name: 'index' }">
                             <img class="navbar_logo" src="/assets/public/images/logo.png" alt="FitClothing">
                             <p class="slogan">брендовая спортивная одежда</p>
-                        </a>
+                        </router-link>
                         <p class="copyright">Авторское право FitClothing @2013-2018</p>
-                        <p class="author">Разработка и техподдержка - <a href="#">DesignStudio</a></p>
+                        <p class="author">Разработка и техподдержка - <a href="javascript:void(0)">DesignStudio</a></p>
                     </div>
                 </div>
             </div>
@@ -259,7 +257,7 @@
         name: 'Footer',
         mixins: [mixinProducts],
         components: {VeeErrors, Errors},
-        props: ['textPages', 'linkToSocialNetworks'],
+        props: ['textPages', 'linkToSocialNetworks', 'settingEmail', 'phone1', 'phone2'],
         computed: {
             'types': function () {
                 return this.$store.getters.types.filter((item) => {

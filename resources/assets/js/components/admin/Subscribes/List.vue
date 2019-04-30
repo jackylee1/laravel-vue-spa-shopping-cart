@@ -175,6 +175,9 @@
                         subscribes.data.splice(index, 1);
                         this.$store.commit('updateSubscribes', subscribes);
                         this.dialogVisible = false;
+                        if (!this.operationsOnSubscribe.read_status) {
+                            this.$store.commit('updateNewSubscribes', this.$store.getters.newSubscribes - 1);
+                        }
                         this.operationsOnSubscribe = null;
                         this.$notify.success({
                             offset: 50,

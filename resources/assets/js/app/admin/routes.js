@@ -16,6 +16,7 @@ import { LinkToSocialNetworksList, LinkToSocialNetworksModel } from "../../compo
 import { SubscribesList, SubscribesWorkWithModel } from "../../components/admin/Subscribes";
 import { SizeTablesList, SizeTalesWorkWithModel } from "../../components/admin/SizeTables";
 import { UtfRecordsList, UtfRecordsWorkWithModel } from "../../components/admin/UtfRecords";
+import { SettingsWorkWithModel } from "../../components/admin/Settings";
 
 export const routes = [
     {
@@ -62,7 +63,7 @@ export const routes = [
             },
             {
                 name: 'orders-update',
-                path: 'orders/:id',
+                path: 'update/:id',
                 component: OrdersWorkWithModel,
                 meta: {
                     hidden: true,
@@ -399,7 +400,7 @@ export const routes = [
         meta: {
             requiresAuth: true,
             hidden: false,
-            name: 'Промокоды',
+            name: 'Промо-коды',
             title: 'Список Промокодов'
         },
         component: LayoutRouterView,
@@ -421,7 +422,7 @@ export const routes = [
                 meta: {
                     hidden: false,
                     name: 'Добавить',
-                    title: 'Создать Промокод'
+                    title: 'Создать Промо-код'
                 }
             },
             {
@@ -608,6 +609,17 @@ export const routes = [
                 }
             }
         ]
+    },
+    {
+        path: '/admin/settings',
+        name: 'settings-update',
+        meta: {
+            requiresAuth: true,
+            hidden: false,
+            name: 'Настройки',
+            title: 'Настройки'
+        },
+        component: SettingsWorkWithModel,
     },
     {
         title: 'Войти',

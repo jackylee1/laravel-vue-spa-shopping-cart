@@ -84,9 +84,11 @@ export default {
         orders: [],
         linkToSocialNetworks: [],
         newSubscribes: 0,
+        newOrders: 0,
         loadNotifications: false,
         sizeTables: [],
         utfRecords: [],
+        settings: []
     },
     getters: {
         isLoggedIn(state) {
@@ -184,6 +186,12 @@ export default {
         },
         utfRecords: function (state) {
             return state.utfRecords;
+        },
+        newOrders: function (state) {
+            return state.newOrders;
+        },
+        settings: function (state) {
+            return state.settings;
         }
     },
     mutations: {
@@ -283,6 +291,12 @@ export default {
         },
         updateUtfRecords: function (state, payload) {
             state.utfRecords = payload;
+        },
+        updateNewOrders: function (state, payload) {
+            state.newOrders = payload;
+        },
+        updateSettings: function (state, payload) {
+            state.settings = payload;
         }
     },
     actions: {

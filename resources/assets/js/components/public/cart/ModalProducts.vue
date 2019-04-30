@@ -17,12 +17,10 @@
                         <div v-for="product in cartProducts" class="row">
                             <div class="col-3">
                                 <router-link :to="{name: 'product', params: {slug: product.product.slug}}">
-                                    <a href="javascript:void(0)">
-                                        <img v-if="product.product.main_image !== null"
-                                             :src="`/app/public/images/products/${product.product.main_image.preview}`"
-                                             :alt="product.product.name"
-                                             class="img-responsive img-fluid">
-                                    </a>
+                                    <img v-if="product.product.main_image !== null"
+                                         :src="`/app/public/images/products/${product.product.main_image.preview}`"
+                                         :alt="product.product.name"
+                                         class="img-responsive img-fluid">
                                 </router-link>
                             </div>
                             <div class="col-md-6">

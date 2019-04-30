@@ -92,7 +92,7 @@
                     <el-button-group>
                         <el-button type="info"
                                    v-if="currentRoute.name === 'users-update'"
-                                   @click="dialogTableVisible = true">Управление промокод</el-button>
+                                   @click="dialogTableVisible = true">Управление Промо-код</el-button>
                         <el-button type="primary" @click="onSubmit">{{submitName}}</el-button>
                     </el-button-group>
                 </el-form-item>

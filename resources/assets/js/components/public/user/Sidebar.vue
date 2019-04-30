@@ -4,16 +4,20 @@
             <template v-if="this.isLoggedIn">
                 <li>
                     <router-link :to="{ name: 'user_information' }">
-                        <a href="javascript:void(0)"><i class="fas fa-pen"></i>Информация</a>
+                        <i class="fas fa-pen"></i>
+                        Информация
                     </router-link>
                 </li>
-                <router-link :to="{ name: 'list_orders' }">
-                    <li><a href="javascript:void(0)"> <i class="fas fa-clipboard-list"></i>Заказы</a></li>
-                </router-link>
+
+                <li>
+                    <router-link :to="{ name: 'list_orders' }">
+                        <i class="fas fa-clipboard-list"></i>Заказы
+                    </router-link>
+                </li>
             </template>
             <li>
                 <router-link :to="{ name: 'user_favorite' }">
-                    <a href="javascript:void(0)"> <i class="fas fa-list-alt"></i>Список избранного</a>
+                    <i class="fas fa-list-alt"></i>Список избранного
                 </router-link>
             </li>
             <template v-if="this.isLoggedIn">

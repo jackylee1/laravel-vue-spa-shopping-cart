@@ -42,8 +42,9 @@
                                 </router-link>
                             </th>
                             <td class="lefted description_item">
-                                <router-link :to="{name: 'product', params: {slug: product.product.slug}}">
-                                    <a href="javascript:void(0)" class="bold">{{product.product.name}}</a>
+                                <router-link class="bold"
+                                             :to="{name: 'product', params: {slug: product.product.slug}}">
+                                    {{product.product.name}}
                                 </router-link>
                                 <span>
                                     <a @click="deleteProductFromCart(product.id)" href="javascript:void(0)">
@@ -120,8 +121,9 @@
                         </router-link>
                     </div>
                     <div class="col-7 item_in_cart">
-                        <router-link :to="{name: 'product', params: {slug: product.product.slug}}">
-                            <a href="javascript:void(0)" class="bold">{{product.product.name}}</a>
+                        <router-link class="bold"
+                                     :to="{name: 'product', params: {slug: product.product.slug}}">
+                            {{product.product.name}}
                         </router-link>
                         <template v-for="filter in getAvailable(product.product_available_id, product.product).filters">
                             <p v-html="getParentAndSelectFilter(filter.filter_id)"></p>

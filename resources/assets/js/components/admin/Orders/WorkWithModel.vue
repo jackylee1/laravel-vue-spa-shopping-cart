@@ -35,8 +35,8 @@
                 </template>
 
                 <template v-if="user !== null && user.promotional_codes.length">
-                    <el-form-item label="Промокоды пользователя" prop="promotional_code_id">
-                        <el-select v-model="form.promotional_code_id" placeholder="Промокоды пользователя">
+                    <el-form-item label="Промо-коды пользователя" prop="promotional_code_id">
+                        <el-select v-model="form.promotional_code_id" placeholder="Промо-коды пользователя">
                             <el-option
                                     v-for="item in this.selectUserPromotionalCodes()"
                                     :key="item.id"
@@ -45,15 +45,25 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
+                    <el-alert :closable="false"
+                              title="Чтобы открепить промо-код от заказа выберите 'Не выбран'"
+                              type="info">
+                    </el-alert>
+                </template>
+                <template v-else>
+                    <el-alert :closable="false"
+                              title="Чтобы открепить промо-код от заказа удалите данные в поле Промо-код"
+                              type="info">
+                    </el-alert>
                 </template>
 
                 <el-form-item v-if="form.promotional_code != null"
-                              label="Промокод который прикреплен к заказу">
+                              label="Промо-код который прикреплен к заказу">
                     {{this.form.promotional_code.code}} ({{this.form.promotional_code.discount}} %)
                 </el-form-item>
 
-                <el-form-item label="Промокод" prop="promotionalCode">
-                    <el-input type="text" v-model="promotionalCode" placeholder="Введите промокод"></el-input>
+                <el-form-item label="Промо-код" prop="promotionalCode">
+                    <el-input type="text" v-model="promotionalCode" placeholder="Введите Промо-код"></el-input>
                 </el-form-item>
 
                 <el-form-item label="Имя" prop="user_name">
@@ -112,6 +122,70 @@
                                 :key="item.id"
                                 :label="item.name"
                                 :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+
+                <el-form-item label="Метод доставки"
+                              prop="delivery_method">
+                    <el-select v-model="form.delivery_method"
+                               filterable
+                               placeholder="Выберите метод доставки">
+                        <el-option
+                                v-for="item in deliveryMethods"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+
+                <el-form-item v-if="areas !== null"
+                              label="Выберите область"
+                              prop="area_id">
+                    <el-select v-model="form.area_id"
+                               style="min-width: 400px;"
+                               filterable
+                               @change="changeAreaSelect"
+                               placeholder="Выберите область">
+                        <el-option
+                                v-for="item in areas"
+                                :key="item.ref"
+                                :label="item.description"
+                                :value="item.ref">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+
+                <el-form-item v-if="cities !== null"
+                              label="Выберите населенный пункт"
+                              prop="city_id">
+                    <el-select v-model="form.city_id"
+                               style="min-width: 400px;"
+                               filterable
+                               @change="changeCitySelect"
+                               placeholder="Выберите населенный пункт">
+                        <el-option
+                                v-for="item in cities"
+                                :key="item.ref"
+                                :label="item.description"
+                                :value="item.ref">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+
+                <el-form-item v-if="warehouses !== null"
+                              label="Выберите отделение"
+                              prop="warehouse_id">
+                    <el-select v-model="form.warehouse_id"
+                               style="min-width: 400px;"
+                               filterable
+                               placeholder="Выберите отделение">
+                        <el-option
+                                v-for="item in warehouses"
+                                :key="item.ref"
+                                :label="item.description"
+                                :value="item.ref">
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -341,6 +415,7 @@
 <script>
     import * as ApiUsers from '../../../app/admin/api/Users';
     import * as ApiOrders from '../../../app/admin/api/Orders';
+    import * as ApiNovaPoshta from '../../../app/public/api/NovaPoshta';
     import * as ApiFilters from '../../../app/admin/api/Filters';
     import * as ApiOrderStatuses from '../../../app/admin/api/OrderStatuses';
     import * as ApiOrderPaymentMethods from '../../../app/admin/api/OrderPaymentMethods';
@@ -401,6 +476,7 @@
                 if (this.$store.getters.orderStatuses.length === 0) {
                     ApiOrderStatuses.get().then((response) => {
                         this.$store.commit('updateOrderStatuses', helperArray.sort(response.data.order_statuses));
+                        this.$store.commit('updateNewOrders', this.$store.getters.newOrders - 1);
                     });
                 }
 
@@ -468,7 +544,13 @@
                 showBtnAddProductToOrder: false,
                 dialogUserTableVisible: false,
                 user: null,
-                promotionalCode: null
+                promotionalCode: null,
+                deliveryMethods: [
+                    {value: 1, label: 'Новая почта'}
+                ],
+                areas: null,
+                cities: null,
+                warehouses: null
             }
         },
         methods: {
@@ -542,23 +624,23 @@
                 this.onSubmit();
                 this.user = user;
 
-                if (this.form.user_name.length === 0) {
+                if (this.form.user_name === null) {
                     this.form.user_name = user.user_name;
                 }
 
-                if (this.form.user_surname.length === 0) {
+                if (this.form.user_surname === null) {
                     this.form.user_surname = user.user_surname;
                 }
 
-                if (this.form.user_patronymic.length === 0) {
+                if (this.form.user_patronymic === null) {
                     this.form.user_patronymic = user.user_patronymic;
                 }
 
-                if (this.form.email.length === 0) {
+                if (this.form.email === null) {
                     this.form.email = user.email;
                 }
 
-                if (this.form.phone.length === 0) {
+                if (this.form.phone === null) {
                     this.form.phone = user.phone;
                 }
 
@@ -748,6 +830,10 @@
                     note: '',
                     total_price: 0,
                     total_discount_price: 0,
+                    delivery_method: null,
+                    area_id: null,
+                    city_id: null,
+                    warehouse_id: null
                 }
             },
             setBreadcrumbElements: function () {
@@ -807,6 +893,13 @@
                 else {
                     this.showBtnAddProductToOrder = false;
                 }
+            },
+            changeAreaSelect: function () {
+                this.form.city_id = null;
+                this.form.warehouse_id = null;
+            },
+            changeCitySelect: function () {
+                this.form.warehouse_id = null;
             }
         },
         components: {
@@ -840,6 +933,38 @@
             'form.promotional_code_id': function (promotionalCodeId) {
                 if (promotionalCodeId === null) {
                     this.promotionalCode = null;
+                }
+            },
+            'form.delivery_method': function () {
+                this.areas = null;
+                ApiNovaPoshta.areas().then((res) => {
+                    if (res.data.status === 'success') {
+                        this.areas = res.data.areas;
+                    }
+                });
+            },
+            'form.area_id': function (value) {
+                this.cities = null;
+                if (value !== null) {
+                    ApiNovaPoshta.cities({
+                        area_ref: value
+                    }).then((res) => {
+                        if (res.data.status === 'success') {
+                            this.cities = res.data.cities;
+                        }
+                    });
+                }
+            },
+            'form.city_id': function (value) {
+                this.warehouses = null;
+                if (value !== null) {
+                    ApiNovaPoshta.warehouses({
+                        city_ref: value
+                    }).then((res) => {
+                        if (res.data.status === 'success') {
+                            this.warehouses = res.data.warehouses;
+                        }
+                    });
                 }
             }
         },

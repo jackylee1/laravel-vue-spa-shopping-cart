@@ -13,9 +13,12 @@
                 </div>
                 <div class="col-6">
                     <ul>
-                        <router-link :to="{name: 'product', params: {slug: product.product.slug}}">
-                            <li><a href="javascript:void(0)" class="bold">{{product.product.name}}</a></li>
-                        </router-link>
+                            <li>
+                                <router-link class="bold"
+                                             :to="{name: 'product', params: {slug: product.product.slug}}">
+                                    {{product.product.name}}
+                                </router-link>
+                            </li>
                         <template v-for="filter in getAvailable(product.product_available_id, product.product).filters">
                             <li v-html="getParentAndSelectFilter(filter.filter_id)"></li>
                         </template>
@@ -37,7 +40,7 @@
             </div>
         </div>
         <router-link :to="{ name: 'cart' }">
-            <a href="javascript:void(0)">Редактировать заказ</a>
+            Редактировать заказ
         </router-link>
     </div>
 </template>

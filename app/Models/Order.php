@@ -147,6 +147,10 @@ class Order extends Model
         return $this->hasMany('App\Models\OrderHistoryStatus', 'order_id', 'id');
     }
 
+    public static function newOrders() {
+        return Order::where('read_status', false)->count();
+    }
+
     public static function createModel($note = null) {
         $order = new Order();
 
@@ -182,7 +186,7 @@ class Order extends Model
             $discount = (($discount + $discount_promotional) > 100) ? 100 : $discount + $discount_promotional;
         }
 
-        $total_price = $total_discount_price = 0;
+        $total_discount_price = $total_price = 0;
         $order->products->each(function ($product) use ($discount, &$total_price, &$total_discount_price) {
             $total_price += $product->price;
             if ($product->discount_price != null) {
@@ -210,6 +214,12 @@ class Order extends Model
         $order->phone = request()->get('phone');
         $order->email = request()->get('email');
         $order->note = request()->get('note');
+
+        $order->delivery_method = request()->get('delivery_method');
+        $order->area_id = request()->get('area_id');
+        $order->city_id = request()->get('city_id');
+        $order->warehouse_id = request()->get('warehouse_id');
+
         if ($order->order_status_id != request()->get('order_status_id')) {
             $order->order_status_id = request()->get('order_status_id');
             $order_history_status = $order->historyStatuses()->create([
@@ -222,8 +232,17 @@ class Order extends Model
         $order->promotional_code_id = request()->get('promotion_code_id');
 
         $discount_promotional = 0;
-        if (request()->filled('promotional_code_id') || $promotional_code !== null) {
-            if (request()->filled('promotional_code_id')) {
+        if ($promotional_code === null && !request()->filled('promotional_code_id')) {
+            $order->promotional_code_id = null;
+            $order->setRelation('promotional_code', null);
+        }
+        elseif (request()->filled('promotional_code_id') || $promotional_code !== null) {
+            if (request()->filled('promotional_code_id')
+                && $promotional_code !== null
+                && request()->get('promotional_code_id') !== $promotional_code) {
+                $promotional_code_id = $promotional_code->id;
+            }
+            elseif (request()->filled('promotional_code_id')) {
                 $promotional_code = PromotionalCode::getCodeById(request()->get('promotional_code_id'));
                 $promotional_code_id = request()->get('promotional_code_id');
             }
@@ -247,10 +266,6 @@ class Order extends Model
             }
 
             $order->promotional_code_id = $promotional_code_id;
-        }
-        else {
-            $order->promotional_code_id = null;
-            $order->setRelation('promotional_code', null);
         }
 
         $order = $this->recalculatePrice($order, $discount_promotional);

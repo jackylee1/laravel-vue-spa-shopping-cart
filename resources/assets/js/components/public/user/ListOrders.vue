@@ -19,7 +19,7 @@
                                     <div v-for="order in orders" class="order">
                                         <div class="order_column">
                                             <router-link :to="{ name: 'view_order', params: { id: order.id } }">
-                                                <a href="javascript:void(0)">Заказ №{{order.id}}</a>
+                                                Заказ №{{order.id}}
                                             </router-link>
                                         </div>
                                         <div class="order_column text-center">
