@@ -33,6 +33,12 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Type whereImagePreview($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Type whereShowOnFooter($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Type whereShowOnIndex($value)
+ * @property string|null $m_title
+ * @property string|null $m_description
+ * @property string|null $m_keywords
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Type whereMDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Type whereMKeywords($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Type whereMTitle($value)
  */
 class Type extends Model
 {

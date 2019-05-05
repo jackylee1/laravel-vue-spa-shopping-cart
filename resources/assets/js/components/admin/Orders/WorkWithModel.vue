@@ -130,6 +130,7 @@
                               prop="delivery_method">
                     <el-select v-model="form.delivery_method"
                                filterable
+                               @change="changeDeliveryMethodSelect"
                                placeholder="Выберите метод доставки">
                         <el-option
                                 v-for="item in deliveryMethods"
@@ -546,6 +547,7 @@
                 user: null,
                 promotionalCode: null,
                 deliveryMethods: [
+                    {value: null, label: 'Не выбран'},
                     {value: 1, label: 'Новая почта'}
                 ],
                 areas: null,
@@ -894,6 +896,11 @@
                     this.showBtnAddProductToOrder = false;
                 }
             },
+            changeDeliveryMethodSelect: function () {
+                this.form.area_id = null;
+                this.form.city_id = null;
+                this.form.warehouse_id = null;
+            },
             changeAreaSelect: function () {
                 this.form.city_id = null;
                 this.form.warehouse_id = null;
@@ -935,13 +942,15 @@
                     this.promotionalCode = null;
                 }
             },
-            'form.delivery_method': function () {
+            'form.delivery_method': function (value) {
                 this.areas = null;
-                ApiNovaPoshta.areas().then((res) => {
-                    if (res.data.status === 'success') {
-                        this.areas = res.data.areas;
-                    }
-                });
+                if (value !== null) {
+                    ApiNovaPoshta.areas().then((res) => {
+                        if (res.data.status === 'success') {
+                            this.areas = res.data.areas;
+                        }
+                    });
+                }
             },
             'form.area_id': function (value) {
                 this.cities = null;

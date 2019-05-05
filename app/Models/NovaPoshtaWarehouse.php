@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Tools\Api\Delivery\NovaPoshta;
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -26,9 +27,13 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaWarehouse whereSiteKey($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaWarehouse whereTypeOfWarehouse($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaWarehouse disableCache()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaWarehouse withCacheCooldownSeconds($seconds)
  */
 class NovaPoshtaWarehouse extends Model
 {
+    use Cachable;
+
     public $timestamps = false;
     protected $fillable = [
         'site_key',

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Tools\Api\Delivery\NovaPoshta;
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -27,9 +28,13 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaCity whereSettlementType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaCity whereSettlementTypeDescription($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaCity disableCache()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaCity withCacheCooldownSeconds($seconds)
  */
 class NovaPoshtaCity extends Model
 {
+    use Cachable;
+
     protected $fillable = [
         'ref',
         'area',

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Tools\KeyTool;
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -23,9 +24,13 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Favorite whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Favorite whereUserId($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Favorite disableCache()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Favorite withCacheCooldownSeconds($seconds)
  */
 class Favorite extends Model
 {
+    use Cachable;
+
     protected $fillable = [
         'key',
         'user_id',

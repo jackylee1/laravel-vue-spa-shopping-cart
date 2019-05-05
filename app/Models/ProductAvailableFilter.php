@@ -34,4 +34,8 @@ class ProductAvailableFilter extends Model
         'product_available_id' => 'integer',
         'filter_id' => 'integer'
     ];
+
+    public function productAvailable() {
+        return $this->hasOne('App\Models\ProductAvailable', 'id', 'product_available_id');
+    }
 }

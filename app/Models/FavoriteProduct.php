@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
@@ -19,9 +20,13 @@ use Illuminate\Support\Facades\DB;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\FavoriteProduct whereProductId($value)
  * @mixin \Eloquent
  * @property-read \App\Models\Product $product
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\FavoriteProduct disableCache()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\FavoriteProduct withCacheCooldownSeconds($seconds)
  */
 class FavoriteProduct extends Model
 {
+    use Cachable;
+
     public $timestamps = false;
 
     protected $fillable = [

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -17,9 +18,13 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UtfRecord whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UtfRecord whereSortingOrder($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UtfRecord disableCache()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UtfRecord withCacheCooldownSeconds($seconds)
  */
 class UtfRecord extends Model
 {
+    use Cachable;
+
     public $timestamps = false;
 
     protected $fillable = [

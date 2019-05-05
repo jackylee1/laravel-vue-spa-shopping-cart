@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -21,9 +22,13 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Subscribe whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Subscribe whereReadStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Subscribe whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Subscribe disableCache()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Subscribe withCacheCooldownSeconds($seconds)
  */
 class Subscribe extends Model
 {
+    use Cachable;
+
     protected $fillable = [
         'email',
         'read_status'

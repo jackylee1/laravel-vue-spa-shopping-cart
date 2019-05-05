@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -19,9 +20,13 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\SizeTable whereSortingOrder($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\SizeTable whereTitle($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\SizeTable disableCache()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\SizeTable withCacheCooldownSeconds($seconds)
  */
 class SizeTable extends Model
 {
+    use Cachable;
+
     public $timestamps = false;
 
     protected $fillable = [

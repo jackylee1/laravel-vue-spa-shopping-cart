@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -17,9 +18,13 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ProductSizeTable whereProductId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ProductSizeTable whereSizeTableId($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ProductSizeTable disableCache()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ProductSizeTable withCacheCooldownSeconds($seconds)
  */
 class ProductSizeTable extends Model
 {
+    use Cachable;
+
     public $timestamps = false;
 
     protected $fillable = [

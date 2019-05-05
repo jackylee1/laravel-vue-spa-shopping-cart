@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -17,9 +18,13 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @property int|null $quantity
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ProductBestseller whereQuantity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ProductBestseller disableCache()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ProductBestseller withCacheCooldownSeconds($seconds)
  */
 class ProductBestseller extends Model
 {
+    use Cachable;
+
     public $timestamps = false;
 
     protected $fillable = [

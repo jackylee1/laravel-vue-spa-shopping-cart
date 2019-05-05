@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         $this->call(UsersTableSeeder::class);
         $this->call(SettingTableSeeder::class);
+        $this->call(CategoryTableSeeder::class);
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }
@@ -41,6 +42,21 @@ class UsersTableSeeder extends Seeder {
         DB::table('users')->insert($data);
 
         $this->command->info('Users seeded');
+    }
+}
+
+class CategoryTableSeeder extends Seeder {
+    public function run() {
+        $data = [
+            [
+                'name' => 'Корневая категория', 'like_name' => getOnlyCharacters('Корневая категория'),
+                'slug' => str_slug('Корневая категория'), 'sorting_order' => 0, 'parent_id' => 0, 'type_id' => null
+            ],
+        ];
+        DB::table('categories')->delete();
+        DB::table('categories')->truncate();
+        DB::table('categories')->insert($data);
+        $this->command->info('Categories seeded');
     }
 }
 

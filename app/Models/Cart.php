@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Tools\KeyTool;
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -52,9 +53,13 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \App\Models\OrderPaymentMethod $paymentMethod
  * @property-read \App\Models\PromotionalCode $promotionalCode
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Cart whereNote($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Cart disableCache()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Cart withCacheCooldownSeconds($seconds)
  */
 class Cart extends Model
 {
+    use Cachable;
+
     protected $fillable = [
         'key',
         'user_id',

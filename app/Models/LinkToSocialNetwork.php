@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Tools\File;
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -22,9 +23,13 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\LinkToSocialNetwork whereSortingOrder($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\LinkToSocialNetwork whereUrl($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\LinkToSocialNetwork disableCache()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\LinkToSocialNetwork withCacheCooldownSeconds($seconds)
  */
 class LinkToSocialNetwork extends Model
 {
+    use Cachable;
+
     public $timestamps = false;
 
     protected $fillable = [

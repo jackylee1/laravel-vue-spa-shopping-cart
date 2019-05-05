@@ -69,6 +69,12 @@ use Illuminate\Support\Facades\DB;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product newProducts()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product searchByText()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product joinBestseller()
+ * @property string|null $m_title
+ * @property string|null $m_keywords
+ * @property string|null $m_description
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product whereMDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product whereMKeywords($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product whereMTitle($value)
  */
 class Product extends Model
 {

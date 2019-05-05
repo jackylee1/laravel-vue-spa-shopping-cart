@@ -33,6 +33,12 @@ use Nestable\NestableTrait;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Category withCacheCooldownSeconds($seconds)
  * @property int|null $show_on_header
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Category whereShowOnHeader($value)
+ * @property string|null $m_title
+ * @property string|null $m_description
+ * @property string|null $m_keywords
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Category whereMDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Category whereMKeywords($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Category whereMTitle($value)
  */
 class Category extends Model
 {

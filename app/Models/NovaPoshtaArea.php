@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Tools\Api\Delivery\NovaPoshta;
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -21,9 +22,13 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaArea whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaArea whereRef($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaArea disableCache()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\NovaPoshtaArea withCacheCooldownSeconds($seconds)
  */
 class NovaPoshtaArea extends Model
 {
+    use Cachable;
+
     protected $fillable = [
         'ref',
         'area_center',

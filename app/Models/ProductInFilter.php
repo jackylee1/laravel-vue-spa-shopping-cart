@@ -70,6 +70,10 @@ class ProductInFilter extends Model
         return $this->hasMany('App\Models\ProductInFilterTree', 'product_in_filter_id', 'id');
     }
 
+    public function availableFilter() {
+        return $this->hasOne('App\Models\ProductAvailableFilter', 'filter_id', 'filter_id');
+    }
+
     protected function destroyModel($id) {
         ProductInFilter::find($id)->delete();
     }
@@ -82,6 +86,12 @@ class ProductInFilter extends Model
         if ($category_id !== null) {
             $query->where('category_id', $category_id);
         }
+
+        $query->whereHas('availableFilter', function ($query) {
+            $query->whereHas('productAvailable', function ($query) {
+                $query->where('quantity', '>', 0);
+            });
+        });
 
         $models = $query->setEagerLoads([])->whereIn('filter_id', $filters)->get();
 

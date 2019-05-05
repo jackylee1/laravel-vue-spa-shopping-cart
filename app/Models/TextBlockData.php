@@ -30,6 +30,12 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TextBlockData whereSlug($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TextBlockData disableCache()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TextBlockData withCacheCooldownSeconds($seconds)
+ * @property string|null $m_title
+ * @property string|null $m_description
+ * @property string|null $m_keywords
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TextBlockData whereMDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TextBlockData whereMKeywords($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TextBlockData whereMTitle($value)
  */
 class TextBlockData extends Model
 {
