@@ -66,6 +66,7 @@ class SettingTableSeeder extends Seeder {
             ['slug' => 'phone1'],
             ['slug' => 'phone2'],
             ['slug' => 'email'],
+            ['slug' => 'address'],
             ['slug' => 'index_m_title'],
             ['slug' => 'index_m_description'],
             ['slug' => 'index_m_keywords'],

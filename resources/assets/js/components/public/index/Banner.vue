@@ -1,6 +1,6 @@
 <template>
     <div>
-        <section class="banner">
+        <section class="banner" v-if="indexTypes !== undefined && indexTypes.length">
             <div class="container">
                 <div class="row" v-for="typesChunk in _.chunk(indexTypes, 2)">
                     <div v-for="type in typesChunk"

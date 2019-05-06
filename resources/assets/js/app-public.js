@@ -5,6 +5,7 @@ import VueCookies from 'vue-cookies';
 import vSelect from 'vue-select';
 import VueRouter from 'vue-router';
 import Vuex from 'vuex';
+import VueYoutube from 'vue-youtube';
 import { routes } from './app/public/routes';
 import Layout from './components/public/Layout';
 import StoreData from './app/public/store';
@@ -32,6 +33,7 @@ Vue.use(VueLoading, {
 });
 Vue.component('v-select', vSelect);
 Vue.use(Meta);
+Vue.use(VueYoutube);
 
 const store = new Vuex.Store(StoreData);
 

@@ -44,7 +44,7 @@ class SendCreateOrderNotification extends Notification
             ->line("ID Заказа: {$this->order->id}");
         
         if (auth()->check()) {
-            $mail_message->action('Просмотреть в личном кабинете', url("/user/order/{$this->order->id}"));
+            $mail_message->action('Просмотреть в личном кабинете', url()->to("/user/order/{$this->order->id}"));
         }
 
         return $mail_message;

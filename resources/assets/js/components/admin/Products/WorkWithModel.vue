@@ -24,7 +24,6 @@
                 <el-form-item label="Описание" prop="description">
                     <tinymce id="description" v-model="description"
                              :other_options="optionsTinymce"
-                             v-on:editorChange="this.changeDescription"
                              v-on:editorInit="initTinymce"></tinymce>
                 </el-form-item>
 
@@ -987,11 +986,11 @@
                     }
                 });
             },
-            changeDescription: function() {
+            /*changeDescription: function() {
                 this.form.description = (this.description.length)
                         ? this.description.replace(/(\")[\.\/]{2,}/, '$1/')
                         : '';
-            },
+            },*/
             uploadImages: function(form) {
                 let formData = new FormData();
                 formData.append('product_id', this.form.id);

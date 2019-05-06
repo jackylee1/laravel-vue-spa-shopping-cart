@@ -18,7 +18,8 @@
                                 <h2>{{item.title}}</h2>
                                 <p v-html="item.description"></p>
                                 <a v-if="item.url !== null"
-                                   :href="item.url"
+                                   href="javascript:void(0)"
+                                   @click="openLinkSlider(item.url)"
                                    class="more_info">
                                     Подробнее
                                 </a>
@@ -42,6 +43,20 @@
 <script>
     export default {
         name: 'Slider',
-        props: ['sliders']
+        props: ['sliders'],
+        methods: {
+            openLinkSlider: function (url) {
+                let domain = location.protocol+'//'+location.hostname;
+                if (url.indexOf(domain) !== -1) {
+                    url = url.replace(domain, '');
+
+                    this.$router.push(url);
+
+                    return true;
+                }
+
+                window.location.href = url;
+            }
+        }
     }
 </script>

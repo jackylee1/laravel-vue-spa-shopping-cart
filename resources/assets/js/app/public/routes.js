@@ -11,12 +11,21 @@ import CheckoutLayout from "../../components/public/cart/Checkout";
 import ConfirmLayout from "../../components/public/cart/Confirm";
 import LoginAndRegistrationLayout from "../../components/public/user/LoginAndRegistration";
 import NotFound from "../../components/public/text_page/NotFound";
+import ContactsLayout from "../../components/public/Contacts/Layout";
 
 export const routes = [
     {
         path: '/',
         component: IndexLayout,
         name: 'index',
+        meta: {
+            requiresAuth: false,
+        }
+    },
+    {
+        path: '/contacts',
+        component: ContactsLayout,
+        name: 'contacts',
         meta: {
             requiresAuth: false,
         }

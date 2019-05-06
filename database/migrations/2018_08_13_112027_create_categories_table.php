@@ -22,6 +22,7 @@ class CreateCategoriesTable extends Migration
             $table->integer('sorting_order')->default(0);
             $table->boolean('show_on_header')->default(true);
             $table->integer('parent_id');
+            $table->boolean('hidden_name')->default(false);
 
             $table->text('m_title')->nullable();
             $table->text('m_description')->nullable();

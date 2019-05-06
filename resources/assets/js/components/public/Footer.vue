@@ -24,6 +24,7 @@
                             <p>узнавайте первыми про акции и новинки</p>
                         </div>
                         <form @keyup.enter="subscribe"
+                              data-vv-scope="form-subscribe"
                               action="javascript:void(0)"
                               class="form-inline">
                             <input v-model="email"
@@ -35,7 +36,11 @@
                                    placeholder="Введите Ваш электронный адрес..." aria-label="">
                             <a @click="subscribe" href="javascript:void(0)" class="to_subscribe">ПОДПИСАТЬСЯ</a>
 
-                            <VeeErrors/>
+                            <div class="row col-sm-12" v-show="errors.has('form-subscribe.email')">
+                                <div class="alert alert-danger" style="margin-top: 10px;min-width: 100%">
+                                    {{ errors.first('form-subscribe.email') }}
+                                </div>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -284,7 +289,7 @@
         },
         methods: {
             subscribe: function () {
-                this.$validator.validateAll().then((result) => {
+                this.$validator.validateAll('form-subscribe').then((result) => {
                     if (result) {
                         let self = this;
                         ApiSubscribe.create({email: this.email}).then((res) => {

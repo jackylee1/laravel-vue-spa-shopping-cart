@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\Cart;
 use App\Models\Favorite;
 use App\Models\Filter;
+use App\Models\IndexMediaFile;
 use App\Models\LinkToSocialNetwork;
 use App\Models\OrderPaymentMethod;
 use App\Models\Product;
@@ -64,6 +65,7 @@ class PageController extends Controller
         $this->setData('payment_methods', OrderPaymentMethod::methods());
         $this->setData('utf_records', UtfRecord::getItems());
         $this->setData('settings', Setting::getItems());
+        $this->setData('index_media_files', IndexMediaFile::getItems());
 
         if (auth()->check()) {
             $this->setData('user', auth()->user());

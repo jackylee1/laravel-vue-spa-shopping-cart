@@ -16,6 +16,7 @@ import tinymce from 'vue-tinymce-editor';
 import FileManager from 'laravel-file-manager';
 import Croppa from 'vue-croppa';
 import VueClipboard from 'vue-clipboard2';
+import VueYoutube from 'vue-youtube';
 
 import './assets/css/theme-dark-purple/index.css';
 import './assets/css/global-style.css';
@@ -33,6 +34,7 @@ Vue.use(ElementUI);
 Vue.use(Croppa);
 Vue.use(VueClipboard);
 Vue.component('tinymce', tinymce);
+Vue.use(VueYoutube);
 
 const store = new Vuex.Store(StoreData);
 

@@ -23,10 +23,10 @@
         name: 'Filters',
         props: ['currentType', 'currentCategory'],
         mounted() {
-            this.setRenderArray();
-            this.setSelectFilters();
+                this.setRenderArray();
+                this.setSelectFilters();
 
-            this.$emit('getProducts', this.$router.currentRoute.query.page);
+                this.$emit('getProducts', this.$router.currentRoute.query.page);
         },
         computed: {
             'filters': function () {
@@ -90,10 +90,10 @@
                 let typeFilters = [];
                 let categoryFilters = [];
 
-                if (this.currentType !== null) {
+                if (this.currentType !== null && this.currentCategory === null) {
                     typeFilters = this.sortCurrentFilters(this.currentType.filters);
                 }
-                if (this.currentCategory !== null) {
+                else if (this.currentCategory !== null) {
                     categoryFilters = this.sortCurrentFilters(this.currentCategory.filters);
                 }
 
@@ -145,8 +145,8 @@
         },
         watch: {
             watchProps: function () {
-                this.setRenderArray();
-                this.setSelectFilters();
+                    this.setRenderArray();
+                    this.setSelectFilters();
             }
         },
     }

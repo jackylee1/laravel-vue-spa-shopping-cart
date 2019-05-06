@@ -16,12 +16,14 @@ class SettingController extends Controller
             'phone1' => 'nullable|phone:UA|max:191',
             'phone2' => 'nullable|phone:UA|max:191',
             'email' => 'nullable|email',
+            'address' => 'nullable|string|max:191',
             'index_m_title' => 'nullable|string|max:50000',
             'index_m_description' => 'nullable|string|max:50000',
             'index_m_keywords' => 'nullable|string|max:50000',
         ]);
 
         $this->setValidateAttribute([
+            'address' => 'Адрес',
             'phone1' => 'Контактный телефон (1)',
             'phone2' => 'Контактный телефон (2)',
             'email' => 'Контактный E-Mail',
@@ -43,6 +45,7 @@ class SettingController extends Controller
         Setting::updateModel('phone1', $request->phone1);
         Setting::updateModel('phone2', $request->phone2);
         Setting::updateModel('email', $request->email);
+        Setting::updateModel('address', $request->address);
         Setting::updateModel('index_m_title', $request->index_m_title);
         Setting::updateModel('index_m_description', $request->index_m_description);
         Setting::updateModel('index_m_keywords', $request->index_m_keywords);

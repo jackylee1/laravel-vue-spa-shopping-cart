@@ -63,6 +63,7 @@
                     this.$store.commit('updateBestsellerProducts', res.data.bestseller_products);
                     this.$store.commit('updateUtfRecords', res.data.utf_records);
                     this.$store.commit('updateSettings', res.data.settings);
+                    this.$store.commit('updateIndexMediaFiles', res.data.index_media_files);
 
                     if (res.data.user !== undefined) {
                         let token = null;

@@ -30,7 +30,8 @@ export default {
         orders: [],
         bestsellerProducts: [],
         utfRecords: [],
-        settings: []
+        settings: [],
+        indexMediaFiles: [],
     },
     getters: {
         currentUser: function (state) {
@@ -113,6 +114,9 @@ export default {
         },
         settings: function (state) {
             return state.settings;
+        },
+        indexMediaFiles: function (state) {
+            return state.indexMediaFiles;
         }
     },
     mutations: {
@@ -208,6 +212,9 @@ export default {
         },
         updateSettings: function (state, payload) {
             state.settings = payload;
+        },
+        updateIndexMediaFiles: function (state, payload) {
+            state.indexMediaFiles = payload;
         }
     }
 };

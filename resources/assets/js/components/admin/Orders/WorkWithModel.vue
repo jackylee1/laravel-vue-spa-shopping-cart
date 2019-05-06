@@ -255,7 +255,7 @@
                         min-width="150">
                     <template slot-scope="props">
                         <template v-for="(filter, index) in props.row.available.filters">
-                            {{ getFilter(filter.filter_id).name }}
+                            {{ getFilter(filter.filter_id) }}
                             <template v-if="index !== props.row.available.filters.length - 1">
                                 <i class="ai-arrow-right"></i>
                             </template>
@@ -556,10 +556,10 @@
             }
         },
         methods: {
-            updateReadStatus: function () {
-                if (this.form.read_status === 0) {
+            updateReadStatus: function (data) {
+                if (!data.read_status) {
                     ApiOrders.updateReadStatus({
-                        id: this.form.id
+                        id: data.id
                     }).then((response) => {
                         if (response.data.status === 'success') {
                             this.form = response.data.order;
@@ -668,15 +668,17 @@
                 }
             },
             getFilter: function (id) {
-                return this.filtersInStore.find(item => item.id === id) ||  {
-                    name: null
+                let filter = this.filtersInStore.find(item => item.id === id);
+                if (filter !== undefined) {
+                    let parent = this.filtersInStore.find(item => item.id === filter.parent_id);
+                    return `${parent.name}: ${filter.name}`;
                 }
             },
             generationSelectAvailableProduct: function (available) {
                 available = available.map(availableItem => {
                     let name = '';
                     availableItem.filters.forEach((filter, index) => {
-                        name += this.getFilter(filter.filter_id).name;
+                        name += this.getFilter(filter.filter_id);
 
                         if (index !== availableItem.filters.length - 1) {
                             name += ' -> ';
@@ -799,7 +801,7 @@
                     this.setUser(data.user_id);
                 }
                 this.form = data;
-                this.updateReadStatus();
+                this.updateReadStatus(data);
                 this.oldForm = _.cloneDeep(this.form);
             },
             setDataToStore: function (data = null) {

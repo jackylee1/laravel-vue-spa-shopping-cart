@@ -52,6 +52,7 @@ class CategoryController extends Controller
             'name' => 'required|string|max:191',
             'sorting_order' => 'required|integer',
             'show_on_header' => 'nullable|boolean',
+            'hidden_name' => 'nullable|boolean',
             'm_title' => 'nullable|string|max:50000',
             'm_description' => 'nullable|string|max:50000',
             'm_keyword' => 'nullable|string|max:50000',
@@ -60,6 +61,7 @@ class CategoryController extends Controller
         $this->setValidateAttribute([
             'parent_id' => 'Родительская категория',
             'type_id' => 'Тип',
+            'hidden_name' => 'Скрыть наименование',
             'name' => 'Наименование',
             'sorting_order' => 'Порядок сортировки',
             'slug' => 'SEO адрес'

@@ -19,7 +19,6 @@ function script_ts($path, $public = true) {
         if ($public) {
             $path = public_path() . $path;
         }
-        dd($path);
 
         $ts = '?v=' . File::lastModified($path);
     } catch (Exception $e) {

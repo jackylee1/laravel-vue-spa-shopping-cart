@@ -20,7 +20,7 @@ class AdminEvent implements ShouldBroadcast
     public function __construct($model, $data)
     {
         $this->model = $model;
-        $this->data = $data;
+        $this->data = $data->toArray();
     }
 
     /**
@@ -35,9 +35,13 @@ class AdminEvent implements ShouldBroadcast
 
     public function broadcastWith()
     {
-        return [
+        $data = [
             'model' => $this->model,
-            'data' => $this->data
         ];
+        if ($this->model !== 'order') {
+            $data['data'] = $this->data;
+        }
+
+        return $data;
     }
 }

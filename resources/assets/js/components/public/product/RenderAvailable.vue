@@ -9,7 +9,7 @@
                        :id="'option'+(index+1)"
                        checked>
                 <template v-for="(filter, indexFilter) in available.filters">
-                    {{ getFilter(filter.filter_id).name }}
+                    {{ getFilter(filter.filter_id) }}
                     <template v-if="indexFilter !== available.filters.length - 1">
                         +
                     </template>
@@ -44,8 +44,11 @@
                 this.$emit('changeIdAvailable', id);
             },
             getFilter: function (id) {
-                return this.filters.find(item => item.id === id) ||  {
-                    name: null
+                let filter = this.filters.find(item => item.id === id);
+                if (filter !== undefined) {
+                    let parent = this.filters.find(item => item.id === filter.parent_id);
+
+                    return `${parent.name}: ${filter.name}`;
                 }
             },
         }

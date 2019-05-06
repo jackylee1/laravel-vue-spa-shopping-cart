@@ -180,6 +180,25 @@
                     </el-alert>
                 </template>
 
+                <template v-if="workWithNode.parent_id === 1">
+                    <el-form-item label="Скрыть наименование?">
+                        <el-select v-model="workWithNode.hidden_name" placeholder="" prop="hidden_name">
+                            <el-option
+                                    v-for="item in this.selectBoolean"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-alert
+                            style="margin-bottom: 10px"
+                            title="Вы можете скрыть наименование родительской категории (учитывается в шапке сайта)"
+                            type="info"
+                            :closable="false">
+                    </el-alert>
+                </template>
+
                 <el-select v-model="workWithNode.parent_id" placeholder="Выберите родителя" prop="parent_id">
                     <el-option
                             v-for="item in renderSelectParent"
@@ -434,6 +453,7 @@
                     slug: '',
                     parent_id: 1,
                     show_on_header: 1,
+                    hidden_name: 0,
                     m_title: '',
                     m_description: '',
                     m_keywords: ''

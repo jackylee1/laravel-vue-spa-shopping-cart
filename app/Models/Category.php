@@ -56,13 +56,15 @@ class Category extends Model
         'show_on_header',
         'm_title',
         'm_description',
-        'm_keywords'
+        'm_keywords',
+        'hidden_name'
     ];
     protected $cats = [
         'type_id' => 'integer',
         'sorting_order' => 'integer',
         'parent_id' => 'integer',
-        'show_on_header' => 'integer'
+        'show_on_header' => 'integer',
+        'hidden_name' => 'integer'
     ];
 
     protected $parent = 'parent_id';
@@ -101,7 +103,9 @@ class Category extends Model
         $model->show_on_header = (request()->filled('show_on_header'))
             ? request()->get('show_on_header')
             : 1;
-
+        $model->hidden_name = (request()->filled('hidden_name'))
+            ? request()->get('hidden_name')
+            : 0;
         $model->m_title = request()->get('m_title');
         $model->m_description = request()->get('m_description');
         $model->m_keywords = request()->get('m_keywords');

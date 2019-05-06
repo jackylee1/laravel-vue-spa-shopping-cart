@@ -13,6 +13,8 @@ Route::group([], function () {
     Route::get('products', 'Api\ProductController@products');
     Route::get('product/view/{slug}', 'Api\ProductController@view');
 
+    Route::post('feedback', 'Api\FeedbackController@send');
+
     Route::prefix('favorite')->group(function () {
         Route::post('/', 'Api\FavoriteController@store');
         Route::post('/destroy', 'Api\FavoriteController@destroy');
@@ -153,6 +155,10 @@ Route::group(['middleware' => ['jwt.auth', 'only-administration'], 'prefix' => '
     Route::post('subscribes/update_read_status', 'Api\Admin\SubscribeController@updateReadStatus');
 
     Route::post('new_notifications', 'Api\Admin\NotificationController@getNew');
+
+    Route::resource('index_media_files', 'Api\Admin\IndexMediaFileController')->only([
+        'index', 'show', 'store', 'update', 'destroy'
+    ]);
 
     Route::prefix('orders')->group(function () {
         Route::post('add_product', 'Api\Admin\OrderController@addProduct');

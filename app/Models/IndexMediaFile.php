@@ -11,9 +11,6 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id
  * @property int $sorting_order
- * @property int $type
- * @property string|null $image_origin
- * @property string|null $image_preview
  * @property string|null $video
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\IndexMediaFile disableCache()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\IndexMediaFile newModelQuery()
@@ -34,22 +31,16 @@ class IndexMediaFile extends Model
 
     public $timestamps = false;
 
-    public $path_image = 'public/images/index_files/';
-
     protected $fillable = [
         'sorting_order',
-        'type',
-        'image_origin',
-        'image_preview',
         'video'
     ];
 
     protected $casts = [
         'sorting_order' => 'integer',
-        'type' => 'integer',
     ];
 
-    protected function getItems() {
+    public static function getItems() {
         return IndexMediaFile::orderBy('sorting_order', 'asc')->get();
     }
 
@@ -57,39 +48,24 @@ class IndexMediaFile extends Model
         return IndexMediaFile::find($id);
     }
 
-    private function deleteImages($model) {
-        File::delete($this->path_image, [$model->image_preview, $model->image_origin]);
-    }
-
-    private function workWithModel($model, $image_origin, $image_preview) {
-        $model->title = request()->get('title');
-        $model->url = request()->get('url');
-        $model->description = request()->get('description');
-        if ($image_origin !== null && $image_preview !== null) {
-            $this->deleteImages($model);
-
-            $model->image_preview = $image_preview;
-            $model->image_origin = $image_origin;
-        }
+    private function workWithModel($model) {
+        $model->video = request()->get('video');
         $model->sorting_order = (request()->filled('sorting_order')) ? request()->get('sorting_order') : 0;
         $model->save();
 
         return $model;
     }
 
-    protected function createModel($image_origin, $image_preview) {
-        return $this->workWithModel(new Slider(), $image_origin, $image_preview);
+    protected function createModel() {
+        return $this->workWithModel(new IndexMediaFile());
     }
 
-    protected function updateModel($image_origin, $image_preview) {
-        return $this->workWithModel(Slider::find(request()->get('id')), $image_origin, $image_preview);
+    protected function updateModel() {
+        return $this->workWithModel(IndexMediaFile::find(request()->get('id')));
     }
 
     protected function destroyModel($id) {
         $model = IndexMediaFile::find($id);
-
-        $this->deleteImages($model);
-
         $model->delete();
     }
 }

@@ -31,11 +31,6 @@ export function listeningEvents(store) {
                 break;
             case 'order':
                 store.commit('updateNewOrders', store.getters.newOrders + 1);
-                if (store.getters.orders.data !== undefined) {
-                    let orders = store.getters.orders;
-                    orders.data.unshift(message.data);
-                    store.commit('updateOrders', orders);
-                }
                 break;
         }
     });

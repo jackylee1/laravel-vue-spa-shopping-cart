@@ -21,10 +21,15 @@
                                         <a class="menu_tab" href="javascript:void(0)">{{type.name}}</a>
                                         <ul v-if="type.categories.length">
                                             <template v-for="(category, index) in getTreeCategories(type.categories)">
-                                                <li :class="(index === 0) ? 'first_column' : 'second_column'">
-                                                    <ul>
+                                                <li  v-if="category.show_on_header"
+                                                     :class="(index === 0) ? 'first_column' : 'second_column'">
+                                                    <ul >
                                                         <template v-if="category.children !== undefined && category.children.length">
-                                                            <li v-if="category.show_on_header"><p>{{category.name}}</p></li>
+                                                            <li v-if="!category.hidden_name">
+                                                                <router-link :to="{ name: 'catalog', query: { type: type.slug, category:  category.slug } }">
+                                                                    <p>{{category.name}}</p>
+                                                                </router-link>
+                                                            </li>
                                                             <template v-for="categoryChildren in sortCategories(category.children)">
                                                                 <li>
                                                                     <router-link :to="{ name: 'catalog', query: { type: type.slug, category: categoryChildren.slug } }">
@@ -32,6 +37,13 @@
                                                                     </router-link>
                                                                 </li>
                                                             </template>
+                                                        </template>
+                                                        <template v-else>
+                                                            <li v-if="!category.hidden_name">
+                                                                <router-link :to="{ name: 'catalog', query: { type: type.slug, category:  category.slug } }">
+                                                                    <p>{{category.name}}</p>
+                                                                </router-link>
+                                                            </li>
                                                         </template>
                                                     </ul>
                                                 </li>
@@ -90,6 +102,11 @@
                                         </li>
                                     </template>
                                 </template>
+                                <li class="menu_link">
+                                    <a class="menu_tab" @click="openLink('contacts')" href="javascript:void(0)">
+                                        Контакты
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </div>

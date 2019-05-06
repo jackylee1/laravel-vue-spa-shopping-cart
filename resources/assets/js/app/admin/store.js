@@ -88,7 +88,8 @@ export default {
         loadNotifications: false,
         sizeTables: [],
         utfRecords: [],
-        settings: []
+        settings: [],
+        indexMediaFiles: []
     },
     getters: {
         isLoggedIn(state) {
@@ -192,6 +193,9 @@ export default {
         },
         settings: function (state) {
             return state.settings;
+        },
+        indexMediaFiles: function (state) {
+            return state.indexMediaFiles;
         }
     },
     mutations: {
@@ -297,6 +301,9 @@ export default {
         },
         updateSettings: function (state, payload) {
             state.settings = payload;
+        },
+        updateIndexMediaFiles: function (state, payload) {
+            state.indexMediaFiles = payload;
         }
     },
     actions: {

@@ -22,6 +22,10 @@
                     <el-input type="text" v-model="form.email" placeholder="Введите E-Mail"></el-input>
                 </el-form-item>
 
+                <el-form-item label="Адрес" prop="address">
+                    <el-input type="text" v-model="form.address" placeholder="Введите Адрес"></el-input>
+                </el-form-item>
+
                 <el-form-item label="Index Meta Заголовок" prop="index_m_title">
                     <el-input type="text" v-model="form.index_m_title" placeholder="Введите Index Meta Заголовок"></el-input>
                 </el-form-item>
@@ -85,6 +89,9 @@
                 form: this.defaultFormData(),
                 oldForm: null,
                 rules: {
+                    address: [
+                        {max: 191, min: 0, message: generatingValidationMessage('length', [255, 0]), trigger: ['blur', 'change']}
+                    ],
                     index_m_title: [
                         {max: 50000, min: 0, message: generatingValidationMessage('length', [50000, 0]), trigger: ['blur', 'change']}
                     ],
@@ -115,6 +122,7 @@
                 this.form.phone1 = data.find((item) => item.slug === 'phone1').value;
                 this.form.phone2 = data.find((item) => item.slug === 'phone2').value;
                 this.form.email = data.find((item) => item.slug === 'email').value;
+                this.form.address = data.find((item) => item.slug === 'address').value;
                 this.form.index_m_title = data.find((item) => item.slug === 'index_m_title').value;
                 this.form.index_m_keywords = data.find((item) => item.slug === 'index_m_keywords').value;
                 this.form.index_m_description = data.find((item) => item.slug === 'index_m_description').value;
@@ -126,6 +134,7 @@
                     phone1: '',
                     phone2: '',
                     email: '',
+                    address: '',
                     index_m_title: '',
                     index_m_keywords: '',
                     index_m_description: '',
@@ -138,6 +147,7 @@
                 settings.unshift({slug: 'phone1', value: currentData.phone1});
                 settings.unshift({slug: 'phone2', value: currentData.phone2});
                 settings.unshift({slug: 'email', value: currentData.email});
+                settings.unshift({slug: 'address', value: currentData.address});
                 settings.unshift({slug: 'index_m_title', value: currentData.index_m_title});
                 settings.unshift({slug: 'index_m_keywords', value: currentData.index_m_keywords});
                 settings.unshift({slug: 'index_m_description', value: currentData.index_m_description});

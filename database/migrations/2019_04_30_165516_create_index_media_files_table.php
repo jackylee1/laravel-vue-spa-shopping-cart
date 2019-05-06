@@ -16,9 +16,6 @@ class CreateIndexMediaFilesTable extends Migration
         Schema::create('index_media_files', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('sorting_order')->default(0);
-            $table->integer('type')->default(0);
-            $table->char('image_origin')->nullable();
-            $table->char('image_preview')->nullable();
             $table->char('video')->nullable();
         });
     }

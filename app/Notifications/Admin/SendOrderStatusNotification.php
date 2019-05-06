@@ -49,6 +49,8 @@ class SendOrderStatusNotification extends Notification
         if ($this->user_id !== null) {
             $main_message->action('Просмотреть в личном кабинете', url("/user/order/$this->order_id"));
         }
+
+        return $main_message;
     }
 
     /**

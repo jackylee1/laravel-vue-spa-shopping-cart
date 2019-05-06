@@ -16,6 +16,7 @@ import { LinkToSocialNetworksList, LinkToSocialNetworksModel } from "../../compo
 import { SubscribesList, SubscribesWorkWithModel } from "../../components/admin/Subscribes";
 import { SizeTablesList, SizeTalesWorkWithModel } from "../../components/admin/SizeTables";
 import { UtfRecordsList, UtfRecordsWorkWithModel } from "../../components/admin/UtfRecords";
+import { IndexMediaFilesList, IndexMediaFilesWorkWithModel } from "../../components/admin/IndexMediaFiles";
 import { SettingsWorkWithModel } from "../../components/admin/Settings";
 
 export const routes = [
@@ -564,6 +565,36 @@ export const routes = [
                     hidden: true,
                     name: 'Обновление данных UTF записи',
                     title: 'Обновление данных UTF записи'
+                }
+            },
+            {
+                name: 'index-media-files-list',
+                path: 'index_media_files',
+                component: IndexMediaFilesList,
+                meta: {
+                    hidden: false,
+                    name: 'Медиа-файлы на главной',
+                    title: 'Медиа-файлы на главной'
+                }
+            },
+            {
+                name: 'index-media-files-create',
+                path: 'index_media_files/create',
+                component: IndexMediaFilesWorkWithModel,
+                meta: {
+                    hidden: false,
+                    name: 'Добавить медиа-файл на главную',
+                    title: 'Добавить медиа-файл на главную'
+                }
+            },
+            {
+                name: 'index-media-files-update',
+                path: 'index_media_files/:id',
+                component: IndexMediaFilesWorkWithModel,
+                meta: {
+                    hidden: true,
+                    name: 'Обновление данных медиа-файл',
+                    title: 'Обновление данных медиа-файл'
                 }
             }
         ]
