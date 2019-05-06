@@ -25,10 +25,10 @@
                                                      :class="(index === 0) ? 'first_column' : 'second_column'">
                                                     <ul >
                                                         <template v-if="category.children !== undefined && category.children.length">
-                                                            <li v-if="!category.hidden_name">
-                                                                <router-link :to="{ name: 'catalog', query: { type: type.slug, category:  category.slug } }">
-                                                                    <p>{{category.name}}</p>
-                                                                </router-link>
+                                                            <li v-if="!category.hidden_name"
+                                                                style="cursor: pointer"
+                                                                @click="openLinkByObject({ name: 'catalog', query: { type: type.slug, category:  category.slug } })">
+                                                                <p>{{category.name}}</p>
                                                             </li>
                                                             <template v-for="categoryChildren in sortCategories(category.children)">
                                                                 <li>
@@ -39,10 +39,10 @@
                                                             </template>
                                                         </template>
                                                         <template v-else>
-                                                            <li v-if="!category.hidden_name">
-                                                                <router-link :to="{ name: 'catalog', query: { type: type.slug, category:  category.slug } }">
-                                                                    <p>{{category.name}}</p>
-                                                                </router-link>
+                                                            <li v-if="!category.hidden_name"
+                                                                style="cursor: pointer"
+                                                                @click="openLinkByObject({ name: 'catalog', query: { type: type.slug, category:  category.slug } })">
+                                                                <p>{{category.name}}</p>
                                                             </li>
                                                         </template>
                                                     </ul>
@@ -183,6 +183,9 @@
                 }
 
                 return this.$router.push({name: name});
+            },
+            openLinkByObject: function (obj) {
+                return this.$router.push(obj);
             }
         },
         watch: {
