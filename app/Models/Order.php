@@ -253,8 +253,8 @@ class Order extends Model
 
             $discount_promotional = $promotional_code->discount;
 
-            //$promotional_code->status = 0;
-            //$promotional_code->save();
+            $promotional_code->status = 0;
+            $promotional_code->save();
 
             if ($promotional_code_id != $order->promotional_code_id) {
                 $order->setRelation('promotional_code', $promotional_code);
