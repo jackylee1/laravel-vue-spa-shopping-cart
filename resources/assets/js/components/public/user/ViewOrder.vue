@@ -146,7 +146,8 @@
                                             ТОВАРОВ НА СУММУ:
                                             <span class="items_sum_numb">{{order.total_price}} грн.</span>
                                         </p>
-                                        <p class="items_sum_text" v-if="order.total_discount_price !== null">
+                                        <p class="items_sum_text"
+                                           v-if="order.total_discount_price !== null && order.total_price !== order.total_discount_price">
                                             С УЧЕТОМ СКИДКИ ЗА ГРУППУ И(ИЛИ) ПРОМО-КОД:
                                             <span class="items_sum_numb">{{order.total_discount_price}} грн.</span>
                                         </p>

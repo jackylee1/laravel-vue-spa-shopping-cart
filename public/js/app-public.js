@@ -6947,6 +6947,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 
 
@@ -53724,7 +53725,9 @@ var render = function() {
                                   )
                                 ]),
                                 _vm._v(" "),
-                                _vm.order.total_discount_price !== null
+                                _vm.order.total_discount_price !== null &&
+                                _vm.order.total_price !==
+                                  _vm.order.total_discount_price
                                   ? _c("p", { staticClass: "items_sum_text" }, [
                                       _vm._v(
                                         "\n                                        С УЧЕТОМ СКИДКИ ЗА ГРУППУ И(ИЛИ) ПРОМО-КОД:\n                                        "
