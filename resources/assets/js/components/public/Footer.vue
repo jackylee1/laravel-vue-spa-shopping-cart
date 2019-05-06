@@ -328,7 +328,8 @@
                         }
                     });
                 });
-                return arrayToTree(tempFilters, {
+
+                return arrayToTree(_.unionBy(tempFilters, 'id'), {
                     parentProperty: 'parent_id',
                     customID: 'id'
                 });

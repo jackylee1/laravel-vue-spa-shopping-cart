@@ -698,7 +698,7 @@ var arrayToTree = __webpack_require__(/*! array-to-tree */ "./node_modules/array
           }
         });
       });
-      return arrayToTree(tempFilters, {
+      return arrayToTree(_.unionBy(tempFilters, 'id'), {
         parentProperty: 'parent_id',
         customID: 'id'
       });
