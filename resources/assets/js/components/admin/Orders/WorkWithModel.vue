@@ -939,6 +939,14 @@
                     this.promotionalCode = this.form.promotional_code.code;
                 }
             },
+            'promotionalCode': function (value) {
+                if (value === null) {
+                    this.form.promotional_code_id = null;
+                }
+                else if (value.toString().length === 0) {
+                    this.form.promotional_code_id = null;
+                }
+            },
             'form.promotional_code_id': function (promotionalCodeId) {
                 if (promotionalCodeId === null) {
                     this.promotionalCode = null;
