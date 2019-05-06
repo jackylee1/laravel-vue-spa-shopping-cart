@@ -48,12 +48,12 @@
                                                     </ul>
                                                 </li>
                                             </template>
-                                            <li v-if="type.image_preview !== null" class="sixth_column">
+                                            <li v-if="type.image_origin !== null" class="sixth_column">
                                                 <ul>
                                                     <li>
                                                         <a href="javascript:void(0)">
                                                             <img class="menu_img"
-                                                                 :src="`/app/public/images/type/${type.image_preview}`"
+                                                                 :src="`/app/public/images/type/${type.image_origin}`"
                                                                  :alt="type.name">
                                                         </a>
                                                     </li>
