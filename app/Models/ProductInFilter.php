@@ -29,6 +29,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ProductInFilter disableCache()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ProductInFilter withCacheCooldownSeconds($seconds)
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProductInFilterTree[] $filters
+ * @property-read \App\Models\ProductAvailableFilter $availableFilter
  */
 class ProductInFilter extends Model
 {
@@ -80,6 +81,7 @@ class ProductInFilter extends Model
 
     public static function getProductIdsByFilters($filters, $type_id = null, $category_id = null) {
         $query = ProductInFilter::query();
+
         if ($type_id !== null) {
             $query->where('type_id', $type_id);
         }
@@ -87,13 +89,13 @@ class ProductInFilter extends Model
             $query->where('category_id', $category_id);
         }
 
-        $query->whereHas('availableFilter', function ($query) {
-            $query->whereHas('productAvailable', function ($query) {
-                $query->where('quantity', '>', 0);
-            });
-        });
+        /*$query->whereHas('availableFilter', function ($query) {
+            //$query->whereHas('productAvailable', function ($query) {
+            //    $query->where('quantity', '>', 0);
+            //});
+        });*/
 
-        $models = $query->setEagerLoads([])->whereIn('filter_id', $filters)->get();
+        $models = $query->setEagerLoads([])->whereIn('filter_id', array_values($filters->toArray()))->get();
 
         $id_products = [];
 

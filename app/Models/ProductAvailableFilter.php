@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ProductAvailableFilter disableCache()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ProductAvailableFilter withCacheCooldownSeconds($seconds)
+ * @property-read \App\Models\ProductAvailable $productAvailable
  */
 class ProductAvailableFilter extends Model
 {

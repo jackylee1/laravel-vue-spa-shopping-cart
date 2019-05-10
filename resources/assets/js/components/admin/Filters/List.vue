@@ -8,7 +8,7 @@
                 <el-row>
                     <el-button type="primary" @click="modalCreateNode">Добавить</el-button>
                 </el-row>
-                <p style="padding-top: 15px">Наименование фильтра | Тип | Порядок сортировки | Операции</p>
+                <p style="padding-top: 15px">Наименование фильтра | Тип | Порядок сорт. | Операции</p>
             </el-row>
             <el-tree class="ds-description"
                      :data="renderTree()"
@@ -50,7 +50,7 @@
                     <el-input v-model="workWithNode.slug"></el-input>
                 </el-form-item>
 
-                <el-form-item  label="Порядок сортировки" prop="sorting_order">
+                <el-form-item  label="Порядок сорт." prop="sorting_order">
                     <el-input v-model="workWithNode.sorting_order"></el-input>
                 </el-form-item>
 

@@ -51,7 +51,6 @@
             </el-table-column>
             <el-table-column
                     fixed="right"
-                    label="Управление"
                     min-width="150">
                 <template slot-scope="props">
                     <el-button-group>

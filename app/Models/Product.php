@@ -117,7 +117,8 @@ class Product extends Model
         'filters',
         'available',
         'mainType',
-        'sizeTable'
+        'sizeTable',
+        'video'
     ];
 
     public $path_image = 'public/images/products/';
@@ -148,6 +149,10 @@ class Product extends Model
 
     public function filters() {
         return $this->hasMany('App\Models\ProductInFilter');
+    }
+
+    public function video() {
+        return $this->hasMany('App\Models\ProductVideo', 'product_id', 'id')->orderBy('sorting_order', 'asc');
     }
 
     public function scopeAllSelectAndCurrentPrice($query) {
@@ -216,6 +221,7 @@ class Product extends Model
         $query = Product::query();
         if (request()->filled('q')) {
             $like_data = getLikeData(request()->get('q'));
+            dump($like_data);
             $query->whereRaw('lower(like_name) like ?', ["%{$like_data['str']}%"])
                 ->orWhereRaw('lower(like_name) like ?', ["%{$like_data['add_spaces']}%"])
                 ->orWhereRaw('lower(like_name) like ?', ["%{$like_data['clear_spaces']}%"])
@@ -367,11 +373,11 @@ class Product extends Model
         if (request()->filled('sort')) {
             switch (request()->get('sort')) {
                 case 'from_cheap_to_expensive':
-                    $query->orderBy('products.current_price', 'asc');
+                    $query->orderBy('current_price', 'asc');
                     break;
 
                 case 'from_expensive_to_cheap':
-                    $query->orderByDesc('products.current_price');
+                    $query->orderByDesc('current_price');
                     break;
 
                 case 'popular':

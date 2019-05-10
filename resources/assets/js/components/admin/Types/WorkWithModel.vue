@@ -76,8 +76,8 @@
                     </el-select>
                 </el-form-item>
 
-                <el-form-item label="Порядок сортировки" prop="sorting_order">
-                    <el-input type="text" v-model="form.sorting_order" placeholder="Введите порядок сортировки"></el-input>
+                <el-form-item label="Порядок сорт." prop="sorting_order">
+                    <el-input type="text" v-model="form.sorting_order" placeholder="Введите Порядок сорт."></el-input>
                 </el-form-item>
 
                 <PageElementsAlerts :alerts="alerts" :type="typeAlerts"/>
@@ -95,7 +95,7 @@
         <div class="ds-block" v-if="showTree">
             <el-row class="ds-description">
                 <h3 class="text-center">Список категорий</h3>
-                Наименование категории | Порядок сортировки | Операции
+                Наименование категории | Порядок сорт. | Операции
             </el-row>
             <el-tree class="ds-description"
                 :data="renderTree()"
@@ -157,7 +157,7 @@
                     <el-input type="text" v-model="workWithNode.m_keywords" placeholder="Введите Meta Ключевые слова"></el-input>
                 </el-form-item>
 
-                <el-form-item  label="Порядок сортировки" prop="sorting_order">
+                <el-form-item  label="Порядок сорт." prop="sorting_order">
                     <el-input v-model="workWithNode.sorting_order"></el-input>
                 </el-form-item>
 

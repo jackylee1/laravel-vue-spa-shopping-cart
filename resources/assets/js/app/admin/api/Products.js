@@ -45,3 +45,15 @@ export function availableUpdateQuantity(request) {
 export function availableDestroy(request) {
     return axios.post('/api/admin/products/available/destroy', request);
 }
+
+export function destroyVideo(id) {
+    return axios.delete(`/api/admin/products/video/${id}`);
+}
+
+export function updateVideo(id, request) {
+    return axios.patch(`/api/admin/products/video/${id}`, request);
+}
+
+export function createVideo(request) {
+    return axios.post('/api/admin/products/video/', request);
+}

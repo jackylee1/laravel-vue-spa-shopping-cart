@@ -14,8 +14,8 @@
                     <el-input type="text" v-model="form.video" placeholder="Введите Ссылка на Youtube видео"></el-input>
                 </el-form-item>
 
-                <el-form-item label="Порядок сортировки" prop="sorting_order">
-                    <el-input type="text" v-model="form.sorting_order" placeholder="Введите Порядок сортировки"></el-input>
+                <el-form-item label="Порядок сорт." prop="sorting_order">
+                    <el-input type="text" v-model="form.sorting_order" placeholder="Введите Порядок сорт."></el-input>
                 </el-form-item>
 
                 <PageElementsAlerts :alerts="alerts" :type="typeAlerts"/>

@@ -6,9 +6,9 @@
 
         <NewProducts :products="newProducts"/>
 
-        <BestSellers :products="bestsellerProducts"/>
-
         <Banner/>
+
+        <BestSellers :products="bestsellerProducts"/>
 
         <BestSellers/>
 

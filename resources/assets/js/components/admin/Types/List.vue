@@ -26,12 +26,11 @@
             </el-table-column>
             <el-table-column
                     prop="sorting_order"
-                    label="Порядок сортировки"
+                    label="Порядок сорт."
                     min-width="150">
             </el-table-column>
             <el-table-column
                     fixed="right"
-                    label="Управление"
                     min-width="150">
                 <template slot-scope="props">
                     <el-button-group>

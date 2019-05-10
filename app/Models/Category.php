@@ -39,6 +39,8 @@ use Nestable\NestableTrait;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Category whereMDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Category whereMKeywords($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Category whereMTitle($value)
+ * @property int|null $hidden_name
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Category whereHiddenName($value)
  */
 class Category extends Model
 {

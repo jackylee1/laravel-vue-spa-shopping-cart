@@ -140,6 +140,9 @@
                         <el-button v-if="currentRoute.name === 'products-update'"
                                    type="default"
                                    @click="dialogWorkWithAvailable">Наличие товара</el-button>
+                        <el-button v-if="currentRoute.name === 'products-update'"
+                                   type="default"
+                                   @click="modalCreateVideo">Добавить видео</el-button>
                         <el-button type="primary" @click="onSubmit">{{submitName}}</el-button>
                     </el-button-group>
                 </el-form-item>
@@ -147,7 +150,7 @@
         </div>
 
         <el-row v-if="currentRoute.name === 'products-update'">
-            <el-col :span="24">
+            <el-col :span="14">
                 <div class="ds-block">
                     <h4 class="text-center">Добавлен в</h4>
                     <el-table
@@ -155,6 +158,7 @@
                             style="width: 100%">
                         <el-table-column
                                 fixed
+                                min-width="150"
                                 label="Тип">
                             <template slot-scope="props">
                                 {{ getType(props.row.type_id).name }}
@@ -162,7 +166,7 @@
                         </el-table-column>
                         <el-table-column
                                 fixed
-                                min-width="200"
+                                min-width="150"
                                 label="Категория">
                             <template slot-scope="props">
                                 <template v-for="(category, index) in props.row.categories">
@@ -188,7 +192,7 @@
                         </el-table-column>
                         <el-table-column
                                 fixed="right"
-                                label="Управление"
+                                label=""
                                 min-width="50">
                             <template slot-scope="props">
                                 <el-button
@@ -202,7 +206,7 @@
                     </el-table>
                 </div>
             </el-col>
-            <el-col :span="24">
+            <el-col :span="10">
                 <div class="ds-block">
                     <h4 class="text-center">Данные наличия товара</h4>
                     <el-table
@@ -212,7 +216,7 @@
                                 fixed
                                 prop="id"
                                 label="ID"
-                                min-width="15">
+                                min-width="25">
                         </el-table-column>
                         <el-table-column
                                 fixed
@@ -234,7 +238,6 @@
                         </el-table-column>
                         <el-table-column
                                 fixed="right"
-                                label="Управление"
                                 min-width="45">
                             <template slot-scope="props">
                                 <el-button-group>
@@ -257,28 +260,107 @@
             </el-col>
         </el-row>
 
-        <div class="ds-block" v-if="currentRoute.name === 'products-update'">
-            <h4 class="text-center">Список изображений</h4>
+        <el-row v-if="currentRoute.name === 'products-update'">
+            <el-col :span="12">
+                <div class="ds-block">
+                    <h4 class="text-center">Список изображений</h4>
 
-            <PageElementsAlerts :alerts="alertsUploadImages" :type="typeAlerts"/>
+                    <PageElementsAlerts :alerts="alertsUploadImages" :type="typeAlerts"/>
 
-            <el-upload
-                    :multiple="true"
-                    drag
-                    name="image"
-                    class="upload-images"
-                    :action="actionUploadImages"
-                    :http-request="uploadImages"
-                    :on-preview="handlePreviewImages"
-                    :on-remove="handleRemoveImages"
-                    :file-list="imagesList"
-                    :on-change="onChangeImages"
-                    list-type="picture">
-                <i class="el-icon-upload"></i>
-                <div class="el-upload__text">Переместите в эту область изображение или <em>кликните чтобы загрузить</em></div>
-                <div slot="tip" class="el-upload__tip">jpg/png/jpeg/gif/ изображения размером не более 2048kb</div>
-            </el-upload>
-        </div>
+                    <el-upload
+                            :multiple="true"
+                            drag
+                            name="image"
+                            class="upload-images"
+                            :action="actionUploadImages"
+                            :http-request="uploadImages"
+                            :on-preview="handlePreviewImages"
+                            :on-remove="handleRemoveImages"
+                            :file-list="imagesList"
+                            :on-change="onChangeImages"
+                            list-type="picture">
+                        <i class="el-icon-upload"></i>
+                        <div class="el-upload__text">Переместите в эту область изображение или <em>кликните чтобы загрузить</em></div>
+                        <div slot="tip" class="el-upload__tip">jpg/png/jpeg/gif/ изображения размером не более 2048kb</div>
+                    </el-upload>
+                </div>
+            </el-col>
+            <el-col :span="12">
+                <div class="ds-block">
+                    <h4 class="text-center">Видео товара</h4>
+                    <el-table
+                            :data="form.video"
+                            style="width: 100%">
+                        <el-table-column
+                                fixed
+                                prop="id"
+                                min-width="25"
+                                label="ID">
+                        </el-table-column>
+                        <el-table-column
+                                min-width="100"
+                                label="Ссылка на видео">
+                            <template slot-scope="props">
+                                <a :href="props.row.url" target="_blank">{{props.row.url}}</a>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                                prop="sorting_order"
+                                min-width="70"
+                                label="Порядок сорт.">
+                        </el-table-column>
+                        <el-table-column
+                                fixed="right"
+                                min-width="25">
+                            <template slot-scope="props">
+                                <el-button-group>
+                                    <el-button
+                                            @click.native.prevent="modalUpdateVideo(props.row.id)"
+                                            size="mini">
+                                        <i class="el-icon-edit"></i>
+                                    </el-button>
+                                    <el-button
+                                            size="mini"
+                                            type="danger"
+                                            @click.native.prevent="deleteVideo(props.row.id)">
+                                        <i class="el-icon-delete"></i>
+                                    </el-button>
+                                </el-button-group>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </div>
+            </el-col>
+        </el-row>
+
+        <el-dialog width="40%" :title="titleDialogWorkWith" :visible.sync="visibleDialogWorkWithVideo">
+            <el-form :model="modelVideo"
+                     ref="formWorkWithVideo">
+                <el-form-item label="Ссылка на Youtube видео"
+                              prop="url">
+                    <el-input type="text" v-model="modelVideo.url"
+                              placeholder="Введите Ссылку на Youtube видео"></el-input>
+                </el-form-item>
+
+                <el-form-item label="Порядок сорт."
+                              prop="sorting_order">
+                    <el-input type="text" v-model="modelVideo.sorting_order"
+                              placeholder="Введите Порядок сорт."></el-input>
+                </el-form-item>
+            </el-form>
+
+            <PageElementsAlerts :alerts="modalAlerts" :type="modalTypeAlerts"/>
+
+            <span slot="footer" class="dialog-footer">
+                <el-button-group>
+                    <el-button @click="visibleDialogWorkWithVideo = false">Отмена</el-button>
+                    <el-button type="primary"
+                               @click="videoManagementHandler">
+                        Сохранить
+                    </el-button>
+                </el-button-group>
+            </span>
+        </el-dialog>
 
         <el-dialog width="40%" :title="titleDialogWorkWith" :visible.sync="visibleDialogWorkWithAvailable">
             <el-form ref="formWorkWithAvailable">
@@ -373,7 +455,7 @@
                     <el-button :disabled="this.currentProductImageOnModal === 'origin'" type="primary" @click="changeProductImageOnModal('origin')">Оригинал</el-button>
                     <el-button :disabled="this.currentProductImageOnModal === 'preview'" type="primary" @click="changeProductImageOnModal('preview')">Превью</el-button>
                 </el-button-group>
-                <el-form-item label="Порядок сортировки" prop="sorting_order">
+                <el-form-item label="Порядок сорт." prop="sorting_order">
                     <el-input v-model="workWithImage.sorting_order"></el-input>
                 </el-form-item>
                 <el-form-item label="Статус изображения" prop="main_status">
@@ -623,6 +705,13 @@
                 selectedFormType: null,
                 selectedFormCategory: null,
                 selectedSizeTable: null,
+                visibleDialogWorkWithVideo: false,
+                modelVideo: {
+                    id: null,
+                    product_id: null,
+                    url: null,
+                    sorting_order: 1
+                },
             }
         },
         methods: {
@@ -1106,7 +1195,8 @@
                     main_type: {},
                     m_title: '',
                     m_description: '',
-                    m_keywords: ''
+                    m_keywords: '',
+                    video: [],
                 }
             },
             setBreadcrumbElements: function () {
@@ -1161,6 +1251,87 @@
                         return false;
                     }
                 });
+            },
+            modalCreateVideo: function () {
+                this.titleDialogWorkWith = 'Добавить видео к товару';
+                this.modelVideo = {
+                    id: null,
+                    product_id: this.form.id,
+                    sorting_order: 0,
+                    url: null
+                };
+                this.visibleDialogWorkWithVideo = true;
+            },
+            modalUpdateVideo: function (id) {
+                this.titleDialogWorkWith = 'Изменить данные о Видео товара';
+                this.modelVideo = this.form.video.find((item) => item.id === id);
+                this.visibleDialogWorkWithVideo = true;
+            },
+            deleteVideo: function (id) {
+                ApiProducts.destroyVideo(id).then((res) => {
+                    if (res.data.status === 'success') {
+                        let video = this.form.video;
+                        let index = video.findIndex((item) => item.id === id);
+                        video.splice(index, 1);
+                        this.changeOldForm(this.form);
+
+                        this.$notify.success({
+                            offset: 50,
+                            title: 'Запрос успешно выполнен',
+                            message: res.data.message
+                        });
+                    }
+                }).catch((error) => {
+                    this.alerts = error.response.data.errors;
+                    this.typeAlerts = 'error';
+                });
+            },
+            videoManagementHandler: function () {
+                if (this.modelVideo !== null) {
+                    if (this.modelVideo.id === null) {
+                        ApiProducts.createVideo(this.modelVideo).then((res) => {
+                            if (res.data.status === 'success') {
+                                let video = this.form.video;
+                                video.unshift(res.data.product_video);
+                                video = _.orderBy(video, 'sorting_order', 'asc');
+                                this.form.video = video;
+                                this.changeOldForm(this.form);
+
+                                this.visibleDialogWorkWithVideo = false;
+
+                                this.$notify.success({
+                                    offset: 50,
+                                    title: 'Запрос успешно выполнен',
+                                    message: res.data.message
+                                });
+                            }
+                        }).catch((error) => {
+                            this.modalAlerts = error.response.data.errors;
+                            this.modalTypeAlerts = 'error';
+                        });
+                    }
+                    else {
+                        ApiProducts.updateVideo(this.modelVideo.id, this.modelVideo).then((res) => {
+                            if (res.data.status === 'success') {
+                                let video = this.form.video;
+                                let index = video.findIndex((item) => item.id === res.data.product_video.id);
+                                video[index] = res.data.product_video;
+                                video = _.orderBy(video, 'sorting_order', 'asc');
+                                this.form.video = video;
+                                this.changeOldForm(this.form);
+
+                                this.$notify.success({
+                                    offset: 50,
+                                    title: 'Запрос успешно выполнен',
+                                    message: res.data.message
+                                });
+                            }
+                        }).catch((error) => {
+                            this.modalAlerts = error.response.data.errors;
+                            this.modalTypeAlerts = 'error';
+                        });
+                    }
+                }
             }
         },
         components: {

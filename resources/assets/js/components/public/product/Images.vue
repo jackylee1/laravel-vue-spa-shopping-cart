@@ -22,6 +22,15 @@
                         </template>
                     </li>
                 </template>
+                <li v-for="video in product.video">
+                    <a data-fancybox="gallery"
+                       data-type="iframe"
+                       :data-src="video.url">
+                        <img class="small_img"
+                             src="/assets/public/images/items/video.png"
+                             alt="">
+                    </a>
+                </li>
             </ul>
         </div>
         <div v-if="product.main_image !== null" class="col-md-6 item_image">

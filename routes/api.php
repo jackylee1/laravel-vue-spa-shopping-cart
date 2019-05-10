@@ -103,6 +103,10 @@ Route::group(['middleware' => ['jwt.auth', 'only-administration'], 'prefix' => '
             Route::post('update_quantity', 'Api\Admin\ProductAvailableController@updateQuantity');
             Route::post('destroy', 'Api\Admin\ProductAvailableController@destroy');
         });
+
+        Route::resource('video', 'Api\Admin\ProductVideoController')->only([
+            'store', 'update', 'destroy'
+        ]);
     });
     Route::prefix('product_images')->group(function () {
         Route::post('upload', 'Api\Admin\ProductController@uploadImage');

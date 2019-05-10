@@ -5,6 +5,8 @@ function getOnlyCharacters($str) {
 }
 
 function prepareForLike($str) {
+    $str = preg_replace('/[^a-zA-Zа-яА-Я\d+]/ui', ' ', $str);
+
     return preg_replace("/[ ]+/u", "%%", $str);
 }
 

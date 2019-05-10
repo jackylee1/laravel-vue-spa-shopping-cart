@@ -20,11 +20,10 @@
             </el-table-column>
             <el-table-column
                     prop="sorting_order"
-                    label="Порядок сортировки">
+                    label="Порядок сорт.">
             </el-table-column>
             <el-table-column
-                    fixed="right"
-                    label="Управление">
+                    fixed="right">
                 <template slot-scope="props">
                     <el-button-group>
                         <el-button
