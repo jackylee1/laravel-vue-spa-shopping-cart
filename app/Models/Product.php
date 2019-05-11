@@ -221,7 +221,6 @@ class Product extends Model
         $query = Product::query();
         if (request()->filled('q')) {
             $like_data = getLikeData(request()->get('q'));
-            dump($like_data);
             $query->whereRaw('lower(like_name) like ?', ["%{$like_data['str']}%"])
                 ->orWhereRaw('lower(like_name) like ?', ["%{$like_data['add_spaces']}%"])
                 ->orWhereRaw('lower(like_name) like ?', ["%{$like_data['clear_spaces']}%"])
@@ -277,7 +276,7 @@ class Product extends Model
         return $product;
     }
 
-    public static function getNewProducts() {
+    public static function getNewProducts($limit = 16) {
         $query = Product::query();
         $query->select([
             'id',
@@ -296,12 +295,12 @@ class Product extends Model
             ->with(['mainImage'])
             ->newProducts()
             ->orderByDesc('created_at')
-            ->limit(15)->get();
+            ->limit($limit)->get();
 
         return ProductTool::checkRelevanceDiscount($products);
     }
 
-    public static function getBestsellers() {
+    public static function getBestsellers($limit = 16) {
         $query = Product::query();
 
         $id_products = ProductBestseller::getProducts()->toArray();
@@ -326,13 +325,13 @@ class Product extends Model
         $products = $query->activeForPublic()
             ->with(['mainImage'])
             ->orderByDesc('product_bestsellers.quantity')
-            ->limit(15)->get();
+            ->limit($limit)->get();
 
         return ProductTool::checkRelevanceDiscount($products);
     }
 
 
-    public static function getProductsPublic() {
+    public static function getProductsPublic($all = false) {
         $query = Product::query();
 
         $query->allSelectAndCurrentPrice();
@@ -400,10 +399,18 @@ class Product extends Model
                     break;
             }
         }
+        elseif (request()->filled('limit')) {
+            $query->inRandomOrder();
+        }
 
-        $products = $query->paginate(12);
+        if ($all) {
+            $products = $query->get();
+        }
+        else {
+            $products = (request()->filled('limit')) ? $query->limit(request()->get('limit'))->get() : $query->paginate(12);
+        }
 
-        ProductTool::checkRelevanceDiscount($products->items());
+        ProductTool::checkRelevanceDiscount((request()->filled('limit') || $all) ? $products : $products->items());
 
         return $products;
     }

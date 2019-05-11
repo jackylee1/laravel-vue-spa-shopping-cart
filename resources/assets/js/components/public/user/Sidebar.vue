@@ -10,6 +10,13 @@
                 </li>
 
                 <li>
+                    <router-link :to="{ name: 'user_promotional_codes' }">
+                        <i class="fas fa-percent"></i>
+                        Промо-коды
+                    </router-link>
+                </li>
+
+                <li>
                     <router-link :to="{ name: 'list_orders' }">
                         <i class="fas fa-clipboard-list"></i>Заказы
                     </router-link>

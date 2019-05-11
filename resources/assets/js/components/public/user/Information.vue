@@ -8,6 +8,12 @@
                     <h3>Информация</h3>
                     <form :model="form"
                           action="javascript:void(0)">
+                        <div class="form-group row" v-if="this.currentUser.group !== null">
+                            <label for="name" class="col-lg-3">Вы состоите в группе:</label>
+                            <div class="col-lg-9">
+                                {{this.currentUser.group.user_group.name}} (Скидка: {{this.currentUser.group.user_group.discount}}%)
+                            </div>
+                        </div>
                         <div class="form-group row">
                             <label for="name" class="col-lg-3 col-form-label">Имя </label>
                             <div class="col-lg-9">

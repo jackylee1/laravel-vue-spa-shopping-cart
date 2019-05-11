@@ -44,7 +44,7 @@
                     <Comments/>
                 </template>
 
-                <!-- <RecommendedProducts/> -->
+                <RecommendedProducts :products="recommendedProducts"/>
             </div>
         </section>
     </div>
@@ -118,6 +118,7 @@
         },
         data() {
             return {
+                recommendedProducts: [],
                 product: null,
                 breadcrumbs: [],
                 isLoading: true,
@@ -205,6 +206,26 @@
                     this.breadcrumbs.push({'title': this.product.name});
                 }
             },
+            getRecommendedProducts: function (typeId, categoryId) {
+                categoryId = (Array.isArray(categoryId)) ? _.last(categoryId) : categoryId;
+
+                if (typeId !== null && categoryId !== null) {
+                    ApiProducts.get(1, {
+                        type: typeId,
+                        category: categoryId,
+                        limit: 8
+                    }).then((res) => {
+                        this.recommendedProducts = res.data.products;
+                    }).catch((error) => {
+                        this.alerts = error.response.data.errors;
+                        this.$notify({
+                            type: 'error',
+                            title: 'Ошибка',
+                            text: 'при получении рекомендованных товаров'
+                        });
+                    });
+                }
+            },
             handleSetBreadcrumbs: function () {
                 if (this.breadcrumbs.length === 0
                     && this.typePrevious === null && this.categoryPrevious === null
@@ -213,6 +234,7 @@
                     && this.product.main_type !== null
                     && this.product.main_type.type_id !== undefined) {
                     this.setBreadcrumbs(this.product.main_type.type_id, this.product.main_type.category_id);
+                    this.getRecommendedProducts(this.product.main_type.type_id, this.product.main_type.category_id)
                 }
                 else {
                     let typeId = null;
@@ -224,10 +246,16 @@
                         categoryId = this.categoryPrevious.id;
                     }
                     this.setBreadcrumbs(typeId, categoryId);
+                    this.getRecommendedProducts(typeId, categoryId);
                 }
             }
         },
         watch: {
+            '$route' (to, from){
+                this.breadcrumbs = [];
+                this.productView();
+                this.$scrollTo('#top_line', 650);
+            },
             'types': function () {
                 this.dataLoad.push(true);
             },

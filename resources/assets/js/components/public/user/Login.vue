@@ -58,9 +58,7 @@
                         </a>
                     </div>
                     <div class="authorization righted">
-                        <a href="javascript:void(0)">
-                            Забыли пароль?
-                        </a>
+                        <router-link :to="{ name: 'forget_password' }">Забыли пароль?</router-link>
                     </div>
                 </div>
             </div>

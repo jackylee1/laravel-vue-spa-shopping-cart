@@ -40,6 +40,8 @@ Route::group([], function () {
 
     Route::prefix('user')->group(function () {
         Route::post('registration', 'Api\UserController@registration');
+        Route::post('send_reset_password', 'Api\UserController@sendResetPassword');
+        Route::post('reset_password', 'Api\UserController@resetUserPassword');
     });
 
     Route::post('/order/by_in_one_click', 'Api\OrderController@byInOneClick');

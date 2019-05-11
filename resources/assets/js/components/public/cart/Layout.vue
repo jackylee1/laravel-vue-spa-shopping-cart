@@ -112,48 +112,59 @@
                         </tbody>
                     </table>
                 </div>
-                <div v-for="product in cartProducts" class="row cart_description_mobile">
-                    <div class="col-5">
-                        <router-link :to="{name: 'product', params: {slug: product.product.slug}}">
-                            <img v-if="product.product.main_image !== null"
-                                 :src="`/app/public/images/products/${product.product.main_image.preview}`"
-                                 :alt="product.product.name">
-                        </router-link>
-                    </div>
-                    <div class="col-7 item_in_cart">
-                        <router-link class="bold"
-                                     :to="{name: 'product', params: {slug: product.product.slug}}">
-                            {{product.product.name}}
-                        </router-link>
-                        <template v-for="filter in getAvailable(product.product_available_id, product.product).filters">
-                            <p v-html="getParentAndSelectFilter(filter.filter_id)"></p>
-                        </template>
-                        <p>Цена:
-                            <strike v-if="product.product.discount_price !== null">
-                                {{product.product.price}} грн
-                            </strike>
-                            {{product.product.current_price}} грн
-                        </p>
-                        <p>Сумма
-                            <strike v-if="product.product.discount_price !== null">
-                                {{product.product.price * product.quantity}} грн
-                            </strike>
-                            {{product.product.current_price * product.quantity}} грн
-                        </p>
-                        <div class="input-group spinner">
-                            <input type="text" class="form-control"
-                                   v-model="product.quantity"
-                                   disabled>
-                            <div class="input-group-btn-vertical">
-                                <button @click="btnChangeCartQuantity(product, 'inc')"
-                                        class="btn btn-default"
-                                        type="button">+</button>
-                                <button @click="btnChangeCartQuantity(product, 'desc')"
-                                        class="btn btn-default"
-                                        type="button">-</button>
+                <div class="row cart_description_mobile">
+                    <template v-for="product in cartProducts">
+                        <div class="col-5">
+                            <router-link :to="{name: 'product', params: {slug: product.product.slug}}">
+                                <img v-if="product.product.main_image !== null"
+                                     :src="`/app/public/images/products/${product.product.main_image.preview}`"
+                                     :alt="product.product.name">
+                            </router-link>
+                        </div>
+                        <div class="col-7 item_in_cart">
+                            <router-link class="bold"
+                                         :to="{name: 'product', params: {slug: product.product.slug}}">
+                                {{product.product.name}}
+                            </router-link>
+                            <template v-for="filter in getAvailable(product.product_available_id, product.product).filters">
+                                <p v-html="getParentAndSelectFilter(filter.filter_id)"></p>
+                            </template>
+                            <a @click="deleteProductFromCart(product.id)" href="javascript:void(0)">
+                                <i class="far fa-trash-alt"></i>
+                            </a>
+                            <p>Цена:
+                                <strike v-if="product.product.discount_price !== null">
+                                    {{product.product.price}} грн
+                                </strike>
+                                {{product.product.current_price}} грн
+                            </p>
+                            <p>Сумма
+                                <strike v-if="product.product.discount_price !== null">
+                                    {{product.product.price * product.quantity}} грн
+                                </strike>
+                                {{product.product.current_price * product.quantity}} грн
+                            </p>
+                            <div class="input-group spinner">
+                                <input type="text" class="form-control"
+                                       v-model="product.quantity"
+                                       disabled>
+                                <div class="input-group-btn-vertical">
+                                    <button @click="btnChangeCartQuantity(product, 'inc')"
+                                            class="btn btn-default"
+                                            type="button">+</button>
+                                    <button @click="btnChangeCartQuantity(product, 'desc')"
+                                            class="btn btn-default"
+                                            type="button">-</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </template>
+
+                    <template v-if="cartProducts.length === 0">
+                        <div class="alert alert-info text-center" style="width: 100%">
+                            У Вас нет товаров в корзине
+                        </div>
+                    </template>
                 </div>
 
                 <hr>

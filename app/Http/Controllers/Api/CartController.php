@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\AdminEvent;
 use App\Models\Cart;
 use App\Models\NovaPoshtaArea;
 use App\Models\ProductAvailable;
 use App\Models\PromotionalCode;
+use App\Models\Subscribe;
+use App\Notifications\Admin\SendSubscribeNotification;
 use App\Traits\ValidateTrait;
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -136,6 +140,16 @@ class CartController extends Controller
             'note' => 'Комментарий к заказу'
         ]);
         $request->validate($this->validate_rules, [], $this->validate_attributes);
+
+        if ($request->filled('subscribe') && $request->subscribe) {
+            $subscribe = Subscribe::getSubscribeByEmail($request->email);
+            if ($subscribe === null) {
+                $subscribe = Subscribe::firstOrCreateModel($request->email);
+
+                User::getUser(1)->notify(new SendSubscribeNotification($subscribe->id));
+                event(new AdminEvent('subscribe', $subscribe));
+            }
+        }
 
         $cart = Cart::updateModel();
 

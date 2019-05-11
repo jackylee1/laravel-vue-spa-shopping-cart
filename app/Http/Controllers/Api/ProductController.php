@@ -34,6 +34,7 @@ class ProductController extends Controller
             }
         }
         $this->setValidateRule([
+            'limit' => 'nullable|integer|max:8',
             'text' => 'nullable|string|max:1500',
             'type' => 'nullable|integer|exists:types,id',
             'category' => 'nullable|integer|exists:categories,id',

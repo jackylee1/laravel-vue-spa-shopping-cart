@@ -3,15 +3,19 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Subscribe;
+use App\Notifications\PublicNotification\MailResetPasswordToken;
 use App\Traits\ValidateTrait;
 use App\User;
+use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 
 class UserController extends Controller
 {
-    use ValidateTrait;
+    use ValidateTrait,
+        ResetsPasswords;
 
     private function setRegex($password = 'password', $confirmation = 'password_confirmation') {
         $password_regex_message = 'Пароль имеет не верный формат. Пароль должен состоять как минимум с 3 символов латинского алфавита включа один символ в верхнем регистре и 3 цифр.';
@@ -126,5 +130,50 @@ class UserController extends Controller
             'remember' => true,
             'expires_in' => auth('api')->factory()->getTTL() * 60
         ]);
+    }
+
+    public function sendResetPassword(Request $request) {
+        $this->setValidateRule(['email' => 'required|email|exists:users,email']);
+        $this->setValidateAttribute([
+            'email' => 'E-Mail'
+        ]);
+        $request->validate($this->validate_rules, [], $this->validate_attributes);
+
+        $user = User::where('email', request()->input('email'))->first();
+        $token = Password::getRepository()->create($user);
+
+        $user->notify(new MailResetPasswordToken($token, $user));
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Инструкция по восстановлению пароля отправлена на указанный E-Mail'
+        ]);
+    }
+
+    public function resetUserPassword(Request $request)
+    {
+        $password_regex = $this->setRegex('password', 'password_confirmation');
+        $this->setValidateRule([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => "required|confirmed|min:6|$password_regex",
+        ]);
+        $this->setValidateAttribute([
+            'token' => 'Токен',
+            'email' => 'E-Mail',
+            'password' => 'Новый пароль',
+            'password_confirmation' => 'Подтвердите новый пароль'
+        ]);
+        $request->validate($this->validate_rules, $this->validate_messages, $this->validate_attributes);
+
+        $response = $this->broker()->reset(
+            $this->credentials($request), function ($user, $password) {
+            $this->resetPassword($user, $password);
+        }
+        );
+
+        return $response == Password::PASSWORD_RESET
+            ? $this->sendResetResponse($request, $response)
+            : $this->sendResetFailedResponse($request, $response);
     }
 }

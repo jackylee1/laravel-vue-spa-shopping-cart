@@ -150,7 +150,6 @@
         </div>
 
         <el-row v-if="currentRoute.name === 'products-update'">
-            <el-col :span="14">
                 <div class="ds-block">
                     <h4 class="text-center">Добавлен в</h4>
                     <el-table
@@ -205,8 +204,6 @@
                         </el-table-column>
                     </el-table>
                 </div>
-            </el-col>
-            <el-col :span="10">
                 <div class="ds-block">
                     <h4 class="text-center">Данные наличия товара</h4>
                     <el-table
@@ -223,7 +220,7 @@
                                 label="Параметры">
                             <template slot-scope="props">
                                 <template v-for="(filter, index) in props.row.filters">
-                                    {{ getFilter(filter.filter_id).name }}
+                                    {{ getStringTreeFilters(filter.filter_id) }}
                                     <template v-if="index !== props.row.filters.length - 1">
                                         <i class="ai-plus"></i>
                                     </template>
@@ -257,80 +254,75 @@
                         </el-table-column>
                     </el-table>
                 </div>
-            </el-col>
         </el-row>
 
         <el-row v-if="currentRoute.name === 'products-update'">
-            <el-col :span="12">
-                <div class="ds-block">
-                    <h4 class="text-center">Список изображений</h4>
+            <div class="ds-block">
+                <h4 class="text-center">Список изображений</h4>
 
-                    <PageElementsAlerts :alerts="alertsUploadImages" :type="typeAlerts"/>
+                <PageElementsAlerts :alerts="alertsUploadImages" :type="typeAlerts"/>
 
-                    <el-upload
-                            :multiple="true"
-                            drag
-                            name="image"
-                            class="upload-images"
-                            :action="actionUploadImages"
-                            :http-request="uploadImages"
-                            :on-preview="handlePreviewImages"
-                            :on-remove="handleRemoveImages"
-                            :file-list="imagesList"
-                            :on-change="onChangeImages"
-                            list-type="picture">
-                        <i class="el-icon-upload"></i>
-                        <div class="el-upload__text">Переместите в эту область изображение или <em>кликните чтобы загрузить</em></div>
-                        <div slot="tip" class="el-upload__tip">jpg/png/jpeg/gif/ изображения размером не более 2048kb</div>
-                    </el-upload>
-                </div>
-            </el-col>
-            <el-col :span="12">
-                <div class="ds-block">
-                    <h4 class="text-center">Видео товара</h4>
-                    <el-table
-                            :data="form.video"
-                            style="width: 100%">
-                        <el-table-column
-                                fixed
-                                prop="id"
-                                min-width="25"
-                                label="ID">
-                        </el-table-column>
-                        <el-table-column
-                                min-width="100"
-                                label="Ссылка на видео">
-                            <template slot-scope="props">
-                                <a :href="props.row.url" target="_blank">{{props.row.url}}</a>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                                prop="sorting_order"
-                                min-width="70"
-                                label="Порядок сорт.">
-                        </el-table-column>
-                        <el-table-column
-                                fixed="right"
-                                min-width="25">
-                            <template slot-scope="props">
-                                <el-button-group>
-                                    <el-button
-                                            @click.native.prevent="modalUpdateVideo(props.row.id)"
-                                            size="mini">
-                                        <i class="el-icon-edit"></i>
-                                    </el-button>
-                                    <el-button
-                                            size="mini"
-                                            type="danger"
-                                            @click.native.prevent="deleteVideo(props.row.id)">
-                                        <i class="el-icon-delete"></i>
-                                    </el-button>
-                                </el-button-group>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                </div>
-            </el-col>
+                <el-upload
+                        :multiple="true"
+                        drag
+                        name="image"
+                        class="upload-images"
+                        :action="actionUploadImages"
+                        :http-request="uploadImages"
+                        :on-preview="handlePreviewImages"
+                        :on-remove="handleRemoveImages"
+                        :file-list="imagesList"
+                        :on-change="onChangeImages"
+                        list-type="picture">
+                    <i class="el-icon-upload"></i>
+                    <div class="el-upload__text">Переместите в эту область изображение или <em>кликните чтобы загрузить</em></div>
+                    <div slot="tip" class="el-upload__tip">jpg/png/jpeg/gif/ изображения размером не более 2048kb</div>
+                </el-upload>
+            </div>
+            <div class="ds-block">
+                <h4 class="text-center">Видео товара</h4>
+                <el-table
+                        :data="form.video"
+                        style="width: 100%">
+                    <el-table-column
+                            fixed
+                            prop="id"
+                            min-width="25"
+                            label="ID">
+                    </el-table-column>
+                    <el-table-column
+                            min-width="100"
+                            label="Ссылка на видео">
+                        <template slot-scope="props">
+                            <a :href="props.row.url" target="_blank">{{props.row.url}}</a>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                            prop="sorting_order"
+                            min-width="70"
+                            label="Порядок сорт.">
+                    </el-table-column>
+                    <el-table-column
+                            fixed="right"
+                            min-width="25">
+                        <template slot-scope="props">
+                            <el-button-group>
+                                <el-button
+                                        @click.native.prevent="modalUpdateVideo(props.row.id)"
+                                        size="mini">
+                                    <i class="el-icon-edit"></i>
+                                </el-button>
+                                <el-button
+                                        size="mini"
+                                        type="danger"
+                                        @click.native.prevent="deleteVideo(props.row.id)">
+                                    <i class="el-icon-delete"></i>
+                                </el-button>
+                            </el-button-group>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
         </el-row>
 
         <el-dialog width="40%" :title="titleDialogWorkWith" :visible.sync="visibleDialogWorkWithVideo">
@@ -929,6 +921,13 @@
                     this.$store.commit('updateTypes', response.data.types);
                     this.types = response.data.types;
                 });
+            },
+            getStringTreeFilters: function (id) {
+                let filter = this.filters.find(item => item.id === id);
+                if (filter !== undefined) {
+                    let parent = this.filters.find(item => item.id === filter.parent_id);
+                    return `${parent.name}: ${filter.name}`;
+                }
             },
             getFilter: function (id) {
                 return this.filters.find(item => item.id === id) ||  {

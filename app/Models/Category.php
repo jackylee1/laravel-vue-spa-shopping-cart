@@ -181,4 +181,8 @@ class Category extends Model
             'model' => $model
         ];
     }
+
+    public static function getCategories() {
+        return Category::select('*')->get();
+    }
 }

@@ -27,13 +27,17 @@ Route::prefix('file-manager')->middleware(['jwt.auth', 'only-administration'])->
 
     Route::get('url', '\Alexusmai\LaravelFileManager\Controllers\FileManagerController@url')->name('fm.url');
 
-    // Integration with editors
     Route::get('ckeditor', '\Alexusmai\LaravelFileManager\Controllers\FileManagerController@ckeditor')->name('fm.ckeditor');
 });
 
 Route::get('/admin/{vue_capture?}', function () {
 	return view('admin');
 })->where('vue_capture', '[\/\w\.-]*');
+
+Route::get('export_to_xml/{key}', 'ProductController@exportToXml');
+Route::get('/reset_password/{token}/{email}', function () {
+    return view('public');
+});
 
 Route::get('/{vue_capture?}', function () {
 	return view('public');

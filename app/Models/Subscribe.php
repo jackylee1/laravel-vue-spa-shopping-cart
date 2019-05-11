@@ -41,6 +41,10 @@ class Subscribe extends Model
         return Subscribe::find($id);
     }
 
+    public static function getSubscribeByEmail($email) {
+        return Subscribe::where('email', $email)->first();
+    }
+
     private function workWithModel($model) {
         $model->email = request()->get('email');
         $model->save();

@@ -5,13 +5,13 @@
                 <h4>Ваши отзывы</h4>
             </div>
         </div>
-        <div class="row comments">
+        <div class="row comments" v-if="href !== null">
             <div id="fb-root"></div>
             <div class="col-lg-12">
                 <div class="fb-comments"
                      id="fb_comments"
                      width="100%"
-                     :data-href="facebookPage"
+                     :data-href="href"
                      data-numposts="6"></div>
             </div>
         </div>
@@ -22,6 +22,7 @@
     export default {
         name: 'Comments',
         created: function() {
+            this.href = this.facebookPage();
             if (!this.loadFBComments) {
                 this.initFBComments();
             }
@@ -32,6 +33,9 @@
             }
         },
         methods: {
+            facebookPage: function () {
+                return window.location.origin + '/' + this.$router.currentRoute.fullPath;
+            },
             initFBComments: function () {
                 window.fbAsyncInit = function() {
                     FB.init({
@@ -55,10 +59,20 @@
         computed: {
             'loadFBComments': function () {
                 return this.$store.getters.loadFBComments;
-            },
-            'facebookPage': function () {
-                return window.location.origin + '/' + this.$router.currentRoute.fullPath;
-            },
+            }
         },
+        data() {
+            return {
+                href: null
+            }
+        },
+        watch: {
+            '$route'() {
+                this.href = this.facebookPage();
+                setTimeout(() => {
+                    FB.XFBML.parse();
+                }, 2000);
+            }
+        }
     }
 </script>

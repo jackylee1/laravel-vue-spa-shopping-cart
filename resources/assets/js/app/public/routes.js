@@ -3,6 +3,7 @@ import TextPageLayout from "../../components/public/text_page/Layout";
 import CatalogLayout from "../../components/public/catalog/Layout";
 import ProductLayout from "../../components/public/product/Layout";
 import InformationLayout from "../../components/public/user/Information";
+import PromotionalCodesLayout from "../../components/public/user/PromotionalCodes";
 import FavoriteLayout from "../../components/public/user/Favorite";
 import ListOrdersLayout from "../../components/public/user/ListOrders";
 import ViewOrderLayout from "../../components/public/user/ViewOrder";
@@ -10,6 +11,8 @@ import CartLayout from "../../components/public/cart/Layout";
 import CheckoutLayout from "../../components/public/cart/Checkout";
 import ConfirmLayout from "../../components/public/cart/Confirm";
 import LoginAndRegistrationLayout from "../../components/public/user/LoginAndRegistration";
+import ForgetPasswordLayout from "../../components/public/user/ForgetPassword";
+import ResetPasswordLayout from "../../components/public/user/ResetPassword";
 import NotFound from "../../components/public/text_page/NotFound";
 import ContactsLayout from "../../components/public/Contacts/Layout";
 
@@ -58,6 +61,14 @@ export const routes = [
         path: '/user',
         component: InformationLayout,
         name: 'user_information',
+        meta: {
+            requiresAuth: true,
+        }
+    },
+    {
+        path: '/promotional_codes',
+        component: PromotionalCodesLayout,
+        name: 'user_promotional_codes',
         meta: {
             requiresAuth: true,
         }
@@ -119,6 +130,22 @@ export const routes = [
         path: '/registration',
         component: LoginAndRegistrationLayout,
         name: 'registration',
+        meta: {
+            requiresAuth: false,
+        }
+    },
+    {
+        path: '/forget_password',
+        component: ForgetPasswordLayout,
+        name: 'forget_password',
+        meta: {
+            requiresAuth: false,
+        }
+    },
+    {
+        path: '/reset_password/:token/:email',
+        component: ResetPasswordLayout,
+        name: 'reset_password',
         meta: {
             requiresAuth: false,
         }

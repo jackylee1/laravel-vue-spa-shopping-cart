@@ -202,7 +202,14 @@
                                             <li v-if="phone1 !== null">т. {{phone1}}</li>
                                             <li v-if="phone2 !== null">т. {{phone2}}</li>
                                             <li v-if="settingEmail">{{settingEmail}}</li>
-                                            <li><a href="#"><img src="/assets/public/images/socials/telegram.png" alt=""></a> <a href="#"><img src="/assets/public/images/socials/viber.png" alt=""></a></li>
+                                            <li v-if="linkToSocialNetworks.length">
+                                                <template v-for="link in linkToSocialNetworks">
+                                                    <a :href="link.url" target="_blank">
+                                                        <img :src="'/app/public/images/social_network/'+ link.image_preview"
+                                                             :alt="link.url">
+                                                    </a>
+                                                </template>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>
