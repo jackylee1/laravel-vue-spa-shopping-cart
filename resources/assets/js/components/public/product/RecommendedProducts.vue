@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="products !== null && products.length">
         <div class="row rec_title">
             <div class="col-lg-12">
                 <h4>Рекомендуемые товары</h4>
