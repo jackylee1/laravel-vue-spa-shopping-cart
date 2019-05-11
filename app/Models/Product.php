@@ -404,7 +404,7 @@ class Product extends Model
         }
 
         if ($all) {
-            $products = $query->get();
+            $products = $query->disableCache()->get();
         }
         else {
             $products = (request()->filled('limit')) ? $query->limit(request()->get('limit'))->get() : $query->paginate(12);
