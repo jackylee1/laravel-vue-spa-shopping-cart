@@ -27,12 +27,34 @@
             min-height: 300px !important;
         }
     </style>
+
+    <script src="//unpkg.com/@textback/notification-widget@latest/build/index.js"></script>
 </head>
 
 <body>
 <div id="app">
     <layout/>
 </div>
+
+<tb-notification-widget  widget-id=3b9283b3-b18d-6f0f-3482-016ab075960f></tb-notification-widget>
+
+<script type="text/javascript" encoding="utf-8">
+    var _tbEmbedArgs = _tbEmbedArgs || [];
+    (function () {
+        var u =  "https://widget.textback.io/widget";
+        _tbEmbedArgs.push(["widgetId", "2e91819d-622c-49b8-ae34-ca9575adab5d"]);
+        _tbEmbedArgs.push(["baseUrl", u]);
+
+        var d = document, g = d.createElement("script"), s = d.getElementsByTagName("script")[0];
+        g.type = "text/javascript";
+        g.charset = "utf-8";
+        g.defer = true;
+        g.async = true;
+        g.src = u + "/widget.js";
+        s.parentNode.insertBefore(g, s);
+    })();
+
+</script>
 
 <script src="{{ mix('js/manifest.js') }}"></script>
 <script src="{{ mix('js/vendor.js') }}"></script>
