@@ -17,7 +17,9 @@ class CreatePromotionalCodesTable extends Migration
             $table->increments('id');
             $table->char('code');
             $table->char('like_code');
-            $table->integer('discount');
+            $table->integer('type')->default(0);
+            $table->integer('discount')->nullable();
+            $table->integer('cash_value')->nullable();
             $table->boolean('status')->default(true);
             $table->timestamps();
         });

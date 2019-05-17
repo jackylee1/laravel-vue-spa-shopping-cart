@@ -1,293 +1,293 @@
 <template>
-    <div>
-        <VueLoading :active.sync="isLoading" color="#df1e30"/>
+  <div>
+    <VueLoading :active.sync="isLoading" color="#df1e30"/>
 
-        <Breadcrumbs :items="breadcrumbs"/>
+    <Breadcrumbs :items="breadcrumbs"/>
 
-        <section class="wrapper">
-            <div class="container">
-                <Errors  style="margin-top: 10px" :type="typeAlerts"
-                        v-on:clearAlerts="clearAlerts"
-                        :alerts="alerts"/>
+    <section class="wrapper">
+      <div class="container">
+        <Errors  style="margin-top: 10px" :type="typeAlerts"
+                 v-on:clearAlerts="clearAlerts"
+                 :alerts="alerts"/>
 
-                <Sort v-on:getProducts="getProducts"
-                      v-on:updateSort="updateSort"
-                      :currentCategory="currentCategory"
-                      :currentType="currentType"/>
+        <Sort v-on:getProducts="getProducts"
+              v-on:updateSort="updateSort"
+              :currentCategory="currentCategory"
+              :currentType="currentType"/>
 
-                <Filters :currentType="currentType"
-                         :currentCategory="currentCategory"
-                         v-on:getProducts="getProducts"/>
+        <Filters :currentType="currentType"
+                 :currentCategory="currentCategory"
+                 v-on:getProducts="getProducts"/>
 
-                <Products :products="products"/>
+        <Products :products="products"/>
 
-                <div v-if="products !== undefined && products.length === 0" class="alert alert-info" style="margin-top:20px; width: 100%">
-                    По запросу нет товаров
-                </div>
+        <div v-if="products !== undefined && products.length === 0" class="alert alert-info" style="margin-top:20px; width: 100%">
+          По запросу нет товаров
+        </div>
 
-                <Pagination :pagination="pagination"
-                            v-on:pageChange="getProducts"/>
-            </div>
-        </section>
-    </div>
+        <Pagination :pagination="pagination"
+                    v-on:pageChange="getProducts"/>
+      </div>
+    </section>
+  </div>
 </template>
 
 <script>
-    import * as ApiProducts from '../../../app/public/api/Products';
-    import mixinAlerts from '../../../app/public/mixins/Alerts';
-    import Breadcrumbs from "../Breadcrumbs";
-    import Products from "./Products";
-    import Sort from "./Sort";
-    import Filters from "./Filters";
-    import Errors from "../Errors";
-    import Pagination from "../Pagination";
-    import VueLoading from "vue-loading-overlay/src/js/Component";
+  import * as ApiProducts from '../../../app/public/api/Products';
+  import mixinAlerts from '../../../app/public/mixins/Alerts';
+  import Breadcrumbs from "../Breadcrumbs";
+  import Products from "./Products";
+  import Sort from "./Sort";
+  import Filters from "./Filters";
+  import Errors from "../Errors";
+  import Pagination from "../Pagination";
+  import VueLoading from "vue-loading-overlay/src/js/Component";
 
-    export default {
-        name: 'CatalogLayout',
-        mixins: [mixinAlerts],
-        mounted() {
-            this.$scrollTo('#top_line', 650);
+  export default {
+    name: 'CatalogLayout',
+    mixins: [mixinAlerts],
+    mounted() {
+      this.$scrollTo('#top_line', 650);
 
-            if (this.types.length) {
-                this.setTypesAndBreadcrumbs();
-            }
+      if (this.types.length) {
+        this.setTypesAndBreadcrumbs();
+      }
 
-            this.$watch(vm => [vm.currentType, vm.currentCategory], val => {
-                this.isLoading = true;
+      this.$watch(vm => [vm.currentType, vm.currentCategory], val => {
+        this.isLoading = true;
 
-                this.$scrollTo('#top_line', 650);
+        this.$scrollTo('#top_line', 650);
 
-                let intervalId = setInterval(() => {
-                    let checkType = this.intervalData[0] === this.currentType;
-                    let checkCategory = this.intervalData[1] === this.currentCategory;
-                    if (checkType && checkCategory) {
-                        this.getProducts(this.$route.query.page);
-                        clearInterval(intervalId);
-                    }
-                    else {
-                        this.intervalData = [this.currentType, this.currentCategory];
-                    }
-                }, 500);
-            });
+        let intervalId = setInterval(() => {
+          let checkType = this.intervalData[0] === this.currentType;
+          let checkCategory = this.intervalData[1] === this.currentCategory;
+          if (checkType && checkCategory) {
+            this.getProducts(this.$route.query.page);
+            clearInterval(intervalId);
+          }
+          else {
+            this.intervalData = [this.currentType, this.currentCategory];
+          }
+        }, 500);
+      });
 
-            this.$store.commit('updateSearchByText', this.$router.currentRoute.query.text);
+      this.$store.commit('updateSearchByText', this.$router.currentRoute.query.text);
+    },
+    computed: {
+      types: function () {
+        return this.$store.getters.types;
+      },
+      productsStore: function () {
+        return this.$store.getters.products;
+      },
+      urlPrevious: function () {
+        return this.$store.getters.urlPrevious;
+      },
+      watchProps: function () {
+        return [this.currentCategory, this.currentType].join();
+      },
+      searchByText: function () {
+        return this.$store.getters.searchByText;
+      }
+    },
+    data() {
+      return {
+        breadcrumbs: [],
+        currentCategory: null,
+        currentType: null,
+        isLoading: false,
+        isFullPage: true,
+        products: [],
+        sort: (this.$route.query.sort !== undefined && this.$route.query.sort !== null) ? this.$route.query.sort : 'all',
+        pagination: {
+          currentPage: 1,
+          totalPages: 1,
+          count: 1
         },
-        computed: {
-            types: function () {
-                return this.$store.getters.types;
-            },
-            productsStore: function () {
-                return this.$store.getters.products;
-            },
-            urlPrevious: function () {
-                return this.$store.getters.urlPrevious;
-            },
-            watchProps: function () {
-                return [this.currentCategory, this.currentType].join();
-            },
-            searchByText: function () {
-                return this.$store.getters.searchByText;
-            }
-        },
-        data() {
-            return {
-                breadcrumbs: [],
-                currentCategory: null,
-                currentType: null,
-                isLoading: false,
-                isFullPage: true,
-                products: [],
-                sort: (this.$route.query.sort !== undefined && this.$route.query.sort !== null) ? this.$route.query.sort : 'all',
-                pagination: {
-                    currentPage: 1,
-                    totalPages: 1,
-                    count: 1
-                },
-                intervalData: [],
-                mTitle: '',
-                mDescription: '',
-                mKeywords: '',
-                mImage: '',
-            }
-        },
-        components: {
-            VueLoading,
-            Pagination,
-            Errors,
-            Filters,
-            Sort,
-            Products,
-            Breadcrumbs,
-        },
-        methods: {
-            setMetaTags: function () {
-                this.mTitle = this.mDescription = this.mKeywords = this.mImage = '';
+        intervalData: [],
+        mTitle: '',
+        mDescription: '',
+        mKeywords: '',
+        mImage: '',
+      }
+    },
+    components: {
+      VueLoading,
+      Pagination,
+      Errors,
+      Filters,
+      Sort,
+      Products,
+      Breadcrumbs,
+    },
+    methods: {
+      setMetaTags: function () {
+        this.mTitle = this.mDescription = this.mKeywords = this.mImage = '';
 
-                if (this.currentType !== null && this.currentType.m_title !== null) {
-                    this.mTitle += `| ${this.currentType.m_title}`;
-                }
-
-                if (this.currentCategory !== null && this.currentCategory.m_title !== null) {
-                    this.mTitle += `| ${this.currentCategory.m_title}`;
-                }
-
-                let model = (this.currentCategory === null) ? this.currentType : this.currentCategory;
-                if (model !== null) {
-                    this.mDescription = (model.m_description !== null) ? model.m_description : '';
-                    this.mKeywords = (model.m_keywords !== null) ? model.m_keywords : '';
-                }
-                else {
-                    this.mTitle = '| ';
-                    switch (this.sort) {
-                        case 'all':
-                            this.mTitle += 'Все товары';
-                            break;
-                        case 'from_cheap_to_expensive':
-                            this.mTitle += 'От дешевых к дорогим';
-                            break;
-                        case 'from_expensive_to_cheap':
-                            this.mTitle += 'От дорогих к дешевым';
-                            break;
-                        case 'popular':
-                            this.mTitle += 'Популярные';
-                            break;
-                        case 'new':
-                            this.mTitle += 'Новинки';
-                            break;
-                        case 'promotional':
-                            this.mTitle += 'Акционные';
-                            break;
-                    }
-                }
-
-                if (this.currentType !== null && this.currentType.image_preview !== null) {
-                    this.mImage = `${location.protocol + '//' + location.hostname}/app/public/images/type/${this.currentType.image_preview}`;
-                }
-            },
-            updateSort: function (value) {
-                this.sort = value;
-            },
-            setProducts: function (products) {
-                this.pagination.currentPage = products.current_page;
-                this.pagination.totalPages = products.last_page;
-                this.pagination.count = products.total;
-
-                this.products = products.data;
-
-                this.isLoading = false;
-            },
-            getProducts: function (page = 1) {
-                console.log('getProducts | call method');
-
-                this.isLoading = true;
-
-                this.$router.push({ query: Object.assign({}, this.$route.query, { page: page }) });
-
-                if (this.$router.currentRoute.fullPath === this.urlPrevious) {
-                    this.setProducts(this.productsStore);
-                }
-                else {
-                    setTimeout(() => {
-                        this.$store.commit('updateCategoryPrevious', this.currentCategory);
-                        this.$store.commit('updateTypePrevious', this.currentType);
-
-                        this.$store.commit('updateUrlPrevious', this.$router.currentRoute.fullPath);
-
-                        ApiProducts.get(page, {
-                            type: (this.currentType !== null) ? this.currentType.id : null,
-                            category: (this.currentCategory !== null) ? this.currentCategory.id : null,
-                            filters: this.$route.query.filters,
-                            sort: this.sort,
-                            text: this.$store.getters.searchByText
-                        }).then((res) => {
-                            console.log('getProducts | api response');
-
-                            this.$store.commit('updateProducts', res.data.products);
-
-                            this.setProducts(res.data.products);
-                        }).catch((error) => {
-                            this.alerts = error.response.data.errors;
-                            this.$notify({
-                                type: 'error',
-                                title: 'Ошибка',
-                                text: 'при выполнеении запроса'
-                            });
-                            this.isLoading = false;
-                        });
-                    }, 1200);
-                }
-            },
-            setTypesAndBreadcrumbs: function () {
-                this.breadcrumbs = [];
-                let tempType = null;
-                let tempCategory = null;
-                this.types.forEach((type) => {
-                    if (type.slug === this.$route.query.type) {
-                        tempType = type;
-                    }
-                    type.categories.forEach((category) => {
-                        if (category.slug === this.$route.query.category) {
-                            tempCategory = category;
-                        }
-                    });
-                });
-                [this.currentType, this.currentCategory] = [tempType, tempCategory];
-
-                if (this.currentType !== null) {
-                    this.breadcrumbs.push({
-                        title: this.currentType.name,
-                        route: `{ "name": "catalog", "query": { "type": "${this.currentType.slug}"} }`
-                    });
-                }
-                if (this.currentCategory !== null) {
-                    this.breadcrumbs.push({
-                        title: this.currentCategory.name
-                    });
-                }
-                this.setMetaTags();
-            },
-        },
-        watch: {
-            'types': function () {
-                this.setTypesAndBreadcrumbs();
-            },
-            '$route' (to, from){
-                this.$router.push({ query: Object.assign({}, this.$route.query, { text: this.searchByText }) });
-
-                this.setTypesAndBreadcrumbs();
-            },
-            'sort': function () {
-                this.getProducts();
-            }
-        },
-        beforeDestroy() {
-            this.$store.commit('updateSearchByText', null);
-            this.$router.currentRoute.query.text = null;
-        },
-        metaInfo() {
-            return {
-                title: this.mTitle,
-                meta: [
-                    { name: 'description', content: this.mDescription },
-                    { name: 'keywords', content: this.mKeywords },
-
-                    {property: 'og:title', content: this.mTitle},
-                    {property: 'og:site_name', content: 'FitClothing'},
-                    {property: 'og:type', content: 'website'},
-                    {property: 'og:url', content: window.location.href},
-                    {property: 'og:image', content: this.mImage},
-                    {property: 'og:description', content: this.mDescription},
-
-                    {name: 'twitter:card', content: 'summary'},
-                    {name: 'twitter:site', content: window.location.href},
-                    {name: 'twitter:title', content: this.mTitle},
-                    {name: 'twitter:description', content: this.mDescription},
-                    {name: 'twitter:image:src', content: this.mImage},
-
-                    { itemprop: 'image', content: this.mImage }
-                ]
-            }
+        if (this.currentType !== null && this.currentType.m_title !== null) {
+          this.mTitle += `| ${this.currentType.m_title}`;
         }
+
+        if (this.currentCategory !== null && this.currentCategory.m_title !== null) {
+          this.mTitle += `| ${this.currentCategory.m_title}`;
+        }
+
+        let model = (this.currentCategory === null) ? this.currentType : this.currentCategory;
+        if (model !== null) {
+          this.mDescription = (model.m_description !== null) ? model.m_description : '';
+          this.mKeywords = (model.m_keywords !== null) ? model.m_keywords : '';
+        }
+        else {
+          this.mTitle = '| ';
+          switch (this.sort) {
+            case 'all':
+              this.mTitle += 'Все товары';
+              break;
+            case 'from_cheap_to_expensive':
+              this.mTitle += 'От дешевых к дорогим';
+              break;
+            case 'from_expensive_to_cheap':
+              this.mTitle += 'От дорогих к дешевым';
+              break;
+            case 'popular':
+              this.mTitle += 'Популярные';
+              break;
+            case 'new':
+              this.mTitle += 'Новинки';
+              break;
+            case 'promotional':
+              this.mTitle += 'Акционные';
+              break;
+          }
+        }
+
+        if (this.currentType !== null && this.currentType.image_preview !== null) {
+          this.mImage = `${location.protocol + '//' + location.hostname}/app/public/images/type/${this.currentType.image_preview}`;
+        }
+      },
+      updateSort: function (value) {
+        this.sort = value;
+      },
+      setProducts: function (products) {
+        this.pagination.currentPage = products.current_page;
+        this.pagination.totalPages = products.last_page;
+        this.pagination.count = products.total;
+
+        this.products = products.data;
+
+        this.isLoading = false;
+      },
+      getProducts: function (page = 1) {
+        console.log('getProducts | call method');
+
+        this.isLoading = true;
+
+        this.$router.push({ query: Object.assign({}, this.$route.query, { page: page }) });
+
+        if (this.$router.currentRoute.fullPath === this.urlPrevious) {
+          this.setProducts(this.productsStore);
+        }
+        else {
+          setTimeout(() => {
+            this.$store.commit('updateCategoryPrevious', this.currentCategory);
+            this.$store.commit('updateTypePrevious', this.currentType);
+
+            this.$store.commit('updateUrlPrevious', this.$router.currentRoute.fullPath);
+
+            ApiProducts.get(page, {
+              type: (this.currentType !== null) ? this.currentType.id : null,
+              category: (this.currentCategory !== null) ? this.currentCategory.id : null,
+              filters: this.$route.query.filters,
+              sort: this.sort,
+              text: this.$store.getters.searchByText
+            }).then((res) => {
+              console.log('getProducts | api response');
+
+              this.$store.commit('updateProducts', res.data.products);
+
+              this.setProducts(res.data.products);
+            }).catch((error) => {
+              this.alerts = error.response.data.errors;
+              this.$notify({
+                type: 'error',
+                title: 'Ошибка',
+                text: 'при выполнеении запроса'
+              });
+              this.isLoading = false;
+            });
+          }, 1200);
+        }
+      },
+      setTypesAndBreadcrumbs: function () {
+        this.breadcrumbs = [];
+        let tempType = null;
+        let tempCategory = null;
+        this.types.forEach((type) => {
+          if (type.slug === this.$route.query.type) {
+            tempType = type;
+          }
+          type.categories.forEach((category) => {
+            if (category.slug === this.$route.query.category) {
+              tempCategory = category;
+            }
+          });
+        });
+        [this.currentType, this.currentCategory] = [tempType, tempCategory];
+
+        if (this.currentType !== null) {
+          this.breadcrumbs.push({
+            title: this.currentType.name,
+            route: `{ "name": "catalog", "query": { "type": "${this.currentType.slug}"} }`
+          });
+        }
+        if (this.currentCategory !== null) {
+          this.breadcrumbs.push({
+            title: this.currentCategory.name
+          });
+        }
+        this.setMetaTags();
+      },
+    },
+    watch: {
+      'types': function () {
+        this.setTypesAndBreadcrumbs();
+      },
+      '$route' (to, from){
+        this.$router.push({ query: Object.assign({}, this.$route.query, { text: this.searchByText }) });
+
+        this.setTypesAndBreadcrumbs();
+      },
+      'sort': function () {
+        this.getProducts();
+      }
+    },
+    beforeDestroy() {
+      this.$store.commit('updateSearchByText', null);
+      this.$router.currentRoute.query.text = null;
+    },
+    metaInfo() {
+      return {
+        title: this.mTitle,
+        meta: [
+          { name: 'description', content: this.mDescription },
+          { name: 'keywords', content: this.mKeywords },
+
+          {property: 'og:title', content: this.mTitle},
+          {property: 'og:site_name', content: 'FitClothing'},
+          {property: 'og:type', content: 'website'},
+          {property: 'og:url', content: window.location.href},
+          {property: 'og:image', content: this.mImage},
+          {property: 'og:description', content: this.mDescription},
+
+          {name: 'twitter:card', content: 'summary'},
+          {name: 'twitter:site', content: window.location.href},
+          {name: 'twitter:title', content: this.mTitle},
+          {name: 'twitter:description', content: this.mDescription},
+          {name: 'twitter:image:src', content: this.mImage},
+
+          { itemprop: 'image', content: this.mImage }
+        ]
+      }
     }
+  }
 </script>

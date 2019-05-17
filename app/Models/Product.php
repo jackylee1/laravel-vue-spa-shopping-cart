@@ -75,6 +75,7 @@ use Illuminate\Support\Facades\DB;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product whereMDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product whereMKeywords($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product whereMTitle($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProductVideo[] $video
  */
 class Product extends Model
 {

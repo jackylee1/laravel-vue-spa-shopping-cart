@@ -29,7 +29,7 @@ Vue.use(Vuex);
 Vue.use(Notifications);
 Vue.use(Fragment.Plugin);
 Vue.use(VueLoading, {
-    color: 'red'
+  color: 'red',
 });
 Vue.component('v-select', vSelect);
 Vue.use(Meta);
@@ -38,8 +38,8 @@ Vue.use(VueYoutube);
 const store = new Vuex.Store(StoreData);
 
 const router = new VueRouter({
-    routes,
-    mode: 'history'
+  routes,
+  mode: 'history',
 });
 
 initialize(store, router);
@@ -47,10 +47,10 @@ initialize(store, router);
 console.log('public app');
 
 const app = new Vue({
-    el: '#app',
-    router,
-    store,
-    components: {
-        Layout
-    }
+  el: '#app',
+  router,
+  store,
+  components: {
+    Layout,
+  },
 });

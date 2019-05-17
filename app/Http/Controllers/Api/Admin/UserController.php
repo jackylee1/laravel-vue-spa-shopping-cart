@@ -197,12 +197,11 @@ class UserController extends Controller
             ], 403);
         }
 
-        $user->notify(new SendPromotionalCode($user->name,
-            $user->promotionalCodes->first()->promotionalCode->code,
-            $user->promotionalCodes->first()->promotionalCode->discount));
+        $promotional_code = $user->promotionalCodes->firstWhere('promotional_code_id', $request->promotional_code_id);
+        $user->notify(new SendPromotionalCode($user->name, $promotional_code));
 
-        $user->promotionalCodes->first()->send_status_to_email = 1;
-        $user->promotionalCodes->first()->save();
+        $promotional_code->send_status_to_email = 1;
+        $promotional_code->save();
 
         return response()->json([
             'status' => 'success',

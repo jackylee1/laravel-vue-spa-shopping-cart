@@ -39,34 +39,34 @@ Vue.use(VueYoutube);
 const store = new Vuex.Store(StoreData);
 
 const router = new VueRouter({
-    routes,
-    mode: 'history'
+  routes,
+  mode: 'history',
 });
 
 Vue.use(VuePageTitle, {
-    router,
-    prefix: 'Admin Panel - '
+  router,
+  prefix: 'Admin Panel - ',
 });
 
 initialize(store, router);
 
 if (store.getters.currentUser !== null && store.getters.currentUser.status === 'administration') {
-    Vue.use(FileManager, {
-        store,
-        headers: {'Authorization': `Bearer ${store.getters.currentUser.token}`},
-        baseUrl: `${window.location.protocol}//${window.location.host}/file-manager/`,
-    });
+  Vue.use(FileManager, {
+    store,
+    headers: { 'Authorization': `Bearer ${store.getters.currentUser.token}` },
+    baseUrl: `${window.location.protocol}//${window.location.host}/file-manager/`,
+  });
 
-    listeningEvents(store);
+  listeningEvents(store);
 }
 
 console.log('admin app');
 
 const app = new Vue({
-    el: '#app',
-    router,
-    store,
-    components: {
-        Layout
-    }
+  el: '#app',
+  router,
+  store,
+  components: {
+    Layout,
+  },
 });

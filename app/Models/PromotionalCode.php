@@ -29,10 +29,20 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PromotionalCode disableCache()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PromotionalCode withCacheCooldownSeconds($seconds)
+ * @property int|null $type
+ * @property int|null $cash_value
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PromotionalCode whereCashValue($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\PromotionalCode whereType($value)
  */
 class PromotionalCode extends Model
 {
     use Cachable;
+
+    protected $casts = [
+        'discount' => 'integer',
+        'type' => 'integer',
+        'cash_value' => 'integer'
+    ];
 
     public function userPromotionalCode() {
         return $this->hasOne('App\Models\UserPromotionalCode',
@@ -68,9 +78,11 @@ class PromotionalCode extends Model
     }
 
     protected function workWithModel($model) {
+        $model->type = request()->get('type');
         $model->code = request()->get('code');
         $model->like_code = getOnlyCharacters(request()->get('code'));
         $model->discount = request()->get('discount');
+        $model->cash_value = request()->get('cash_value');
         $model->status = request()->get('status');
         $model->save();
 

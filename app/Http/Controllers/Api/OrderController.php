@@ -106,7 +106,7 @@ class OrderController extends Controller
 
         $order->save();
 
-        $order = Order::recalculatePrice($order->fresh(), ($promotional_code !== null) ? $promotional_code->discount: 0);
+        $order = Order::recalculatePrice($order->fresh(), $promotional_code);
 
         $order->save();
 

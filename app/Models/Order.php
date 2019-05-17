@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\AdminEvent;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Model;
 
@@ -147,6 +148,10 @@ class Order extends Model
         return $this->hasMany('App\Models\OrderHistoryStatus', 'order_id', 'id');
     }
 
+    public function promotionalCodeUsedCash() {
+        return $this->hasMany('App\Models\OrderPromotionalCodeUsedCash', 'order_id', 'id');
+    }
+
     public static function newOrders() {
         return Order::where('read_status', false)->count();
     }
@@ -170,7 +175,7 @@ class Order extends Model
         return $order->fresh();
     }
 
-    protected function recalculatePrice($order, $discount_promotional = 0) {
+    protected static function recalculatePrice($order, $promotional_code = null) {
         $discount = 0;
         if (isset($order->user) && $order->user !== null) {
             if ($order->user->discount > 0) {
@@ -182,8 +187,12 @@ class Order extends Model
             }
         }
 
-        if ($discount_promotional !== 0) {
-            $discount = (($discount + $discount_promotional) > 100) ? 100 : $discount + $discount_promotional;
+        if ($promotional_code !== null && $promotional_code->type === 0) {
+            $discount = (($discount + $promotional_code->discount) > 100)
+                ? 100
+                : $discount + $promotional_code->discount;
+
+            $promotional_code->status = 0;
         }
 
         $total_discount_price = $total_price = 0;
@@ -197,6 +206,33 @@ class Order extends Model
                 $total_discount_price += $deduct_discount;
             }
         });
+
+        if ($promotional_code !== null && $promotional_code->type === 1) {
+            $promotional_code->cash_value += $order->promotionalCodeUsedCash()->sum('cash');
+            $order->promotionalCodeUsedCash()->delete();
+
+            $difference_cash_value = $total_discount_price - $promotional_code->cash_value;
+            if ($difference_cash_value < 0) {
+                $order->promotionalCodeUsedCash()->create([
+                    'promotional_code_id' => $promotional_code->id,
+                    'cash' => $promotional_code->cash_value - abs($difference_cash_value)
+                ]);
+
+                $promotional_code->cash_value = abs($difference_cash_value);
+                $promotional_code->status = 1;
+            }
+            else {
+                $order->promotionalCodeUsedCash()->create([
+                    'promotional_code_id' => $promotional_code->id,
+                    'cash' => $promotional_code->cash_value
+                ]);
+                $promotional_code->status = 0;
+                $promotional_code->cash_value = 0;
+            }
+            $promotional_code->save();
+
+            $total_discount_price = ($difference_cash_value < 0) ? 0 : $difference_cash_value;
+        }
 
         $order->total_price = $total_price;
         $order->total_discount_price = $total_discount_price;
@@ -229,11 +265,21 @@ class Order extends Model
             $order->historyStatuses->push($order_history_status);
         }
         $order->order_payment_method_id = request()->get('order_payment_method_id');
+        $order_promotional_code_id = $order->promotional_code_id;
         $order->promotional_code_id = request()->get('promotion_code_id');
 
-        $discount_promotional = 0;
-
         if ($promotional_code === null && !request()->filled('promotional_code_id')) {
+            if ($order_promotional_code_id !== null) {
+                $code = PromotionalCode::getCodeById($order_promotional_code_id);
+                $code->cash_value += $order->promotionalCodeUsedCash()->sum('cash');
+                $code->status = 1;
+                $code->save();
+
+                event(new AdminEvent('promotional_code', $code));
+
+                $order->promotionalCodeUsedCash()->delete();
+            }
+
             $order->promotional_code_id = null;
             $order->setRelation('promotional_code', null);
         }
@@ -251,11 +297,6 @@ class Order extends Model
                 $promotional_code_id = $promotional_code->id;
             }
 
-            $discount_promotional = $promotional_code->discount;
-
-            $promotional_code->status = 0;
-            $promotional_code->save();
-
             if ($promotional_code_id != $order->promotional_code_id) {
                 $order->setRelation('promotional_code', $promotional_code);
 
@@ -269,7 +310,7 @@ class Order extends Model
             $order->promotional_code_id = $promotional_code_id;
         }
 
-        $order = $this->recalculatePrice($order, $discount_promotional);
+        $order = self::recalculatePrice($order, $promotional_code);
 
         $order->save();
 
@@ -352,7 +393,7 @@ class Order extends Model
 
         $order->products->push($order_product);
 
-        $order = $this->recalculatePrice($order);
+        $order = self::recalculatePrice($order, $order->promotionalCode);
 
         $order->save();
 
@@ -372,7 +413,7 @@ class Order extends Model
         });
         $order->setRelation('products', $products);
 
-        $order = $this->recalculatePrice($order);
+        $order = self::recalculatePrice($order, $order->promotionalCode);
 
         $order->save();
 
@@ -425,5 +466,17 @@ class Order extends Model
 
     protected function destroyModel($id) {
         Order::find($id)->delete();
+    }
+
+    public static function resetPromotionalCode($promotional_code_id) {
+        $order = Order::where('promotional_code_id', $promotional_code_id)->first();
+        if ($order !== null) {
+            $order->update([
+                'promotional_code_id' => null
+            ]);
+            $order = self::recalculatePrice($order);
+        }
+
+        return $order;
     }
 }

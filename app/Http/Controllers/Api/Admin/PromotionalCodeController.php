@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Models\Order;
 use App\Models\PromotionalCode;
 use App\Traits\ValidateTrait;
 use Illuminate\Http\Request;
@@ -25,17 +26,30 @@ class PromotionalCodeController extends Controller
         }
         else {
             $this->setValidateRule([
-                'code' => 'required|string|unique:promotional_codes,code'
+                'code' => 'required|string|unique:promotional_codes,code',
+                'type' => 'required|integer|in:0,1'
+            ]);
+        }
+        if (\request()->get('type') === 0) {
+            $this->setValidateRule([
+                'discount' => 'required|integer|between:0,100'
+            ]);
+        }
+        else {
+            $this->setValidateRule([
+                'cash_value' => 'required|integer'
             ]);
         }
         $this->setValidateRule([
-            'discount' => 'required|integer|between:0,100',
             'status' => 'required|boolean'
         ]);
         $this->setValidateAttribute([
             'name' => 'Имя',
             'code' => 'Промо-код',
-            'status' => 'Статус'
+            'status' => 'Статус',
+            'type' => 'Тип',
+            'cash_value' => 'Денежное значение',
+            'discount' => 'Процент скидки'
         ]);
     }
 
@@ -126,6 +140,7 @@ class PromotionalCodeController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Промо-код успешно удален',
+            'order' => Order::resetPromotionalCode($id)
         ]);
     }
 
