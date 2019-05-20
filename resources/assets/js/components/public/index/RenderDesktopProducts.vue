@@ -23,7 +23,7 @@
                       <template v-if="product.discount_price !== null">
                         <strike>{{product.price}} грн</strike>
                       </template>
-                      <span>{{product.current_price}} грн</span>
+                      <span :style="(product.discount_price === null) ? 'color: #000' : ''">{{product.current_price}} грн</span>
                     </p>
                     <div class="add_to_cart">
                       <router-link class="btn"

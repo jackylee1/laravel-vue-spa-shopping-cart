@@ -17,7 +17,7 @@
                   </a>
                 </li>
                 <template v-for="type in this.types">
-                  <li class="menu_link">
+                  <li class="menu_link" v-if="type.show_on_header">
                     <a class="menu_tab" href="javascript:void(0)">{{type.name}}</a>
                     <ul v-if="type.categories.length">
                       <template v-for="(category, index) in getTreeCategories(type.categories)">

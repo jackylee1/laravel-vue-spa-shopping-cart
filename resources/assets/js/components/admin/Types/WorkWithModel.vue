@@ -65,6 +65,28 @@
           </el-select>
         </el-form-item>
 
+        <el-form-item label="Показать в блоке Сертификаты">
+          <el-select v-model="form.show_on_certificate" placeholder="Показать в блоке Сертификаты" prop="show_on_certificate">
+            <el-option
+                v-for="item in this.selectBoolean"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="Показать в шапке сайта?">
+          <el-select v-model="form.show_on_header" placeholder="Показать в шапке сайта?" prop="show_on_header">
+            <el-option
+                v-for="item in this.selectBoolean"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+
         <el-form-item label="Показать в футере">
           <el-select v-model="form.show_on_footer" placeholder="Показать в футере" prop="show_on_footer">
             <el-option
@@ -611,6 +633,8 @@
           slug: '',
           show_on_index: 0,
           show_on_footer: 0,
+          show_on_certificate: 0,
+          show_on_header: 1,
           image: null,
           image_preview: null,
           image_origin: null,
@@ -636,6 +660,20 @@
 
         return formData;
       },
+      resetOldTypeCertificate: function (response) {
+        if (this.types.length === 0) {
+          return false;
+        }
+
+        let indexTypeCertificate = this.types.findIndex(item => item.show_on_certificate === 1 && response.data.type.id !== item.id);
+        if (indexTypeCertificate !== -1) {
+          let types = this.types;
+          let type = types[indexTypeCertificate];
+          type.show_on_certificate = 0;
+          types.splice(indexTypeCertificate, 1, type);
+          this.$store.commit('updateTypes', types);
+        }
+      },
       onSubmit: function () {
         this.$refs['formWorkWithModel'].validate((valid) => {
           if (valid) {
@@ -646,9 +684,11 @@
                   title: 'Запрос успешно выполнен',
                   message: response.data.message
                 });
+                this.resetOldTypeCertificate(response);
 
                 this.oldForm = response.data.type;
                 this.form = response.data.type;
+
                 this.sortCategories();
                 this.setDataToStore(response.data.type);
               }).catch((error) => {
@@ -658,6 +698,8 @@
             }
             else {
               ApiTypes.create(this.getFromData(this.form)).then((response) => {
+                this.resetOldTypeCertificate(response);
+
                 let types = this.types;
                 if (types.length) {
                   types.unshift(response.data.type);

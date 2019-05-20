@@ -195,9 +195,12 @@ class Order extends Model
             $promotional_code->status = 0;
         }
 
-        $total_discount_price = $total_price = 0;
-        $order->products->each(function ($product) use ($discount, &$total_price, &$total_discount_price) {
+        $total_discount_price = 0;
+        $only_price = 0;
+        $total_price = 0;
+        $order->products->each(function ($product) use ($discount, &$total_price, &$only_price, &$total_discount_price) {
             $total_price += $product->price;
+            $only_price += ($product->discount_price == null) ? $product->price : 0;
             if ($product->discount_price != null) {
                 $total_discount_price += $product->discount_price;
             }
@@ -209,9 +212,10 @@ class Order extends Model
 
         if ($promotional_code !== null && $promotional_code->type === 1) {
             $promotional_code->cash_value += $order->promotionalCodeUsedCash()->sum('cash');
+            $cash_value = $promotional_code->cash_value;
             $order->promotionalCodeUsedCash()->delete();
 
-            $difference_cash_value = $total_discount_price - $promotional_code->cash_value;
+            $difference_cash_value = $only_price - $promotional_code->cash_value;
             if ($difference_cash_value < 0) {
                 $order->promotionalCodeUsedCash()->create([
                     'promotional_code_id' => $promotional_code->id,
@@ -230,6 +234,10 @@ class Order extends Model
                 $promotional_code->cash_value = 0;
             }
             $promotional_code->save();
+
+            $only_price_diff_cash_value = $only_price - $cash_value;
+            $only_price_diff_cash_value = ($only_price_diff_cash_value < 0) ? 0 : $only_price_diff_cash_value;
+            $difference_cash_value = $only_price_diff_cash_value + ($total_discount_price - $only_price);
 
             $total_discount_price = ($difference_cash_value < 0) ? 0 : $difference_cash_value;
         }

@@ -21,6 +21,8 @@ class CreateTypesTable extends Migration
             $table->char('image_preview')->nullable();
             $table->boolean('show_on_index')->default(false);
             $table->boolean('show_on_footer')->default(false);
+            $table->boolean('show_on_certificate')->default(false);
+            $table->boolean('show_on_header')->default(true);
             $table->integer('sorting_order')->default(0);
 
             $table->text('m_title')->nullable();

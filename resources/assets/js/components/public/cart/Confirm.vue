@@ -18,7 +18,7 @@
           <InformationCart :cart="cart"/>
 
           <div class="col-sm-6 col-12 checkout_items righted">
-            <p v-if="totalPrice > 0">
+            <p>
               Сумма заказа:
               <span class="delivery_data">{{totalPrice}} грн</span>
             </p>

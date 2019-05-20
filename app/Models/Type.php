@@ -27,6 +27,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Type withCacheCooldownSeconds($seconds)
  * @property int|null $show_on_index
  * @property int|null $show_on_footer
+ * @property int|null $show_on_certificate
  * @property string|null $image_preview
  * @property string|null $image_origin
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Type whereImageOrigin($value)
@@ -52,13 +53,17 @@ class Type extends Model
         'image_origin',
         'show_on_index',
         'show_on_footer',
+        'show_on_certificate',
+        'show_on_header',
         'm_title',
         'm_description',
         'm_keywords'
     ];
     protected $casts = [
         'show_on_index' => 'integer',
-        'show_on_footer' => 'integer'
+        'show_on_footer' => 'integer',
+        'show_on_certificate' => 'integer',
+        'show_on_header' => 'integer',
     ];
 
     public $timestamps = false;
@@ -101,11 +106,15 @@ class Type extends Model
     }
 
     private function workWithModel($model, $image_origin, $image_preview) {
+        $type_certificate = Type::where('show_on_certificate', true)->first();
+
         $model->name = request()->get('name');
         $model->slug = cleanStr(request()->get('slug'));
         $model->sorting_order = request()->get('sorting_order');
         $model->show_on_index = request()->get('show_on_index');
         $model->show_on_footer = request()->get('show_on_footer');
+        $model->show_on_certificate = request()->get('show_on_certificate');
+        $model->show_on_header = request()->get('show_on_header');
 
         if ($image_origin !== null && $image_preview !== null) {
             $this->deleteImages($model);
@@ -119,6 +128,11 @@ class Type extends Model
         $model->m_keywords = request()->get('m_keywords');
 
         $model->save();
+
+        if ($type_certificate !== null && $model->show_on_certificate && $type_certificate->id !== $model->id) {
+            $type_certificate->show_on_certificate = false;
+            $type_certificate->save();
+        }
 
         return $model;
     }

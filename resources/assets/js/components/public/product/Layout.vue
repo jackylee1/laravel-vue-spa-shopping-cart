@@ -23,7 +23,7 @@
                 <template v-if="product.discount_price !== null">
                   <strike>{{price}} <span class="currency">грн</span></strike>
                 </template>
-                <span class="red_price">{{currentPrice}} <span class="currency">грн</span></span>
+                <span :style="(product.discount_price === null) ? 'color: #000' : 'color: #df1e30'">{{currentPrice}} <span class="currency">грн</span></span>
               </h3>
 
               <AvailableAndControl :product="product"

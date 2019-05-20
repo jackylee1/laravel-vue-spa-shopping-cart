@@ -66,6 +66,13 @@
           {{props.row.id}} <template v-if="!props.row.read_status"><span style="color: red;">NEW!</span></template>
         </template>
       </el-table-column>
+      <el-table-column min-width="70">
+        <template slot-scope="props">
+            <p :style="`background-color: ${getLastStatus(props.row.id).color};color: #fff;text-align: center`">
+              {{getLastStatus(props.row.id).name}}
+            </p>
+        </template>
+      </el-table-column>
       <el-table-column
           label="Заказчик"
           min-width="120">
@@ -96,7 +103,7 @@
       </el-table-column>
       <el-table-column
           prop="total_discount_price"
-          label="Сумма заказа (с учетом всех скидок)"
+          label="Сумма заказа"
           min-width="100">
       </el-table-column>
       <el-table-column
@@ -214,6 +221,17 @@
       }
     },
     methods: {
+      getLastStatus: function (id) {
+        let order = this.orders.find(item => item.id === id);
+        console.log(order);
+        if (order !== undefined && order.history_statuses.length === 0) {
+          return null;
+        }
+        else {
+          console.log(_.last(order.history_statuses).status);
+          return _.last(order.history_statuses).status;
+        }
+      },
       deleteOrder: function () {
         if (this.operationsOnOrder) {
           ApiOrders.destroy(this.operationsOnOrder.id).then((response) => {

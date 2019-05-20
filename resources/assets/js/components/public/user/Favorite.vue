@@ -27,7 +27,7 @@
                     <template v-if="product.product.discount_price !== null">
                       <strike>{{product.product.price}} грн</strike>
                     </template>
-                    <span>{{product.product.current_price}} грн</span>
+                    <span :style="(product.discount_price === null) ? 'color: #000' : ''">{{product.product.current_price}} грн</span>
                   </p>
                   <div class="add_to_cart">
                     <router-link class="btn" :to="{ name: 'product', params: {slug: product.product.slug} }">

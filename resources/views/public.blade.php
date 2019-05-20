@@ -26,6 +26,9 @@
             width: 100% !important;
             min-height: 300px !important;
         }
+        .price-not-discount {
+            color: #333333;
+        }
     </style>
 
     <script src="//unpkg.com/@textback/notification-widget@latest/build/index.js"></script>
@@ -35,8 +38,6 @@
 <div id="app">
     <layout/>
 </div>
-
-<tb-notification-widget  widget-id=3b9283b3-b18d-6f0f-3482-016ab075960f></tb-notification-widget>
 
 <script type="text/javascript" encoding="utf-8">
     var _tbEmbedArgs = _tbEmbedArgs || [];

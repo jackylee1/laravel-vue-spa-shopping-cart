@@ -7,7 +7,7 @@
     <el-form :model="formSearch" class="ds-query-form" label-width="250px">
       <el-form-item label="Поиск по">
         <el-input v-model="formSearch.q"
-                  placeholder="наименованию и краткому описанию"></el-input>
+                  placeholder="артикул, наименованию и краткому описанию"></el-input>
       </el-form-item>
       <el-form-item label="Только акционные">
         <el-select style="min-width: 450px;"

@@ -160,10 +160,12 @@ export default {
 
       let price = 0;
       let discountPrice = 0;
+      let onlyPrice = 0;
 
       this.cartProducts.forEach((product) => {
         let available = this.getAvailable(product.product_available_id, product.product);
         if (available.quantity > 0) {
+          onlyPrice += (product.product.discount_price == null) ? product.product.price : 0;
           if (product.product.discount_price === null) {
             price += product.product.price * product.quantity;
           }
@@ -176,23 +178,46 @@ export default {
       if (discount > 0) {
         if (price > 0) {
           this.totalPriceDiscount = discount === 100 ? 0 : (price * ((100 - discount) / 100)) + discountPrice;
-
-          if (this.cart.promotional_code !== null && this.cart.promotional_code.type === 1) {
-            let differenceCashValue = this.totalPriceDiscount - this.cart.promotional_code.cash_value;
-            this.totalPriceDiscount = (differenceCashValue < 0) ? 0 : differenceCashValue;
-          }
         }
+      }
+
+      if (this.cart.promotional_code !== null && this.cart.promotional_code.type === 1) {
+        let onlyPriceDiffCashValue = (onlyPrice - this.cart.promotional_code.cash_value);
+        onlyPriceDiffCashValue = (onlyPriceDiffCashValue < 0) ? 0 : onlyPriceDiffCashValue;
+        let differenceCashValue = onlyPriceDiffCashValue + (this.totalPriceDiscount - onlyPrice);
+        this.totalPriceDiscount = (differenceCashValue < 0) ? 0 : differenceCashValue;
+      }
+
+      if (this.totalPriceDiscount !== null) {
+        this.totalPriceDiscount = this.totalPriceDiscount.toFixed(2).replace(/\.?0+$/, '');
       }
     },
     setTotalPrice() {
       this.totalPrice = null;
+      let onlyPrice = 0;
+      let onlyDiscountPrice = 0;
       if (this.cart !== null) {
         this.cart.products.forEach((item) => {
           let available = this.getAvailable(item.product_available_id, item.product);
           if (available.quantity > 0) {
-            this.totalPrice += item.product.current_price * item.quantity;
+            if (item.product.discount_price == null) {
+              onlyPrice += item.product.price * item.quantity;
+            }
+            else {
+              onlyDiscountPrice += item.product.discount_price * item.quantity;
+            }
           }
         });
+
+        if (this.cart.promotional_code !== null && this.cart.promotional_code.type === 1) {
+          let onlyPriceDiffCashValue = (onlyPrice - this.cart.promotional_code.cash_value);
+          onlyPriceDiffCashValue = (onlyPriceDiffCashValue < 0) ? 0 : onlyPriceDiffCashValue;
+          this.totalPrice = onlyPriceDiffCashValue + onlyDiscountPrice;
+          this.totalPrice = this.totalPrice.toFixed(2).replace(/\.?0+$/, '');
+        }
+        else {
+          this.totalPrice = (onlyPrice + onlyDiscountPrice).toFixed(2).replace(/\.?0+$/, '');
+        }
       }
     },
     getAvailable(availableId, product) {

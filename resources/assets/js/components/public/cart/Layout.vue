@@ -169,7 +169,7 @@
 
         <hr>
 
-        <div v-if="totalPrice > 0" class="row lets_checkout">
+        <div class="row lets_checkout">
           <div class="col-12">
             <p class="items_sum_text">
               ТОВАРОВ НА СУММУ:

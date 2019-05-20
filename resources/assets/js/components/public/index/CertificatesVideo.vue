@@ -4,7 +4,12 @@
       <div class="container voucher_and_video">
         <div class="row">
           <div class="col-sm-6 voucher">
-            <img class="voucher_img" src="/assets/public/images/voucher/voucher.png" alt="">
+            <template v-if="certificate !== null">
+              <router-link class="btn"
+                           :to="{ name: 'catalog', query: { type: certificate.slug } }">
+                <img class="voucher_img" src="/assets/public/images/voucher/voucher.png" alt="">
+              </router-link>
+            </template>
           </div>
           <div class="col-sm-6 video" v-for="file in indexMediaFiles">
             <youtube :fitParent="true"
@@ -45,19 +50,34 @@
     name: 'CertificatesVideo',
     mounted() {
       this.indexMediaFiles = this.indexMediaFilesStore;
+      this.types = this.typesStore;
+      this.findCertificate();
     },
     computed: {
       indexMediaFilesStore: function () {
         return this.$store.getters.indexMediaFiles;
+      },
+      typesStore: function () {
+        return this.$store.getters.types;
       }
     },
     data() {
       return {
         indexMediaFiles: [],
-        videoFile: null
+        videoFile: null,
+        types: null,
+        certificate: null
       }
     },
     methods: {
+      findCertificate: function () {
+        if (this.types.length > 0) {
+          let index = this.types.findIndex(item => item.show_on_certificate === 1);
+          if (index !== -1) {
+            this.certificate = this.types[index];
+          }
+        }
+      },
       openModalVideo: function (file) {
         this.videoFile = file;
         $('#modalVideo').modal('show');
@@ -69,6 +89,10 @@
     watch: {
       'indexMediaFilesStore': function (files) {
         this.indexMediaFiles = files;
+      },
+      'typesStore': function (types) {
+        this.types = types;
+        this.findCertificate();
       }
     }
   }

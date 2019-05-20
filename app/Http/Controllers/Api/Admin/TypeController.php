@@ -51,6 +51,8 @@ class TypeController extends Controller
             'image' => 'nullable|image|max:2048',
             'show_on_footer' => 'nullable|boolean',
             'show_on_index' => 'nullable|boolean',
+            'show_on_header' => 'nullable|boolean',
+            'show_on_certificate' => 'nullable|boolean',
             'm_title' => 'nullable|string|max:50000',
             'm_description' => 'nullable|string|max:50000',
             'm_keyword' => 'nullable|string|max:50000',
@@ -61,7 +63,9 @@ class TypeController extends Controller
             'sorting_order' => 'Порядок сортировки',
             'show_on_index' => 'Показать на главной',
             'show_on_footer' => 'Показать в футере',
-            'image' => 'Изображение'
+            'image' => 'Изображение',
+            'show_on_certificate' => 'Показать в блоке "Сертификаты"',
+            'show_on_header' => 'Отображать в шапке'
         ]);
     }
 

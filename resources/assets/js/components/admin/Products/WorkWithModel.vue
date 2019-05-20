@@ -24,6 +24,7 @@
         <el-form-item label="Описание" prop="description">
           <tinymce id="description" v-model="description"
                    :other_options="optionsTinymce"
+                   v-on:editorChange="this.changeDescription"
                    v-on:editorInit="initTinymce"></tinymce>
         </el-form-item>
 
@@ -128,6 +129,17 @@
               type="date"
               placeholder="Выберите дату включения">
           </el-date-picker>
+        </el-form-item>
+
+        <el-form-item label="В XML попадает?" prop="in_xml">
+          <el-select v-model="form.in_xml" placeholder="">
+            <el-option
+                v-for="item in this.selectBoolean"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
 
         <PageElementsAlerts :alerts="alerts" :type="typeAlerts"/>
@@ -579,6 +591,9 @@
             return res.data.size_tables;
           })
         }
+      },
+      selectBoolean: function () {
+        return this.$store.getters.selectDataBoolean;
       }
     },
     data() {
@@ -1074,11 +1089,9 @@
           }
         });
       },
-      /*changeDescription: function() {
-          this.form.description = (this.description.length)
-                  ? this.description.replace(/(\")[\.\/]{2,}/, '$1/')
-                  : '';
-      },*/
+      changeDescription: function() {
+          this.form.description = this.description;
+      },
       uploadImages: function(form) {
         let formData = new FormData();
         formData.append('product_id', this.form.id);
@@ -1196,6 +1209,7 @@
           m_description: '',
           m_keywords: '',
           video: [],
+          in_xml: 0
         }
       },
       setBreadcrumbElements: function () {

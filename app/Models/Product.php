@@ -98,7 +98,8 @@ class Product extends Model
         'date_inclusion',
         'm_title',
         'm_description',
-        'm_keywords'
+        'm_keywords',
+        'in_xml'
     ];
 
     protected $casts = [
@@ -108,6 +109,7 @@ class Product extends Model
         'discount_end' => 'datetime',
         'main_image' => 'integer',
         'status' => 'integer',
+        'in_xml' => 'integer',
         'date_inclusion' => 'date'
     ];
 
@@ -230,6 +232,7 @@ class Product extends Model
                 ->orWhereRaw('lower(like_preview_description) like ?', ["%{$like_data['add_spaces']}%"])
                 ->orWhereRaw('lower(like_preview_description) like ?', ["%{$like_data['clear_spaces']}%"])
                 ->orWhereRaw('lower(like_preview_description) like ?', ["%{$like_data['like']}%"]);
+            $query->orWhere('article', $like_data['str']);
         }
         if (request()->get('only_discounts') == 1) {
             $query->where('discount_price', '>', 0);
@@ -405,7 +408,7 @@ class Product extends Model
         }
 
         if ($all) {
-            $products = $query->disableCache()->get();
+            $products = $query->where('in_xml', true)->disableCache()->get();
         }
         else {
             $products = (request()->filled('limit')) ? $query->limit(request()->get('limit'))->get() : $query->paginate(12);
@@ -451,21 +454,26 @@ class Product extends Model
         $model->m_title = request()->get('m_title');
         $model->m_description = request()->get('m_description');
         $model->m_keywords = request()->get('m_keywords');
+        $model->in_xml = request()->get('in_xml');
 
         $model->save();
 
         if (request()->filled('main_type')) {
             $type = $model->mainType()->first();
+            $type_id = (isset(request()->get('main_type')['type_id']))
+                ? request()->get('main_type')['type_id'] : null;
+            $category_id = (isset(request()->get('main_type')['category_id']))
+                ? request()->get('main_type')['category_id'] : null;
             if ($type === null) {
                 $model->mainType()->create([
-                    'type_id' => request()->get('main_type')['type_id'],
-                    'category_id' => request()->get('main_type')['category_id'],
+                    'type_id' => $type_id,
+                    'category_id' => $category_id,
                 ]);
             }
             else {
                 $type->update([
-                    'type_id' => request()->get('main_type')['type_id'],
-                    'category_id' => request()->get('main_type')['category_id'],
+                    'type_id' => $type_id,
+                    'category_id' => $category_id,
                 ]);
             }
         }

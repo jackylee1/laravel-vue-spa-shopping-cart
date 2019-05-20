@@ -71,11 +71,12 @@ class ProductController extends Controller
             'date_inclusion' => 'nullable|date',
             'main_type' => 'required|array',
             'main_type.type_id' => 'required|integer|exists:types,id',
-            'main_type.category_id' => 'required|array',
+            'main_type.category_id' => 'nullable|array',
             'main_type.category_id.*' => 'integer|exists:categories,id',
             'm_title' => 'nullable|string|max:50000',
             'm_description' => 'nullable|string|max:50000',
             'm_keyword' => 'nullable|string|max:50000',
+            'in_xml' => 'nullable|boolean'
         ]);
         if (request()->filled('discount_start') && request()->filled('discount_end')) {
             $start_date = DateTimeTools::explodeRequestDateTime(request()->get('discount_start'));
@@ -119,6 +120,7 @@ class ProductController extends Controller
             'main_type' => 'Дефолтный тип товара',
             'main_type.type_id' => 'Тип товара для «хлебных крошек»',
             'main_type.category_id' => 'Категория для «хлебных крошек»',
+            'in_xml' => 'В XML'
         ]);
     }
 

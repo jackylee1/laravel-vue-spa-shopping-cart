@@ -46,7 +46,7 @@
                 У Вас нет товаров в корзине
               </div>
             </template>
-            <div v-if="totalPrice > 0" class="row">
+            <div class="row">
               <div class="col-12 righted">
                 <h5 class="item_sum">
                   <span>Сумма заказа:</span> {{totalPrice}} грн
