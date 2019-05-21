@@ -29,6 +29,7 @@ class CreateProductsTable extends Migration
             $table->integer('main_image')->nullable();
             $table->date('date_inclusion')->nullable();
             $table->boolean('status')->default(true);
+            $table->boolean('in_xml')->default(false);
 
             $table->text('m_title')->nullable();
             $table->text('m_description')->nullable();

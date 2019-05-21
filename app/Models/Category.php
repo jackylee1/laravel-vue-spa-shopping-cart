@@ -94,6 +94,12 @@ class Category extends Model
     }
 
     private function workWithModel($model) {
+        if ($model->id !== null && $model->parent_id !== request()->get('parent_id')) {
+            $new_categories = (request()->get('parent_id') == 1) ? [$model->id] : [request()->get('parent_id'), $model->id];
+            $where_categories = (request()->get('parent_id') == 1) ? [$model->parent_id, $model->id] : [$model->id];
+            ProductMainType::getItemsByCategories($where_categories, $new_categories);
+        }
+
         $model->parent_id = request()->get('parent_id');
         $model->type_id = request()->get('type_id');
         $model->name = request()->get('name');

@@ -396,6 +396,7 @@
         currentModel: 'types',
         workWithCategory: {},
         visibleDialogWorkWithFiltersCategory: false,
+        oldParentId: null
       }
     },
     computed: {
@@ -564,6 +565,7 @@
       modalEditNode: function (node) {
         this.titleDialogWorkWith = 'Изменить данные категории';
         this.workWithNode = node;
+        this.oldParentId = this.workWithNode.parent_id;
         this.visibleDialogWorkWithNode = true;
         this.modalAlerts = [];
       },
@@ -572,6 +574,11 @@
           if (valid) {
             if (this.workWithNode.id !== undefined) {
               ApiCategories.update(this.workWithNode.id, this.workWithNode).then((response) => {
+                if (this.oldParentId !== response.data.category.parent_id) {
+                  this.$store.commit('updateProducts', []);
+                  this.oldParentId = response.data.category.parent_id;
+                }
+
                 let category = response.data.category;
                 let index = this.categories.findIndex((item) => item.id === category.id);
                 this.categories[index] = category;
