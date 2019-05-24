@@ -12,7 +12,9 @@
           <div class="col-sm-7 searching">
             <form class="form-inline" action="javascript:void(0)" v-on:keyup.enter="getProducts">
               <input v-model="textSearch"
-                     class="form-control form-control-sm mr-3" type="text"
+                     name="desktopAutocomplete" id="desktopAutocomplete"
+                     data-provide="typeahead" autocomplete="off"
+                     class="form-control typeahead form-control-sm mr-3" type="text"
                      placeholder="Введите поисковое слово в этом поле..."
                      aria-label="Поиск">
               <i class="fas fa-search"
@@ -48,9 +50,12 @@
 </template>
 
 <script>
+  //import mixinProductsAutoComplete from '../../app/public/mixins/productsAutoComplete';
   import ModalProducts from "./cart/ModalProducts";
+
   export default {
     name: 'Header',
+    //mixins: [mixinProductsAutoComplete],
     components: {ModalProducts},
     mounted() {
       this.textSearch = this.searchByText;

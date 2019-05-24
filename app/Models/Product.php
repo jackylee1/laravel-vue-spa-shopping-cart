@@ -342,6 +342,10 @@ class Product extends Model
 
         $query->activeForPublic();
 
+        if (request()->filled('autocomplete')) {
+            $query->searchByText();
+        }
+
         if (request()->filled('filters')) {
             $request_filters = (is_array(request()->get('filters'))) ? request()->get('filters') : [request()->get('filters')];
             $filters = Filter::getFiltersById(array_filter($request_filters));
@@ -403,7 +407,7 @@ class Product extends Model
                     break;
             }
         }
-        elseif (request()->filled('limit')) {
+        elseif (request()->filled('limit') && !request()->filled('autocomplete')) {
             $query->inRandomOrder();
         }
 

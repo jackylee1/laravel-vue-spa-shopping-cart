@@ -4,6 +4,8 @@
       <form class="form-inline d-flex justify-content-center"
             action="javascript:void(0)" v-on:keyup.enter="getProducts">
         <input v-model="textSearch"
+               name="mobileAutocomplete"
+               id="mobileAutocomplete"
                class="form-control"
                type="search"
                placeholder="Введите поисковое слово"

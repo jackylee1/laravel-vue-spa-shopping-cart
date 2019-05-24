@@ -10,6 +10,7 @@ use App\Models\TextBlockTitle;
 use App\Models\Type;
 use App\Traits\DataTrait;
 use App\Traits\ValidateTrait;
+use function GuzzleHttp\Psr7\str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -35,7 +36,8 @@ class ProductController extends Controller
         }
         $this->setValidateRule([
             'limit' => 'nullable|integer|max:8',
-            'text' => 'nullable|string|max:1500',
+            'text' => 'nullable|string|max:150',
+            'autocomplete' => 'nullable|boolean',
             'type' => 'nullable|integer|exists:types,id',
             'category' => 'nullable|integer|exists:categories,id',
             'sort' => 'nullable|in:all,from_cheap_to_expensive,from_expensive_to_cheap,popular,new,promotional'
@@ -49,7 +51,27 @@ class ProductController extends Controller
         ]);
         $request->validate($this->validate_rules, [], $this->validate_attributes);
 
-        $this->setData('products', Product::getProductsPublic());
+        if ($request->filled('autocomplete')) {
+            $request->merge([
+                'limit' => 15,
+            ]);
+            $request->merge(request()->all());
+            app()->instance('request', $request);
+
+            $products = Product::getProductsPublic()->map(function ($product, $key) {
+                return (object)[
+                    'index' => $key,
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'picture' => 'http://placehold.it/32x32'
+                ];
+            });
+
+            $this->setData('products', $products);
+        }
+        else {
+            $this->setData('products', Product::getProductsPublic());
+        }
 
         return response()->json($this->data);
     }
