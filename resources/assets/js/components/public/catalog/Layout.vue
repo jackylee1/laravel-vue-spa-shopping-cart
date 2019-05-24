@@ -4,7 +4,7 @@
 
     <Breadcrumbs :items="breadcrumbs"/>
 
-    <section class="wrapper">
+    <section class="wrapper categories">
       <div class="container">
         <Errors  style="margin-top: 10px" :type="typeAlerts"
                  v-on:clearAlerts="clearAlerts"

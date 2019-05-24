@@ -31,7 +31,7 @@ $.get("/api/products", {
   $("#desktopAutocomplete").typeahead({ source: data.products });
 },'json');
 
-function getProductsAutoComplete(text) {
+/*function getProductsAutoComplete(text) {
   $.get("/api/products", {
     autocomplete: 1,
     text: text
@@ -44,7 +44,7 @@ function getProductsAutoComplete(text) {
       source: data.products
     });
   },'json');
-}
+}*/
 
 $('#mobileAutocomplete, #desktopAutocomplete').donetyping(function() {
   var value = $(this).val();
