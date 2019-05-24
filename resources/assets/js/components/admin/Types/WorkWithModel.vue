@@ -65,6 +65,25 @@
           </el-select>
         </el-form-item>
 
+        <el-form-item label="Текущее изображение на главной" v-if="form.image_index_preview !== null && form.image_index_preview !== undefined">
+          <img width="100" height="auto" :src="'/app/public/images/type/'+form.image_index_preview">
+        </el-form-item>
+
+        <el-form-item v-if="form.show_on_index" label="Изображение на главной" prop="image_index">
+          <el-upload
+              name="image"
+              :multiple="false"
+              :show-file-list="false"
+              :on-change="changeDataInImageIndexField"
+              :action="'windows.location.href'"
+              :auto-upload="false">
+            <el-button slot="trigger" size="small" type="primary">Выбрать изображение</el-button>
+            <el-button style="margin-left: 10px;" size="small" type="danger" @click="resetIndexImage">Очистить</el-button>
+            <div class="el-upload__tip" slot="tip">jpg/png/jpeg/gif/ изображения размером не более 2048kb</div>
+            <div v-if="fileIndexName.length">Выбранное изображение: {{fileIndexName}}</div>
+          </el-upload>
+        </el-form-item>
+
         <el-form-item label="Показать в блоке Сертификаты">
           <el-select v-model="form.show_on_certificate" placeholder="Показать в блоке Сертификаты" prop="show_on_certificate">
             <el-option
@@ -359,6 +378,7 @@
           label: 'name'
         },
         fileName: '',
+        fileIndexName: '',
         countChangesSlug: 0,
         showTree: false,
         showFilters: false,
@@ -424,9 +444,17 @@
         this.fileName = file.name;
         this.form.image = file.raw;
       },
+      changeDataInImageIndexField: function(file, fileListt) {
+        this.fileIndexName = file.name;
+        this.form.image_index = file.raw;
+      },
       resetImage: function() {
         this.form.image = null;
         this.fileName = '';
+      },
+      resetIndexImage: function() {
+        this.form.image_index = null;
+        this.fileIndexName = '';
       },
       changeOldForm: function(data) {
         this.oldForm = data;
@@ -645,6 +673,8 @@
           image: null,
           image_preview: null,
           image_origin: null,
+          image_index_preview: null,
+          image_index_origin: null,
           m_title: '',
           m_description: '',
           m_keywords: ''

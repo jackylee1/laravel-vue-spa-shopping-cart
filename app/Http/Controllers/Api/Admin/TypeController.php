@@ -17,6 +17,8 @@ class TypeController extends Controller
     private $path,
         $image_origin,
         $image_preview,
+        $image_index_origin,
+        $image_index_preview,
         $resize_params;
 
     public function __construct() {
@@ -30,6 +32,7 @@ class TypeController extends Controller
             'crop' => true
         ];
         $this->image_origin = $this->image_preview = null;
+        $this->image_index_origin = $this->image_index_preview = null;
     }
 
     private function validateForUpdate() {
@@ -49,6 +52,7 @@ class TypeController extends Controller
             'sorting_order' => 'required|integer',
             'slug' => $rules_slug,
             'image' => 'nullable|image|max:2048',
+            'image_index' => 'nullable|image|max:2048',
             'show_on_footer' => 'nullable|boolean',
             'show_on_index' => 'nullable|boolean',
             'show_on_header' => 'nullable|boolean',
@@ -100,6 +104,20 @@ class TypeController extends Controller
             $this->image_origin = $this->image_origin->file_name;
             $this->image_preview = $this->image_preview->file_name;
         }
+
+        if (request()->hasFile('image_index')) {
+            $this->image_index_origin = File::upload(request(), ['file_key' => 'image_index', 'path_save' => $this->path]);
+            $this->image_index_preview = File::upload(request(), ['file_key' => 'image_index', 'path_save' => $this->path]);
+
+            Image::resize(
+                public_path("app/{$this->image_index_preview->full_path}"),
+                public_path("app/$this->path"),
+                $this->resize_params
+            );
+
+            $this->image_index_origin = $this->image_index_origin->file_name;
+            $this->image_index_preview = $this->image_index_preview->file_name;
+        }
     }
 
     public function store(Request $request)
@@ -109,7 +127,7 @@ class TypeController extends Controller
 
         $this->uploadImage();
 
-        $type = Type::createModel($this->image_origin, $this->image_preview);
+        $type = Type::createModel($this->image_origin, $this->image_preview, $this->image_index_origin, $this->image_index_preview);
 
         return response()->json([
             'status' => 'success',
@@ -139,7 +157,7 @@ class TypeController extends Controller
 
         $this->uploadImage();
 
-        $type = Type::updateModel($this->image_origin, $this->image_preview);
+        $type = Type::updateModel($this->image_origin, $this->image_preview, $this->image_index_origin, $this->image_index_preview);
 
         return response()->json([
             'status' => 'success',

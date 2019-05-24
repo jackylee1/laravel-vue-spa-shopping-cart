@@ -12,6 +12,7 @@
           <div class="col-sm-7 searching">
             <form class="form-inline" action="javascript:void(0)" v-on:keyup.enter="getProducts">
               <input v-model="textSearch"
+                     v-on:keyup="debounceProductsAutoComplete"
                      name="desktopAutocomplete" id="desktopAutocomplete"
                      data-provide="typeahead" autocomplete="off"
                      class="form-control typeahead form-control-sm mr-3" type="text"
@@ -20,23 +21,21 @@
               <i class="fas fa-search"
                  @click="getProducts"
                  aria-hidden="true"></i>
+              <ListProductsAutoComplete v-on:selectResultAutoComplete="selectResultAutoComplete"
+                                        :resultProductsAutoComplete="resultProductsAutoComplete"/>
             </form>
           </div>
           <div class="col-sm-1">
             <router-link :to="{ name: 'user_favorite' }">
               <img class="heart" src="/assets/public/images/cart/heart_white.png" alt="Heart">
-              <span v-if="countFavoriteProducts > 0" class="badge">
-                                {{countFavoriteProducts}}
-                            </span>
+              <span v-if="countFavoriteProducts > 0" class="badge">{{countFavoriteProducts}}</span>
             </router-link>
           </div>
           <div class="col-sm-1">
             <div class="dropdown">
               <a class="btn" href="#" data-toggle="modal" data-target="#exampleModal">
                 <img class="cart" src="/assets/public/images/cart/cart_white.png" alt="">
-                <span v-if="countCartProducts > 0" class="badge">
-                                    {{countCartProducts}}
-                                </span>
+                <span v-if="countCartProducts > 0" class="badge">{{countCartProducts}}</span>
               </a>
 
               <ModalProducts/>
@@ -50,13 +49,18 @@
 </template>
 
 <script>
-  //import mixinProductsAutoComplete from '../../app/public/mixins/productsAutoComplete';
+  import * as ApiProducts from '../../app/public/api/Products';
+  import mixinAlerts from '../../app/public/mixins/Alerts';
   import ModalProducts from "./cart/ModalProducts";
+  import ListProductsAutoComplete from "./product/ListProductsAutoComplete";
 
   export default {
     name: 'Header',
-    //mixins: [mixinProductsAutoComplete],
-    components: {ModalProducts},
+    mixins: ['mixinAlerts'],
+    components: {ListProductsAutoComplete, ModalProducts },
+    created: function () {
+      this.debounceProductsAutoComplete = _.debounce(this.productsAutoComplete, 500);
+    },
     mounted() {
       this.textSearch = this.searchByText;
 
@@ -80,9 +84,32 @@
         textSearch: null,
         countFavoriteProducts: 0,
         countCartProducts: 0,
+        resultProductsAutoComplete: [],
+        debounceProductsAutoComplete: null,
       }
     },
     methods: {
+      selectResultAutoComplete: function (value) {
+        this.textSearch = value;
+        this.resultProductsAutoComplete = [];
+      },
+      productsAutoComplete: function () {
+        if (this.textSearch !== null && this.textSearch.length > 0) {
+          ApiProducts.get(1, {
+            text: this.textSearch,
+            autocomplete: 1
+          }).then(res => {
+            if (res.data.products !== undefined) {
+              this.resultProductsAutoComplete = res.data.products;
+            }
+          }).catch((error) => {
+            this.alerts = error.response.data.errors;
+          })
+        }
+        else {
+          this.resultProductsAutoComplete = [];
+        }
+      },
       getProducts: function () {
         this.$store.commit('updateSearchByText', this.textSearch);
         this.$router.push({ query: Object.assign({}, this.$route.query, { text: this.textSearch }) });

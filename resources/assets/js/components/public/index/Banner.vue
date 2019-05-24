@@ -4,7 +4,7 @@
       <div class="container">
         <div class="row" v-for="typesChunk in _.chunk(indexTypes, 2)">
           <div v-for="type in typesChunk"
-               :style="`background: url(/app/public/images/type/${type.image_origin})`"
+               :style="`background: url(/app/public/images/type/${type.image_index_origin})`"
                class="col-12 col-sm-6 left_banner centered">
             <h2>{{type.name}}</h2>
             <router-link class="btn"

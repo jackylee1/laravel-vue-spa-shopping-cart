@@ -51,6 +51,8 @@ class Type extends Model
         'slug',
         'image_preview',
         'image_origin',
+        'image_index_preview',
+        'image_index_origin',
         'show_on_index',
         'show_on_footer',
         'show_on_certificate',
@@ -72,8 +74,25 @@ class Type extends Model
 
     public $path_image = 'public/images/type/';
 
-    private function deleteImages($model) {
-        File::delete($this->path_image, [$model->image_preview, $model->image_origin]);
+    private function deleteImages($model, $type = 1) {
+        $images = [];
+        switch ($type) {
+            case 1:
+                $images = [$model->image_preview, $model->image_origin];
+                break;
+            case 2:
+                $images = [$model->image_index_preview, $model->image_index_origin];
+                break;
+            case 'all':
+                $images = [
+                    $model->image_preview,
+                    $model->image_origin,
+                    $model->image_index_preview,
+                    $model->image_index_origin
+                ];
+                break;
+        }
+        File::delete($this->path_image, $images);
     }
 
     public function filters() {
@@ -105,7 +124,7 @@ class Type extends Model
         }])->orderBy('sorting_order', 'asc')->get();
     }
 
-    private function workWithModel($model, $image_origin, $image_preview) {
+    private function workWithModel($model, $image_origin, $image_preview, $image_index_origin, $image_index_preview) {
         $type_certificate = Type::where('show_on_certificate', true)->first();
 
         $model->name = request()->get('name');
@@ -123,6 +142,20 @@ class Type extends Model
             $model->image_preview = $image_preview;
         }
 
+        if ($image_origin !== null && $image_preview !== null) {
+            $this->deleteImages($model);
+
+            $model->image_origin = $image_origin;
+            $model->image_preview = $image_preview;
+        }
+
+        if ($image_index_origin !== null && $image_index_preview !== null) {
+            $this->deleteImages($model, 2);
+
+            $model->image_index_origin = $image_index_origin;
+            $model->image_index_preview = $image_index_preview;
+        }
+
         $model->m_title = request()->get('m_title');
         $model->m_description = request()->get('m_description');
         $model->m_keywords = request()->get('m_keywords');
@@ -137,20 +170,24 @@ class Type extends Model
         return $model;
     }
 
-    protected function createModel($image_origin = null, $image_preview = null) {
-        $model = $this->workWithModel(new Type(), $image_origin, $image_preview)->fresh();
+    protected function createModel($image_origin = null, $image_preview = null,
+                                   $image_index_origin = null, $image_index_preview = null) {
+        $model = $this->workWithModel(new Type(), $image_origin, $image_preview,
+                                    $image_index_origin, $image_index_preview)->fresh();
 
         return $model;
     }
 
-    protected function updateModel($image_origin = null, $image_preview = null) {
-        $model = $this->workWithModel(Type::find(request()->get('id')), $image_origin, $image_preview);
+    protected function updateModel($image_origin = null, $image_preview = null,
+                                   $image_index_origin = null, $image_index_preview = null) {
+        $model = $this->workWithModel(Type::find(request()->get('id')), $image_origin, $image_preview,
+                                    $image_index_origin, $image_index_preview);
 
         return $model;
     }
 
     protected function destroyModel($id) {
-        $this->deleteImages(Type::find($id));
+        $this->deleteImages(Type::find($id), 'all');
         Type::find($id)->delete();
     }
 

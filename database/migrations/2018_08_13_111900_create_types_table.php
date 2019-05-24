@@ -19,6 +19,8 @@ class CreateTypesTable extends Migration
             $table->char('slug');
             $table->char('image_origin')->nullable();
             $table->char('image_preview')->nullable();
+            $table->char('image_index_origin')->nullable();
+            $table->char('image_index_preview')->nullable();
             $table->boolean('show_on_index')->default(false);
             $table->boolean('show_on_footer')->default(false);
             $table->boolean('show_on_certificate')->default(false);
