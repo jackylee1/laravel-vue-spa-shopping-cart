@@ -34,6 +34,10 @@
           min-width="150">
         <template slot-scope="props">
           <el-button-group>
+            <el-button size="mini"
+                       @click.native.prevent="viewOnSite(props.row)">
+              <i class="el-icon-view"></i>
+            </el-button>
             <el-button
                 @click.native.prevent="goToUpdate(props.row.id)"
                 size="mini">
@@ -109,6 +113,9 @@
       }
     },
     methods: {
+      viewOnSite: function (item) {
+        window.open(location.protocol+'//'+location.hostname+'/catalog?type='+item.slug, '_blank');
+      },
       deleteType: function () {
         if (this.operationsOnType) {
           ApiTypes.destroy(this.operationsOnType.id).then((response) => {

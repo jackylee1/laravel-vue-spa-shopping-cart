@@ -155,6 +155,11 @@
         <template slot-scope="props">
           <el-button-group>
             <el-button
+                @click.native.prevent="viewOnSite(props.row)"
+                size="mini">
+              <i class="el-icon-view"></i>
+            </el-button>
+            <el-button
                 @click.native.prevent="goToUpdate(props.row.id)"
                 size="mini">
               <i class="el-icon-edit"></i>
@@ -298,6 +303,9 @@
       },
     },
     methods: {
+      viewOnSite: function (item) {
+        window.open(location.protocol+'//'+location.hostname+'/product/'+item.slug, '_blank');
+      },
       setFilters: function () {
         ApiFilters.get().then((response) => {
           this.$store.commit('updateFilters', response.data.filters);

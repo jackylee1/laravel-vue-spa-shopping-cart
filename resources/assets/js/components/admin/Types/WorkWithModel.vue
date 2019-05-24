@@ -125,6 +125,7 @@
 
         <el-form-item>
           <el-button-group>
+            <el-button v-if="showFilters" type="default" @click="viewOnSite(null)"><i class="el-icon-view"></i></el-button>
             <el-button v-if="showFilters" type="default" @click="modalWorkWithFilters">Управление фильтрами</el-button>
             <el-button v-if="showTree" type="default" @click="modalCreateNode">Добавить категорию</el-button>
             <el-button type="primary" @click="onSubmit">{{submitName}}</el-button>
@@ -145,27 +146,31 @@
                :props="defaultProps"
                :expand-on-click-node="false">
                 <span class="ds-tree-node" slot-scope="{ node }">
-                    <span>{{ node.label }}</span>
-                    <span>{{ node.data.sorting_order }}</span>
-                    <span>
-                        <el-button-group>
-                            <el-button type="primary"
-                                       @click="modalWorkWithFiltersCategory(node.data)"
-                                       size="mini">
-                                <i class="ai-filter"></i>
-                            </el-button>
-                            <el-button type="primary"
-                                       @click="modalEditNode(node.data)"
-                                       size="mini">
-                                <i class="el-icon-edit"></i>
-                            </el-button>
-                            <el-button type="danger"
-                                       size="mini"
-                                       @click="modalDeleteNode(node.data)">
-                                <i class="el-icon-delete"></i>
-                            </el-button>
-                        </el-button-group>
-                    </span>
+                  <span>{{ node.label }}</span>
+                  <span>{{ node.data.sorting_order }}</span>
+                  <span>
+                    <el-button-group>
+                      <el-button @click="viewOnSite(node.data)"
+                        size="mini">
+                        <i class="el-icon-view"></i>
+                      </el-button>
+                      <el-button type="primary"
+                        @click="modalWorkWithFiltersCategory(node.data)"
+                        size="mini">
+                        <i class="ai-filter"></i>
+                      </el-button>
+                      <el-button type="primary"
+                        @click="modalEditNode(node.data)"
+                        size="mini">
+                        <i class="el-icon-edit"></i>
+                      </el-button>
+                      <el-button type="danger"
+                        size="mini"
+                        @click="modalDeleteNode(node.data)">
+                        <i class="el-icon-delete"></i>
+                      </el-button>
+                    </el-button-group>
+                  </span>
                 </span>
       </el-tree>
     </div>
@@ -440,6 +445,13 @@
       }
     },
     methods: {
+      viewOnSite: function (item) {
+        let url = location.protocol+'//'+location.hostname+'/catalog?type='+this.oldForm.slug;
+        if (item !== null) {
+          url += '&category='+item.slug;
+        }
+        window.open(url, '_blank');
+      },
       changeDataInImageField: function(file, fileListt) {
         this.fileName = file.name;
         this.form.image = file.raw;

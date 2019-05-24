@@ -148,6 +148,9 @@
           <el-button-group>
             <el-button v-if="currentRoute.name === 'products-update'"
                        type="default"
+                       @click="viewOnSite"><i class="el-icon-view"></i></el-button>
+            <el-button v-if="currentRoute.name === 'products-update'"
+                       type="default"
                        @click="dialogWorkWithFilter">Добавить в ...</el-button>
             <el-button v-if="currentRoute.name === 'products-update'"
                        type="default"
@@ -722,6 +725,9 @@
       }
     },
     methods: {
+      viewOnSite: function () {
+        window.open(location.protocol+'//'+location.hostname+'/product/'+this.oldForm.slug, '_blank');
+      },
       removeAvailable: function (index) {
         let available = this.form.available[index];
         ApiProducts.availableDestroy({
