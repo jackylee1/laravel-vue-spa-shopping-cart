@@ -7,11 +7,6 @@
             <div class="menu">
               <ul>
                 <li class="menu_link">
-                  <a class="menu_tab" @click="openLink('index')" href="javascript:void(0)">
-                    Главная
-                  </a>
-                </li>
-                <li class="menu_link">
                   <a class="menu_tab" @click="openLink('new')" href="javascript:void(0)">
                     Новинки
                   </a>
@@ -102,11 +97,6 @@
                     </li>
                   </template>
                 </template>
-                <li class="menu_link">
-                  <a class="menu_tab" @click="openLink('contacts')" href="javascript:void(0)">
-                    Контакты
-                  </a>
-                </li>
               </ul>
             </div>
           </div>
