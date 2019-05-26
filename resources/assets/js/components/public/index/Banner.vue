@@ -16,10 +16,6 @@
         </div>
       </div>
     </section>
-
-    <section class="banner_mobile">
-
-    </section>
   </div>
 </template>
 
