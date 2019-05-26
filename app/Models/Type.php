@@ -142,13 +142,6 @@ class Type extends Model
             $model->image_preview = $image_preview;
         }
 
-        if ($image_origin !== null && $image_preview !== null) {
-            $this->deleteImages($model);
-
-            $model->image_origin = $image_origin;
-            $model->image_preview = $image_preview;
-        }
-
         if ($image_index_origin !== null && $image_index_preview !== null) {
             $this->deleteImages($model, 2);
 
