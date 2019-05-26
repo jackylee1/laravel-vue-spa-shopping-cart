@@ -95,6 +95,24 @@
           </el-select>
         </el-form-item>
 
+        <el-form-item v-if="workWithNode.type === 0" label="Показать изображение?">
+          <el-select v-model="workWithNode.show_image" placeholder="Показать изображение?" prop="show_image">
+            <el-option
+                v-for="item in this.selectBoolean"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item  v-if="workWithNode.type === 0">
+          <el-alert :closable="false"
+                    title="Показать изображение - учитывается в случае если родительский фильтр Отображается на главной или Отображается в шарке"
+                    type="info">
+          </el-alert>
+        </el-form-item>
+
         <el-form-item v-if="workWithNode.type !== 0" label="Показать в футере">
           <el-select v-model="workWithNode.show_on_footer" placeholder="Показать в шапке" prop="show_on_footer">
             <el-option
@@ -289,6 +307,7 @@
           show_on_index: 0,
           show_on_header: 0,
           show_on_footer: 0,
+          show_image: 1,
           image: null,
           image_preview: null,
           image_origin: null,

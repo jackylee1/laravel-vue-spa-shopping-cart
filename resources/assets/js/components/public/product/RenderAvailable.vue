@@ -46,9 +46,7 @@
       getFilter: function (id) {
         let filter = this.filters.find(item => item.id === id);
         if (filter !== undefined) {
-          let parent = this.filters.find(item => item.id === filter.parent_id);
-
-          return `${parent.name}: ${filter.name}`;
+          return filter.name;
         }
       },
     }

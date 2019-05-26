@@ -79,6 +79,7 @@ class FilterController extends Controller
             'show_on_header' => 'nullable|boolean',
             'show_on_footer' => 'nullable|boolean',
             'show_on_index' => 'nullable|boolean',
+            'show_image' => 'nullable|boolean',
         ]);
 
         $this->setValidateAttribute([
@@ -90,6 +91,7 @@ class FilterController extends Controller
             'show_on_header' => 'Показать в шапке',
             'show_on_index' => 'Показать на главной',
             'show_on_footer' => 'Показать в футере',
+            'show_image' => 'Отображать изображение',
             'image' => 'Изображение фильтра'
         ]);
     }

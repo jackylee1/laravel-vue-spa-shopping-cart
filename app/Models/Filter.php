@@ -59,6 +59,7 @@ class Filter extends Model
         'show_on_index',
         'show_on_header',
         'show_on_footer',
+        'show_image',
         'image_origin',
         'image_preview'
     ];
@@ -70,6 +71,7 @@ class Filter extends Model
         'show_on_index' => 'integer',
         'show_on_header' => 'integer',
         'show_on_footer' => 'integer',
+        'show_image' => 'integer',
     ];
     public $timestamps = false;
     protected $parent = 'parent_id';
@@ -109,6 +111,7 @@ class Filter extends Model
         $model->show_on_index = request()->get('show_on_index');
         $model->show_on_header = request()->get('show_on_header');
         $model->show_on_footer = request()->get('show_on_footer');
+        $model->show_image = request()->get('show_image');
 
         if ($image_origin !== null && $image_preview !== null) {
             $this->deleteImages($model);

@@ -80,7 +80,7 @@
         let tempFilters = filters;
         this.filters.forEach((filter) => {
           this.$store.getters.filters.forEach((item) => {
-            if (filter.id === item.parent_id) {
+            if (filter.id === item.parent_id && item.show_image) {
               tempFilters.push(item);
             }
           });

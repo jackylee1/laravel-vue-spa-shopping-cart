@@ -26,6 +26,7 @@ class CreateFiltersTable extends Migration
             $table->boolean('show_on_index')->default(false);
             $table->boolean('show_on_header')->default(false);
             $table->boolean('show_on_footer')->default(false);
+            $table->boolean('show_image')->default(true);
         });
     }
 
