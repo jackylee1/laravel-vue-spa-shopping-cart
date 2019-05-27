@@ -177,6 +177,7 @@
 
     <el-dialog :title="titleDialogWorkWith" :visible.sync="visibleDialogWorkWithNode">
       <el-form ref="formWorkWithNode"
+               v-loading="loading"
                :rules="rulesNode"
                :model="workWithNode">
         <el-form-item label="Наименование" prop="name">
@@ -421,7 +422,8 @@
         currentModel: 'types',
         workWithCategory: {},
         visibleDialogWorkWithFiltersCategory: false,
-        oldParentId: null
+        oldParentId: null,
+        loading: false
       }
     },
     computed: {
@@ -612,6 +614,7 @@
       clickWorkWithNode: function () {
         this.$refs['formWorkWithNode'].validate((valid) => {
           if (valid) {
+            this.loading = true;
             if (this.workWithNode.id !== undefined) {
               ApiCategories.update(this.workWithNode.id, this.workWithNode).then((response) => {
                 if (this.oldParentId !== response.data.category.parent_id) {
@@ -631,6 +634,7 @@
                   title: 'Запрос успешно выполнен',
                   message: response.data.message
                 });
+                this.loading = false;
               }).catch((error) => {
                 this.modalAlerts = error.response.data.errors;
                 this.modalTypeAlerts = 'error';
@@ -651,9 +655,11 @@
                   title: 'Запрос успешно выполнен',
                   message: response.data.message
                 });
+                this.loading = false;
               }).catch((error) => {
                 this.modalAlerts = error.response.data.errors;
                 this.modalTypeAlerts = 'error';
+                this.loading = false;
               });
             }
           }
