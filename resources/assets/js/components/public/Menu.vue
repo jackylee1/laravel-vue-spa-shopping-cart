@@ -21,8 +21,8 @@
                           <ul >
                             <template v-if="category.children !== undefined && category.children.length">
                               <li v-if="!category.hidden_name"
-                                  style="cursor: pointer"
-                                  @click="openLinkByObject({ name: 'catalog', query: { type: type.slug, category:  category.slug } })">
+                                  :style="(category.active_link) ? 'cursor: pointer' : 'cursor: default'"
+                                  v-on:click="(category.active_link) ? openLinkByObject({ name: 'catalog', query: { type: type.slug, category:  category.slug } }) : false">
                                 <p>{{category.name}}</p>
                               </li>
                               <template v-for="categoryChildren in sortCategories(category.children)">

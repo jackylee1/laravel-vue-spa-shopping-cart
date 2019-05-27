@@ -238,12 +238,33 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-alert
-              style="margin-bottom: 10px"
-              title="Вы можете скрыть наименование родительской категории (учитывается в шапке сайта)"
-              type="info"
-              :closable="false">
-          </el-alert>
+          <el-form-item>
+            <el-alert
+                style="margin-bottom: 10px"
+                title="Вы можете скрыть наименование родительской категории (учитывается в шапке сайта)"
+                type="info"
+                :closable="false">
+            </el-alert>
+          </el-form-item>
+
+          <el-form-item label="Активная ссылка?">
+            <el-select v-model="workWithNode.active_link" placeholder="" prop="active_link">
+              <el-option
+                  v-for="item in this.selectBoolean"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-alert
+                style="margin-bottom: 10px"
+                title="Активная ссылка - отвечает за то активная ли ссылка родительской категории в шапке сайта"
+                type="info"
+                :closable="false">
+            </el-alert>
+          </el-form-item>
         </template>
 
         <el-select v-model="workWithNode.parent_id" placeholder="Выберите родителя" prop="parent_id">
@@ -519,6 +540,7 @@
           parent_id: 1,
           show_on_header: 1,
           hidden_name: 0,
+          active_link: 1,
           m_title: '',
           m_description: '',
           m_keywords: ''

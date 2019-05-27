@@ -60,14 +60,16 @@ class Category extends Model
         'm_title',
         'm_description',
         'm_keywords',
-        'hidden_name'
+        'hidden_name',
+        'active_link'
     ];
     protected $cats = [
         'type_id' => 'integer',
         'sorting_order' => 'integer',
         'parent_id' => 'integer',
         'show_on_header' => 'integer',
-        'hidden_name' => 'integer'
+        'hidden_name' => 'integer',
+        'active_link' => 'integer'
     ];
 
     protected $parent = 'parent_id';
@@ -118,6 +120,16 @@ class Category extends Model
         $model->hidden_name = (request()->filled('hidden_name'))
             ? request()->get('hidden_name')
             : 0;
+
+        if ($model->parent_id == 1) {
+            $model->active_link = (request()->filled('active_link'))
+                ? request()->get('active_link')
+                : 1;
+        }
+        else {
+            $model->active_link = 1;
+        }
+
         $model->m_title = request()->get('m_title');
         $model->m_description = request()->get('m_description');
         $model->m_keywords = request()->get('m_keywords');

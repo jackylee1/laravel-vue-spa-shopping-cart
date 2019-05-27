@@ -53,6 +53,7 @@ class CategoryController extends Controller
             'sorting_order' => 'required|integer',
             'show_on_header' => 'nullable|boolean',
             'hidden_name' => 'nullable|boolean',
+            'active_link' => 'nullable|boolean',
             'm_title' => 'nullable|string|max:50000',
             'm_description' => 'nullable|string|max:50000',
             'm_keyword' => 'nullable|string|max:50000',
@@ -64,7 +65,8 @@ class CategoryController extends Controller
             'hidden_name' => 'Скрыть наименование',
             'name' => 'Наименование',
             'sorting_order' => 'Порядок сортировки',
-            'slug' => 'SEO адрес'
+            'slug' => 'SEO адрес',
+            'active_link' => 'Активная ссылка'
         ]);
     }
 

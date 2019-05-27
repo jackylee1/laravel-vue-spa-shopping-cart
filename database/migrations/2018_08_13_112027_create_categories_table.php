@@ -23,6 +23,7 @@ class CreateCategoriesTable extends Migration
             $table->boolean('show_on_header')->default(true);
             $table->integer('parent_id');
             $table->boolean('hidden_name')->default(false);
+            $table->boolean('active_link')->default(true);
 
             $table->text('m_title')->nullable();
             $table->text('m_description')->nullable();
