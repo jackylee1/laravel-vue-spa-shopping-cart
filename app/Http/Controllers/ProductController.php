@@ -32,9 +32,6 @@ class ProductController extends Controller
         $filters = Filter::getFilters();
         $products = Product::getProductsPublic(true);
 
-        //dd($filters);
-        //dd($products->first());
-
         return response()->view('export_to_xml', [
             'products' => $products,
             'types' => $types,

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Jobs\ReassignCategoryProducts;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Model;
 use Nestable\NestableTrait;
@@ -97,18 +98,10 @@ class Category extends Model
         if ($model->id !== null && $model->parent_id !== request()->get('parent_id')) {
             $new_categories = (request()->get('parent_id') == 1) ? [$model->id] : [request()->get('parent_id'), $model->id];
             $old_categories = ($model->parent_id == 1) ? [$model->id] : [$model->parent_id, $model->id];
-            ProductMainType::getItemsByCategories($old_categories, $new_categories);
 
-            $last_id_in_old_categories = $old_categories[count($old_categories) - 1];
-            $last_id_in_new_categories = $new_categories[count($new_categories) - 1];
-
-            $product_in_filters = ProductInFilter::getItemsByTypeAndCategory($model->type_id, $last_id_in_old_categories);
-            $product_in_filters->each(function ($item) use ($new_categories) {
-                $item->categories()->delete();
-                collect($new_categories)->each(function ($new_category) use ($item) {
-                    $item->categories()->create(['category_id' => $new_category]);
-                });
-            });
+            if ($new_categories !== $old_categories) {
+                ReassignCategoryProducts::dispatchNow($model->type_id, $old_categories, $new_categories);
+            }
         }
 
         $model->parent_id = (request()->get('parent_id') == 0) ? 1 : request()->get('parent_id');
@@ -201,5 +194,9 @@ class Category extends Model
 
     public static function getCategories() {
         return Category::select('*')->get();
+    }
+
+    public static function getItemsByIds($id_categories) {
+        return \DB::table('categories')->whereIn('id', $id_categories)->orderBy('parent_id', 'asc')->get();
     }
 }

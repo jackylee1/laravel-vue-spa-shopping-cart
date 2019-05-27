@@ -26,8 +26,8 @@ class ProductController extends Controller
 
         $this->path = 'public/images/products/';
         $this->resize_params = [
-            'width' => 170,
-            'height' => 190,
+            'width' => 600,
+            'height' => 650,
             'aspect_ratio' => true,
             'crop' => true
         ];
