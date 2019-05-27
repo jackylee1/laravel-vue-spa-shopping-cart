@@ -543,6 +543,8 @@
         this.setFilters();
       }
 
+      this.sizeTables = this.sizeTablesStore;
+
       this.currentRoute = this.$router.currentRoute;
       if (this.currentRoute.name === 'products-update') {
         if (this.products.data !== undefined && this.products.data.length) {
@@ -563,8 +565,6 @@
         this.submitName = 'Создать';
         this.pageTitle = helperRouter.getRouteByName(this.$router, 'products-create').meta.title;
       }
-
-      this.sizeTables = this.sizeTablesStore;
 
       this.setBreadcrumbElements();
     },
@@ -1211,6 +1211,7 @@
           status: 1,
           data: null,
           main_type: {},
+          size_table: {},
           m_title: '',
           m_description: '',
           m_keywords: '',
@@ -1424,7 +1425,10 @@
         }
       },
       'selectedSizeTable': function () {
-        if (this.form.size_table['size_table_id'] !== this.selectedSizeTable) {
+        if (this.form.size_table['size_table_id'] === undefined) {
+          this.form.size_table['size_table_id'] = this.selectedSizeTable;
+        }
+        else if (this.form.size_table['size_table_id'] !== this.selectedSizeTable) {
           this.form.size_table['size_table_id'] = this.selectedSizeTable;
         }
       },
