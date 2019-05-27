@@ -28,7 +28,7 @@
         this.setSelectFilters();
 
         this.$emit('getProducts', this.$router.currentRoute.query.page);
-      }, 1500);
+      }, 600);
     },
     computed: {
       'filters': function () {
@@ -152,7 +152,7 @@
         _.delay(() => {
           this.setRenderArray();
           this.setSelectFilters();
-        }, 1600);
+        }, 1000);
       }
     },
   }

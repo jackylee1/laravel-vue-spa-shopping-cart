@@ -100,7 +100,7 @@ class Category extends Model
             $old_categories = ($model->parent_id == 1) ? [$model->id] : [$model->parent_id, $model->id];
 
             if ($new_categories !== $old_categories) {
-                ReassignCategoryProducts::dispatchNow($model->type_id, $old_categories, $new_categories);
+                dispatch(new ReassignCategoryProducts($model->type_id, $old_categories, $new_categories));
             }
         }
 
