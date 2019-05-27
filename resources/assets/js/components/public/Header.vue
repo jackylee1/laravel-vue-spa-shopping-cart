@@ -13,6 +13,7 @@
             <form class="form-inline" action="javascript:void(0)" v-on:keyup.enter="getProducts">
               <input v-model="textSearch"
                      v-on:keyup="debounceProductsAutoComplete"
+                     @blur="resultProductsAutoComplete = []"
                      name="desktopAutocomplete" id="desktopAutocomplete"
                      data-provide="typeahead" autocomplete="off"
                      class="form-control typeahead form-control-sm mr-3" type="text"

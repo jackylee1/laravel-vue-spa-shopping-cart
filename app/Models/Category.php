@@ -96,11 +96,22 @@ class Category extends Model
     private function workWithModel($model) {
         if ($model->id !== null && $model->parent_id !== request()->get('parent_id')) {
             $new_categories = (request()->get('parent_id') == 1) ? [$model->id] : [request()->get('parent_id'), $model->id];
-            $where_categories = (request()->get('parent_id') == 1) ? [$model->parent_id, $model->id] : [$model->id];
-            ProductMainType::getItemsByCategories($where_categories, $new_categories);
+            $old_categories = ($model->parent_id == 1) ? [$model->id] : [$model->parent_id, $model->id];
+            ProductMainType::getItemsByCategories($old_categories, $new_categories);
+
+            $last_id_in_old_categories = $old_categories[count($old_categories) - 1];
+            $last_id_in_new_categories = $new_categories[count($new_categories) - 1];
+
+            $product_in_filters = ProductInFilter::getItemsByTypeAndCategory($model->type_id, $last_id_in_old_categories);
+            $product_in_filters->each(function ($item) use ($new_categories) {
+                $item->categories()->delete();
+                collect($new_categories)->each(function ($new_category) use ($item) {
+                    $item->categories()->create(['category_id' => $new_category]);
+                });
+            });
         }
 
-        $model->parent_id = request()->get('parent_id');
+        $model->parent_id = (request()->get('parent_id') == 0) ? 1 : request()->get('parent_id');
         $model->type_id = request()->get('type_id');
         $model->name = request()->get('name');
         $model->like_name = getOnlyCharacters(request()->get('name'));

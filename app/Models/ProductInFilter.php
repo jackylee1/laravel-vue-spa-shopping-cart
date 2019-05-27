@@ -111,4 +111,11 @@ class ProductInFilter extends Model
 
         return $id_products;
     }
+
+    public static function getItemsByTypeAndCategory($type_id, $category_id) {
+        return ProductInFilter::where([
+            ['type_id', $type_id],
+            ['category_id', $category_id]
+        ])->get();
+    }
 }

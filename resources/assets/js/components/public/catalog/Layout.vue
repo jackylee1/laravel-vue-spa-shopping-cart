@@ -178,8 +178,6 @@
         this.isLoading = false;
       },
       getProducts: function (page = 1) {
-        console.log('getProducts | call method');
-
         this.isLoading = true;
 
         this.$router.push({ query: Object.assign({}, this.$route.query, { page: page }) });
@@ -201,7 +199,6 @@
               sort: this.sort,
               text: this.$store.getters.searchByText
             }).then((res) => {
-              console.log('getProducts | api response');
 
               this.$store.commit('updateProducts', res.data.products);
 

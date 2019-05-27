@@ -39,8 +39,8 @@ class ProductMainType extends Model
         'category_id' => 'array'
     ];
 
-    public static function getItemsByCategories($where_categories, $new_categories) {
-        ProductMainType::where('category_id', '[' . implode(',', $where_categories) . ']')->update([
+    public static function getItemsByCategories($old_categories, $new_categories) {
+        ProductMainType::where('category_id', '[' . implode(',', $old_categories) . ']')->update([
             'category_id' => '[' . implode(',', $new_categories) . ']'
         ]);
     }

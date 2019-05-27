@@ -23,10 +23,12 @@
     name: 'Filters',
     props: ['currentType', 'currentCategory'],
     mounted() {
-      this.setRenderArray();
-      this.setSelectFilters();
+      _.delay(() => {
+        this.setRenderArray();
+        this.setSelectFilters();
 
-      this.$emit('getProducts', this.$router.currentRoute.query.page);
+        this.$emit('getProducts', this.$router.currentRoute.query.page);
+      }, 1500);
     },
     computed: {
       'filters': function () {
@@ -70,7 +72,9 @@
         let queryFilters = this.$router.currentRoute.query.filters;
 
         let filters = (queryFilters !== undefined && queryFilters.length > 0) ? queryFilters : this.mergeFilters();
-
+        if (filters !== null && !Array.isArray(filters)) {
+          filters = [filters];
+        }
         if (filters.length) {
           filters.forEach((filter, index) => {
             if (queryFilters !== undefined
@@ -145,8 +149,10 @@
     },
     watch: {
       watchProps: function () {
-        this.setRenderArray();
-        this.setSelectFilters();
+        _.delay(() => {
+          this.setRenderArray();
+          this.setSelectFilters();
+        }, 1600);
       }
     },
   }

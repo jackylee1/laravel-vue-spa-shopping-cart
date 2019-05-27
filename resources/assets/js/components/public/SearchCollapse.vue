@@ -5,6 +5,7 @@
             action="javascript:void(0)" v-on:keyup.enter="getProducts">
         <input v-model="textSearch"
                v-on:keyup="debounceProductsAutoComplete"
+               @blur="resultProductsAutoComplete = []"
                name="mobileAutocomplete"
                id="mobileAutocomplete"
                class="form-control"
@@ -22,7 +23,6 @@
 
 <script>
   import * as ApiProducts from '../../app/public/api/Products';
-  import mixinAlerts from '../../app/public/mixins/Alerts';
   import ListProductsAutoComplete from "./product/ListProductsAutoComplete";
 
   export default {
