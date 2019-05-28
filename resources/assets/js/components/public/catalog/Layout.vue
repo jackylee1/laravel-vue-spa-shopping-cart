@@ -238,6 +238,13 @@
           });
         }
         if (this.currentCategory !== null) {
+          if (this.currentCategory.parent_id !== 1) {
+            let parentCategory = this.currentType.categories.find(item => item.id === this.currentCategory.parent_id);
+            this.breadcrumbs.push({
+              title: parentCategory.name,
+              route: `{ "name": "catalog", "query": { "type": "${this.currentType.slug}", "category": "${parentCategory.slug}"} }`
+            });
+          }
           this.breadcrumbs.push({
             title: this.currentCategory.name
           });

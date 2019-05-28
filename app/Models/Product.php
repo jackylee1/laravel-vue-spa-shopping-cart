@@ -172,7 +172,16 @@ class Product extends Model
                     $query->where('type_id', (int)request()->get('type'));
                 }
                 if (request()->filled('category')) {
-                    $query->where('category_id', (int)request()->get('category'));
+                    $category_id = (int)request()->get('category');
+                    $children_categories = Category::getChildrenCategories($category_id);
+
+                    $query->where('category_id', $category_id);
+
+                    if (count($children_categories) > 0) {
+                        $query->orWhereHas('categories', function ($query) use ($children_categories) {
+                            $query->whereIn('category_id', $children_categories);
+                        });
+                    }
                 }
             });
         }

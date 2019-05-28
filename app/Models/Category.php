@@ -74,14 +74,14 @@ class Category extends Model
 
     protected $parent = 'parent_id';
 
-    private $ids;
+    private static $ids;
 
     protected $with = ['filters'];
 
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
-        $this->ids = [];
+        self::$ids = [];
     }
 
     public function type() {
@@ -161,25 +161,31 @@ class Category extends Model
         return $this->workWithModel(Category::with('type')->find(request()->get('id')));
     }
 
-    private function searchIds($data) {
+    private static function searchIds($data) {
         $count = count($data);
         $i = 0;
         while ($i < $count) {
-            $this->ids[] = $data[$i]['id'];
+            self::$ids[] = $data[$i]['id'];
             if (count($data[$i]['child']) > 0) {
-                $this->searchIds($data[$i]['child']);
+                self::searchIds($data[$i]['child']);
             }
             $i++;
         }
     }
 
+    public static function getChildrenCategories ($id) {
+        self::searchIds(Category::parent((int)$id)->renderAsArray());
+
+        return array_unique(self::$ids);
+    }
+
     protected function destroyModel($id) {
-        $this->ids[] = (int)$id;
-        $this->searchIds(Category::parent((int)$id)->renderAsArray());
+        self::$ids[] = (int)$id;
+        self::getChildrenCategories($id);
 
-        Category::whereIn('id', $this->ids)->delete();
+        Category::whereIn('id', self::$ids)->delete();
 
-        return $this->ids;
+        return self::$ids;
     }
 
     protected function handleFilter() {

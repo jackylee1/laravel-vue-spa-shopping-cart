@@ -183,23 +183,27 @@
             categoryId = this.product.main_type.category_id[this.product.main_type.category_id.length - 1];
           }
 
-          type.categories.forEach((item) => {
-            if (item.id === categoryId) {
-              if (this.urlPrevious !== null) {
-                this.breadcrumbs.push({
-                  'title': item.name,
-                  'url': this.urlPrevious
-                });
-              }
-              else {
-                this.breadcrumbs.push({
-                  'title': item.name,
-                  'route': `{ "name": "catalog", "query": { "type": "${type.slug}", "category": "${item.slug}"} }`
-                });
-              }
+          let category = type.categories.find(item => item.id === categoryId);
+          if (category.parent_id !== 1) {
+            let parentCategory = type.categories.find(item => item.id === category.parent_id);
+            this.breadcrumbs.push({
+              title: parentCategory.name,
+              route: `{ "name": "catalog", "query": { "type": "${type.slug}", "category": "${parentCategory.slug}"} }`
+            });
+          }
 
-            }
-          });
+          if (this.urlPrevious !== null) {
+            this.breadcrumbs.push({
+              'title': category.name,
+              'url': this.urlPrevious
+            });
+          }
+          else {
+            this.breadcrumbs.push({
+              'title': category.name,
+              'route': `{ "name": "catalog", "query": { "type": "${type.slug}", "category": "${category.slug}"} }`
+            });
+          }
         }
 
         if (this.product !== null) {

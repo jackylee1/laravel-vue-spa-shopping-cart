@@ -98,7 +98,13 @@
           typeFilters = this.sortCurrentFilters(this.currentType.filters);
         }
         else if (this.currentCategory !== null) {
-          categoryFilters = this.sortCurrentFilters(this.currentCategory.filters);
+          let childrenCategories = _.filter(this.currentType.categories, (item) => {
+            return item.parent_id === this.currentCategory.id
+          });
+          let childrenCategoryFilters = _.map(childrenCategories, 'filters');
+          childrenCategoryFilters = _.flatten(childrenCategoryFilters);
+
+          categoryFilters = this.sortCurrentFilters(_.unionBy(this.currentCategory.filters, childrenCategoryFilters, 'filter_id'));
         }
 
         if (this.currentCategory === null && this.currentType === null) {
