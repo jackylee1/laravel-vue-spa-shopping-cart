@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Jobs\ReassignCategoryProducts;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Model;
-use Nestable\NestableTrait;
 
 /**
  * App\Models\Category
@@ -45,8 +44,7 @@ use Nestable\NestableTrait;
  */
 class Category extends Model
 {
-    use Cachable,
-        NestableTrait;
+    use Cachable;
 
     public $timestamps = false;
     protected $fillable = [
@@ -161,20 +159,10 @@ class Category extends Model
         return $this->workWithModel(Category::with('type')->find(request()->get('id')));
     }
 
-    private static function searchIds($data) {
-        $count = count($data);
-        $i = 0;
-        while ($i < $count) {
-            self::$ids[] = $data[$i]['id'];
-            if (count($data[$i]['child']) > 0) {
-                self::searchIds($data[$i]['child']);
-            }
-            $i++;
-        }
-    }
-
-    public static function getChildrenCategories ($id) {
-        self::searchIds(Category::parent((int)$id)->renderAsArray());
+    public static function getChildrenCategories($id) {
+        Category::where('parent_id', $id)->get()->each(function ($category) {
+            self::$ids[] = $category->id;
+        });
 
         return array_unique(self::$ids);
     }

@@ -5,10 +5,16 @@
         <div class="row">
           <div class="col-sm-6">
             <div class="telephone">
-              <span class="first" v-if="phone1 !== null">
+              <span  style="cursor: pointer"
+                     @click="openTel(phone1)"
+                     class="first"
+                     v-if="phone1 !== null">
                 {{phone1}}
               </span>
-              <span class="second" v-if="phone2 !== null">
+              <span  style="cursor: pointer"
+                     @click="openTel(phone2)"
+                     class="second"
+                     v-if="phone2 !== null">
                 {{phone2}}
               </span>
             </div>
@@ -40,6 +46,11 @@
     computed: {
       isLoggedIn: function () {
         return this.$store.getters.isLoggedIn;
+      }
+    },
+    methods: {
+      openTel: function (phone) {
+        window.location.href = `tel:${phone}`;
       }
     }
   }

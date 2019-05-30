@@ -74,9 +74,15 @@
           <div class="col-lg-2 footer_menu">
             <h3>Наши контакты</h3>
             <ul>
-              <li v-if="phone1 !== null">т. {{phone1}}</li>
-              <li v-if="phone2 !== null">т. {{phone2}}</li>
-              <li v-if="settingEmail">{{settingEmail}}</li>
+              <li style="cursor: pointer"
+                  @click="openHref('tel', phone1)"
+                  v-if="phone1 !== null">т. {{phone1}}</li>
+              <li style="cursor: pointer"
+                  @click="openHref('tel', phone2)"
+                  v-if="phone2 !== null">т. {{phone2}}</li>
+              <li style="cursor: pointer"
+                  @click="openHref('mailto', settingEmail)"
+                  v-if="settingEmail">{{settingEmail}}</li>
               <li v-if="linkToSocialNetworks.length">
                 <template v-for="link in linkToSocialNetworks">
                   <a :href="link.url" target="_blank">
@@ -295,6 +301,9 @@
       }
     },
     methods: {
+      openHref: function (type, href) {
+        window.location.href = `${type}:${href}`;
+      },
       subscribe: function () {
         this.$validator.validateAll('form-subscribe').then((result) => {
           if (result) {

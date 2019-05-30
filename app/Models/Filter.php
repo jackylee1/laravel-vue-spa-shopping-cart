@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Tools\File;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Model;
-use Nestable\NestableTrait;
 
 /**
  * App\Models\Filter
@@ -44,8 +43,7 @@ use Nestable\NestableTrait;
  */
 class Filter extends Model
 {
-    use NestableTrait,
-        Cachable;
+    use Cachable;
 
     protected $ids;
     protected $count_children, $count_parents;
@@ -147,39 +145,14 @@ class Filter extends Model
         return $query->count();
     }
 
-    private function searchIds($data) {
-        $count = count($data);
-        $i = 0;
-        while ($i < $count) {
-            $this->count_children += 1;
-            $this->ids[] = $data[$i]['id'];
-            if (count($data[$i]['child']) > 0) {
-                $this->searchIds($data[$i]['child']);
-            }
-            $i++;
-        }
-    }
-
-    private function searchParents($data) {
-        $count = count($data);
-        $i = 0;
-        while ($i < $count) {
-            if (!in_array($data[$i]['parent_id'], $this->ids)) {
-                $this->ids[] = $data[$i]['parent_id'];
-                $this->count_parents += 1;
-            }
-            if (count($data[$i]['child']) > 0) {
-                $this->searchParents($data[$i]['child']);
-            }
-            $i++;
-        }
-    }
-
     protected function destroyModel($id) {
         $this->ids[] = (int)$id;
-        $this->searchIds(Filter::parent((int)$id)->renderAsArray());
+        $models = Filter::where('parent_id', $id)->orWhere('id', $id)->get();
 
-        $models = Filter::whereIn('id', $this->ids)->get();
+        $models->each(function ($filter) {
+            $this->ids[] = $filter->id;
+        });
+
         $models->each(function ($model) {
             $this->deleteImages($model);
         });

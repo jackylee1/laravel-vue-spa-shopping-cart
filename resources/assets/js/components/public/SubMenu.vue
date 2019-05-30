@@ -5,8 +5,12 @@
         <div class="row">
           <div class="col-4 phones my-auto">
             <ul>
-              <li v-if="phone1 !== null">{{phone1}}</li>
-              <li v-if="phone2 !== null">{{phone2}}</li>
+              <li style="cursor: pointer"
+                  @click="openTel(phone1)"
+                  v-if="phone1 !== null">{{phone1}}</li>
+              <li style="cursor: pointer"
+                  @click="openTel(phone2)"
+                  v-if="phone2 !== null">{{phone2}}</li>
             </ul>
           </div>
           <template v-if="this.isLoggedIn">
@@ -52,6 +56,11 @@
     computed: {
       isLoggedIn: function () {
         return this.$store.getters.isLoggedIn;
+      },
+    },
+    methods: {
+      openTel: function (phone) {
+        window.location.href = `tel:${phone}`;
       }
     }
   }
