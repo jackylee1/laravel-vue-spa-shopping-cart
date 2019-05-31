@@ -88,13 +88,13 @@
                                     && props.row[relationForAction] !== null
                                     && props.row[relationForAction][relationKey] !== null
                                     && props.row[relationForAction][relationKey] === parseInt($route.params.id))
-                                    ? 'danger' : 'success'"
+                                    ? 'success' : 'danger'"
               :icon="(relationForAction != null
                                     && relationKey != null
                                     && props.row[relationForAction] !== null
                                     && props.row[relationForAction][relationKey] !== null
                                     && props.row[relationForAction][relationKey] === parseInt($route.params.id))
-                                    ? 'el-icon-close' : 'el-icon-check'" circle
+                                    ? 'el-icon-check' : 'el-icon-close'" circle
               @click="selectUser(props.row)">
           </el-button>
         </template>

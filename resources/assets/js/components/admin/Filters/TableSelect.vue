@@ -26,8 +26,8 @@
           min-width="70">
         <template slot-scope="props">
           <el-button
-              :type="btnSelect(props.row.id) ? 'danger' : 'success'"
-              :icon="btnSelect(props.row.id) ? 'el-icon-close' : 'el-icon-check'" circle
+              :type="btnSelect(props.row.id) ? 'success' : 'danger'"
+              :icon="btnSelect(props.row.id) ? 'el-icon-check' : 'el-icon-close'" circle
               @click="selectFilter(props.row)">
           </el-button>
         </template>
