@@ -113,7 +113,6 @@ class CategoryController extends Controller
         }
 
         $ids = Category::destroyModel($id);
-        dump($ids);
 
         return response()->json([
             'status' => 'success',

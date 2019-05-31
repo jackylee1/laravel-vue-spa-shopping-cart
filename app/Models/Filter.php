@@ -146,19 +146,19 @@ class Filter extends Model
     }
 
     protected function destroyModel($id) {
-        $this->ids[] = (int)$id;
+        $ids[] = (int)$id;
         $models = Filter::where('parent_id', $id)->orWhere('id', $id)->get();
 
-        $models->each(function ($filter) {
-            $this->ids[] = $filter->id;
+        $models->each(function ($filter) use (&$ids) {
+            $ids[] = $filter->id;
         });
 
         $models->each(function ($model) {
             $this->deleteImages($model);
         });
 
-        Filter::whereIn('id', $this->ids)->delete();
+        Filter::whereIn('id', $ids)->delete();
 
-        return $this->ids;
+        return $ids;
     }
 }

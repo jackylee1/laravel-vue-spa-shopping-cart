@@ -72,14 +72,14 @@ class Category extends Model
 
     protected $parent = 'parent_id';
 
-    private static $ids;
+    private static $model_ids;
 
     protected $with = ['filters'];
 
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
-        self::$ids = [];
+        self::$model_ids = [];
     }
 
     public function type() {
@@ -160,20 +160,24 @@ class Category extends Model
     }
 
     public static function getChildrenCategories($id) {
-        Category::where('parent_id', $id)->get()->each(function ($category) {
-            self::$ids[] = $category->id;
+        $model_ids = [];
+        Category::where('parent_id', $id)->get()->each(function ($category) use (&$model_ids) {
+            $model_ids[] = $category->id;
         });
 
-        return array_unique(self::$ids);
+        return $model_ids;
     }
 
-    protected function destroyModel($id) {
-        self::$ids[] = (int)$id;
-        self::getChildrenCategories($id);
+    public static function destroyModel($id) {
+        $model_ids[] = (int)$id;
+        $categories = Category::where('parent_id', $id)->get();
+        $categories->each(function ($category) use (&$model_ids) {
+            $model_ids[] = $category->id;
+        });
 
-        Category::whereIn('id', self::$ids)->delete();
+        Category::whereIn('id', $model_ids)->delete();
 
-        return self::$ids;
+        return $model_ids;
     }
 
     protected function handleFilter() {
