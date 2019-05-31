@@ -95,7 +95,8 @@
         let categoryFilters = [];
 
         if (this.currentType !== null && this.currentCategory === null) {
-          typeFilters = this.sortCurrentFilters(this.currentType.filters);
+          let childrenCategoryFilters = _.flatten(_.map(this.currentType.categories, 'filters'));
+          typeFilters = this.sortCurrentFilters(_.unionBy(childrenCategoryFilters, 'filter_id'));
         }
         else if (this.currentCategory !== null) {
           let childrenCategories = _.filter(this.currentType.categories, (item) => {
@@ -103,7 +104,6 @@
           });
           let childrenCategoryFilters = _.map(childrenCategories, 'filters');
           childrenCategoryFilters = _.flatten(childrenCategoryFilters);
-
           categoryFilters = this.sortCurrentFilters(_.unionBy(this.currentCategory.filters, childrenCategoryFilters, 'filter_id'));
         }
 

@@ -86,14 +86,12 @@ class ProductInFilter extends Model
             $query->where('type_id', $type_id);
         }
         if ($category_id !== null) {
-            $query->where('category_id', $category_id);
+            $id_categories = Category::getChildrenCategories($category_id);
+            $id_categories[] = $category_id;
+            $query->whereHas('categories', function ($query) use ($id_categories) {
+                $query->whereIn('category_id', $id_categories);
+            });
         }
-
-        /*$query->whereHas('availableFilter', function ($query) {
-            //$query->whereHas('productAvailable', function ($query) {
-            //    $query->where('quantity', '>', 0);
-            //});
-        });*/
 
         $models = $query->setEagerLoads([])->whereIn('filter_id', array_values($filters->toArray()))->get();
 

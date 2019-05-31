@@ -147,7 +147,7 @@ class Filter extends Model
 
     protected function destroyModel($id) {
         $ids[] = (int)$id;
-        $models = Filter::where('parent_id', $id)->orWhere('id', $id)->get();
+        $models = Filter::where('parent_id', $id)->get();
 
         $models->each(function ($filter) use (&$ids) {
             $ids[] = $filter->id;
