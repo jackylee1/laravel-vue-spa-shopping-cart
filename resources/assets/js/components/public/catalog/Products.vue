@@ -2,7 +2,7 @@
   <div>
     <template v-if="products !== undefined && products.length">
       <template v-for="(productsChunk, index) in _.chunk(products, 4)">
-        <div class="row category_items justify-content-center">
+        <div class="row category_items">
           <template v-for="(product, productIndex) in productsChunk">
             <div class="col-md-3 col-sm-6 col-6 the_items_card">
               <div class="thumb-wrapper">
