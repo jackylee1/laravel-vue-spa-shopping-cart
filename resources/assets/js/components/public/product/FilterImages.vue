@@ -2,7 +2,7 @@
   <div>
     <template v-for="(itemImage, index) in this.getImages()">
       <img @click="productsByFilter(getFilterByImage(itemImage))"
-           :style="(index !== 0) ? 'margin-left: 5px' : ''"
+           :style="(index !== 0) ? 'margin-left: 5px; cursor: pointer;' : 'cursor: pointer'"
            class="item_logo"
            :src="`/app/public/images/filter/${itemImage}`" alt="">
     </template>
