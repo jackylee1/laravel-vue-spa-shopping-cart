@@ -86,3 +86,10 @@
 .text-center {
     text-align: center;
 }
+
+.fa-icon {
+    width: auto;
+    height: 0.9em;
+    max-width: 100%;
+    max-height: 100%;
+}

@@ -108,7 +108,7 @@
           <template v-if="props.row.discount_price !== null && props.row.discount_price > 0">
             {{props.row.name}}
             <el-tooltip class="item" effect="dark" content="Акционный товар" placement="top-start">
-              <i class="ai-tag-o share-price" />
+              <v-icon name="tag"></v-icon>
             </el-tooltip>
           </template>
           <template v-else>

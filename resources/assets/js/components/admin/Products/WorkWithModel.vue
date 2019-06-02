@@ -186,7 +186,7 @@
               <template v-for="(category, index) in props.row.categories">
                 {{ getCategory(props.row.type_id, category.category_id).name }}
                 <template v-if="index !== props.row.categories.length - 1">
-                  <i class="ai-arrow-right"></i>
+                  <v-icon name="arrow-right"></v-icon>
                 </template>
               </template>
             </template>
@@ -199,7 +199,7 @@
               <template v-for="(filter, index) in props.row.filters">
                 {{ getFilter(filter.filter_id).name }}
                 <template v-if="index !== props.row.filters.length - 1">
-                  <i class="ai-arrow-right"></i>
+                  <v-icon name="arrow-right"></v-icon>
                 </template>
               </template>
             </template>
@@ -237,7 +237,7 @@
               <template v-for="(filter, index) in props.row.filters">
                 {{ getStringTreeFilters(filter.filter_id) }}
                 <template v-if="index !== props.row.filters.length - 1">
-                  <i class="ai-plus"></i>
+                  <v-icon name="plus"></v-icon>
                 </template>
               </template>
             </template>

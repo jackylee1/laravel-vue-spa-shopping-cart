@@ -157,7 +157,7 @@
                       <el-button type="primary"
                         @click="modalWorkWithFiltersCategory(node.data)"
                         size="mini">
-                        <i class="ai-filter"></i>
+                        <v-icon name="filter"></v-icon>
                       </el-button>
                       <el-button type="primary"
                         @click="modalEditNode(node.data)"

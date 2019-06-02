@@ -17,12 +17,15 @@ import FileManager from 'laravel-file-manager';
 import Croppa from 'vue-croppa';
 import VueClipboard from 'vue-clipboard2';
 import VueYoutube from 'vue-youtube';
+import Icon from 'vue-awesome/components/Icon';
 
 import './assets/css/theme-dark-purple/index.css';
 import './assets/css/global-style.css';
 import lang from 'element-ui/lib/locale/lang/ru-RU';
 import locale from 'element-ui/lib/locale';
-import 'ant-design-icons/dist/anticons.min.css';
+
+import 'vue-awesome/icons/flag';
+import 'vue-awesome/icons';
 
 locale.use(lang);
 VueClipboard.config.autoSetContainer = true;
@@ -35,6 +38,7 @@ Vue.use(Croppa);
 Vue.use(VueClipboard);
 Vue.component('tinymce', tinymce);
 Vue.use(VueYoutube);
+Vue.component('v-icon', Icon);
 
 const store = new Vuex.Store(StoreData);
 

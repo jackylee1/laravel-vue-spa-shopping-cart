@@ -248,7 +248,7 @@
             <template v-if="props.row.discount_price !== null && props.row.discount_price > 0">
               {{props.row.product.name}}
               <el-tooltip class="item" effect="dark" content="Акционный товар" placement="top-start">
-                <i class="ai-tag-o share-price" />
+                <v-icon name="tag"></v-icon>
               </el-tooltip>
             </template>
             <template v-else>
@@ -263,7 +263,7 @@
             <template v-for="(filter, index) in props.row.available.filters">
               {{ getFilter(filter.filter_id) }}
               <template v-if="index !== props.row.available.filters.length - 1">
-                <i class="ai-arrow-right"></i>
+                <v-icon name="arrow-right"></v-icon>
               </template>
             </template>
           </template>
