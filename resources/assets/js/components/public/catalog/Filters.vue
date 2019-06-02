@@ -4,14 +4,27 @@
       <template v-for="(filterRender, index) in this.renderArraySelect">
         <div class="col-md-2">
           <p class="text-center">{{filterRender.name}}</p>
-          <select @click="changeFilter"
-                  v-model="selectFilters[index]"
-                  class="form-control-sm custom-select">
-            <option value=""></option>
-            <template v-for="filterChildren in getChildrenFilters(filterRender)">
-              <option :value="filterChildren.id">{{filterChildren.name}}</option>
-            </template>
-          </select>
+          <template v-if="filterRender.type === 2">
+            <select @click="changeFilter"
+                    v-model="selectFilters[index]"
+                    multiple
+                    class="form-control-sm custom-select">
+              <option value=""></option>
+              <template v-for="filterChildren in getChildrenFilters(filterRender)">
+                <option :value="filterChildren.id">{{filterChildren.name}}</option>
+              </template>
+            </select>
+          </template>
+          <template v-else>
+            <select @click="changeFilter"
+                    v-model="selectFilters[index]"
+                    class="form-control-sm custom-select">
+              <option value=""></option>
+              <template v-for="filterChildren in getChildrenFilters(filterRender)">
+                <option :value="filterChildren.id">{{filterChildren.name}}</option>
+              </template>
+            </select>
+          </template>
         </div>
       </template>
     </div>
@@ -26,7 +39,6 @@
       _.delay(() => {
         this.setRenderArray();
         this.setSelectFilters();
-
         this.$emit('getProducts', this.$router.currentRoute.query.page);
       }, 600);
     },
@@ -68,24 +80,47 @@
           )});
       },
       setSelectFilters: function () {
-        this.selectFilters = [];
         let queryFilters = this.$router.currentRoute.query.filters;
 
         let filters = (queryFilters !== undefined && queryFilters.length > 0) ? queryFilters : this.mergeFilters();
         if (filters !== null && !Array.isArray(filters)) {
           filters = [filters];
         }
+
+        let tempSelectFilters;
+        tempSelectFilters = [];
+
         if (filters.length) {
           filters.forEach((filter, index) => {
             if (queryFilters !== undefined
               && queryFilters[index] !== undefined
               && filter.filter_id !== parseInt(queryFilters[index])) {
-              this.selectFilters.push(queryFilters[index]);
+              if (tempSelectFilters[index] !== queryFilters[index]) {
+                tempSelectFilters[index] = (Array.isArray(queryFilters[index]))
+                  ? queryFilters[index].join(',')
+                  : queryFilters[index];
+              }
             }
             else {
-              this.selectFilters.push(filter.filter_id);
+              tempSelectFilters[index] = filter.filter_id;
             }
           });
+        }
+
+        tempSelectFilters = tempSelectFilters.map((item, index) => {
+          if (typeof item === 'string' && item.indexOf(',') !== -1) {
+            return item.split(',');
+          }
+          else if (this.renderArraySelect[index].type === 2) {
+            return [item];
+          }
+          else {
+            return item;
+          }
+        });
+
+        if (tempSelectFilters !== this.selectFilters) {
+          this.selectFilters = tempSelectFilters;
         }
 
         this.setFiltersToUrl();
@@ -109,7 +144,7 @@
 
         if (this.currentCategory === null && this.currentType === null) {
           typeFilters = this.filters.map((filter) => {
-            if (filter.type === 1) {
+            if (filter.type === 1 || filter.type === 2) {
               return {
                 filter_id: filter.id
               };

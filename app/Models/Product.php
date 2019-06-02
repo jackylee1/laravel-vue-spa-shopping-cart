@@ -357,6 +357,13 @@ class Product extends Model
 
         if (request()->filled('filters')) {
             $request_filters = (is_array(request()->get('filters'))) ? request()->get('filters') : [request()->get('filters')];
+            $request_filters = collect($request_filters)->map(function ($item) {
+                $str = str_replace(['[', ']', '"'], '', $item);
+                if (strpos($str, ',')) {
+                    return explode(',', $str);
+                }
+                return $str;
+            })->toArray();
             $filters = Filter::getFiltersById(array_filter($request_filters));
             $filters = $filters->map(function ($filter) {
                 if ($filter->parent_id !== 0) {
@@ -364,6 +371,20 @@ class Product extends Model
                 }
             })->filter(function ($filter) {
                 return $filter !== null;
+            });
+
+            $filters = collect($request_filters)->map(function ($item) use ($filters) {
+                if (is_array($item)) {
+                    $intersect = $filters->intersect($item);
+                    if ($intersect->count() > 0) {
+                        return array_values($intersect->toArray());
+                    }
+                }
+                elseif ($filters->contains($item)) {
+                    return (int)$item;
+                }
+            })->filter(function ($item) {
+                return $item !== null;
             });
 
             if ($filters->count() > 0) {

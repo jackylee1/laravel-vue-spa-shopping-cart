@@ -2,15 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Filter;
-use App\Models\LinkToSocialNetwork;
 use App\Models\Product;
-use App\Models\Slider;
-use App\Models\TextBlockTitle;
-use App\Models\Type;
 use App\Traits\DataTrait;
 use App\Traits\ValidateTrait;
-use function GuzzleHttp\Psr7\str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -25,7 +19,7 @@ class ProductController extends Controller
             if (is_array($request->get('filters'))) {
                 $this->setValidateRule([
                     'filters' => 'array',
-                    'filters.*' => 'integer|exists:filters,id|nullable',
+                    'filters.*' => 'nullable|regex:/^(?!,$)[\d,\[\]\"\"]+$/',
                 ]);
             }
             else {

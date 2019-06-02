@@ -14,7 +14,7 @@ export default {
       let filters;
       filters = [];
       this.treeAllFilters.forEach((item) => {
-        if (item.type === 1) {
+        if (item.type === 1 || item.type === 2) {
           if (filter.parent_id === item.id) {
             filters.push(filter.id);
           }

@@ -223,12 +223,10 @@
     methods: {
       getLastStatus: function (id) {
         let order = this.orders.find(item => item.id === id);
-        console.log(order);
         if (order !== undefined && order.history_statuses.length === 0) {
           return null;
         }
         else {
-          console.log(_.last(order.history_statuses).status);
           return _.last(order.history_statuses).status;
         }
       },
