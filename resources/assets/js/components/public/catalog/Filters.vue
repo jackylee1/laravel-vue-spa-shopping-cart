@@ -130,8 +130,7 @@
         let categoryFilters = [];
 
         if (this.currentType !== null && this.currentCategory === null) {
-          let childrenCategoryFilters = _.flatten(_.map(this.currentType.categories, 'filters'));
-          typeFilters = this.sortCurrentFilters(_.unionBy(childrenCategoryFilters, 'filter_id'));
+          typeFilters = this.sortCurrentFilters(this.currentType.filters);
         }
         else if (this.currentCategory !== null) {
           let childrenCategories = _.filter(this.currentType.categories, (item) => {
@@ -159,6 +158,7 @@
         this.renderArraySelect = [];
 
         let filters = this.mergeFilters();
+        console.log(filters);
 
         filters.forEach((filter) => {
           filter = this.filters.find((item) => {

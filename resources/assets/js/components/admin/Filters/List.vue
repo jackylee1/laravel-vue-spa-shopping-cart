@@ -137,7 +137,7 @@
               <el-option
                   v-for="item in getParentFilters"
                   :key="item.id"
-                  :label="(item.id === 0) ? `${item.name}` : `${item.name} (ID: ${item.id}`"
+                  :label="(item.id === 0) ? `${item.name}` : `${item.name} (ID: ${item.id})`"
                   :value="item.id">
               </el-option>
             </el-select>
