@@ -68,7 +68,6 @@ class User extends Authenticatable implements JWTSubject
         'description',
         'user_name',
         'user_surname',
-        'user_patronymic',
         'discount',
         'discount',
         'email',
@@ -115,7 +114,6 @@ class User extends Authenticatable implements JWTSubject
             $like = prepareForLike(request()->get('q'));
             $query->whereRaw('lower(user_name) like ?', ["%{$like}%"])
                 ->orWhereRaw('lower(user_surname) like ?', ["%{$like}%"])
-                ->orWhereRaw('lower(user_patronymic) like ?', ["%{$like}%"])
                 ->orWhereRaw('lower(email) like ?', ["%{$like}%"]);
         }
 
@@ -131,7 +129,6 @@ class User extends Authenticatable implements JWTSubject
     private function workWithModel($model) {
         $model->user_name = request()->get('user_name');
         $model->user_surname = request()->get('user_surname');
-        $model->user_patronymic = request()->get('user_patronymic');
         $model->email = request()->get('email');
         $model->phone = request()->get('phone');
         if (request()->get('id') !== 1) {
@@ -219,7 +216,6 @@ class User extends Authenticatable implements JWTSubject
         return User::create([
             'user_name' => request()->get('name'),
             'user_surname' => request()->get('surname'),
-            'user_patronymic' => request()->get('patronymic'),
             'email' => request()->get('email'),
             'phone' => request()->get('phone'),
             'password' => Hash::make(request()->get('password'))

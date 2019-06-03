@@ -139,12 +139,11 @@ class Category extends Model
 
     protected function checkUniqueSlug() {
         $query = Category::query();
-        $parent = (request()->get('parent_id') !== null) ? request()->get('parent_id') : 0;
         if (request()->get('id') !== null) {
             $query->where('id', '<>', request()->get('id'));
         }
         $query->where([
-            ['parent_id', $parent],
+            ['type_id', request()->get('type_id')],
             ['slug', request()->get('slug')]
         ]);
 
@@ -204,6 +203,10 @@ class Category extends Model
 
     public static function getCategories() {
         return Category::select('*')->get();
+    }
+
+    public static function getCategoryById($id) {
+        return Category::setEagerLoads([])->find($id);
     }
 
     public static function getItemsByIds($id_categories) {

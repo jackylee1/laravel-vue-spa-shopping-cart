@@ -4,7 +4,8 @@
       <template v-for="errors in alerts">
         <template v-for="message in errors">
           <el-alert
-              style="padding: 10px;margin-bottom: 10px;"
+              :closable="false"
+              style="padding: 10px;margin-bottom: 10px;margin-top: 15px;"
               :title="message"
               :type="type">
           </el-alert>

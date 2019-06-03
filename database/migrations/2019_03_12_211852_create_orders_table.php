@@ -19,7 +19,6 @@ class CreateOrdersTable extends Migration
             $table->integer('user_id')->nullable()->unsigned();
             $table->string('user_name')->nullable();
             $table->string('user_surname')->nullable();
-            $table->string('user_patronymic')->nullable();
             $table->string('phone')->nullable();
             $table->string('email')->nullable();
             $table->text('note')->nullable();

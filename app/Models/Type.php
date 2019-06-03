@@ -205,4 +205,8 @@ class Type extends Model
             'model' => $model
         ];
     }
+
+    public static function getTypeById($id) {
+        return Type::setEagerLoads([])->find($id);
+    }
 }

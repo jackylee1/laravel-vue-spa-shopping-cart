@@ -26,7 +26,9 @@
                       {{getDateTimeString(order.created_at)}}
                     </div>
                     <div class="order_column text-center">
-                      <template v-if="order.total_discount_price !== null && order.total_discount_price > 0">
+                      <template v-if="order.total_discount_price !== null
+                                      && order.total_discount_price > 0
+                                      && order.total_discount_price !== order.total_price">
                         <strike style="padding-right: 5px">{{order.total_price}}грн. </strike> {{order.total_discount_price}} грн.
                       </template>
                       <template v-else>

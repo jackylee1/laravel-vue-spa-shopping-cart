@@ -96,6 +96,7 @@ export default {
           let cart = this.cart;
           cart.products.unshift(res.data.cart_product);
           this.$store.commit('updateCart', cart);
+          $('#modalCartProducts').modal('show');
 
           this.$notify({
             type: 'success',

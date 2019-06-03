@@ -45,7 +45,6 @@ class UserController extends Controller
         $this->setValidateRule([
             'name' => 'required|string|max:50',
             'surname' => 'required|string|max:50',
-            'patronymic' => 'required|string|max:50',
             'phone' => 'required|phone:UA|unique:users,phone,' . auth()->user()->id,
             'email' => 'required|email|unique:users,email,' . auth()->user()->id
         ]);
@@ -53,7 +52,6 @@ class UserController extends Controller
         $this->setValidateAttribute([
             'name' => 'Имя',
             'surname' => 'Фамилия',
-            'patronymic' => 'Отчество',
             'phone' => 'Телефон',
             'email' => 'E-Mail',
             'old_password' => 'Старый пароль',
@@ -67,7 +65,6 @@ class UserController extends Controller
         $user->update([
             'user_name' => $request->name,
             'user_surname' => $request->surname,
-            'user_patronymic' => $request->patronymic,
             'phone' => $request->phone,
             'email' => $request->email
         ]);
@@ -96,7 +93,6 @@ class UserController extends Controller
         $this->setValidateRule([
             'name' => 'required|string|max:50',
             'surname' => 'required|string|max:50',
-            'patronymic' => 'required|string|max:50',
             'phone' => 'required|phone:UA',
             'email' => 'required|email|unique:users,email',
             'password' => "required|required_with:password_confirmation|confirmed|min:6|$password_regex",
@@ -106,7 +102,6 @@ class UserController extends Controller
         $this->setValidateAttribute([
             'name' => 'Имя',
             'surname' => 'Фамилия',
-            'patronymic' => 'Отчество',
             'phone' => 'Телефон',
             'email' => 'E-Mail',
             'password' => 'Пароль',

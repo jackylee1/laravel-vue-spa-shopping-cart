@@ -187,8 +187,8 @@
         }
         else {
           setTimeout(() => {
-            this.$store.commit('updateCategoryPrevious', this.currentCategory);
             this.$store.commit('updateTypePrevious', this.currentType);
+            this.$store.commit('updateCategoryPrevious', this.currentCategory);
 
             this.$store.commit('updateUrlPrevious', this.$router.currentRoute.fullPath);
 

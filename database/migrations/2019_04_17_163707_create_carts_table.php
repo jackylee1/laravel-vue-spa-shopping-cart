@@ -25,7 +25,6 @@ class CreateCartsTable extends Migration
             $table->char('warehouse_id')->nullable();
             $table->char('user_name')->nullable();
             $table->char('user_surname')->nullable();
-            $table->char('user_patronymic')->nullable();
             $table->char('phone')->nullable();
             $table->char('email')->nullable();
             $table->text('note')->nullable();

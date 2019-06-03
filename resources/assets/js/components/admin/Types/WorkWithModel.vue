@@ -658,6 +658,7 @@
                 });
                 this.loading = false;
               }).catch((error) => {
+                this.loading = false;
                 this.modalAlerts = error.response.data.errors;
                 this.modalTypeAlerts = 'error';
               });
@@ -825,7 +826,7 @@
         }
       },
       'workWithNode.name': function (val) {
-        if (val !== undefined) {
+        if (val !== undefined && (this.workWithNode.id === undefined || this.workWithNode.id === null)) {
           this.workWithNode.slug = slugify(val, {
             replacement: '-',
             remove: null,

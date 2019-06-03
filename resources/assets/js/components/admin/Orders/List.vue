@@ -18,11 +18,6 @@
                   placeholder="Введите Имя">
         </el-input>
       </el-form-item>
-      <el-form-item label="Отчество">
-        <el-input v-model="formSearch.user_patronymic"
-                  placeholder="Введите Отчество">
-        </el-input>
-      </el-form-item>
       <el-form-item label="ID Пользователя">
         <el-input v-model="formSearch.user_id"
                   placeholder="Введите ID пользователя">
@@ -79,8 +74,8 @@
         <template slot-scope="props">
           <template v-if="props.row.user_id">
             <router-link :to="{ name: 'users-update', params: { id: props.row.user_id }}">
-              <template v-if="props.row.user_surname !== null && props.row.user_name !== null && props.row.user_patronymic !== null">
-                {{props.row.user_surname}} {{props.row.user_name}} {{props.row.user_patronymic}} (ID {{props.row.user_id}})
+              <template v-if="props.row.user_surname !== null && props.row.user_name !== null">
+                {{props.row.user_surname}} {{props.row.user_name}} (ID {{props.row.user_id}})
               </template>
               <template v-else>Страница пользователя (ID {{props.row.user_id}})</template>
             </router-link>
@@ -89,7 +84,6 @@
           <template v-else>
             {{props.row.user_surname}}
             {{props.row.user_name}}
-            {{props.row.user_patronymic}}
             <br>
           </template>
           <template v-if="props.row.email !== null">E-Mail: {{props.row.email}}<br></template>
@@ -213,7 +207,6 @@
           id: null,
           user_name: '',
           user_surname: '',
-          user_patronymic: '',
           user_id: null,
           only_new: 0,
         },
@@ -292,7 +285,6 @@
           id: null,
           user_name: '',
           user_surname: '',
-          user_patronymic: '',
           user_id: null,
           only_new: 0,
         };

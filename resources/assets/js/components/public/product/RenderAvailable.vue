@@ -1,6 +1,6 @@
 <template>
   <div>
-    <template v-for="(available, index) in _.filter(availableModels, (item) => item.quantity > 0)">
+    <template v-for="(available, index) in _.filter(availableModels, (item) => item.quantity > 0 && item.filters.length)">
       <label @click="changeIdAvailable(available.id)"
              :class="(index === 0) ? 'btn btn-primary active' : 'btn btn-primary'">
         <input type="radio"
@@ -33,7 +33,7 @@
     },
     mounted() {
       if (this.availableModels.length > 0) {
-        let available = _.find(this.availableModels, function (x) { return x.quantity > 0 });
+        let available = _.find(this.availableModels, function (x) { return x.quantity > 0 && x.filters.length });
         if (available !== null && available !== undefined) {
           this.$emit('changeIdAvailable', available.id);
         }

@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
+    <div class="modal fade" id="modalCartProducts" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -53,7 +53,7 @@
                 </h5>
               </div>
               <div class="col-12 righted">
-                <h5 v-if="totalPriceDiscount > 0" class="item_sum">
+                <h5 v-if="totalPriceDiscount > 0 && totalPrice !== totalPriceDiscount" class="item_sum">
                   <span>Сумма с учетом пользовательских скидок:</span> {{totalPriceDiscount}} грн
                 </h5>
               </div>
@@ -78,7 +78,7 @@
     mixins: [mixinCart],
     methods: {
       openCart: function () {
-        $('#exampleModal').modal('hide');
+        $('#modalCartProducts').modal('hide');
         $('.modal-backdrop').removeClass('modal-backdrop');
         this.$router.push({ name: 'cart'});
       }

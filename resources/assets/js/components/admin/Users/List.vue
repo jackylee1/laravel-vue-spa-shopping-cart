@@ -45,11 +45,6 @@
           label="Имя"
           min-width="100">
       </el-table-column>
-      <el-table-column
-          prop="user_patronymic"
-          label="Отчество"
-          min-width="100">
-      </el-table-column>
       <el-table-column type="expand">
         <template slot-scope="props">
           <p>E-mail: {{ props.row.email }}</p>

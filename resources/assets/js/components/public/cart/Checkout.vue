@@ -43,22 +43,6 @@
                 </div>
               </div>
               <div class="form-group row">
-                <label for="user_patronymic" class="col-lg-4 col-form-label">Отчество</label>
-                <div class="col-lg-8">
-                  <input type="text"
-                         v-model="cart.user_patronymic"
-                         data-vv-as="Отчество"
-                         name="user_patronymic"
-                         v-validate="'max:50'"
-                         class="form-control"
-                         id="user_patronymic"
-                         placeholder="Введите Отчество">
-                  <small v-show="errors.has('form-checkout.user_patronymic')" class="text-danger">
-                    {{ errors.first('form-checkout.user_patronymic') }}
-                  </small>
-                </div>
-              </div>
-              <div class="form-group row">
                 <label for="phone" class="col-lg-4 col-form-label">Телефон <span class="validate">*</span></label>
                 <div class="col-lg-8">
                   <input type="text"
@@ -357,9 +341,6 @@
         }
         if (this.cart.user_surname === null && this.currentUser !== null) {
           this.cart.user_surname = this.currentUser.user_surname;
-        }
-        if (this.cart.user_patronymic === null && this.currentUser !== null) {
-          this.cart.user_patronymic = this.currentUser.user_patronymic;
         }
         if (this.cart.phone === null && this.currentUser !== null) {
           this.cart.phone = this.currentUser.phone;

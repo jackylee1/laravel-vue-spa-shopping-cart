@@ -33,15 +33,6 @@
             </div>
 
             <div class="form-group row">
-              <label for="patronymic" class="col-lg-3 col-form-label">Отчество</label>
-              <div class="col-lg-9">
-                <input v-model="form.patronymic"
-                       name="patronymic" id="patronymic"
-                       type="text" class="form-control" placeholder="Отчество">
-              </div>
-            </div>
-
-            <div class="form-group row">
               <label for="phone" class="col-lg-3 col-form-label">Телефон</label>
               <div class="col-lg-9">
                 <input v-model="form.phone"
@@ -120,7 +111,6 @@
       if (this.currentUser !== null) {
         this.form.name = this.currentUser.user_name;
         this.form.surname = this.currentUser.user_surname;
-        this.form.patronymic = this.currentUser.user_patronymic;
         this.form.email = this.currentUser.email;
         this.form.phone = this.currentUser.phone;
       }
@@ -138,7 +128,6 @@
         form:  {
           name: null,
           surname: null,
-          patronymic: null,
           email: null,
           phone: null,
           old_password: null,

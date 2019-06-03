@@ -39,19 +39,6 @@ class FilterController extends Controller
             ]);
         }
 
-        $this->setValidateRule([
-            'slug' => [
-                'required',
-                'string',
-                function ($attribute, $value, $fail) {
-                    if (Filter::checkUniqueSlug() > 0) {
-                        $fail('На этом уровне вложенности уже существует запись с этим SEO URL');
-                    }
-                }
-            ],
-            'image' => 'nullable|image|max:2048'
-        ]);
-
         if (\request()->get('type') === 0) {
             $this->setValidateRule([
                 'parent_id' => 'required|integer|exists:filters,id'
@@ -87,7 +74,6 @@ class FilterController extends Controller
             'type' => 'Тип',
             'name' => 'Наименование',
             'sorting_order' => 'Порядок сортировки',
-            'slug' => 'SEO адрес',
             'show_on_header' => 'Показать в шапке',
             'show_on_index' => 'Показать на главной',
             'show_on_footer' => 'Показать в футере',

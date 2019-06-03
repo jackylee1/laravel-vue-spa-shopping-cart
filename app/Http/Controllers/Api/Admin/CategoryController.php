@@ -26,7 +26,7 @@ class CategoryController extends Controller
                 'string',
                 function ($attribute, $value, $fail) {
                     if (Category::checkUniqueSlug() > 0) {
-                        $fail('На этом уровне вложенности уже существует запись с этим SEO URL');
+                        $fail('У этого типа уже существует категория с указанным SEO URL');
                     }
                 }
             ]

@@ -169,18 +169,24 @@ class Product extends Model
         if (request()->filled('type') || request()->filled('category')) {
             return $query->whereHas('filters', function ($query) {
                 if (request()->filled('type')) {
-                    $query->where('type_id', (int)request()->get('type'));
+                    $type = Type::getTypeById((int)request()->get('type'));
+                    if ($type !== null) {
+                        $query->where('type_id', $type->id);
+                    }
                 }
                 if (request()->filled('category')) {
-                    $category_id = (int)request()->get('category');
-                    $children_categories = Category::getChildrenCategories($category_id);
+                    $category = Category::getCategoryById((int)request()->get('category'));
+                    if ($category !== null) {
+                        $category_id = $category->id;
+                        $children_categories = Category::getChildrenCategories($category_id);
 
-                    $query->where('category_id', $category_id);
+                        $query->where('category_id', $category_id);
 
-                    if (count($children_categories) > 0) {
-                        $query->orWhereHas('categories', function ($query) use ($children_categories) {
-                            $query->whereIn('category_id', $children_categories);
-                        });
+                        if (count($children_categories) > 0) {
+                            $query->orWhereHas('categories', function ($query) use ($children_categories) {
+                                $query->whereIn('category_id', $children_categories);
+                            });
+                        }
                     }
                 }
             });

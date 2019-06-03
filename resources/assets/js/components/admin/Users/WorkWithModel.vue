@@ -17,10 +17,6 @@
           <el-input type="text" v-model="form.user_name" placeholder="Введите Имя"></el-input>
         </el-form-item>
 
-        <el-form-item label="Отчество" prop="user_patronymic">
-          <el-input type="text" v-model="form.user_patronymic" placeholder="Введите Отчество"></el-input>
-        </el-form-item>
-
         <el-form-item label="E-mail" prop="email">
           <el-input type="email" v-model="form.email" placeholder="Введите E-mail"></el-input>
         </el-form-item>
@@ -167,10 +163,6 @@
             {max: 191, min: 3, message: generatingValidationMessage('length', [255, 3]), trigger: ['blur', 'change']}
           ],
           user_surname: [
-            {required: true, message: generatingValidationMessage('required'), trigger: ['blur', 'change']},
-            {max: 191, min: 3, message: generatingValidationMessage('length', [255, 3]), trigger: ['blur', 'change']}
-          ],
-          user_patronymic: [
             {required: true, message: generatingValidationMessage('required'), trigger: ['blur', 'change']},
             {max: 191, min: 3, message: generatingValidationMessage('length', [255, 3]), trigger: ['blur', 'change']}
           ],
@@ -328,7 +320,6 @@
           id: null,
           user_name: '',
           user_surname: '',
-          user_patronymic: '',
           email: '',
           password: '',
           password_confirmation: '',

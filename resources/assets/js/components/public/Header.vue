@@ -34,10 +34,10 @@
           </div>
           <div class="col-sm-1">
             <div class="dropdown">
-              <a class="btn" href="#" data-toggle="modal" data-target="#exampleModal">
+              <router-link :to="{ name: 'cart' }">
                 <img class="cart" src="/assets/public/images/cart/cart_white.png" alt="">
                 <span v-if="countCartProducts > 0" class="badge">{{countCartProducts}}</span>
-              </a>
+              </router-link>
 
               <ModalProducts/>
 

@@ -46,10 +46,6 @@
           <el-input v-model="workWithNode.name"></el-input>
         </el-form-item>
 
-        <el-form-item label="SEO адрес" prop="slug">
-          <el-input v-model="workWithNode.slug"></el-input>
-        </el-form-item>
-
         <el-form-item  label="Порядок сорт." prop="sorting_order">
           <el-input v-model="workWithNode.sorting_order"></el-input>
         </el-form-item>
@@ -141,7 +137,7 @@
               <el-option
                   v-for="item in getParentFilters"
                   :key="item.id"
-                  :label="(item.id === 0) ? `${item.name}` : `${item.name} (ID: ${item.id}, SEO: ${item.slug})`"
+                  :label="(item.id === 0) ? `${item.name}` : `${item.name} (ID: ${item.id}`"
                   :value="item.id">
               </el-option>
             </el-select>
@@ -182,7 +178,6 @@
   import * as helperRouter from '../../../app/helpers/router';
 
   let arrayToTree = require('array-to-tree');
-  let slugify = require('slugify');
 
   export default {
     name: 'filters',
@@ -235,10 +230,6 @@
           name: [
             {required: true, message: generatingValidationMessage('required'), trigger: ['blur', 'change']},
             {max: 191, min: 1, message: generatingValidationMessage('length', [255, 1]), trigger: ['blur', 'change']}
-          ],
-          slug: [
-            {required: true, message: generatingValidationMessage('required'), trigger: ['blur', 'change']},
-            {max: 191, min: 1, message: generatingValidationMessage('length', [255, 3]), trigger: ['blur', 'change']}
           ],
           sorting_order: [
             {required: true, message: generatingValidationMessage('required'), trigger: ['blur', 'change']},
@@ -303,7 +294,6 @@
           sorting_order: 0,
           type: 1,
           parent_id: 0,
-          slug: '',
           show_on_index: 0,
           show_on_header: 0,
           show_on_footer: 0,
@@ -382,6 +372,7 @@
             let index = this.filters.findIndex((item) => item.id === response.data.remove_filters[i]);
             this.filters.splice(index, 1);
           }
+          this.$store.commit('updateProducts', []);
           this.deleteNodeDialogVisible = false;
           this.updateFiltersStore();
           this.$notify.success({
@@ -406,24 +397,6 @@
       PageElementsAlerts
     },
     watch: {
-      'workWithNode.name': function (val) {
-        if (val !== undefined) {
-          this.workWithNode.slug = slugify(val, {
-            replacement: '-',
-            remove: null,
-            lower: true
-          })
-        }
-      },
-      'workWithNode.slug': function (val) {
-        if (val !== undefined) {
-          this.workWithNode.slug = slugify(val, {
-            replacement: '-',
-            remove: null,
-            lower: true
-          })
-        }
-      },
       'workWithNode.type': function (val) {
         if (val !== 0) {
           this.workWithNode.parent_id = 0;

@@ -35,22 +35,6 @@
         </div>
       </div>
       <div class="form-group row">
-        <label for="user_patronymic" class="col-lg-4 col-form-label">
-          Отчество <span class="validate">*</span>
-        </label>
-        <div class="col-lg-8">
-          <input type="text"
-                 v-model="form.patronymic"
-                 v-validate="'required|max:50'"
-                 data-vv-as="Отчество"
-                 class="form-control" id="user_patronymic" name="user_patronymic"
-                 placeholder="Введите Отчество">
-          <small v-show="errors.has('form-reg.user_patronymic')" class="text-danger">
-            {{ errors.first('form-reg.user_patronymic') }}
-          </small>
-        </div>
-      </div>
-      <div class="form-group row">
         <label for="phone" class="col-lg-4 col-form-label">
           Телефон <span class="validate">*</span>
         </label>
@@ -157,7 +141,6 @@
         form: {
           surname: '',
           name: '',
-          patronymic: '',
           email: '',
           phone: '',
           password: '',

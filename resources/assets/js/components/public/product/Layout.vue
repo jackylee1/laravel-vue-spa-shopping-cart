@@ -171,39 +171,50 @@
       },
       setBreadcrumbs: function (typeId, categoryId) {
         let type = this.types.find((item) => item.id === typeId);
-        if (type !== undefined) {
-          this.breadcrumbs.push({
-            title: type.name,
-            route: `{ "name": "catalog", "query": { "type": "${type.slug}"} }`
-          });
-        }
 
+        let category = undefined;
         if (categoryId !== null) {
           if (Array.isArray(categoryId)) {
             categoryId = this.product.main_type.category_id[this.product.main_type.category_id.length - 1];
           }
 
-          let category = type.categories.find(item => item.id === categoryId);
-          if (category.parent_id !== 1) {
-            let parentCategory = type.categories.find(item => item.id === category.parent_id);
-            this.breadcrumbs.push({
-              title: parentCategory.name,
-              route: `{ "name": "catalog", "query": { "type": "${type.slug}", "category": "${parentCategory.slug}"} }`
-            });
+          category = type.categories.find(item => item.id === categoryId);
+        }
+
+        if (type !== undefined) {
+          let route = `{ "name": "catalog", "query": { "type": "${type.slug}"} }`;
+          let key = 'route';
+          if (category === undefined && this.urlPrevious !== null) {
+            route = this.urlPrevious;
+            key = 'url';
           }
 
-          if (this.urlPrevious !== null) {
-            this.breadcrumbs.push({
-              'title': category.name,
-              'url': this.urlPrevious
-            });
-          }
-          else {
-            this.breadcrumbs.push({
-              'title': category.name,
-              'route': `{ "name": "catalog", "query": { "type": "${type.slug}", "category": "${category.slug}"} }`
-            });
-          }
+          let breadcrumbRoute = {};
+          breadcrumbRoute.title = type.name;
+          breadcrumbRoute[key] = route;
+
+          this.breadcrumbs.push(breadcrumbRoute);
+        }
+
+        if (category !== undefined && category.parent_id !== 1) {
+          let parentCategory = type.categories.find(item => item.id === category.parent_id);
+          this.breadcrumbs.push({
+            title: parentCategory.name,
+            route: `{ "name": "catalog", "query": { "type": "${type.slug}", "category": "${parentCategory.slug}"} }`
+          });
+        }
+
+        if (category !== undefined && this.urlPrevious !== null) {
+          this.breadcrumbs.push({
+            'title': category.name,
+            'url': this.urlPrevious
+          });
+        }
+        else if (category !== undefined) {
+          this.breadcrumbs.push({
+            'title': category.name,
+            'route': `{ "name": "catalog", "query": { "type": "${type.slug}", "category": "${category.slug}"} }`
+          });
         }
 
         if (this.product !== null) {

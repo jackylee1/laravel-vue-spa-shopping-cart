@@ -13,8 +13,8 @@
             <section v-if="order !== null && order !== undefined" class="cart cart_sf">
               <h3>Заказ №{{order.id}}</h3>
               <div class="container">
-                <template v-if="order.user_surname !== null || order.user_name !== null || order.user_patronymic !== null">
-                  <p>Заказчик: {{order.user_surname}} {{order.user_name}} {{order.user_patronymic}}</p>
+                <template v-if="order.user_surname !== null || order.user_name !== null">
+                  <p>Заказчик: {{order.user_surname}} {{order.user_name}}</p>
                 </template>
                 <p v-if="order.phone !== null">Телефон: {{order.phone}}</p>
                 <p v-if="order.email !== null">E-Mail: {{order.email}}</p>

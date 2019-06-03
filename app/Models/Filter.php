@@ -13,7 +13,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $parent_id
  * @property string $name
  * @property string $like_name
- * @property string $slug
  * @property int $type
  * @property int $sorting_order
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Filter newModelQuery()
@@ -51,7 +50,6 @@ class Filter extends Model
         'parent_id',
         'name',
         'like_name',
-        'slug',
         'type',
         'sorting_order',
         'show_on_index',
@@ -103,7 +101,6 @@ class Filter extends Model
         $model->parent_id = request()->get('parent_id');
         $model->name = request()->get('name');
         $model->like_name = getOnlyCharacters(request()->get('name'));
-        $model->slug = cleanStr(request()->get('slug'));
         $model->type = request()->get('type');
         $model->sorting_order = request()->get('sorting_order');
         $model->show_on_index = request()->get('show_on_index');
@@ -129,20 +126,6 @@ class Filter extends Model
 
     protected function updateModel($image_origin = null, $image_preview = null) {
         return $this->workWithModel(Filter::find(request()->get('id')), $image_origin, $image_preview);
-    }
-
-    protected function checkUniqueSlug() {
-        $query = Filter::query();
-        $parent = (request()->get('parent_id') !== null) ? request()->get('parent_id') : 0;
-        if (request()->get('id') !== null) {
-            $query->where('id', '<>', request()->get('id'));
-        }
-        $query->where([
-            ['parent_id', $parent],
-            ['slug', request()->get('slug')]
-        ]);
-
-        return $query->count();
     }
 
     protected function destroyModel($id) {

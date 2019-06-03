@@ -39,7 +39,6 @@ class UserController extends Controller
         $this->setValidateRule([
             'user_name' => 'required|string|max:191',
             'user_surname' => 'required|string|max:191',
-            'user_patronymic' => 'required|string|max:191',
             'phone' => 'required|string|max:191',
             'status' => 'required|string|in:user,administration',
             'description' => 'nullable|string|max:2500',
@@ -50,7 +49,6 @@ class UserController extends Controller
         $this->setValidateAttribute([
             'user_name' => 'Имя',
             'user_surname' => 'Фамилия',
-            'user_patronymic' => 'Отчество',
             'email' => 'E-mail',
             'phone' => 'Телефон',
             'password' => 'Пароль',

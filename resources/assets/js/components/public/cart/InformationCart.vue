@@ -1,6 +1,6 @@
 <template>
   <div class="col-sm-6 col-12">
-    <p><span class="delivery_data">{{cart.user_surname}} {{cart.user_name}} {{cart.user_patronymic}}</span></p>
+    <p><span class="delivery_data">{{cart.user_surname}} {{cart.user_name}}</span></p>
     <template v-if="cart.delivery === 1">
       <p><span class="delivery_data">Доставка Новой почтой</span></p>
       <p v-if="cart.np_area !== undefined && cart.np_area !== null">

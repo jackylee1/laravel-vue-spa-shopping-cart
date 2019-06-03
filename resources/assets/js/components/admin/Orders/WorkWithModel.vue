@@ -80,10 +80,6 @@
           <el-input type="text" v-model="form.user_surname" placeholder="Введите Фамилию"></el-input>
         </el-form-item>
 
-        <el-form-item label="Отвество" prop="user_patronymic">
-          <el-input type="text" v-model="form.user_patronymic" placeholder="Введите Отчество"></el-input>
-        </el-form-item>
-
         <el-form-item label="E-Mail" prop="email">
           <el-input type="text" v-model="form.email" placeholder="Введите E-Mail"></el-input>
         </el-form-item>
@@ -521,9 +517,6 @@
           user_surname: [
             {max: 191, min: 1, message: generatingValidationMessage('length', [191, 1]), trigger: ['blur', 'change']}
           ],
-          user_patronymic: [
-            {max: 191, min: 1, message: generatingValidationMessage('length', [191, 1]), trigger: ['blur', 'change']}
-          ],
           email: [
             {max: 191, min: 3, message: generatingValidationMessage('length', [255, 3]), trigger: ['blur', 'change']},
             {type: 'email', message: generatingValidationMessage('email'), trigger: ['blur', 'change']}
@@ -638,10 +631,6 @@
           this.form.user_surname = user.user_surname;
         }
 
-        if (this.form.user_patronymic === null) {
-          this.form.user_patronymic = user.user_patronymic;
-        }
-
         if (this.form.email === null) {
           this.form.email = user.email;
         }
@@ -679,7 +668,7 @@
         }
       },
       generationSelectAvailableProduct: function (available) {
-        available = available.map(availableItem => {
+        available = available.filter(item => item.filters.length).map(availableItem => {
           let name = '';
           availableItem.filters.forEach((filter, index) => {
             name += this.getFilter(filter.filter_id);
@@ -838,7 +827,6 @@
           id: null,
           user_name: '',
           user_surname: '',
-          user_patronymic: '',
           phone: '',
           email: '',
           note: '',

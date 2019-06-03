@@ -111,7 +111,7 @@
           if (typeof item === 'string' && item.indexOf(',') !== -1) {
             return item.split(',');
           }
-          else if (this.renderArraySelect[index].type === 2) {
+          else if (this.renderArraySelect[index] !== undefined && this.renderArraySelect[index].type === 2) {
             return [item];
           }
           else {

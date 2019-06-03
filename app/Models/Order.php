@@ -76,7 +76,6 @@ class Order extends Model
         'user_id',
         'user_name',
         'user_surname',
-        'user_patronymic',
         'phone',
         'email',
         'note',
@@ -254,7 +253,6 @@ class Order extends Model
         $order->user_id = request()->get('user_id');
         $order->user_name = request()->get('user_name');
         $order->user_surname = request()->get('user_surname');
-        $order->user_patronymic = request()->get('user_patronymic');
         $order->phone = request()->get('phone');
         $order->email = request()->get('email');
         $order->note = request()->get('note');
@@ -354,15 +352,6 @@ class Order extends Model
                 $query->whereRaw('lower(user_surname) like ?', ['%'. request()->get('user_surname') .'%']);
                 $query->orWhereHas('user', function ($query) {
                     $query->whereRaw('lower(user_surname) like ?', ['%'. request()->get('user_surname') .'%']);
-                });
-            });
-        }
-
-        if (request()->filled('user_patronymic')) {
-            $query->where(function ($query) {
-                $query->whereRaw('lower(user_patronymic) like ?', ['%'. request()->get('user_patronymic') .'%']);
-                $query->orWhereHas('user', function ($query) {
-                    $query->whereRaw('lower(user_patronymic) like ?', ['%'. request()->get('user_patronymic') .'%']);
                 });
             });
         }

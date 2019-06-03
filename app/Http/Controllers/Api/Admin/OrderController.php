@@ -28,7 +28,6 @@ class OrderController extends Controller
             'id' => 'nullable|integer',
             'user_name' => 'nullable|string|max:191',
             'user_surname' => 'nullable|string|max:191',
-            'user_patronymic' => 'nullable|string|max:191',
             'user_id' => 'nullable|integer',
             'only_new' => 'nullable|boolean',
         ]);
@@ -36,7 +35,6 @@ class OrderController extends Controller
             'id' => 'ID заказа',
             'user_name' => 'Имя',
             'user_surname' => 'Фамилия',
-            'user_patronymic' => 'Отчество',
             'user_id' => 'ID пользователя',
             'only_new' => 'Только новые заказы',
         ]);
@@ -85,7 +83,6 @@ class OrderController extends Controller
             'user_id' => 'nullable|integer|exists:users,id',
             'user_name' => 'nullable|string|max:191',
             'user_surname' => 'nullable|string|max:191',
-            'user_patronymic' => 'nullable|string|max:191',
             'phone' => 'required|string|max:191',
             'email' => 'nullable|email|max:191',
             'note' => 'nullable|string|max:50000',
@@ -126,7 +123,6 @@ class OrderController extends Controller
             'user_id' => 'Пользователь',
             'user_name' => 'Имя',
             'user_surname' => 'Фамилия',
-            'user_patronymic' => 'Отвество',
             'phone' => 'Телефон',
             'email' => 'E-Mail',
             'note' => 'Комментарий',

@@ -51,7 +51,6 @@ class OrderController extends Controller
         }
         $order->user_name = $cart->user_name;
         $order->user_surname = $cart->user_surname;
-        $order->user_patronymic = $cart->user_patronymic;
         $order->phone = $cart->phone;
         $order->email = $cart->email;
         $order->delivery_method = $cart->delivery;
