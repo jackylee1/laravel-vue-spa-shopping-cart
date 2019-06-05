@@ -16,6 +16,11 @@
                          deselectLabel=""
                          placeholder=""
                          selectedLabel="Выбрано">
+              <template slot="tag" slot-scope="{ option, remove }">
+                <span class="multiselect__tag">
+                  <span>{{ option.name }}</span>
+                </span>
+              </template>
             </multiselect>
         </div>
       </template>

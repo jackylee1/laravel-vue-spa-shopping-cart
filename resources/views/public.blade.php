@@ -39,6 +39,7 @@
         .multiselect__tag {
             background: #cccccc;
             color: #000;
+            padding: 4px 10px 4px 10px;
         }
         .multiselect__tag-icon:focus, .multiselect__tag-icon:hover {
             background: #f00;
