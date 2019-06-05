@@ -2,29 +2,21 @@
   <div>
     <div v-if="this.renderArraySelect.length" class="row filter_wrapper">
       <template v-for="(filterRender, index) in this.renderArraySelect">
-        <div class="col-md-2">
+        <div class="col-md-4">
           <p class="text-center">{{filterRender.name}}</p>
-          <template v-if="filterRender.type === 2">
-            <select @click="changeFilter"
-                    v-model="selectFilters[index]"
-                    multiple
-                    class="form-control-sm custom-select">
-              <option value=""></option>
-              <template v-for="filterChildren in getChildrenFilters(filterRender)">
-                <option :value="filterChildren.id">{{filterChildren.name}}</option>
-              </template>
-            </select>
-          </template>
-          <template v-else>
-            <select @click="changeFilter"
-                    v-model="selectFilters[index]"
-                    class="form-control-sm custom-select">
-              <option value=""></option>
-              <template v-for="filterChildren in getChildrenFilters(filterRender)">
-                <option :value="filterChildren.id">{{filterChildren.name}}</option>
-              </template>
-            </select>
-          </template>
+            <multiselect :value="getActiveFilters(selectFilters[index])"
+                         :options="getChildrenFilters(filterRender)"
+                         @input="changeFilter"
+                         @open="changeActiveVModel(index)"
+                         label="name"
+                         :closeOnSelect="false"
+                         track-by="id"
+                         :multiple="filterRender.type === 2"
+                         selectLabel=""
+                         deselectLabel=""
+                         placeholder=""
+                         selectedLabel="Выбрано">
+            </multiselect>
         </div>
       </template>
     </div>
@@ -60,14 +52,40 @@
         selectFilters: [],
         renderArraySelect: [],
         intervalData: [],
+        activeVModel: null
       }
     },
     methods: {
-      changeFilter: function () {
+      changeActiveVModel: function (index) {
+        this.activeVModel = index;
+      },
+      getActiveFilters: function (idFilters) {
+        if (idFilters === null || idFilters.length === 0) {
+          return false;
+        }
+
+        return _(this.filters).keyBy('id').at(idFilters).value();
+      },
+      changeFilter: function (value) {
+        this.selectFilters[this.activeVModel] = value;
         this.setFiltersToUrl();
         this.$emit('getProducts');
       },
       setFiltersToUrl: function () {
+        this.selectFilters = this.selectFilters.map((item) => {
+          if (Array.isArray(item)) {
+            return item.map((item) => {
+              if (typeof item === 'object') {
+                return (item.id !== undefined) ? item.id : item;
+              }
+              return item;
+            })
+          }
+          if (typeof item === 'object') {
+            return (item.id !== undefined) ? item.id : item;
+          }
+          return item;
+        });
         this.$router.push({ query: Object.assign(
             {},
             this.$route.query, {
@@ -109,21 +127,40 @@
 
         tempSelectFilters = tempSelectFilters.map((item, index) => {
           if (typeof item === 'string' && item.indexOf(',') !== -1) {
-            return item.split(',');
+            return item.split(',').map(item => parseInt(item));
           }
           else if (this.renderArraySelect[index] !== undefined && this.renderArraySelect[index].type === 2) {
-            return [item];
+            return [parseInt(item)];
           }
           else {
-            return item;
+            return parseInt(item);
           }
         });
 
         if (tempSelectFilters !== this.selectFilters) {
+          //this.selectFilters = tempSelectFilters.map(item => this.handleCorrectVModel(item));
           this.selectFilters = tempSelectFilters;
         }
 
         this.setFiltersToUrl();
+      },
+      correctVModel: function (id) {
+        let index = this.filters.findIndex(item => item.id === id);
+        if (index !== -1) {
+          if (this.filters[index].parent_id !== 0) {
+            return id;
+          }
+          return null;
+        }
+        return null;
+      },
+      handleCorrectVModel: function (value) {
+        if (Array.isArray(value)) {
+          return value.map((item) => {
+            return this.correctVModel(item);
+          }).filter(item => item !== null);
+        }
+        return this.correctVModel(value);
       },
       mergeFilters: function () {
         let typeFilters = [];
@@ -175,6 +212,9 @@
       },
       getChildrenFilters: function (filter) {
         let tempFilters = [];
+        let tempItem = _.cloneDeep(filter);
+        tempItem.name = 'Выберите фильтр';
+        tempFilters.push(tempItem);
         this.$store.getters.filters.forEach((item) => {
           if (filter.id === item.parent_id) {
             tempFilters.push(item);

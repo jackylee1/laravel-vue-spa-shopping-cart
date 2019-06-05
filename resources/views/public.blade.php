@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/assets/public/css/normalize.min.css">
     {!! style_ts('/assets/public/css/style.css') !!}
     {!! style_ts('/assets/public/css/account.css') !!}
+    <link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css">
     <link rel="stylesheet" href="/assets/public/css/ionicons.min.css">
     <link rel="stylesheet" href="/assets/public/css/jquery.fancybox.css">
 
@@ -29,6 +30,26 @@
         .price-not-discount {
             color: #333333;
         }
+        .multiselect__option--highlight:after {
+            background: #f00;
+        }
+        .multiselect__option--highlight {
+            background: #f00;
+        }
+        .multiselect__tag {
+            background: #cccccc;
+            color: #000;
+        }
+        .multiselect__tag-icon:focus, .multiselect__tag-icon:hover {
+            background: #f00;
+        }
+        .multiselect__tag-icon:after {
+            color: #000;
+        }
+        .multiselect__tag, .multiselect__tags, .multiselect__tag-icon {
+            border-radius: 0px;
+        }
+
     </style>
 
     <script src="//unpkg.com/@textback/notification-widget@latest/build/index.js"></script>

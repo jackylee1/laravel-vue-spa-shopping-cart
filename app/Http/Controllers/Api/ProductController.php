@@ -19,7 +19,7 @@ class ProductController extends Controller
             if (is_array($request->get('filters'))) {
                 $this->setValidateRule([
                     'filters' => 'array',
-                    'filters.*' => 'nullable|regex:/^(?!,$)[\d,\[\]\"\"]+$/',
+                    'filters.*' => 'nullable|regex:/^(?!,$)[\d,(null),\[\]\"\"]+$/',
                 ]);
             }
             else {

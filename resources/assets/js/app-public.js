@@ -3,6 +3,7 @@ require('./bootstrap');
 import Vue from 'vue';
 import VueCookies from 'vue-cookies';
 import vSelect from 'vue-select';
+import Multiselect from 'vue-multiselect';
 import VueRouter from 'vue-router';
 import Vuex from 'vuex';
 import VueYoutube from 'vue-youtube';
@@ -32,6 +33,7 @@ Vue.use(VueLoading, {
   color: 'red',
 });
 Vue.component('v-select', vSelect);
+Vue.component('multiselect', Multiselect);
 Vue.use(Meta);
 Vue.use(VueYoutube);
 
