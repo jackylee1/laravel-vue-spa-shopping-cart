@@ -32,4 +32,8 @@ class TypeFilter extends Model
     public function filter() {
         return $this->hasOne('App\Models\Filter', 'id', 'filter_id');
     }
+
+    public function productInFilterTree() {
+        return $this->hasOne('App\Models\ProductInFilterTree', 'filter_id', 'filter_id');
+    }
 }

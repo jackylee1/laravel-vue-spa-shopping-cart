@@ -34,7 +34,7 @@ class ProductController extends Controller
             'autocomplete' => 'nullable|boolean',
             'type' => 'nullable|integer|exists:types,id',
             'category' => 'nullable|integer',
-            'sort' => 'nullable|in:all,from_cheap_to_expensive,from_expensive_to_cheap,popular,new,promotional'
+            'sort' => 'nullable|in:all,from_cheap_to_expensive,from_expensive_to_cheap,popular,new,promotional',
         ]);
         $this->setValidateAttribute([
             'type' => 'Тип продукции',

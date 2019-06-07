@@ -109,8 +109,13 @@ class Type extends Model
 
     public static function types() {
         return Type::with(['categories' => function ($query) {
+            $query->has('productInCategories');
+            $query->with(['filters' => function ($query) {
+                $query->whereHas('productInFiltersTree');
+            }]);
             $query->orderBy('sorting_order', 'asc');
         }])->with(['filters' => function ($query) {
+            $query->has('productInFilterTree');
             $query->join('filters', function ($join) {
                 $join->on('type_filters.filter_id', '=', 'filters.id');
             });

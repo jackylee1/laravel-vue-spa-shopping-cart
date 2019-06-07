@@ -90,6 +90,10 @@ class Category extends Model
         return $this->hasMany('App\Models\CategoryFilter', 'category_id', 'id');
     }
 
+    public function productInCategories() {
+        return $this->hasOne('App\Models\ProductInFilterCategory', 'category_id', 'id');
+    }
+
     public static function getCategoryBySlug($slug) {
         return Category::where('slug', $slug)->first();
     }

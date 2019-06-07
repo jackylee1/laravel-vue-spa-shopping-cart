@@ -27,4 +27,8 @@ class CategoryFilter extends Model
     
     protected $fillable = ['category_id', 'filter_id'];
     public $timestamps = false;
+
+    public function productInFiltersTree() {
+        return $this->hasOne('App\Models\ProductInFilterTree', 'filter_id', 'filter_id');
+    }
 }
