@@ -366,11 +366,11 @@ class Product extends Model
             $request_filters = collect($request_filters)->map(function ($item) {
                 $str = str_replace(['[', ']', '"'], '', $item);
                 if (strpos($str, ',')) {
-                    return explode(',', $str);
+                    return array_map('intval', explode(',', $str));
                 }
-                return $str;
+                return [(int)$str];
             })->toArray();
-            $filters = Filter::getFiltersById(array_filter($request_filters));
+            $filters = Filter::getFiltersById(arrayFlatten(array_filter($request_filters)));
             $filters = $filters->map(function ($filter) {
                 if ($filter->parent_id !== 0) {
                     return $filter->id;
@@ -379,7 +379,7 @@ class Product extends Model
                 return $filter !== null;
             });
 
-            $filters = collect($request_filters)->map(function ($item) use ($filters) {
+            $filters = $filters->map(function ($item) use ($filters) {
                 if (is_array($item)) {
                     $intersect = $filters->intersect($item);
                     if ($intersect->count() > 0) {
@@ -392,6 +392,25 @@ class Product extends Model
             })->filter(function ($item) {
                 return $item !== null;
             });
+            $array_filters = array_values($filters->toArray());
+
+            $request_filters = collect($request_filters)->map(function ($filter) use ($array_filters) {
+                if (is_array($filter)) {
+                    $result = collect($filter)->filter(function ($item) use ($array_filters) {
+                        return in_array($item, $array_filters);
+                    })->toArray();
+
+                    return array_values($result);
+                }
+                return (in_array($filter, $array_filters)) ? $filter : null;
+            })->filter(function ($filter) {
+                if (is_array($filter)) {
+                    return count($filter) > 0;
+                }
+                return $filter !== null;
+            });
+            $request_filters = collect(array_values($request_filters->toArray()));
+            $filters = $request_filters;
 
             if ($filters->count() > 0) {
                 $id_products = ProductInFilter::getProductIdsByFilters(

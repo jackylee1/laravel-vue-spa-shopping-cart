@@ -39,6 +39,7 @@
             "App\\": "app/"
         },
         "files": [
+            "app/Helpers/array.php",
             "app/Helpers/str.php",
             "app/Helpers/html.php"
         ]

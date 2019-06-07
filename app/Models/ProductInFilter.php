@@ -93,48 +93,29 @@ class ProductInFilter extends Model
             });
         }
 
-        $id_filters = [];
+        $query->whereIn('filter_id', arrayFlatten($filters->toArray()));
 
-        $filters->each(function ($filter) use ($query, &$id_filters) {
-            if (is_array($filter)) {
-                $query->whereIn('filter_id', array_values($filter));
-            }
-            else {
-                $id_filters[] = (int)$filter;
-            }
-        });
-        $count_id_filters = count($id_filters);
-        if ($count_id_filters > 0) {
-            if ($count_id_filters === $filters->count()) {
-                $query->whereIn('filter_id', $id_filters);
-            }
-            else {
-                $query->orWhereIn('filter_id', $id_filters);
-            }
-        }
-
-        $models = $query->setEagerLoads([])->with('filters')->get();
+        $products = $query->setEagerLoads([])->with('filters')->get();
 
         $id_products = [];
 
-        $models->groupBy('product_id')->each(function ($model, $key) use ($filters, &$id_products) {
+        $products->groupBy('product_id')->each(function ($product, $key) use ($filters, &$id_products) {
             $id_filters = [];
-            $model->each(function ($item) use (&$id_filters) {
+            $product->each(function ($item) use (&$id_filters) {
                 $id_filters[] = $item->filter_id;
                 $item->filters->each(function ($item) use (&$id_filters) {
                     $id_filters[] = $item->filter_id;
                 });
             });
             $id_filters = array_unique($id_filters);
+
             $check_exist_filters = [];
             $filters->each(function ($filter) use (&$check_exist_filters, $id_filters) {
                 if (is_array($filter)) {
                     $check_exist_filters[] = (count(array_intersect($filter, $id_filters)) > 0) ? true : false;
                 }
-                else {
-                    $check_exist_filters[] = (in_array($filter, $id_filters)) ? true : false;
-                }
             });
+
             if (!in_array(false, $check_exist_filters)) {
                 $id_products[] = $key;
             }

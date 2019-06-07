@@ -57,7 +57,7 @@ class ProductController extends Controller
                     'index' => $key,
                     'id' => $product->id,
                     'name' => $product->name,
-                    'picture' => 'http://placehold.it/32x32'
+                    'picture' => ''
                 ];
             });
 
