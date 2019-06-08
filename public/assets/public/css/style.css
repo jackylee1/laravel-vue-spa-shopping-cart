@@ -207,6 +207,9 @@ h1 {
   width: 200%;
   max-width: 290px;
 }
+.megamenu .menu .logo_mobiled {
+  display: none;
+}
 .megamenu .menu .menu_brands .brands .menu_brand_logo {
   max-width: 100%;
   padding-right: 10%;
@@ -228,7 +231,7 @@ h1 {
 }
 .menu-mobile {
   display: none;
-  padding: 20px 25px;
+  padding: 20px;
   color: #df1e30;
 }
 .menu-mobile img {
@@ -239,7 +242,6 @@ h1 {
   font-family: "Ionicons";
   font-size: 2.5rem;
   padding: 0;
-  float: right;
   position: relative;
   top: 50%;
   -webkit-transform: translateY(-25%);
@@ -500,6 +502,19 @@ h1 {
   border-bottom: 2px solid #6c6c6c;
   height: 80px;
 }
+.wrapper .titles_top .btn {
+  color: #000;
+  background: #FFF;
+  border: 1px solid #e7eaed;
+  border-radius: 0;
+}
+.wrapper .titles_top .bootstrap-select:not(.input-group-btn),
+.wrapper .titles_top .bootstrap-select[class*="col-"] {
+  display: flex;
+}
+.wrapper .titles_top .active {
+  margin-bottom: 0;
+}
 .wrapper .filters {
   text-align: right;
 }
@@ -507,10 +522,48 @@ h1 {
   margin-top: 25px;
   margin-bottom: 50px;
 }
+.wrapper .filter_wrapper .filter_title h3 {
+  display: none;
+  margin: 15px 0 30px 0;
+}
+.wrapper .filter_wrapper .filter_title h3 a {
+  padding: 15px;
+  border: 1px solid #e2e2e2;
+}
+.wrapper .filter_wrapper .filter_title h3 a i {
+  margin-left: 20%;
+}
+.wrapper .filter_wrapper .filter_title .collapse:not(.show) {
+  display: block;
+}
 .wrapper .filter_wrapper .col-md-1,
 .wrapper .filter_wrapper .col-md-2 {
   padding-right: 2px;
   padding-left: 2px;
+}
+.wrapper .filter_wrapper .btn {
+  color: #000;
+  background: #FFF;
+  border: 1px solid #e7eaed;
+  border-radius: 0;
+}
+.wrapper .filter_wrapper .selected {
+  margin-bottom: 0;
+}
+.wrapper .filter_wrapper .dropdown-toggle {
+  padding: 2px;
+}
+.wrapper .filter_wrapper .dropdown-menu {
+  width: auto;
+  border-radius: 0;
+}
+.wrapper .filter_wrapper .bootstrap-select:not(.input-group-btn),
+.wrapper .filter_wrapper .bootstrap-select[class*="col-"] {
+  display: flex;
+}
+.wrapper .filter_wrapper .bootstrap-select .dropdown-toggle .filter-option-inner-inner {
+  color: #aeb2c2;
+  font-weight: 200;
 }
 .wrapper .form-control {
   border: 1px solid #808080;
@@ -579,7 +632,6 @@ h1 {
   font-size: 15px;
   font-weight: 100;
   padding: 5px 10px;
-  /*width: 45px;*/
 }
 .wrapper .category_items .modal-content .variations .btn-group .btn-primary:not(:disabled):not(.disabled):active,
 .wrapper .category_items .modal-content .variations .btn-group .btn-primary:not(:disabled):not(.disabled).active {
@@ -650,7 +702,6 @@ h1 {
   color: #6c6c6c;
   font-size: 18px;
   padding: 5px 10px;
-  /*width: 60px;*/
 }
 .item_card .variations .btn-group .btn-primary:not(:disabled):not(.disabled):active,
 .item_card .variations .btn-group .btn-primary:not(:disabled):not(.disabled).active {
@@ -1837,6 +1888,18 @@ h1 {
     padding-right: 0;
     padding-left: 0;
   }
+  .megamenu .container .menu .mobile_block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .megamenu .container .menu .logo_mobiled {
+    display: block;
+    margin-left: 20px;
+  }
+  .megamenu .container .menu .logo_mobiled .navbar_logo {
+    width: 80%;
+  }
   .megamenu .container .menu .menu_brands .brands .menu_brand_logo {
     display: none;
   }
@@ -1852,7 +1915,7 @@ h1 {
     height: 100%;
   }
   .submenu .phones {
-    font-size: 9.7px;
+    font-size: 12px;
     font-weight: 400;
     height: 100%;
   }
@@ -2088,6 +2151,12 @@ h1 {
   .hits_items_mobile h4 {
     font-size: 15px;
   }
+  .wrapper .filter_wrapper .filter_title h3 {
+    display: block;
+  }
+  .wrapper .filter_wrapper .filter_title .collapse:not(.show) {
+    display: none;
+  }
   .wrapper .titles_top {
     height: 100%;
   }
@@ -2221,7 +2290,7 @@ h1 {
 }
 @media only screen and (max-width: 411px) {
   .menu-mobile {
-    padding: 20px 75px;
+    padding: 20px;
   }
   .searchcollapse .form-control {
     width: 55%;
@@ -2234,7 +2303,7 @@ h1 {
     font-size: 21px;
   }
   .menu-mobile {
-    padding: 20px 55px;
+    padding: 20px;
   }
   .slider .carousel-indicators li {
     top: 30px;

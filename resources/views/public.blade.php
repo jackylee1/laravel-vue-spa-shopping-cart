@@ -79,13 +79,14 @@
 
 </script>
 
+<script src="/assets/public/js/vendor/jquery.min.js"></script>
+<script src="/assets/public/js/bootstrap.bundle.js"></script>
+<script src="/assets/public/js/bootstrap.js"></script>
+
 <script src="{{ mix('js/manifest.js') }}"></script>
 <script src="{{ mix('js/vendor.js') }}"></script>
 <script src="{{ mix('js/app-public.js') }}"></script>
 
-<script src="/assets/public/js/vendor/jquery.min.js"></script>
-<script src="/assets/public/js/bootstrap.bundle.js"></script>
-<script src="/assets/public/js/bootstrap.js"></script>
 <script type="text/javascript" src="/assets/public/js/jquery.touchSwipe.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
 <script src="https://unpkg.com/ionicons@4.4.6/dist/ionicons.js"></script>

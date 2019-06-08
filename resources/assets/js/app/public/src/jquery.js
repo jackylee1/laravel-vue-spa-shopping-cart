@@ -20,7 +20,7 @@ export function createMenu() {
 
     $('.menu > ul > li:has( > ul)').addClass('menu-dropdown-icon');
     $('.menu > ul > li > ul:not(:has(ul))').addClass('normal-sub');
-    $(".menu > ul").before("<a class=\"menu-mobile\" href=\"#\"><img class=\"navbar_logo\" src=\"/assets/public/images/logo-mobile.png\" alt=\"FitClothing\"></a>");
+    $(".menu > ul").before("<div class=\"mobile_block\"><a class=\"logo_mobiled\" href=\"/\"><img class=\"navbar_logo\" src=\"/assets/public/images/logo-mobile.png\" alt=\"FitClothing\"></a>" + "<a class=\"menu-mobile\" href=\"/\"></a></div>");
     $(".menu > ul > li").hover(
       function (e) {
         if ($(window).width() > 1025) {
