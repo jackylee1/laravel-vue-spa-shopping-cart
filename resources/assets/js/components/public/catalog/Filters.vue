@@ -49,7 +49,7 @@
       _.delay(() => {
         this.setRenderArray();
         this.setSelectFilters();
-        console.log('delay mounded');
+
         setTimeout(() => {
           this.$emit('getProducts', this.$router.currentRoute.query.page);
         }, 1000);

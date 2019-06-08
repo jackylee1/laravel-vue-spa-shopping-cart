@@ -263,7 +263,6 @@
         this.setTypesAndBreadcrumbs();
       },
       'sort': function () {
-        console.log('get products sort');
         this.getProducts();
       }
     },
