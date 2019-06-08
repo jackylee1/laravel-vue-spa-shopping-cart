@@ -3,7 +3,8 @@
     <div class="col-lg-12">
       <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center">
-          <li :class="(pagination.currentPage === 1) ? 'page-item disabled' : 'page-item'">
+          <li v-if="!checkIsMobile"
+              :class="(pagination.currentPage === 1) ? 'page-item disabled' : 'page-item'">
             <a href="javascript:void(0)"
                class="page-link"
                @click="pageClicked( pagination.currentPage - 1 )">
@@ -20,7 +21,8 @@
               {{ page }}
             </a>
           </li>
-          <li :class="(pagination.currentPage === this.pagination.totalPages) ? 'page-item disabled': 'page-item'">
+          <li v-if="!checkIsMobile"
+              :class="(pagination.currentPage === this.pagination.totalPages) ? 'page-item disabled': 'page-item'">
             <a href="javascript:void(0)"
                class="page-link"
                @click="pageClicked( pagination.currentPage + 1 )">
@@ -33,9 +35,16 @@
   </div>
 </template>
 <script>
+  import { isMobile } from 'mobile-device-detect';
+
   export default {
     name: 'Pagination',
     props: ['pagination'],
+    computed: {
+      checkIsMobile: function () {
+        return isMobile;
+      }
+    },
     methods: {
       pageLinks: function () {
         if (this.pagination.totalPages === undefined) {
