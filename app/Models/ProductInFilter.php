@@ -130,4 +130,27 @@ class ProductInFilter extends Model
             ['category_id', $category_id]
         ])->get();
     }
+
+    public static function getActiveFilters($type_id = null, $category_id = null) {
+        $query = ProductInFilter::query();
+        $where = [];
+
+        if ($type_id !== null) {
+            $where[] = ['type_id', $type_id];
+        }
+
+        $query->where($where);
+
+        if ($category_id !== null) {
+            $id_categories = Category::getChildrenCategories($category_id);
+            $id_categories[] = $category_id;
+            $query->whereHas('categories', function ($query) use ($id_categories) {
+                $query->whereIn('category_id', $id_categories);
+            });
+        }
+
+        $models = $query->setEagerLoads([])->select('filter_id')->where('filter_id', '<>', null)->distinct()->get();
+
+        return $models->map->only(['filter_id'])->flatten()->toArray();
+    }
 }

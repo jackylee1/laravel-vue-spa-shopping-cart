@@ -107,15 +107,11 @@ class Type extends Model
         return Type::where('slug', $slug)->first();
     }
 
-    public static function types() {
-        return Type::with(['categories' => function ($query) {
-            $query->has('productInCategories');
-            $query->with(['filters' => function ($query) {
-                $query->whereHas('productInFiltersTree');
-            }]);
+    public static function types($public = false) {
+        $types = Type::with(['categories' => function ($query) {
+            $query->with(['filters']);
             $query->orderBy('sorting_order', 'asc');
         }])->with(['filters' => function ($query) {
-            $query->has('productInFilterTree');
             $query->join('filters', function ($join) {
                 $join->on('type_filters.filter_id', '=', 'filters.id');
             });
@@ -127,6 +123,30 @@ class Type extends Model
                 'filters.sorting_order',
             ]);
         }])->orderBy('sorting_order', 'asc')->get();
+
+        if ($public) {
+            $types = $types->map(function ($type) {
+                $type->categories->map(function ($category) {
+                    $id_filters = $category->filters->map->only(['filter_id'])->flatten();
+                    $check_in_category_relation = ($category->type_id === 1) ? true : false;
+                    $id_filters = $id_filters->filter(function ($id_filter)
+                    use ($category, $check_in_category_relation) {
+                        return ProductInFilterTree::findByFilterId($id_filter,
+                                $category->type_id,
+                                $category->id,
+                                $check_in_category_relation) !== null;
+                    });
+                    $filters = $category->filters->whereIn('filter_id', $id_filters->toArray());
+
+                    $category->setRelation('filters', collect(array_values($filters->toArray())));
+
+                    return $category;
+                });
+                return $type;
+            });
+        }
+
+        return $types;
     }
 
     private function workWithModel($model, $image_origin, $image_preview, $image_index_origin, $image_index_preview) {

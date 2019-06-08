@@ -32,6 +32,7 @@ export default {
     utfRecords: [],
     settings: [],
     indexMediaFiles: [],
+    activeFilters: []
   },
   getters: {
     currentUser: function (state) {
@@ -117,6 +118,9 @@ export default {
     },
     indexMediaFiles: function (state) {
       return state.indexMediaFiles;
+    },
+    activeFilters: function (state) {
+      return state.activeFilters;
     }
   },
   mutations: {
@@ -215,6 +219,9 @@ export default {
     },
     updateIndexMediaFiles: function (state, payload) {
       state.indexMediaFiles = payload;
+    },
+    updateActiveFilters: function (state, payload) {
+      state.activeFilters = payload;
     }
   }
 };

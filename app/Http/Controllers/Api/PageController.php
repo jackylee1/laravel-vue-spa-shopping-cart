@@ -55,7 +55,7 @@ class PageController extends Controller
 
         $this->setData('link_to_social_networks', LinkToSocialNetwork::getLinks());
         $this->setData('text_pages', TextBlockTitle::getTitlesAndData());
-        $this->setData('types', Type::types());
+        $this->setData('types', Type::types(true));
         $this->setData('filters', Filter::getFilters());
         $this->setData('size_tables', SizeTable::getSizes());
         $this->setData('new_products', Product::getNewProducts());

@@ -8,10 +8,10 @@
         <transition name="fade">
           <div class="row" v-show="activeCollapseFilter">
             <template v-for="(filterRender, index) in this.renderArraySelect">
-              <div class="col-md-4">
+              <div class="col-md-4" v-if="getChildrenFilters(filterRender, index).length">
                 <p class="text-center">{{filterRender.name}}</p>
                   <multiselect :value="getActiveFilters(selectFilters[index])"
-                               :options="getChildrenFilters(filterRender)"
+                               :options="getChildrenFilters(filterRender, index)"
                                @input="changeFilter"
                                @open="changeActiveVModel(index)"
                                label="name"
@@ -21,6 +21,7 @@
                                selectLabel=""
                                deselectLabel=""
                                placeholder=""
+                               noOptions="Нет данных"
                                selectedLabel="Выбрано">
                     <template slot="tag" slot-scope="{ option, remove }">
                       <span class="multiselect__tag">
@@ -56,6 +57,9 @@
       }, 550);
     },
     computed: {
+      activeFilters: function () {
+        return this.$store.getters.activeFilters;
+      },
       'filters': function () {
         return this.$store.getters.filters;
       },
@@ -97,7 +101,7 @@
       changeFilter: function (value) {
         this.selectFilters[this.activeVModel] = value;
         this.setFiltersToUrl();
-        console.log('change filter get products');
+
         this.$emit('getProducts');
       },
       setFiltersToUrl: function () {
@@ -239,7 +243,7 @@
 
         this.renderArraySelect = _.orderBy(this.renderArraySelect, 'sorting_order', 'asc');
       },
-      getChildrenFilters: function (filter) {
+      getChildrenFilters: function (filter, index) {
         let tempFilters = [];
         let tempItem = _.cloneDeep(filter);
         tempItem.name = 'Выберите фильтр';
@@ -249,6 +253,17 @@
             tempFilters.push(item);
           }
         });
+
+        let activeFilters = this.activeFilters.find((item) => {
+          let type = (this.currentType !== null) ? this.currentType.id : null;
+          let category = (this.currentCategory !== null) ? this.currentCategory.id : null;
+          return item.type_id === type && item.category_id === category
+        });
+        if (activeFilters !== undefined) {
+          tempFilters = _.filter(tempFilters, (item) => {
+            return activeFilters.filters.indexOf(item.id) !== -1;
+          });
+        }
 
         return _.orderBy(tempFilters, 'sorting_order', 'asc');
       },

@@ -74,6 +74,9 @@
       this.$store.commit('updateSearchByText', this.$router.currentRoute.query.text);
     },
     computed: {
+      activeFilters: function () {
+        return this.$store.getters.activeFilters;
+      },
       types: function () {
         return this.$store.getters.types;
       },
@@ -177,10 +180,30 @@
 
         this.isLoading = false;
       },
+      getTypeIdAndCategoryId: function () {
+        return {
+          type_id: (this.currentType !== null) ? this.currentType.id : null,
+          category_id: (this.currentCategory !== null) ? this.currentCategory.id : null
+        };
+      },
       getProducts: function (page = 1) {
         this.isLoading = true;
 
-        this.$router.push({ query: Object.assign({}, this.$route.query, { page: page }) });
+        let statusActiveFilters = 1;
+        if (this.activeFilters.length) {
+          let selectActiveFilter = _.filter(this.activeFilters, {
+            type_id: this.getTypeIdAndCategoryId().type_id,
+            category_id: this.getTypeIdAndCategoryId().category_id
+          });
+          if (selectActiveFilter.length) {
+            statusActiveFilters = 0;
+          }
+        }
+
+        this.$router.push({ query: Object.assign({}, this.$route.query, {
+          page: page,
+          load_active_filter: statusActiveFilters
+        }) });
 
         if (this.$router.currentRoute.fullPath === this.urlPrevious) {
           this.setProducts(this.productsStore);
@@ -194,13 +217,25 @@
               this.$store.commit('updateUrlPrevious', this.$router.currentRoute.fullPath);
 
               ApiProducts.get(page, {
-                type: (this.currentType !== null) ? this.currentType.id : null,
-                category: (this.currentCategory !== null) ? this.currentCategory.id : null,
+                type: this.getTypeIdAndCategoryId().type_id,
+                category: this.getTypeIdAndCategoryId().category_id,
                 filters: this.$route.query.filters,
                 sort: this.sort,
-                text: this.$store.getters.searchByText
+                text: this.$store.getters.searchByText,
+                load_active_filter: statusActiveFilters
               }).then((res) => {
                 this.$store.commit('updateProducts', res.data.products);
+
+                if (res.data.active_filters !== undefined) {
+                  let activeFiltersData = this.activeFilters;
+                  activeFiltersData.push({
+                    type_id: this.getTypeIdAndCategoryId().type_id,
+                    category_id: this.getTypeIdAndCategoryId().category_id,
+                    filters: res.data.active_filters
+                  });
+
+                  this.$store.commit('updateActiveFilters', activeFiltersData);
+                }
 
                 this.setProducts(res.data.products);
               }).catch((error) => {

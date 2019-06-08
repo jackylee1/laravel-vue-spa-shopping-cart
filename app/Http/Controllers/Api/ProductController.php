@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Product;
+use App\Models\ProductInFilter;
 use App\Traits\DataTrait;
 use App\Traits\ValidateTrait;
 use Illuminate\Http\Request;
@@ -35,6 +36,7 @@ class ProductController extends Controller
             'type' => 'nullable|integer|exists:types,id',
             'category' => 'nullable|integer',
             'sort' => 'nullable|in:all,from_cheap_to_expensive,from_expensive_to_cheap,popular,new,promotional',
+            'load_active_filter' => 'nullable|boolean'
         ]);
         $this->setValidateAttribute([
             'type' => 'Тип продукции',
@@ -65,6 +67,12 @@ class ProductController extends Controller
         }
         else {
             $this->setData('products', Product::getProductsPublic());
+            if ($request->filled('load_active_filter') && $request->load_active_filter == 1) {
+                $this->setData('active_filters', ProductInFilter::getActiveFilters(
+                    $request->get('type'),
+                    $request->get('category')
+                ));
+            }
         }
 
         return response()->json($this->data);
