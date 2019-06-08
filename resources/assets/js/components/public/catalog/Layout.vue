@@ -187,31 +187,32 @@
         }
         else {
           setTimeout(() => {
-            this.$store.commit('updateTypePrevious', this.currentType);
-            this.$store.commit('updateCategoryPrevious', this.currentCategory);
+            if (this.$router.currentRoute.fullPath !== this.urlPrevious) {
+              this.$store.commit('updateTypePrevious', this.currentType);
+              this.$store.commit('updateCategoryPrevious', this.currentCategory);
 
-            this.$store.commit('updateUrlPrevious', this.$router.currentRoute.fullPath);
+              this.$store.commit('updateUrlPrevious', this.$router.currentRoute.fullPath);
 
-            ApiProducts.get(page, {
-              type: (this.currentType !== null) ? this.currentType.id : null,
-              category: (this.currentCategory !== null) ? this.currentCategory.id : null,
-              filters: this.$route.query.filters,
-              sort: this.sort,
-              text: this.$store.getters.searchByText
-            }).then((res) => {
+              ApiProducts.get(page, {
+                type: (this.currentType !== null) ? this.currentType.id : null,
+                category: (this.currentCategory !== null) ? this.currentCategory.id : null,
+                filters: this.$route.query.filters,
+                sort: this.sort,
+                text: this.$store.getters.searchByText
+              }).then((res) => {
+                this.$store.commit('updateProducts', res.data.products);
 
-              this.$store.commit('updateProducts', res.data.products);
-
-              this.setProducts(res.data.products);
-            }).catch((error) => {
-              this.alerts = error.response.data.errors;
-              this.$notify({
-                type: 'error',
-                title: 'Ошибка',
-                text: 'при выполнеении запроса'
+                this.setProducts(res.data.products);
+              }).catch((error) => {
+                this.alerts = error.response.data.errors;
+                this.$notify({
+                  type: 'error',
+                  title: 'Ошибка',
+                  text: 'при выполнеении запроса'
+                });
+                this.isLoading = false;
               });
-              this.isLoading = false;
-            });
+            }
           }, 1200);
         }
       },
@@ -262,6 +263,7 @@
         this.setTypesAndBreadcrumbs();
       },
       'sort': function () {
+        console.log('get products sort');
         this.getProducts();
       }
     },

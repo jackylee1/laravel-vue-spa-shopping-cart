@@ -1,43 +1,59 @@
 <template>
   <div>
     <div v-if="this.renderArraySelect.length" class="row filter_wrapper">
-      <template v-for="(filterRender, index) in this.renderArraySelect">
-        <div class="col-md-4">
-          <p class="text-center">{{filterRender.name}}</p>
-            <multiselect :value="getActiveFilters(selectFilters[index])"
-                         :options="getChildrenFilters(filterRender)"
-                         @input="changeFilter"
-                         @open="changeActiveVModel(index)"
-                         label="name"
-                         :closeOnSelect="false"
-                         track-by="id"
-                         :multiple="filterRender.type === 2"
-                         selectLabel=""
-                         deselectLabel=""
-                         placeholder=""
-                         selectedLabel="Выбрано">
-              <template slot="tag" slot-scope="{ option, remove }">
-                <span class="multiselect__tag">
-                  <span>{{ option.name }}</span>
-                </span>
-              </template>
-            </multiselect>
-        </div>
-      </template>
+      <div class="col-12 filter_title text-center">
+        <h3>
+          <a @click="handleCollapseFilter" v-html="htmlBtnCollapse"></a>
+        </h3>
+        <transition name="fade">
+          <div class="row" v-show="activeCollapseFilter">
+            <template v-for="(filterRender, index) in this.renderArraySelect">
+              <div class="col-md-4">
+                <p class="text-center">{{filterRender.name}}</p>
+                  <multiselect :value="getActiveFilters(selectFilters[index])"
+                               :options="getChildrenFilters(filterRender)"
+                               @input="changeFilter"
+                               @open="changeActiveVModel(index)"
+                               label="name"
+                               :closeOnSelect="false"
+                               track-by="id"
+                               :multiple="filterRender.type === 2"
+                               selectLabel=""
+                               deselectLabel=""
+                               placeholder=""
+                               selectedLabel="Выбрано">
+                    <template slot="tag" slot-scope="{ option, remove }">
+                      <span class="multiselect__tag">
+                        <span>{{ option.name }}</span>
+                      </span>
+                    </template>
+                  </multiselect>
+              </div>
+            </template>
+          </div>
+        </transition>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+  import { isMobile } from 'mobile-device-detect';
+
   export default {
     name: 'Filters',
     props: ['currentType', 'currentCategory'],
     mounted() {
+      this.activeCollapseFilter = (!isMobile);
+
       _.delay(() => {
         this.setRenderArray();
         this.setSelectFilters();
-        this.$emit('getProducts', this.$router.currentRoute.query.page);
-      }, 600);
+        console.log('delay mounded');
+        setTimeout(() => {
+          this.$emit('getProducts', this.$router.currentRoute.query.page);
+        }, 1000);
+      }, 550);
     },
     computed: {
       'filters': function () {
@@ -57,10 +73,17 @@
         selectFilters: [],
         renderArraySelect: [],
         intervalData: [],
-        activeVModel: null
+        activeVModel: null,
+        activeCollapseFilter: true,
+        htmlBtnCollapse: 'Фильтр товаров <i class="fas fa-chevron-down"></i>'
       }
     },
     methods: {
+      handleCollapseFilter: function () {
+        this.activeCollapseFilter = !this.activeCollapseFilter;
+        this.htmlBtnCollapse = (!this.activeCollapseFilter) ? 'Фильтр товаров <i class="fas fa-chevron-down"></i>'
+          : 'Фильтр товаров <i class="fas fa-chevron-up"></i>';
+      },
       changeActiveVModel: function (index) {
         this.activeVModel = index;
       },
@@ -74,6 +97,7 @@
       changeFilter: function (value) {
         this.selectFilters[this.activeVModel] = value;
         this.setFiltersToUrl();
+        console.log('change filter get products');
         this.$emit('getProducts');
       },
       setFiltersToUrl: function () {
@@ -242,3 +266,12 @@
     },
   }
 </script>
+
+<style scoped>
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active до версии 2.1.8 */ {
+    opacity: 0;
+  }
+</style>
