@@ -84,6 +84,8 @@
     },
     methods: {
       handleCollapseFilter: function () {
+        this.htmlBtnCollapse = '';
+
         this.activeCollapseFilter = !this.activeCollapseFilter;
         this.htmlBtnCollapse += 'Фильтр товаров ';
         this.htmlBtnCollapse += (!this.activeCollapseFilter) ? '<i class="fas fa-chevron-down"></i>'
