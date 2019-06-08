@@ -8,7 +8,7 @@
         <transition name="fade">
           <div class="row" v-show="activeCollapseFilter">
             <template v-for="(filterRender, index) in this.renderArraySelect">
-              <div class="col-md-4" v-if="getChildrenFilters(filterRender, index).length">
+              <div class="col-md-4" v-if="getChildrenFilters(filterRender, index).length > 1">
                 <p class="text-center">{{filterRender.name}}</p>
                   <multiselect :value="getActiveFilters(selectFilters[index])"
                                :options="getChildrenFilters(filterRender, index)"
@@ -85,8 +85,9 @@
     methods: {
       handleCollapseFilter: function () {
         this.activeCollapseFilter = !this.activeCollapseFilter;
-        this.htmlBtnCollapse = (!this.activeCollapseFilter) ? 'Фильтр товаров <i class="fas fa-chevron-down"></i>'
-          : 'Фильтр товаров <i class="fas fa-chevron-up"></i>';
+        this.htmlBtnCollapse += 'Фильтр товаров ';
+        this.htmlBtnCollapse += (!this.activeCollapseFilter) ? '<i class="fas fa-chevron-down"></i>'
+                                                             : '<i class="fas fa-chevron-up"></i>';
       },
       changeActiveVModel: function (index) {
         this.activeVModel = index;
