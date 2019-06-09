@@ -17,6 +17,7 @@
                      :options="options"
                      @input="onChangeSort"
                      label="name"
+                     :searchable="false"
                      selectLabel=""
                      placeholder=""
                      deselectLabel=""

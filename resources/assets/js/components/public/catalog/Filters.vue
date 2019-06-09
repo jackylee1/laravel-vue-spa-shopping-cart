@@ -16,6 +16,7 @@
                                @open="changeActiveVModel(index)"
                                label="name"
                                :closeOnSelect="false"
+                               :searchable="false"
                                track-by="id"
                                :multiple="filterRender.type === 2"
                                selectLabel=""
