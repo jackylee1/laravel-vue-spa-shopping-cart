@@ -9,10 +9,11 @@
           <h1 class="category_title">{{currentType.name}}</h1>
         </template>
       </div>
-      <div class="col-md-3 col-6 sort righted my-auto">
+      <div :class="(getIsMobile) ? 'col-12 sort text-center my-auto' : 'col-md-3 col-6 sort righted my-auto'">
         <p>Сортировка:</p>
       </div>
-      <div class="col-md-3 col-6 my-auto">
+      <div :style="(getIsMobile) ? 'padding-bottom: 25px;' : ''"
+           :class="(getIsMobile) ? 'col-12 my-auto' : 'col-md-3 col-6 my-auto'">
         <multiselect :value="getSelectSort(sort)"
                      :options="options"
                      @input="onChangeSort"
@@ -30,6 +31,8 @@
 </template>
 
 <script>
+  import { isMobile } from 'mobile-device-detect';
+
   export default {
     name: 'Sort',
     props: ['currentCategory', 'currentType', 'selectFilters'],
@@ -37,6 +40,9 @@
       this.options = this.getOptions;
     },
     computed: {
+      getIsMobile: function () {
+        return isMobile;
+      },
       getOptions: function () {
         return [
           {value: 'all', name: 'все товары'},
