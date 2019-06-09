@@ -31,7 +31,7 @@
 </template>
 
 <script>
-  import { isMobile } from 'mobile-device-detect';
+  import { isMobileOnly } from 'mobile-device-detect';
 
   export default {
     name: 'Sort',
@@ -41,7 +41,7 @@
     },
     computed: {
       getIsMobile: function () {
-        return isMobile;
+        return isMobileOnly;
       },
       getOptions: function () {
         return [

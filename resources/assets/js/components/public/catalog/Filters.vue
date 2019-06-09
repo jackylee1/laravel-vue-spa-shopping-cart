@@ -40,13 +40,13 @@
 </template>
 
 <script>
-  import { isMobile } from 'mobile-device-detect';
+  import { isMobileOnly } from 'mobile-device-detect';
 
   export default {
     name: 'Filters',
     props: ['currentType', 'currentCategory'],
     mounted() {
-      this.activeCollapseFilter = (!isMobile);
+      this.activeCollapseFilter = (!isMobileOnly);
 
       _.delay(() => {
         this.setRenderArray();
