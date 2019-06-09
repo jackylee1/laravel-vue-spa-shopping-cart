@@ -3,9 +3,9 @@
     <section class="banner" v-if="indexTypes !== undefined && indexTypes.length">
       <div class="container">
         <div class="row" v-for="typesChunk in _.chunk(indexTypes, 2)">
-          <div v-for="type in typesChunk"
-               :style="`background: url(/app/public/images/type/${type.image_index_origin})`"
-               class="col-12 col-sm-6 left_banner centered">
+          <div v-for="(type, index) in typesChunk"
+               :style="getStyleBackgroundImage(type.image_index_origin, (index % 2 !== 0) ? 'top' : 'unset')"
+               :class="(index % 2 !== 0) ? 'col-12 col-sm-6 right_banner centered' : 'col-12 col-sm-6 left_banner centered'">
             <h2>{{type.name}}</h2>
             <router-link class="btn"
                          :to="{ name: 'catalog', query: { type: type.slug } }">
@@ -36,6 +36,14 @@
     data() {
       return {
         indexTypes: this.types
+      }
+    },
+    methods: {
+      getStyleBackgroundImage: function (url, position = 'unset') {
+        return `background: url(/app/public/images/type/${url});` +
+          'background-repeat: no-repeat;' +
+          `background-position: ${position};` +
+          'background-size: auto;';
       }
     },
     watch: {
