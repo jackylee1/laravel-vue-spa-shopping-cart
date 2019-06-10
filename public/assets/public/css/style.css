@@ -2151,6 +2151,13 @@ h1 {
   .hits_items_mobile h4 {
     font-size: 15px;
   }
+  .new_items_mobile .items_mobile_card,
+  .hits_items_mobile .items_mobile_card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-bottom: 25px;
+  }
   .wrapper .filter_wrapper .filter_title h3 {
     display: block;
   }

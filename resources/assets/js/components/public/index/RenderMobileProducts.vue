@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div v-for="productsChunk in _.take(_.chunk(products, 2), 2)" class="row new_items_mobile">
-      <div v-for="product in productsChunk" class="col-6">
+    <div v-for="productsChunk in _.take(_.chunk(products, 2), 2)" class="row new_items_mobile justify-content-center">
+      <div v-for="product in productsChunk" class="col-6 items_mobile_card">
         <div class="img-box">
           <router-link :to="{name: 'product', params: {slug: product.slug}}">
             <img v-if="product.main_image !== null"
@@ -10,10 +10,12 @@
                  class="img-responsive img-fluid">
           </router-link>
         </div>
-        <div class="thumb-content">
+        <div class="thumb-name">
           <router-link :to="{ name: 'product', params: {slug: product.slug} }">
             <h4>{{product.name}}</h4>
           </router-link>
+        </div>
+        <div class="thumb-content">
           <p class="item-price">
             <template v-if="product.discount_price !== null">
               <strike>{{product.price}} грн</strike>

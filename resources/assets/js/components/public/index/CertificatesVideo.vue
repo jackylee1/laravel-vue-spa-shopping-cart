@@ -3,13 +3,11 @@
     <section class="media_content">
       <div class="container voucher_and_video">
         <div class="row">
-          <div class="col-sm-6 voucher">
-            <template v-if="certificate !== null">
-              <router-link class="btn"
-                           :to="{ name: 'catalog', query: { type: certificate.slug } }">
-                <img class="voucher_img" src="/assets/public/images/voucher/voucher.png" alt="">
-              </router-link>
-            </template>
+          <div v-if="certificate !== null" class="col-sm-6 voucher">
+            <router-link class="btn"
+                         :to="{ name: 'catalog', query: { type: certificate.slug } }">
+              <img class="voucher_img" src="/assets/public/images/voucher/voucher.png" alt="">
+            </router-link>
           </div>
           <div class="col-sm-6 video" v-for="file in indexMediaFiles">
             <youtube :fitParent="true"
