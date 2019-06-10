@@ -93,9 +93,6 @@ Route::group(['middleware' => ['jwt.auth', 'only-administration'], 'prefix' => '
     ]);
     Route::post('filters/update', 'Api\Admin\FilterController@update');
 
-    Route::resource('products', 'Api\Admin\ProductController')->only([
-        'index', 'store', 'update', 'destroy', 'show'
-    ]);
     Route::prefix('products')->group(function () {
         Route::post('add_filter', 'Api\Admin\ProductController@addFilter');
         Route::post('remove_filter', 'Api\Admin\ProductInFilterController@remove');
@@ -110,6 +107,11 @@ Route::group(['middleware' => ['jwt.auth', 'only-administration'], 'prefix' => '
             'store', 'update', 'destroy'
         ]);
     });
+
+    Route::resource('products', 'Api\Admin\ProductController')->only([
+        'index', 'store', 'update', 'destroy', 'show'
+    ]);
+    
     Route::prefix('product_images')->group(function () {
         Route::post('upload', 'Api\Admin\ProductController@uploadImage');
         Route::post('delete', 'Api\Admin\ProductController@deleteImage');
