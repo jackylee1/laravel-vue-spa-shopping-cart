@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-for="productsChunk in _.take(_.chunk(products, 2), 2)" class="row new_items_mobile justify-content-center">
+    <div v-for="productsChunk in _.take(_.chunk(products, 2), 2)" class="row new_items_mobile">
       <div v-for="product in productsChunk" class="col-6 items_mobile_card">
         <div class="img-box">
           <router-link :to="{name: 'product', params: {slug: product.slug}}">
