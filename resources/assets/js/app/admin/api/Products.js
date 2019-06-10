@@ -46,14 +46,14 @@ export function availableDestroy(request) {
   return axios.post('/api/admin/products/available/destroy', request);
 }
 
-export function destroyVideo(id) {
-  return axios.delete(`/api/admin/products/video/${id}`);
+export function destroyVideo(request) {
+  return axios.post('/api/admin/products/video/destroy', request);
 }
 
-export function updateVideo(id, request) {
-  return axios.patch(`/api/admin/products/video/${id}`, request);
+export function updateVideo(request) {
+  return axios.post('/api/admin/products/video/update/', request);
 }
 
 export function createVideo(request) {
-  return axios.post('/api/admin/products/video/', request);
+  return axios.post('/api/admin/products/video/create', request);
 }

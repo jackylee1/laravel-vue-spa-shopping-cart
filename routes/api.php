@@ -93,6 +93,10 @@ Route::group(['middleware' => ['jwt.auth', 'only-administration'], 'prefix' => '
     ]);
     Route::post('filters/update', 'Api\Admin\FilterController@update');
 
+    Route::resource('products', 'Api\Admin\ProductController')->only([
+        'index', 'store', 'update', 'destroy', 'show'
+    ]);
+
     Route::prefix('products')->group(function () {
         Route::post('add_filter', 'Api\Admin\ProductController@addFilter');
         Route::post('remove_filter', 'Api\Admin\ProductInFilterController@remove');
@@ -103,15 +107,13 @@ Route::group(['middleware' => ['jwt.auth', 'only-administration'], 'prefix' => '
             Route::post('destroy', 'Api\Admin\ProductAvailableController@destroy');
         });
 
-        Route::resource('video', 'Api\Admin\ProductVideoController')->only([
-            'store', 'update', 'destroy'
-        ]);
+        Route::prefix('video')->group(function () {
+            Route::post('create', 'Api\Admin\ProductVideoController@store');
+            Route::post('update', 'Api\Admin\ProductVideoController@update');
+            Route::post('destroy', 'Api\Admin\ProductVideoController@destroy');
+        });
     });
 
-    Route::resource('products', 'Api\Admin\ProductController')->only([
-        'index', 'store', 'update', 'destroy', 'show'
-    ]);
-    
     Route::prefix('product_images')->group(function () {
         Route::post('upload', 'Api\Admin\ProductController@uploadImage');
         Route::post('delete', 'Api\Admin\ProductController@deleteImage');

@@ -48,12 +48,12 @@ class ProductVideoController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         $this->validationGeneration(true);
         $request->validate($this->validate_rules, [], $this->validate_attributes);
 
-        $product_video = ProductVideo::updateModel($id);
+        $product_video = ProductVideo::updateModel($request->id);
 
         return response()->json([
             'status' => 'success',
@@ -62,17 +62,12 @@ class ProductVideoController extends Controller
         ]);
     }
 
-    public function destroy($id)
+    public function destroy(Request $request)
     {
         $this->validationId();
-        $validator = Validator::make(['id' => $id], $this->validate_rules);
-        if ($validator->fails()) {
-            return response()->json([
-                'errors' => $validator->errors()
-            ], 422);
-        }
+        $request->validate($this->validate_rules, [], $this->validate_attributes);
 
-        ProductVideo::destroyModel($id);
+        ProductVideo::destroyModel($request->id);
 
         return response()->json([
             'status' => 'success',

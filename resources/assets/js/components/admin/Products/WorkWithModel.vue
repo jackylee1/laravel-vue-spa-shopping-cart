@@ -1288,7 +1288,9 @@
         this.visibleDialogWorkWithVideo = true;
       },
       deleteVideo: function (id) {
-        ApiProducts.destroyVideo(id).then((res) => {
+        ApiProducts.destroyVideo({
+          id: id
+        }).then((res) => {
           if (res.data.status === 'success') {
             let video = this.form.video;
             let index = video.findIndex((item) => item.id === id);
@@ -1331,7 +1333,7 @@
             });
           }
           else {
-            ApiProducts.updateVideo(this.modelVideo.id, this.modelVideo).then((res) => {
+            ApiProducts.updateVideo(this.modelVideo).then((res) => {
               if (res.data.status === 'success') {
                 let video = this.form.video;
                 let index = video.findIndex((item) => item.id === res.data.product_video.id);
