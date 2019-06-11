@@ -5,7 +5,6 @@
             action="javascript:void(0)" v-on:keyup.enter="getProducts">
         <input v-model="textSearch"
                v-on:keyup="debounceProductsAutoComplete"
-               @blur="resultProductsAutoComplete = []"
                name="mobileAutocomplete"
                id="mobileAutocomplete"
                class="form-control"
@@ -68,6 +67,7 @@
         }
       },
       getProducts: function () {
+        this.resultProductsAutoComplete = [];
         this.$store.commit('updateSearchByText', this.textSearch);
         this.$router.push({ query: Object.assign({}, this.$route.query, { text: this.textSearch }) });
 
