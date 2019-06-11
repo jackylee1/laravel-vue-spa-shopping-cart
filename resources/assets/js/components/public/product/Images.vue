@@ -25,7 +25,7 @@
         <li v-for="video in product.video">
           <a data-fancybox="gallery"
              data-type="iframe"
-             :data-src="video.url">
+             :data-src="getUrlIframe(video.url)">
             <img class="small_img"
                  src="/assets/public/images/items/video.png"
                  alt="">
@@ -76,6 +76,13 @@
 <script>
   export default {
     name: 'Images',
-    props: ['product']
+    props: ['product'],
+    methods: {
+      getUrlIframe: function (url) {
+        let v = new URL(url).searchParams.get('v');
+
+        return `https://www.youtube.com/embed/${v}`;
+      }
+    }
   }
 </script>

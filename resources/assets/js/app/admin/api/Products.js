@@ -51,7 +51,7 @@ export function destroyVideo(request) {
 }
 
 export function updateVideo(request) {
-  return axios.post('/api/admin/products/video/update/', request);
+  return axios.post('/api/admin/products/video/update', request);
 }
 
 export function createVideo(request) {
