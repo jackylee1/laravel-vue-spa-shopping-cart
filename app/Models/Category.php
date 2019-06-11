@@ -146,10 +146,7 @@ class Category extends Model
         if (request()->get('id') !== null) {
             $query->where('id', '<>', request()->get('id'));
         }
-        $query->where([
-            ['type_id', request()->get('type_id')],
-            ['slug', request()->get('slug')]
-        ]);
+        $query->where('slug', request()->get('slug'));
 
         return $query->count();
     }
