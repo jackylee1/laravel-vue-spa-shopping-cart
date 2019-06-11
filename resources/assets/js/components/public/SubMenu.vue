@@ -7,10 +7,14 @@
             <ul>
               <li style="cursor: pointer"
                   @click="openTel(phone1)"
-                  v-if="phone1 !== null">{{phone1}}</li>
+                  v-if="phone1 !== null">
+                {{getPhone(phone1)}}
+              </li>
               <li style="cursor: pointer"
                   @click="openTel(phone2)"
-                  v-if="phone2 !== null">{{phone2}}</li>
+                  v-if="phone2 !== null">
+                {{getPhone(phone2)}}
+              </li>
             </ul>
           </div>
           <template v-if="this.isLoggedIn">
@@ -50,15 +54,23 @@
 </template>
 
 <script>
+  import { isMobileOnly } from 'mobile-device-detect';
+
   export default {
     name: 'SubMenu',
     props: ['phone1', 'phone2'],
     computed: {
+      getIsMobile: function () {
+        return isMobileOnly;
+      },
       isLoggedIn: function () {
         return this.$store.getters.isLoggedIn;
       },
     },
     methods: {
+      getPhone: function (phone) {
+        return (this.getIsMobile) ? phone.replace(/[^0-9]/g, '') : phone;
+      },
       openTel: function (phone) {
         window.location.href = `tel:${phone}`;
       }
