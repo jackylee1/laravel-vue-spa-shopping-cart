@@ -94,6 +94,9 @@
         this.resultProductsAutoComplete = [];
       },
       productsAutoComplete: function () {
+        if (this.textSearch === this.searchByText) {
+          return false;
+        }
         if (this.textSearch !== null && this.textSearch.length > 0) {
           ApiProducts.get(1, {
             text: this.textSearch,
