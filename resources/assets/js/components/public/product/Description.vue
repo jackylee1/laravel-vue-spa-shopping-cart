@@ -4,7 +4,7 @@
       <p v-html="product.description"></p>
     </div>
     <div v-if="sizeTable !== null" class="col-md-5 size_table" id="size_table">
-      <h5>{{sizeTable.title}}</h5>
+      <h5>Таблица размеров</h5>
       <div v-html="sizeTable.description"></div>
     </div>
   </div>
