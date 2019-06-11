@@ -8,8 +8,7 @@
         <transition name="fade">
           <div class="row" v-show="activeCollapseFilter">
             <template v-for="(filterRender, index) in this.renderArraySelect">
-              <div class="col-md-3" v-if="getChildrenFilters(filterRender, index).length">
-                <p class="text-center">{{filterRender.name}}</p>
+              <div class="col-md-3" v-if="getChildrenFilters(filterRender, index).length" style="padding-bottom: 5px">
                   <multiselect :value="getActiveFilters(selectFilters[index])"
                                :options="getChildrenFilters(filterRender, index)"
                                @input="changeFilter"
