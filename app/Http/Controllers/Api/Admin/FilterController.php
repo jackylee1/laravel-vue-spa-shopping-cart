@@ -36,13 +36,19 @@ class FilterController extends Controller
         if ($update) {
             $this->setValidateRule([
                 'id' => 'required|integer|exists:filters,id',
-                'slug' => 'required|string|unique:filters,slug,' . \request()->get('id')
             ]);
+            if (\request()->get('parent_id') == 0) {
+                $this->setValidateRule([
+                    'slug' => 'required|string|unique:filters,slug,' . \request()->get('id')
+                ]);
+            }
         }
         else {
-            $this->setValidateRule([
-                'slug' => 'required|string|unique:filters,slug'
-            ]);
+            if (\request()->get('parent_id') == 0) {
+                $this->setValidateRule([
+                    'slug' => 'required|string|unique:filters,slug'
+                ]);
+            }
         }
 
         if (\request()->get('type') === 0) {

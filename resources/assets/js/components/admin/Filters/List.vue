@@ -17,7 +17,7 @@
                :props="defaultProps"
                :expand-on-click-node="false">
         <span class="ds-tree-node" slot-scope="{ node }">
-          <span>{{ node.label }} (ID: {{node.data.id}} | SEO URL: {{node.data.slug}}) </span>
+          <span>{{ node.label }} (ID: {{node.data.id}} <template v-if="node.data.parent_id === 0">| SEO URL: {{node.data.slug}}</template>) </span>
           <span>{{ getTypeLabelByValue(node.data.type) }}</span>
           <span>{{ node.data.sorting_order }}</span>
           <span>
@@ -46,11 +46,11 @@
           <el-input v-model="workWithNode.name"></el-input>
         </el-form-item>
 
-        <el-form-item label="SEO URL" prop="slug">
+        <el-form-item v-if="workWithNode.parent_id === 0" label="SEO URL" prop="slug">
           <el-input v-model="workWithNode.slug"></el-input>
         </el-form-item>
 
-        <el-form-item  label="Порядок сорт." prop="sorting_order">
+        <el-form-item label="Порядок сорт." prop="sorting_order">
           <el-input v-model="workWithNode.sorting_order"></el-input>
         </el-form-item>
 
@@ -416,11 +416,11 @@
         }
       },
       'workWithNode.name': function (val) {
-        if (val !== undefined && (this.workWithNode.id !== undefined
+        if (val !== undefined && this.workWithNode.parent_id === 0 && (this.workWithNode.id !== undefined
           && (this.workWithNode.slug === null || this.workWithNode.slug.length === 0))) {
           this.setSeoUrl();
         }
-        else if (val !== undefined && (this.workWithNode.id === undefined || this.workWithNode.id === null)) {
+        else if (val !== undefined && this.workWithNode.parent_id === 0 && (this.workWithNode.id === undefined || this.workWithNode.id === null)) {
           this.setSeoUrl();
         }
       },
