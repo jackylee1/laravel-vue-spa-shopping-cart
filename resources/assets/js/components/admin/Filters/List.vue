@@ -17,7 +17,7 @@
                :props="defaultProps"
                :expand-on-click-node="false">
         <span class="ds-tree-node" slot-scope="{ node }">
-          <span>{{ node.label }} (ID: {{node.data.id}}) </span>
+          <span>{{ node.label }} (ID: {{node.data.id}} | SEO URL: {{node.data.slug}}) </span>
           <span>{{ getTypeLabelByValue(node.data.type) }}</span>
           <span>{{ node.data.sorting_order }}</span>
           <span>
@@ -44,6 +44,10 @@
                :model="workWithNode">
         <el-form-item label="Наименование" prop="name">
           <el-input v-model="workWithNode.name"></el-input>
+        </el-form-item>
+
+        <el-form-item label="SEO URL" prop="slug">
+          <el-input v-model="workWithNode.slug"></el-input>
         </el-form-item>
 
         <el-form-item  label="Порядок сорт." prop="sorting_order">
@@ -178,6 +182,7 @@
   import * as helperRouter from '../../../app/helpers/router';
 
   let arrayToTree = require('array-to-tree');
+  let slugify = require('slugify');
 
   export default {
     name: 'filters',
@@ -301,6 +306,7 @@
           image: null,
           image_preview: null,
           image_origin: null,
+          slug: null
         };
         this.visibleDialogWorkWithNode = true;
         this.modalAlerts = [];
@@ -391,6 +397,13 @@
 
         return arrayToTree(filters)
       },
+      setSeoUrl: function () {
+        this.workWithNode.slug = slugify(this.workWithNode.name, {
+          replacement: '-',
+          remove: null,
+          lower: true
+        })
+      }
     },
     components: {
       PageElementsBreadcrumb,
@@ -401,7 +414,16 @@
         if (val !== 0) {
           this.workWithNode.parent_id = 0;
         }
-      }
+      },
+      'workWithNode.name': function (val) {
+        if (val !== undefined && (this.workWithNode.id !== undefined
+          && (this.workWithNode.slug === null || this.workWithNode.slug.length === 0))) {
+          this.setSeoUrl();
+        }
+        else if (val !== undefined && (this.workWithNode.id === undefined || this.workWithNode.id === null)) {
+          this.setSeoUrl();
+        }
+      },
     }
   }
 </script>

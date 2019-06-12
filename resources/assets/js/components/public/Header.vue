@@ -92,6 +92,7 @@
       selectResultAutoComplete: function (value) {
         this.textSearch = value;
         this.resultProductsAutoComplete = [];
+        this.getProducts();
       },
       productsAutoComplete: function () {
         if (this.textSearch === this.searchByText) {

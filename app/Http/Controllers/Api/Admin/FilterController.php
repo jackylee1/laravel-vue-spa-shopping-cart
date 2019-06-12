@@ -36,6 +36,12 @@ class FilterController extends Controller
         if ($update) {
             $this->setValidateRule([
                 'id' => 'required|integer|exists:filters,id',
+                'slug' => 'required|string|unique:filters,slug,' . \request()->get('id')
+            ]);
+        }
+        else {
+            $this->setValidateRule([
+                'slug' => 'required|string|unique:filters,slug'
             ]);
         }
 
@@ -78,7 +84,8 @@ class FilterController extends Controller
             'show_on_index' => 'Показать на главной',
             'show_on_footer' => 'Показать в футере',
             'show_image' => 'Отображать изображение',
-            'image' => 'Изображение фильтра'
+            'image' => 'Изображение фильтра',
+            'slug' => 'SEO URL'
         ]);
     }
 

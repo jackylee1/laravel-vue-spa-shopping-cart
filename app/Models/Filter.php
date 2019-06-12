@@ -57,7 +57,8 @@ class Filter extends Model
         'show_on_footer',
         'show_image',
         'image_origin',
-        'image_preview'
+        'image_preview',
+        'slug'
     ];
     protected $casts = [
         'id' => 'integer',
@@ -102,6 +103,7 @@ class Filter extends Model
         $model->name = request()->get('name');
         $model->like_name = getOnlyCharacters(request()->get('name'));
         $model->type = request()->get('type');
+        $model->slug = (request()->filled('slug')) ? request()->get('slug') : str_slug(request()->get('name'));
         $model->sorting_order = request()->get('sorting_order');
         $model->show_on_index = request()->get('show_on_index');
         $model->show_on_header = request()->get('show_on_header');

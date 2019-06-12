@@ -18,6 +18,7 @@ class CreateFiltersTable extends Migration
             $table->integer('parent_id')->default(0);
             $table->char('name');
             $table->char('like_name');
+            $table->char('slug')->nullable();
             $table->integer('type');
             $table->char('image_origin')->nullable();
             $table->char('image_preview')->nullable();

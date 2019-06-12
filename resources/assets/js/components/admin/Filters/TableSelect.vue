@@ -16,6 +16,11 @@
           min-width="150">
       </el-table-column>
       <el-table-column
+          prop="slug"
+          label="SEO URL"
+          min-width="150">
+      </el-table-column>
+      <el-table-column
           fixed="right"
           label="Операции"
           min-width="70">
