@@ -68,6 +68,7 @@ export default {
       orders: {
         id: null,
         user_name: '',
+        phone: '',
         user_surname: '',
         user_patronymic: '',
         user_id: null,

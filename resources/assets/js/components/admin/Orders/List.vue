@@ -18,6 +18,11 @@
                   placeholder="Введите Имя">
         </el-input>
       </el-form-item>
+      <el-form-item label="Телефон">
+        <el-input v-model="formSearch.phone"
+                  placeholder="Введите Телефон">
+        </el-input>
+      </el-form-item>
       <el-form-item label="ID Пользователя">
         <el-input v-model="formSearch.user_id"
                   placeholder="Введите ID пользователя">
@@ -90,14 +95,22 @@
           <template v-if="props.row.phone !== null">Телефон: {{props.row.phone}}</template>
         </template>
       </el-table-column>
+
       <el-table-column
-          prop="total_price"
-          label="Сумма заказа"
-          min-width="80">
+          label="Сумма"
+          min-width="120">
+        <template slot-scope="props">
+          <template v-if="props.row.total_discount_price === 0 || props.row.total_discount_price === null">
+            {{props.row.total_price}}
+          </template>
+          <template v-else>
+            C учетом скидки: {{props.row.total_discount_price}}
+          </template>
+        </template>
       </el-table-column>
       <el-table-column
-          prop="total_discount_price"
-          label="Сумма заказа"
+          prop="created_at"
+          label="Дата создания"
           min-width="100">
       </el-table-column>
       <el-table-column
@@ -206,6 +219,7 @@
         formSearch: {
           id: null,
           user_name: '',
+          phone: '',
           user_surname: '',
           user_id: null,
           only_new: 0,

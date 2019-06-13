@@ -299,7 +299,7 @@
           <template slot-scope="props">
             <el-button-group>
               <el-button
-                  @click.native.prevent="openProduct(props.row.product_id)"
+                  @click.native.prevent="openProduct(props.row)"
                   size="mini">
                 <i class="el-icon-view"></i>
               </el-button>
@@ -642,8 +642,8 @@
         this.form.user_id = user.id;
         this.dialogUserTableVisible = false;
       },
-      openProduct: function (id) {
-        this.$router.push({name: 'products-update', params: {id: id}});
+      openProduct: function (product) {
+        window.open(`${window.location.origin}/product/${product.product.slug}`, '_blank');
       },
       getQuantityAvailable: function () {
         if (this.operationsOnProduct !== null) {

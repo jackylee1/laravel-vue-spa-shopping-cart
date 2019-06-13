@@ -347,6 +347,15 @@ class Order extends Model
             });
         }
 
+        if (request()->filled('phone')) {
+            $query->where(function ($query) {
+                $query->whereRaw('lower(phone) like ?', ['%'. request()->get('phone') .'%']);
+                $query->orWhereHas('user', function ($query) {
+                    $query->whereRaw('lower(phone) like ?', ['%'. request()->get('phone') .'%']);
+                });
+            });
+        }
+
         if (request()->filled('user_surname')) {
             $query->where(function ($query) {
                 $query->whereRaw('lower(user_surname) like ?', ['%'. request()->get('user_surname') .'%']);
