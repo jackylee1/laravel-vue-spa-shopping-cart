@@ -7,7 +7,7 @@
         </h3>
         <transition name="fade">
           <div class="row" v-show="activeCollapseFilter">
-            <div class="col-md-3" v-if="selectTypeAndCategory.length" style="padding-bottom: 5px">
+            <div class="col-md-3" style="padding-bottom: 5px">
               <a-cascader :options="typesAndCategories"
                           size="large"
                           v-model="selectTypeAndCategory"
@@ -92,6 +92,9 @@
           this.currentCategory,
           this.currentType,
         ].join();
+      },
+      urlPrevious: function () {
+        return this.$store.getters.urlPrevious;
       }
     },
     data() {
@@ -116,6 +119,7 @@
     },
     methods: {
       takeTypeAndCategoryFromUrl: function () {
+        this.selectTypeAndCategory = [];
         let type = null;
         if (this.$route.query.type !== undefined && this.$route.query.type !== null) {
           type = this.typesStore.find((item) => item.slug === this.$route.query.type);
@@ -143,9 +147,12 @@
         }
       },
       emitGetProducts: function () {
-        setTimeout(() => {
-          this.$emit('getProducts', this.$router.currentRoute.query.page);
-        }, 1000);
+        if (this.urlPrevious !== this.$router.currentRoute.fullPath) {
+          setTimeout(() => {
+            this.takeTypeAndCategoryFromUrl();
+            this.$emit('getProducts', this.$router.currentRoute.query.page);
+          }, 1000);
+        }
       },
       setTypeAndCategoryToUrl: function () {
         let typeCategoryLength = this.selectTypeAndCategory.length;
@@ -169,6 +176,7 @@
       },
       changeTypeOrCategory: function (value, selectedOptions) {
         this.selectTypeAndCategory = value;
+
       },
       handleCollapseFilter: function () {
         this.htmlBtnCollapse = '';
@@ -224,8 +232,6 @@
           params.category = this.$route.query.category;
         }
 
-        /*params.category = (this.$route.query.category !== null && this.$route.query.category !== undefined)
-          ? this.$route.query.category : this.routeCategory;*/
         params.filters = _.filter(this.selectFilters, (item) => item !== undefined);
         params.sort = (this.$route.query.sort !== undefined
             && this.$route.query.sort !== null)
@@ -397,7 +403,7 @@
     },
     watch: {
       '$route': function () {
-        this.routeType = this.routeCategory = [];
+        this.routeType = this.routeCategory = null;
         this.selectTypeAndCategory = [];
       },
       'selectTypeAndCategory': function () {

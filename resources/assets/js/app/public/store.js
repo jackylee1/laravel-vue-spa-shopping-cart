@@ -32,7 +32,7 @@ export default {
     utfRecords: [],
     settings: [],
     indexMediaFiles: [],
-    activeFilters: []
+    activeFilters: [],
   },
   getters: {
     currentUser: function (state) {
