@@ -7,7 +7,7 @@
         </h3>
         <transition name="fade">
           <div class="row" v-show="activeCollapseFilter">
-            <div class="col-md-3" style="padding-bottom: 5px">
+            <div class="col-md-3" v-if="selectTypeAndCategory.length" style="padding-bottom: 5px">
               <a-cascader :options="typesAndCategories"
                           size="large"
                           v-model="selectTypeAndCategory"

@@ -338,7 +338,7 @@ class Order extends Model
         if (request()->filled('id')) {
             $query->where('id', request()->get('id'));
         }
-        
+
         if (request()->filled('user_name')) {
             $query->where(function ($query) {
                 $query->whereRaw('lower(user_name) like ?', ['%'. request()->get('user_name') .'%']);
