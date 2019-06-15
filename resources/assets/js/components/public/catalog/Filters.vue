@@ -10,6 +10,8 @@
             <div class="col-md-3" style="padding-bottom: 5px">
               <a-cascader :options="typesAndCategories"
                           size="large"
+                          :changeOnSelect="true"
+                          expandTrigger="hover"
                           v-model="selectTypeAndCategory"
                           @change="changeTypeOrCategory"
                           :fieldNames="typesAndCategoriesFieldNames"
@@ -87,7 +89,7 @@
           this.filters
         ].join();
       },
-      watchTypeCategory: function () {
+      watchTypeCategoryProps: function () {
         return [
           this.currentCategory,
           this.currentType,
@@ -119,37 +121,36 @@
     },
     methods: {
       takeTypeAndCategoryFromUrl: function () {
-        this.selectTypeAndCategory = [];
         let type = null;
+        let tempTypeAndCategory = [];
+
         if (this.$route.query.type !== undefined && this.$route.query.type !== null) {
           type = this.typesStore.find((item) => item.slug === this.$route.query.type);
-
           if (type !== undefined && type !== null) {
-            this.selectTypeAndCategory[0] = type.slug;
+            tempTypeAndCategory[0] = type.slug;
             this.routeType = type.slug;
-
             if (this.$route.query.category !== undefined && this.$route.query.category !== null) {
               let category = type.categories.find(item => item.slug === this.$route.query.category);
               if (category !== undefined) {
                 if (category.parent_id === 1) {
-                  this.selectTypeAndCategory[1] = category.slug;
+                  tempTypeAndCategory[1] = category.slug;
                 }
                 else {
                   let parentCategory = type.categories.find(item => item.id === category.parent_id);
-                  this.selectTypeAndCategory[1] = parentCategory.slug;
-                  this.selectTypeAndCategory[2] = category.slug;
+                  tempTypeAndCategory[1] = parentCategory.slug;
+                  tempTypeAndCategory[2] = category.slug;
                 }
-
                 this.routeCategory = category.slug;
               }
             }
           }
         }
+
+        this.selectTypeAndCategory = tempTypeAndCategory;
       },
       emitGetProducts: function () {
         if (this.urlPrevious !== this.$router.currentRoute.fullPath) {
           setTimeout(() => {
-            this.takeTypeAndCategoryFromUrl();
             this.$emit('getProducts', this.$router.currentRoute.query.page);
           }, 1000);
         }
@@ -170,13 +171,16 @@
           this.routeCategory = null;
         }
 
-
         this.routerPushData();
         this.emitGetProducts();
       },
       changeTypeOrCategory: function (value, selectedOptions) {
         this.selectTypeAndCategory = value;
-
+        if (this.selectTypeAndCategory.length === 0) {
+          this.$router.push({ query: Object.assign(
+            {}, this.$route.query, { type: null, category: null }
+          )});
+        }
       },
       handleCollapseFilter: function () {
         this.htmlBtnCollapse = '';
@@ -215,21 +219,25 @@
         this.selectFilters[this.activeVModel] = value;
         this.setFiltersToUrl();
 
-        this.$emit('getProducts');
+        this.emitGetProducts();
       },
       routerPushData: function() {
         let params = {};
 
-        params.type = this.routeType;
         if (this.$route.query.type !== null && this.$route.query.type !== undefined
           && this.routeType === null) {
           params.type = this.$route.query.type;
         }
+        else {
+          params.type = this.routeType;
+        }
 
-        params.category = this.routeCategory;
         if (this.$route.query.category !== null && this.$route.query.type !== undefined
           && this.routeCategory === null) {
           params.category = this.$route.query.category;
+        }
+        else {
+          params.category = this.routeCategory;
         }
 
         params.filters = _.filter(this.selectFilters, (item) => item !== undefined);
@@ -403,8 +411,9 @@
     },
     watch: {
       '$route': function () {
-        this.routeType = this.routeCategory = null;
-        this.selectTypeAndCategory = [];
+        this.routeType = (this.currentType !== null) ? this.currentType.slug : this.currentType;
+        this.routeCategory = (this.currentCategory !== null) ? this.currentCategory.slug : this.currentCategory;
+        this.takeTypeAndCategoryFromUrl();
       },
       'selectTypeAndCategory': function () {
         this.setTypeAndCategoryToUrl();
@@ -415,24 +424,9 @@
           this.setSelectFilters();
         }, 1000);
       },
-      watchTypeCategory: function () {
-        if (this.currentType !== null
-          && this.currentType.slug !== undefined
-          && this.currentType.slug !== this.routeType) {
-          this.routeType = this.currentType.slug;
-        }
-        else {
-          this.routeType = null;
-        }
-
-        if (this.currentCategory !== null
-          && this.currentCategory.slug !== undefined
-          && this.currentCategory.slug !== this.routeCategory) {
-          this.routeCategory = this.currentCategory.slug;
-        }
-        else {
-          this.routeCategory = null;
-        }
+      watchTypeCategoryProps: function () {
+        this.routeType = (this.currentType !== null) ? this.currentType.slug : this.currentType;
+        this.routeCategory = (this.currentCategory !== null) ? this.currentCategory.slug : this.currentCategory;
 
         this.takeTypeAndCategoryFromUrl();
       },
