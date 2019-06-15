@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Events\AdminEvent;
+use App\Tools\DateTimeTools;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Model;
 
@@ -337,7 +338,7 @@ class Order extends Model
         if (request()->filled('id')) {
             $query->where('id', request()->get('id'));
         }
-
+        
         if (request()->filled('user_name')) {
             $query->where(function ($query) {
                 $query->whereRaw('lower(user_name) like ?', ['%'. request()->get('user_name') .'%']);
@@ -363,6 +364,35 @@ class Order extends Model
                     $query->whereRaw('lower(user_surname) like ?', ['%'. request()->get('user_surname') .'%']);
                 });
             });
+        }
+
+        if (request()->filled('article')) {
+            $query->whereHas('products', function ($query) {
+                $query->whereHas('product', function ($query) {
+                    $query->where('article', request()->get('article'));
+                });
+            });
+        }
+
+        if (request()->filled('date_start') || request()->filled('date_end')) {
+            $date_start = $date_end = null;
+
+            if (request()->filled('date_start')) {
+                $date_start = DateTimeTools::explodeRequestDateTime(request()->get('date_start'))->date;
+            }
+
+            if (request()->filled('date_end')) {
+                $date_end = DateTimeTools::explodeRequestDateTime(request()->get('date_end'))->date;
+            }
+
+            if ($date_start !== null && $date_end !== null) {
+                $query->whereDate('created_at', '>=', $date_start);
+                $query->whereDate('created_at', '<=', $date_end);
+            } elseif ($date_start !== null && $date_end === null) {
+                $query->whereDate('created_at', '>=', $date_start);
+            } elseif ($date_start === null && $date_end !== null) {
+                $query->whereDate('created_at', '<=', $date_end);
+            }
         }
 
         if (request()->filled('user_id')) {

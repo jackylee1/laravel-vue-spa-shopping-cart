@@ -73,6 +73,9 @@ export default {
         user_patronymic: '',
         user_id: null,
         only_new: 0,
+        article: null,
+        date_start: null,
+        date_end: null,
       }
     },
     subscribes: [],

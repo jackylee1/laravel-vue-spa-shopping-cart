@@ -1,14 +1,25 @@
 <template>
   <div>
-    <div v-if="this.renderArraySelect.length" class="row filter_wrapper">
+    <div v-if="this.renderArraySelect.length || typesAndCategories.length" class="row filter_wrapper">
       <div class="col-12 filter_title text-center">
         <h3>
           <a @click="handleCollapseFilter" v-html="htmlBtnCollapse"></a>
         </h3>
         <transition name="fade">
           <div class="row" v-show="activeCollapseFilter">
+            <div class="col-md-3" style="padding-bottom: 5px">
+              <a-cascader :options="typesAndCategories"
+                          size="large"
+                          v-model="selectTypeAndCategory"
+                          @change="changeTypeOrCategory"
+                          :fieldNames="typesAndCategoriesFieldNames"
+                          placeholder="Выберите категорию">
+                <i slot="suffixIcon" class="fas fa-caret-down"style="font-size: 16px;color: #999;padding-right: 15px;"></i>
+              </a-cascader>
+            </div>
+
             <template v-for="(filterRender, index) in this.renderArraySelect">
-              <div class="col-md-3" v-if="getChildrenFilters(filterRender, index).length" style="padding-bottom: 5px">
+              <div class="col-md-3" v-if="getChildrenFilters(filterRender, index).length && selectFilters[index] !== undefined" style="padding-bottom: 5px">
                   <multiselect :value="getActiveFilters(selectFilters[index])"
                                :options="getChildrenFilters(filterRender, index)"
                                @input="changeFilter"
@@ -39,7 +50,9 @@
 </template>
 
 <script>
-  import { isMobileOnly } from 'mobile-device-detect';
+  import {isMobileOnly} from 'mobile-device-detect';
+
+  let arrayToTree = require('array-to-tree');
 
   export default {
     name: 'Filters',
@@ -47,16 +60,19 @@
     mounted() {
       this.activeCollapseFilter = (!isMobileOnly);
 
+      this.typesAndCategories = this.getTypeAndCategories();
+
       _.delay(() => {
         this.setRenderArray();
         this.setSelectFilters();
 
-        setTimeout(() => {
-          this.$emit('getProducts', this.$router.currentRoute.query.page);
-        }, 1000);
+        this.emitGetProducts();
       }, 550);
     },
     computed: {
+      typesStore: function () {
+        return this.$store.getters.types;
+      },
       activeFilters: function () {
         return this.$store.getters.activeFilters;
       },
@@ -70,6 +86,12 @@
           this.$route.query.sort,
           this.filters
         ].join();
+      },
+      watchTypeCategory: function () {
+        return [
+          this.currentCategory,
+          this.currentType,
+        ].join();
       }
     },
     data() {
@@ -79,10 +101,75 @@
         intervalData: [],
         activeVModel: null,
         activeCollapseFilter: true,
-        htmlBtnCollapse: 'Фильтр товаров <i class="fas fa-chevron-down"></i>'
+        htmlBtnCollapse: 'Фильтр товаров <i class="fas fa-chevron-down"></i>',
+        renderTypeAndCategory: [],
+        typesAndCategories: [],
+        typesAndCategoriesFieldNames: {
+          label: 'name',
+          value: 'slug',
+          children: 'children'
+        },
+        selectTypeAndCategory: [],
+        routeType: null,
+        routeCategory: null
       }
     },
     methods: {
+      takeTypeAndCategoryFromUrl: function () {
+        let type = null;
+        if (this.$route.query.type !== undefined && this.$route.query.type !== null) {
+          type = this.typesStore.find((item) => item.slug === this.$route.query.type);
+
+          if (type !== undefined && type !== null) {
+            this.selectTypeAndCategory[0] = type.slug;
+            this.routeType = type.slug;
+
+            if (this.$route.query.category !== undefined && this.$route.query.category !== null) {
+              let category = type.categories.find(item => item.slug === this.$route.query.category);
+              if (category !== undefined) {
+                if (category.parent_id === 1) {
+                  this.selectTypeAndCategory[1] = category.slug;
+                }
+                else {
+                  let parentCategory = type.categories.find(item => item.id === category.parent_id);
+                  this.selectTypeAndCategory[1] = parentCategory.slug;
+                  this.selectTypeAndCategory[2] = category.slug;
+                }
+
+                this.routeCategory = category.slug;
+              }
+            }
+          }
+        }
+      },
+      emitGetProducts: function () {
+        setTimeout(() => {
+          this.$emit('getProducts', this.$router.currentRoute.query.page);
+        }, 1000);
+      },
+      setTypeAndCategoryToUrl: function () {
+        let typeCategoryLength = this.selectTypeAndCategory.length;
+
+        if (typeCategoryLength > 0) {
+          this.routeType = this.selectTypeAndCategory[0];
+        }
+        else {
+          this.routeType = null;
+        }
+        if (typeCategoryLength > 1) {
+          this.routeCategory = this.selectTypeAndCategory[typeCategoryLength - 1];
+        }
+        else {
+          this.routeCategory = null;
+        }
+
+
+        this.routerPushData();
+        this.emitGetProducts();
+      },
+      changeTypeOrCategory: function (value, selectedOptions) {
+        this.selectTypeAndCategory = value;
+      },
       handleCollapseFilter: function () {
         this.htmlBtnCollapse = '';
 
@@ -95,17 +182,59 @@
         this.activeVModel = index;
       },
       getActiveFilters: function (idFilters) {
-        if (idFilters === null || idFilters.length === 0) {
+        if (idFilters === null || idFilters === undefined || idFilters.length === 0) {
           return false;
         }
 
         return _(this.filters).keyBy('id').at(idFilters).value();
+      },
+      getTypeAndCategories: function () {
+        let types = _.cloneDeep(this.typesStore);
+        return types.filter(item => item.show_on_header === 1)
+          .map((item) => {
+            item.children = item.categories;
+            delete item.categories;
+
+            item.children = arrayToTree(item.children, {
+              parentProperty: 'parent_id',
+              customID: 'id'
+            });
+
+            return item;
+          });
       },
       changeFilter: function (value) {
         this.selectFilters[this.activeVModel] = value;
         this.setFiltersToUrl();
 
         this.$emit('getProducts');
+      },
+      routerPushData: function() {
+        let params = {};
+
+        params.type = this.routeType;
+        if (this.$route.query.type !== null && this.$route.query.type !== undefined
+          && this.routeType === null) {
+          params.type = this.$route.query.type;
+        }
+
+        params.category = this.routeCategory;
+        if (this.$route.query.category !== null && this.$route.query.type !== undefined
+          && this.routeCategory === null) {
+          params.category = this.$route.query.category;
+        }
+
+        /*params.category = (this.$route.query.category !== null && this.$route.query.category !== undefined)
+          ? this.$route.query.category : this.routeCategory;*/
+        params.filters = _.filter(this.selectFilters, (item) => item !== undefined);
+        params.sort = (this.$route.query.sort !== undefined
+            && this.$route.query.sort !== null)
+            ? this.$route.query.sort
+            : 'all';
+
+        this.$router.push({ query: Object.assign(
+          {}, this.$route.query, params
+        )});
       },
       setFiltersToUrl: function () {
         this.selectFilters = this.selectFilters.map((item) => {
@@ -122,16 +251,8 @@
           }
           return item;
         });
-        this.$router.push({ query: Object.assign(
-            {},
-            this.$route.query, {
-              filters: _.filter(this.selectFilters, (item) => item !== undefined),
-              sort: (this.$route.query.sort !== undefined
-                && this.$route.query.sort !== null)
-                ? this.$route.query.sort
-                : 'all',
-            }
-          )});
+
+        this.routerPushData();
       },
       setSelectFilters: function () {
         let queryFilters = this.$router.currentRoute.query.filters;
@@ -275,11 +396,42 @@
       }
     },
     watch: {
+      '$route': function () {
+        this.routeType = this.routeCategory = [];
+        this.selectTypeAndCategory = [];
+      },
+      'selectTypeAndCategory': function () {
+        this.setTypeAndCategoryToUrl();
+      },
       watchProps: function () {
         _.delay(() => {
           this.setRenderArray();
           this.setSelectFilters();
         }, 1000);
+      },
+      watchTypeCategory: function () {
+        if (this.currentType !== null
+          && this.currentType.slug !== undefined
+          && this.currentType.slug !== this.routeType) {
+          this.routeType = this.currentType.slug;
+        }
+        else {
+          this.routeType = null;
+        }
+
+        if (this.currentCategory !== null
+          && this.currentCategory.slug !== undefined
+          && this.currentCategory.slug !== this.routeCategory) {
+          this.routeCategory = this.currentCategory.slug;
+        }
+        else {
+          this.routeCategory = null;
+        }
+
+        this.takeTypeAndCategoryFromUrl();
+      },
+      'typesStore': function () {
+        this.typesAndCategories = this.getTypeAndCategories();
       }
     },
   }
@@ -291,5 +443,9 @@
   }
   .fade-enter, .fade-leave-to /* .fade-leave-active до версии 2.1.8 */ {
     opacity: 0;
+  }
+
+  span .ant-cascader-picker {
+    min-height: 40px;
   }
 </style>

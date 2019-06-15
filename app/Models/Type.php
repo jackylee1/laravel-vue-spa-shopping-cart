@@ -66,6 +66,7 @@ class Type extends Model
         'show_on_footer' => 'integer',
         'show_on_certificate' => 'integer',
         'show_on_header' => 'integer',
+        'in_filter' => 'integer',
     ];
 
     public $timestamps = false;

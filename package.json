@@ -31,9 +31,10 @@
         "vue": "^2.6.10",
         "vue-g-select": "git+https://github.com/ibabasik/g-select.git",
         "vue-template-compiler": "^2.6.10",
-        "webpack": "^4.33.0"
+        "webpack": "^4.34.0"
     },
     "dependencies": {
+        "ant-design-vue": "^1.3.10",
         "array-to-tree": "^3.3.0",
         "element-ui": "2.8.2",
         "laravel-echo": "^1.5.3",

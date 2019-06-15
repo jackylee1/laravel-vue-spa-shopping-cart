@@ -8,6 +8,17 @@
         <template v-else-if="currentType !== null">
           <h1 class="category_title">{{currentType.name}}</h1>
         </template>
+
+        <template v-if="searchByText !== null && searchByText !== undefined && searchByText.length">
+          <h4>
+            Текст поиска: {{searchByText}}
+            <button @click="clearSearchByText"
+                    class="btn"
+                    style="padding: 5px;max-height: 25px;">
+              <i style="margin: 0px" class="fa fa-times"></i>
+            </button>
+          </h4>
+        </template>
       </div>
       <div :class="(getIsMobile) ? 'col-12 sort text-center my-auto' : 'col-md-3 col-6 sort righted my-auto'">
         <p>Сортировка:</p>
@@ -38,8 +49,12 @@
     props: ['currentCategory', 'currentType', 'selectFilters'],
     created: function () {
       this.options = this.getOptions;
+      this.searchByText = this.searchByTextStore;
     },
     computed: {
+      searchByTextStore: function () {
+        return this.$store.getters.searchByText;
+      },
       getIsMobile: function () {
         return isMobileOnly;
       },
@@ -57,10 +72,20 @@
     data() {
       return {
         sort: this.$route.query.sort,
-        options: []
+        options: [],
+        searchByText: null
       }
     },
     methods: {
+      clearSearchByText: function () {
+        this.$store.commit('updateSearchByText', null);
+        this.$router.push({ query: Object.assign(
+          {}, this.$route.query, {
+            text: null
+          }
+        )});
+        this.$emit('getProducts');
+      },
       getSelectSort: function (value) {
         return this.options.find(item => item.value === value) || {
           name: '',
@@ -72,6 +97,9 @@
       }
     },
     watch: {
+      'searchByTextStore': function (value) {
+        this.searchByText = value;
+      },
       '$route.query.sort': function (value) {
         this.sort = value;
       },

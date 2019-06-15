@@ -235,6 +235,12 @@ class Product extends Model
         });
     }
 
+    public function scopePromotionalProduct($query) {
+        return $query->where('products.discount_price', '!=', null)
+            ->where('products.discount_start', '<', Carbon::now())
+            ->where('products.discount_end', '>', Carbon::now());
+    }
+
     protected function getProducts() {
         $query = Product::query();
         if (request()->filled('q')) {
@@ -452,9 +458,7 @@ class Product extends Model
                     break;
 
                 case 'promotional':
-                    $query->where('products.discount_price', '!=', null)
-                        ->where('products.discount_start', '<', Carbon::now())
-                        ->where('products.discount_end', '>', Carbon::now());
+                    $query->promotionalProduct();
                     break;
 
                 default:

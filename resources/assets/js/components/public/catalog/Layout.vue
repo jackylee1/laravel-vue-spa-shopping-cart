@@ -259,11 +259,13 @@
           if (type.slug === this.$route.query.type) {
             tempType = type;
           }
-          type.categories.forEach((category) => {
-            if (category.slug === this.$route.query.category) {
-              tempCategory = category;
-            }
-          });
+          if (type.categories !== undefined) {
+            type.categories.forEach((category) => {
+              if (category.slug === this.$route.query.category) {
+                tempCategory = category;
+              }
+            });
+          }
         });
         [this.currentType, this.currentCategory] = [tempType, tempCategory];
 

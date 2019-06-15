@@ -149,6 +149,20 @@ class ProductInFilter extends Model
             });
         }
 
+        if (request()->filled('sort')
+            && (request()->get('sort') === 'new') || request()->get('sort') === 'promotional') {
+            if (request()->get('new')) {
+                $query->whereHas('product', function ($query) {
+                    $query->newProducts();
+                });
+            }
+            else {
+                $query->whereHas('product', function ($query) {
+                    $query->promotionalProduct();
+                });
+            }
+        }
+
         $models = $query->setEagerLoads([])->select('filter_id')->where('filter_id', '<>', null)->distinct()->get();
 
         return $models->map->only(['filter_id'])->flatten()->toArray();

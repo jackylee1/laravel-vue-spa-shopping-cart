@@ -5,30 +5,35 @@
     <el-form :model="formSearch" class="ds-query-form" label-width="250px">
       <el-form-item label="ID Заказа">
         <el-input v-model="formSearch.id"
-                  placeholder="">
+                  placeholder="ID Заказа">
         </el-input>
       </el-form-item>
-      <el-form-item label="Фамилия">
-        <el-input v-model="formSearch.user_surname"
-                  placeholder="Введите Фамилию">
-        </el-input>
-      </el-form-item>
-      <el-form-item label="Имя">
-        <el-input v-model="formSearch.user_name"
-                  placeholder="Введите Имя">
-        </el-input>
-      </el-form-item>
-      <el-form-item label="Телефон">
-        <el-input v-model="formSearch.phone"
-                  placeholder="Введите Телефон">
-        </el-input>
+      <el-form-item label="Фамилия  | Имя | Телефон">
+        <el-col :span="8">
+          <el-input v-model="formSearch.user_surname"
+                    style="width: 100%;"
+                    placeholder="Введите Фамилию">
+          </el-input>
+        </el-col>
+        <el-col :span="8">
+          <el-input v-model="formSearch.user_name"
+                    style="width: 100%;"
+                    placeholder="Введите Имя">
+          </el-input>
+        </el-col>
+        <el-col :span="8">
+          <el-input v-model="formSearch.phone"
+                    style="width: 100%;"
+                    placeholder="Введите Телефон">
+          </el-input>
+        </el-col>
       </el-form-item>
       <el-form-item label="ID Пользователя">
         <el-input v-model="formSearch.user_id"
                   placeholder="Введите ID пользователя">
         </el-input>
       </el-form-item>
-      <el-form-item label="Только новые заказы">
+     <el-form-item label="Только новые заказы">
         <el-select
             v-model="formSearch.only_new"
             placeholder="Только новые заказы">
@@ -39,6 +44,28 @@
               :value="item.value">
           </el-option>
         </el-select>
+      </el-form-item>
+      <el-form-item label="Дата">
+        <el-col :span="12">
+          <el-date-picker type="date" placeholder="От даты"
+                          v-model="formSearch.date_start"
+                          format="yyyy/MM/dd"
+                          value-format="yyyy-MM-dd"
+                          style="width: 100%;"></el-date-picker>
+        </el-col>
+        <el-col :span="12">
+          <el-date-picker type="date"
+                          placeholder="По дату"
+                          format="yyyy/MM/dd"
+                          value-format="yyyy-MM-dd"
+                          v-model="formSearch.date_end"
+                          style="width: 100%;"></el-date-picker>
+        </el-col>
+      </el-form-item>
+      <el-form-item label="Артикул товара">
+        <el-input v-model="formSearch.article"
+                  placeholder="Артикул товара">
+        </el-input>
       </el-form-item>
       <el-form-item>
         <el-button-group>
@@ -223,6 +250,9 @@
           user_surname: '',
           user_id: null,
           only_new: 0,
+          article: null,
+          date_start: null,
+          date_end: null,
         },
         oldFormSearch: null
       }
