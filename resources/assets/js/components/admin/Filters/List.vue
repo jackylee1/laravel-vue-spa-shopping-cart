@@ -137,7 +137,7 @@
 
         <el-form-item  v-if="workWithNode.type !== 0">
           <el-alert :closable="false"
-                    title="Активный фильтр - параметр по которому определяется отображается ли фильтр на сайте"
+                    title="Активный фильтр - параметр отвечает за отображение фильтра на сайте."
                     type="info">
           </el-alert>
         </el-form-item>
