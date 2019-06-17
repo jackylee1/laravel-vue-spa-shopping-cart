@@ -176,11 +176,18 @@
       },
       changeTypeOrCategory: function (value, selectedOptions) {
         this.selectTypeAndCategory = value;
-        if (this.selectTypeAndCategory.length === 0) {
+        let lengthTypeAndCategories = this.selectTypeAndCategory.length;
+        if (lengthTypeAndCategories === 1) {
+          this.$router.push({ query: Object.assign(
+            {}, this.$route.query, { category: null }
+          )});
+        }
+        if (lengthTypeAndCategories === 0) {
           this.$router.push({ query: Object.assign(
             {}, this.$route.query, { type: null, category: null }
           )});
         }
+        this.setTypeAndCategoryToUrl();
       },
       handleCollapseFilter: function () {
         this.htmlBtnCollapse = '';
@@ -202,8 +209,7 @@
       },
       getTypeAndCategories: function () {
         let types = _.cloneDeep(this.typesStore);
-        return types.filter(item => item.show_on_header === 1)
-          .map((item) => {
+        return types.map((item) => {
             item.children = item.categories;
             delete item.categories;
 
@@ -413,6 +419,7 @@
       '$route': function () {
         this.routeType = (this.currentType !== null) ? this.currentType.slug : this.currentType;
         this.routeCategory = (this.currentCategory !== null) ? this.currentCategory.slug : this.currentCategory;
+
         this.takeTypeAndCategoryFromUrl();
       },
       'selectTypeAndCategory': function () {

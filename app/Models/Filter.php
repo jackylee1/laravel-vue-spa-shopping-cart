@@ -55,6 +55,7 @@ class Filter extends Model
         'show_on_index',
         'show_on_header',
         'show_on_footer',
+        'active',
         'show_image',
         'image_origin',
         'image_preview',
@@ -69,6 +70,7 @@ class Filter extends Model
         'show_on_header' => 'integer',
         'show_on_footer' => 'integer',
         'show_image' => 'integer',
+        'active' => 'integer',
     ];
     public $timestamps = false;
     protected $parent = 'parent_id';
@@ -86,7 +88,7 @@ class Filter extends Model
     }
 
     public static function getFilters() {
-        return Filter::orderBy('sorting_order', 'asc')->get();
+        return Filter::where('active', true)->orderBy('sorting_order', 'asc')->get();
     }
 
     public static function getFiltersById($id) {
@@ -108,6 +110,7 @@ class Filter extends Model
         $model->show_on_index = request()->get('show_on_index');
         $model->show_on_header = request()->get('show_on_header');
         $model->show_on_footer = request()->get('show_on_footer');
+        $model->active = request()->get('active');
         $model->show_image = request()->get('show_image');
 
         if ($image_origin !== null && $image_preview !== null) {

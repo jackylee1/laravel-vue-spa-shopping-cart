@@ -11,7 +11,7 @@
 
         <template v-if="searchByText !== null && searchByText !== undefined && searchByText.length">
           <h4>
-            Текст поиска: {{searchByText}}
+            Результат поиска: {{searchByText}}
             <button @click="clearSearchByText"
                     class="btn"
                     style="padding: 5px;max-height: 25px;">

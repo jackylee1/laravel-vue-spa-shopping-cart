@@ -119,6 +119,7 @@
         this.$store.commit('updateSearchByText', this.textSearch);
         this.$router.push({ query: Object.assign({}, this.$route.query, { text: this.textSearch }) });
 
+        this.textSearch = null;
         this.$emit('getProducts');
       },
       setCountFavoriteProducts: function () {
@@ -129,9 +130,6 @@
       }
     },
     watch: {
-      'searchByText': function (value) {
-        this.textSearch = value;
-      },
       'favoriteStore': function () {
         this.setCountFavoriteProducts();
       },
@@ -144,6 +142,9 @@
       'cartStore.products': function () {
         this.setCountCartProducts();
       },
+      '$route': function () {
+        this.textSearch = null;
+      }
     }
   }
 </script>

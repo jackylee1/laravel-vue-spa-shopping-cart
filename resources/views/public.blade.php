@@ -269,7 +269,7 @@
             transform: scale(0.83333333) rotate(0deg);
             color: rgba(0, 0, 0, 0.45);
             position: absolute;
-            right: 12px;
+            right: 0px;
         }
         :root .ant-cascader-menu-item-expand .ant-cascader-menu-item-expand-icon,
         :root .ant-cascader-menu-item-expand .ant-cascader-menu-item-loading-icon {

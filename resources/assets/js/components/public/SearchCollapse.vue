@@ -76,14 +76,10 @@
         this.$store.commit('updateSearchByText', this.textSearch);
         this.$router.push({ query: Object.assign({}, this.$route.query, { text: this.textSearch }) });
 
+        this.textSearch = null;
         this.$emit('getProducts');
       },
     },
     components: { ListProductsAutoComplete },
-    watch: {
-      'searchByText': function (value) {
-        this.textSearch = value;
-      },
-    }
   }
 </script>

@@ -17,4 +17,5 @@ mix.js('resources/assets/js/app-admin.js', 'public/js')
     .extract([
         'vue', 'vue-clipboard2', 'vue-page-title', 'vue-router', 'vuex',
         'axios', 'bootstrap', 'jquery', 'array-to-tree', 'slugify',
+        'ant-design-vue'
     ]).version();

@@ -205,6 +205,11 @@ class Product extends Model
                 ->orWhereRaw('lower(like_name) like ?', ["%{$like_data['clear_spaces']}%"])
                 ->orWhereRaw('lower(like_name) like ?', ["%{$like_data['like']}%"])
 
+                ->orWhereRaw('lower(article) like ?', ["%{$like_data['str']}%"])
+                ->orWhereRaw('lower(article) like ?', ["%{$like_data['add_spaces']}%"])
+                ->orWhereRaw('lower(article) like ?', ["%{$like_data['clear_spaces']}%"])
+                ->orWhereRaw('lower(article) like ?', ["%{$like_data['like']}%"])
+
                 ->orWhereRaw('lower(like_preview_description) like ?', ["%{$like_data['str']}%"])
                 ->orWhereRaw('lower(like_preview_description) like ?', ["%{$like_data['add_spaces']}%"])
                 ->orWhereRaw('lower(like_preview_description) like ?', ["%{$like_data['clear_spaces']}%"])

@@ -168,6 +168,8 @@
         });
       },
       openLink: function (name) {
+        this.$store.commit('updateSearchByText', null);
+
         if (name === 'new' || name === 'promotional') {
           return this.$router.push({name: 'catalog', query: { sort: name }});
         }
@@ -175,6 +177,8 @@
         return this.$router.push({name: name});
       },
       openLinkByObject: function (obj) {
+        this.$store.commit('updateSearchByText', null);
+
         return this.$router.push(obj);
       }
     },
