@@ -111,9 +111,17 @@ class Type extends Model
     public static function types($public = false) {
         $types = Type::with(['categories' => function ($query) {
             $query->with(['filters' => function ($query) {
-                $query->whereHas('filter', function ($query) {
-                    $query->where('active', true);
+                $query->join('filters', function ($join) {
+                    $join->on('category_filters.filter_id', '=', 'filters.id');
+                    $join->where('active', true);
                 });
+                $query->orderBy('filters.sorting_order', 'asc');
+                $query->addSelect([
+                    'category_filters.id',
+                    'category_filters.filter_id',
+                    'category_filters.category_id',
+                    'filters.sorting_order',
+                ]);
             }]);
             $query->orderBy('sorting_order', 'asc');
         }])->with(['filters' => function ($query) {

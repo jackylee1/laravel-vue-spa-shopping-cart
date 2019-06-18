@@ -1,6 +1,13 @@
 <template>
   <div>
     <div v-if="this.renderArraySelect.length || typesAndCategories.length" class="row filter_wrapper">
+      <div v-if="searchByText !== null && searchByText !== undefined && searchByText.length" class="col-12 search_word">
+        <h4>
+          Результат поиска: <span class="words">{{searchByText}}</span>
+          <i type="button" @click="clearSearchByText" class="fas fa-times close_btn"></i>
+        </h4>
+      </div>
+
       <div class="col-12 filter_title text-center">
         <h3>
           <a @click="handleCollapseFilter" v-html="htmlBtnCollapse"></a>
@@ -22,26 +29,26 @@
 
             <template v-for="(filterRender, index) in this.renderArraySelect">
               <div class="col-md-3" v-if="getChildrenFilters(filterRender, index).length && selectFilters[index] !== undefined" style="padding-bottom: 5px">
-                  <multiselect :value="getActiveFilters(selectFilters[index])"
-                               :options="getChildrenFilters(filterRender, index)"
-                               @input="changeFilter"
-                               @open="changeActiveVModel(index)"
-                               label="name"
-                               :closeOnSelect="false"
-                               :searchable="false"
-                               track-by="id"
-                               :multiple="filterRender.type === 2"
-                               selectLabel=""
-                               deselectLabel=""
-                               placeholder=""
-                               noOptions="Нет данных"
-                               selectedLabel="Выбрано">
-                    <template slot="tag" slot-scope="{ option, remove }">
+                <multiselect :value="getActiveFilters(selectFilters[index])"
+                             :options="getChildrenFilters(filterRender, index)"
+                             @input="changeFilter"
+                             @open="changeActiveVModel(index)"
+                             label="name"
+                             :closeOnSelect="false"
+                             :searchable="false"
+                             track-by="id"
+                             :multiple="filterRender.type === 2"
+                             selectLabel=""
+                             deselectLabel=""
+                             placeholder=""
+                             noOptions="Нет данных"
+                             selectedLabel="Выбрано">
+                  <template slot="tag" slot-scope="{ option, remove }">
                       <span class="multiselect__tag">
                         <span>{{ option.name }}</span>
                       </span>
-                    </template>
-                  </multiselect>
+                  </template>
+                </multiselect>
               </div>
             </template>
           </div>
@@ -53,7 +60,6 @@
 
 <script>
   import {isMobileOnly} from 'mobile-device-detect';
-
   let arrayToTree = require('array-to-tree');
 
   export default {
@@ -61,17 +67,19 @@
     props: ['currentType', 'currentCategory'],
     mounted() {
       this.activeCollapseFilter = (!isMobileOnly);
-
       this.typesAndCategories = this.getTypeAndCategories();
+      this.searchByText = this.searchByTextStore;
 
       _.delay(() => {
         this.setRenderArray();
         this.setSelectFilters();
-
         this.emitGetProducts();
       }, 550);
     },
     computed: {
+      searchByTextStore: function () {
+        return this.$store.getters.searchByText;
+      },
       typesStore: function () {
         return this.$store.getters.types;
       },
@@ -116,14 +124,23 @@
         },
         selectTypeAndCategory: [],
         routeType: null,
-        routeCategory: null
+        routeCategory: null,
+        searchByText: null
       }
     },
     methods: {
+      clearSearchByText: function () {
+        this.$store.commit('updateSearchByText', null);
+        this.$router.push({ query: Object.assign(
+            {}, this.$route.query, {
+              text: null
+            }
+          )});
+        this.$emit('getProducts');
+      },
       takeTypeAndCategoryFromUrl: function () {
         let type = null;
         let tempTypeAndCategory = [];
-
         if (this.$route.query.type !== undefined && this.$route.query.type !== null) {
           type = this.typesStore.find((item) => item.slug === this.$route.query.type);
           if (type !== undefined && type !== null) {
@@ -145,7 +162,6 @@
             }
           }
         }
-
         this.selectTypeAndCategory = tempTypeAndCategory;
       },
       emitGetProducts: function () {
@@ -157,7 +173,6 @@
       },
       setTypeAndCategoryToUrl: function () {
         let typeCategoryLength = this.selectTypeAndCategory.length;
-
         if (typeCategoryLength > 0) {
           this.routeType = this.selectTypeAndCategory[0];
         }
@@ -170,7 +185,6 @@
         else {
           this.routeCategory = null;
         }
-
         this.routerPushData();
         this.emitGetProducts();
       },
@@ -179,23 +193,22 @@
         let lengthTypeAndCategories = this.selectTypeAndCategory.length;
         if (lengthTypeAndCategories === 1) {
           this.$router.push({ query: Object.assign(
-            {}, this.$route.query, { category: null }
-          )});
+              {}, this.$route.query, { category: null }
+            )});
         }
         if (lengthTypeAndCategories === 0) {
           this.$router.push({ query: Object.assign(
-            {}, this.$route.query, { type: null, category: null }
-          )});
+              {}, this.$route.query, { type: null, category: null }
+            )});
         }
         this.setTypeAndCategoryToUrl();
       },
       handleCollapseFilter: function () {
         this.htmlBtnCollapse = '';
-
         this.activeCollapseFilter = !this.activeCollapseFilter;
         this.htmlBtnCollapse += 'Фильтр товаров ';
         this.htmlBtnCollapse += (!this.activeCollapseFilter) ? '<i class="fas fa-chevron-down"></i>'
-                                                             : '<i class="fas fa-chevron-up"></i>';
+          : '<i class="fas fa-chevron-up"></i>';
       },
       changeActiveVModel: function (index) {
         this.activeVModel = index;
@@ -204,32 +217,27 @@
         if (idFilters === null || idFilters === undefined || idFilters.length === 0) {
           return false;
         }
-
         return _(this.filters).keyBy('id').at(idFilters).value();
       },
       getTypeAndCategories: function () {
         let types = _.cloneDeep(this.typesStore);
         return types.map((item) => {
-            item.children = item.categories;
-            delete item.categories;
-
-            item.children = arrayToTree(item.children, {
-              parentProperty: 'parent_id',
-              customID: 'id'
-            });
-
-            return item;
+          item.children = item.categories;
+          delete item.categories;
+          item.children = arrayToTree(item.children, {
+            parentProperty: 'parent_id',
+            customID: 'id'
           });
+          return item;
+        });
       },
       changeFilter: function (value) {
         this.selectFilters[this.activeVModel] = value;
         this.setFiltersToUrl();
-
         this.emitGetProducts();
       },
       routerPushData: function() {
         let params = {};
-
         if (this.$route.query.type !== null && this.$route.query.type !== undefined
           && this.routeType === null) {
           params.type = this.$route.query.type;
@@ -237,7 +245,6 @@
         else {
           params.type = this.routeType;
         }
-
         if (this.$route.query.category !== null && this.$route.query.type !== undefined
           && this.routeCategory === null) {
           params.category = this.$route.query.category;
@@ -245,16 +252,14 @@
         else {
           params.category = this.routeCategory;
         }
-
         params.filters = _.filter(this.selectFilters, (item) => item !== undefined);
         params.sort = (this.$route.query.sort !== undefined
-            && this.$route.query.sort !== null)
-            ? this.$route.query.sort
-            : 'all';
-
+          && this.$route.query.sort !== null)
+          ? this.$route.query.sort
+          : 'all';
         this.$router.push({ query: Object.assign(
-          {}, this.$route.query, params
-        )});
+            {}, this.$route.query, params
+          )});
       },
       setFiltersToUrl: function () {
         this.selectFilters = this.selectFilters.map((item) => {
@@ -271,20 +276,16 @@
           }
           return item;
         });
-
         this.routerPushData();
       },
       setSelectFilters: function () {
         let queryFilters = this.$router.currentRoute.query.filters;
-
         let filters = (queryFilters !== undefined && queryFilters.length > 0) ? queryFilters : this.mergeFilters();
         if (filters !== null && !Array.isArray(filters)) {
           filters = [filters];
         }
-
         let tempSelectFilters;
         tempSelectFilters = [];
-
         if (filters.length) {
           filters.forEach((filter, index) => {
             if (queryFilters !== undefined
@@ -301,7 +302,6 @@
             }
           });
         }
-
         tempSelectFilters = tempSelectFilters.map((item, index) => {
           if (typeof item === 'string' && item.indexOf(',') !== -1) {
             return item.split(',').map(item => parseInt(item));
@@ -313,12 +313,10 @@
             return parseInt(item);
           }
         });
-
         if (tempSelectFilters !== this.selectFilters) {
           //this.selectFilters = tempSelectFilters.map(item => this.handleCorrectVModel(item));
           this.selectFilters = tempSelectFilters;
         }
-
         this.setFiltersToUrl();
       },
       correctVModel: function (id) {
@@ -342,7 +340,6 @@
       mergeFilters: function () {
         let typeFilters = [];
         let categoryFilters = [];
-
         if (this.currentType !== null && this.currentCategory === null) {
           typeFilters = this.sortCurrentFilters(this.currentType.filters);
         }
@@ -354,7 +351,6 @@
           childrenCategoryFilters = _.flatten(childrenCategoryFilters);
           categoryFilters = this.sortCurrentFilters(_.unionBy(this.currentCategory.filters, childrenCategoryFilters, 'filter_id'));
         }
-
         if (this.currentCategory === null && this.currentType === null) {
           typeFilters = this.filters.map((filter) => {
             if (filter.type === 1 || filter.type === 2) {
@@ -365,14 +361,11 @@
           });
           typeFilters = _.filter(typeFilters, (item) => item !== undefined);
         }
-
         return _.unionBy(typeFilters, categoryFilters, 'filter_id')
       },
       setRenderArray: function () {
         this.renderArraySelect = [];
-
         let filters = this.mergeFilters();
-
         filters.forEach((filter) => {
           filter = this.filters.find((item) => {
             return item.id === filter.filter_id
@@ -384,7 +377,6 @@
             this.renderArraySelect.push(filter);
           }
         });
-
         this.renderArraySelect = _.orderBy(this.renderArraySelect, 'sorting_order', 'asc');
       },
       getChildrenFilters: function (filter, index) {
@@ -397,7 +389,6 @@
             tempFilters.push(item);
           }
         });
-
         let activeFilters = this.activeFilters.find((item) => {
           let type = (this.currentType !== null) ? this.currentType.id : null;
           let category = (this.currentCategory !== null) ? this.currentCategory.id : null;
@@ -408,7 +399,6 @@
             return activeFilters.filters.indexOf(item.id) !== -1;
           });
         }
-
         return _.orderBy(tempFilters, 'sorting_order', 'asc');
       },
       sortCurrentFilters: function (filters) {
@@ -416,10 +406,12 @@
       }
     },
     watch: {
+      'searchByTextStore': function (value) {
+        this.searchByText = value;
+      },
       '$route': function () {
         this.routeType = (this.currentType !== null) ? this.currentType.slug : this.currentType;
         this.routeCategory = (this.currentCategory !== null) ? this.currentCategory.slug : this.currentCategory;
-
         this.takeTypeAndCategoryFromUrl();
       },
       'selectTypeAndCategory': function () {
@@ -434,7 +426,6 @@
       watchTypeCategoryProps: function () {
         this.routeType = (this.currentType !== null) ? this.currentType.slug : this.currentType;
         this.routeCategory = (this.currentCategory !== null) ? this.currentCategory.slug : this.currentCategory;
-
         this.takeTypeAndCategoryFromUrl();
       },
       'typesStore': function () {
@@ -451,7 +442,6 @@
   .fade-enter, .fade-leave-to /* .fade-leave-active до версии 2.1.8 */ {
     opacity: 0;
   }
-
   span .ant-cascader-picker {
     min-height: 40px;
   }

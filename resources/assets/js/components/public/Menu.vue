@@ -170,6 +170,12 @@
       openLink: function (name) {
         this.$store.commit('updateSearchByText', null);
 
+        this.$router.push({ query: Object.assign(
+          {}, this.$route.query, {
+            filters: null
+          }
+        )});
+
         if (name === 'new' || name === 'promotional') {
           return this.$router.push({name: 'catalog', query: { sort: name }});
         }
@@ -177,6 +183,11 @@
         return this.$router.push({name: name});
       },
       openLinkByObject: function (obj) {
+        this.$router.push({ query: Object.assign(
+          {}, this.$route.query, {
+            filters: null
+          }
+        )});
         this.$store.commit('updateSearchByText', null);
 
         return this.$router.push(obj);

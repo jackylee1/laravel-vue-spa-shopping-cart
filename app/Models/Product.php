@@ -373,6 +373,12 @@ class Product extends Model
         }
 
         if (request()->filled('filters')) {
+            $id_categories = [];
+            if (request()->filled('category')) {
+                $id_categories = Category::getChildrenCategories(request()->get('category'));
+                $id_categories[] = request()->get('category');
+            }
+
             $request_filters = (is_array(request()->get('filters'))) ? request()->get('filters') : [request()->get('filters')];
             $request_filters = collect($request_filters)->map(function ($item) {
                 $str = str_replace(['[', ']', '"'], '', $item);
@@ -382,6 +388,7 @@ class Product extends Model
                 return [(int)$str];
             })->toArray();
             $filters = Filter::getFiltersById(arrayFlatten(array_filter($request_filters)));
+
             $filters = $filters->map(function ($filter) {
                 if ($filter->parent_id !== 0) {
                     return $filter->id;
@@ -427,7 +434,7 @@ class Product extends Model
                 $id_products = ProductInFilter::getProductIdsByFilters(
                     $filters,
                     (request()->filled('type')) ? request()->get('type') : null,
-                    (request()->filled('category')) ? request()->get('category') : null
+                    $id_categories
                 );
 
                 $query->where(function ($query) use ($id_products) {

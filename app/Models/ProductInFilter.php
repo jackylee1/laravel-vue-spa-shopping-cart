@@ -79,15 +79,13 @@ class ProductInFilter extends Model
         ProductInFilter::find($id)->delete();
     }
 
-    public static function getProductIdsByFilters($filters, $type_id = null, $category_id = null) {
+    public static function getProductIdsByFilters($filters, $type_id = null, $id_categories = []) {
         $query = ProductInFilter::query();
 
         if ($type_id !== null) {
             $query->where('type_id', $type_id);
         }
-        if ($category_id !== null) {
-            $id_categories = Category::getChildrenCategories($category_id);
-            $id_categories[] = $category_id;
+        if (count($id_categories)) {
             $query->whereHas('categories', function ($query) use ($id_categories) {
                 $query->whereIn('category_id', $id_categories);
             });

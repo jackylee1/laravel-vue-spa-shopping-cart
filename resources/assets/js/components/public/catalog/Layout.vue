@@ -228,13 +228,19 @@
 
                 if (res.data.active_filters !== undefined) {
                   let activeFiltersData = this.activeFilters;
-                  activeFiltersData.push({
-                    type_id: this.getTypeIdAndCategoryId().type_id,
-                    category_id: this.getTypeIdAndCategoryId().category_id,
-                    filters: res.data.active_filters
+                  let index = activeFiltersData.findIndex((item) => {
+                    return item.type_id === this.getTypeIdAndCategoryId().type_id
+                      && item.category_id === this.getTypeIdAndCategoryId().category_id
                   });
+                  if (index === -1) {
+                    activeFiltersData.push({
+                      type_id: this.getTypeIdAndCategoryId().type_id,
+                      category_id: this.getTypeIdAndCategoryId().category_id,
+                      filters: res.data.active_filters
+                    });
 
-                  this.$store.commit('updateActiveFilters', activeFiltersData);
+                    this.$store.commit('updateActiveFilters', activeFiltersData);
+                  }
                 }
 
                 this.setProducts(res.data.products);

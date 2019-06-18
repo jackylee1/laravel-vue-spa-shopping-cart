@@ -83,6 +83,14 @@ class Filter extends Model
         $this->count_children = 0;
     }
 
+    public function typeFilter() {
+        return $this->hasOne('App\Models\TypeFilter', 'filter_id', 'id');
+    }
+
+    public function categoryFilter() {
+        return $this->hasMany('App\Models\CategoryFilter', 'filter_id', 'id');
+    }
+
     private function deleteImages($model) {
         File::delete($this->path_image, [$model->image_preview, $model->image_origin]);
     }
@@ -91,12 +99,27 @@ class Filter extends Model
         return Filter::where('active', true)->orderBy('sorting_order', 'asc')->get();
     }
 
-    public static function getFiltersById($id) {
+    public static function getFiltersById($id, $check_type_and_category = false, $id_categories = []) {
+        $query = Filter::query();
+
+        if ($check_type_and_category) {
+            if (request()->filled('type')) {
+                /*$query->whereHas('typeFilter', function ($query) {
+                    $query->where('type_id', request()->get('type'));
+                });
+                if (count($id_categories) > 0) {
+                    $query->orWhereHas('CategoryFilter', function ($query) use ($id_categories) {
+                        $query->whereIn('category_id', $id_categories);
+                    });
+                }*/
+            }
+        }
+
         if (is_array($id)) {
-            return Filter::whereIn('id', $id)->get();
+            return $query->whereIn('id', $id)->get();
         }
         else {
-            return Filter::find($id);
+            return $query->find($id);
         }
     }
 
