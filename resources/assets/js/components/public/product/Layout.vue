@@ -75,6 +75,8 @@
       jquery.loadScript();
     },
     mounted() {
+      this.$scrollTo('#top_line', 650);
+
       if (this.products.data !== undefined && this.products.data.length) {
         this.product = this.products.data.find((item) => item.slug === this.$router.currentRoute.params.slug);
 
@@ -96,8 +98,6 @@
       else {
         this.productView();
       }
-
-      this.$scrollTo('#top_line', 650);
     },
     computed: {
       'products': function () {
@@ -269,6 +269,7 @@
       '$route' (to, from){
         this.breadcrumbs = [];
         this.productView();
+
         this.$scrollTo('#top_line', 650);
       },
       'types': function () {

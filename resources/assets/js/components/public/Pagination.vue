@@ -14,11 +14,16 @@
           <li class="page-item"
               v-for="page in this.pageLinks()"
               :key="page"
-              :class="(isActive(page) || page === '...') ? 'page-item disabled' : 'page-item'">
+              :class="(isActive(page) || page === '...' || page === '....') ? 'page-item disabled' : 'page-item'">
             <a class="page-link"
                @click="pageClicked(page)"
                href="javascript:void(0)">
-              {{ page }}
+              <template v-if="page === '...' || page === '....'">
+                {{'...'}}
+              </template>
+              <template v-else>
+                {{ page }}
+              </template>
             </a>
           </li>
           <li v-if="!checkIsMobile"
@@ -72,7 +77,7 @@
               arr.push('...');
               preDots = true;
             } else if (i > this.pagination.currentPage && !postDots) {
-              arr.push('...');
+              arr.push('....');
               postDots = true;
             }
           }
@@ -100,7 +105,7 @@
       },
 
       pageClicked: function (page) {
-        if (page === '...' ||
+        if (page === '...' || page === '....' ||
           page === this.pagination.currentPage ||
           page > this.pagination.totalPages ||
           page < 1) {

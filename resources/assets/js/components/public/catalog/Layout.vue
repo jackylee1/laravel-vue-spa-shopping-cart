@@ -47,16 +47,12 @@
     name: 'CatalogLayout',
     mixins: [mixinAlerts],
     mounted() {
-      this.$scrollTo('#top_line', 650);
-
       if (this.types.length) {
         this.setTypesAndBreadcrumbs();
       }
 
       this.$watch(vm => [vm.currentType, vm.currentCategory], val => {
         this.isLoading = true;
-
-        this.$scrollTo('#top_line', 650);
 
         let intervalId = setInterval(() => {
           let checkType = this.intervalData[0] === this.currentType;
@@ -186,6 +182,9 @@
           category_id: (this.currentCategory !== null) ? this.currentCategory.id : null
         };
       },
+      removeLoadActiveFilters: function (str) {
+        return str.replace('load_active_filter=1', '').replace('load_active_filter=0', '');
+      },
       getProducts: function (page = 1) {
         this.isLoading = true;
 
@@ -205,16 +204,14 @@
           load_active_filter: statusActiveFilters
         }) });
 
-        if (this.$router.currentRoute.fullPath === this.urlPrevious) {
+        if (this.removeLoadActiveFilters(this.$router.currentRoute.fullPath) === this.urlPrevious) {
           this.setProducts(this.productsStore);
         }
         else {
           setTimeout(() => {
-            if (this.$router.currentRoute.fullPath !== this.urlPrevious) {
+            if (this.removeLoadActiveFilters(this.$router.currentRoute.fullPath) !== this.urlPrevious) {
               this.$store.commit('updateTypePrevious', this.currentType);
               this.$store.commit('updateCategoryPrevious', this.currentCategory);
-
-              this.$store.commit('updateUrlPrevious', this.$router.currentRoute.fullPath);
 
               ApiProducts.get(page, {
                 type: this.getTypeIdAndCategoryId().type_id,
@@ -224,6 +221,8 @@
                 text: this.$store.getters.searchByText,
                 load_active_filter: statusActiveFilters
               }).then((res) => {
+                this.$store.commit('updateUrlPrevious', this.removeLoadActiveFilters(this.$router.currentRoute.fullPath));
+
                 this.$store.commit('updateProducts', res.data.products);
 
                 if (res.data.active_filters !== undefined) {

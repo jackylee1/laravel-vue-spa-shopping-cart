@@ -32,6 +32,7 @@
     name: 'IndexLayout',
     mounted() {
       this.$scrollTo('#top_line', 650);
+
       if (!this.loadIndex) {
         ApiPage.index().then((res) => {
           this.sliders = res.data.sliders;

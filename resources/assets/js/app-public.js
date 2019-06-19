@@ -45,6 +45,15 @@ const store = new Vuex.Store(StoreData);
 const router = new VueRouter({
   routes,
   mode: 'history',
+  scrollBehavior (to, from, savedPosition) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (savedPosition) {
+          return resolve(savedPosition);
+        }
+      }, 700);
+    });
+  }
 });
 
 initialize(store, router);

@@ -70,15 +70,20 @@
     name: 'Filters',
     props: ['currentType', 'currentCategory'],
     mounted() {
+      if (this.filters.length) {
+        this.waitFilters = false;
+      }
+
       this.activeCollapseFilter = (!isMobileOnly);
 
       this.searchByText = this.searchByTextStore;
 
       this.typesAndCategories = this.getTypeAndCategories();
 
+      let timeout = (this.urlPrevious !== this.removeLoadActiveFilters(this.$router.currentRoute.fullPath)) ? 1000 : 0;
       _.delay(() => {
         this.emitGetProducts();
-      }, 700);
+      }, timeout);
     },
     computed: {
       searchByTextStore: function () {
@@ -131,9 +136,13 @@
         routeType: null,
         routeCategory: null,
         searchByText: null,
+        waitFilters: true
       }
     },
     methods: {
+      removeLoadActiveFilters: function (str) {
+        return str.replace('load_active_filter=1', '').replace('load_active_filter=0', '');
+      },
       selectFiltersToArrayIds: function () {
         this.selectFilters = this.selectFilters.map((item) => {
           if (Array.isArray(item)) {
@@ -234,23 +243,25 @@
         return filters;
       },
       setRenderArray: function () {
-        this.renderArraySelect = [];
+        if (!this.waitFilters) {
+          this.renderArraySelect = [];
 
-        let filters = this.mergeFilters();
+          let filters = this.mergeFilters();
 
-        filters.forEach((filter) => {
-          filter = this.filters.find((item) => {
-            return item.id === filter.filter_id
+          filters.forEach((filter) => {
+            filter = this.filters.find((item) => {
+              return item.id === filter.filter_id
+            });
+            let index = this.renderArraySelect.findIndex((item) => {
+              return item.id === filter.id;
+            });
+            if (index === -1) {
+              this.renderArraySelect.push(filter);
+            }
           });
-          let index = this.renderArraySelect.findIndex((item) => {
-            return item.id === filter.id;
-          });
-          if (index === -1) {
-            this.renderArraySelect.push(filter);
-          }
-        });
 
-        this.renderArraySelect = _.orderBy(this.renderArraySelect, 'sorting_order', 'asc');
+          this.renderArraySelect = _.orderBy(this.renderArraySelect, 'sorting_order', 'asc');
+        }
       },
       handleCollapseFilter: function () {
         this.htmlBtnCollapse = '';
@@ -323,11 +334,11 @@
         )});
       },
       emitGetProducts: function () {
-        if (this.urlPrevious !== this.$router.currentRoute.fullPath) {
-          setTimeout(() => {
-            this.$emit('getProducts', this.$router.currentRoute.query.page);
-          }, 1000);
-        }
+        let timeout = (this.urlPrevious !== this.removeLoadActiveFilters(this.$router.currentRoute.fullPath)) ? 700 : 0;
+
+        setTimeout(() => {
+          this.$emit('getProducts', this.$router.currentRoute.query.page);
+        }, timeout);
       },
       handleTypeOrCategoryGetProducts: function () {
         let typeCategoriesLength = this.selectTypeAndCategories.length;
@@ -504,6 +515,7 @@
       '$route': function () {
         this.routeType = (this.currentType !== null) ? this.currentType.slug : this.currentType;
         this.routeCategory = (this.currentCategory !== null) ? this.currentCategory.slug : this.currentCategory;
+
         if (this.renderArraySelect.length === 0) {
           this.setRenderArray();
         }
@@ -532,6 +544,14 @@
       'searchByTextStore': function (value) {
         this.searchByText = value;
       },
+      'filters': function () {
+        this.waitFilters = false;
+      },
+      'waitFilters': function () {
+        if (!this.waitFilters && this.renderArraySelect.length === 0) {
+          this.setRenderArray();
+        }
+      }
     },
   }
 </script>
