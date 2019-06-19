@@ -177,7 +177,7 @@
           }
         )});
 
-        if (name === 'new' || name === 'promotional') {
+        if (name === 'new' || name === 'promotional' || name === 'all') {
           return this.$router.push({name: 'catalog', query: { sort: name }});
         }
 
