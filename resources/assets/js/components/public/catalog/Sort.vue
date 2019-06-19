@@ -49,7 +49,6 @@
           {value: 'from_cheap_to_expensive', name: 'от дешевых к дорогим'},
           {value: 'from_expensive_to_cheap', name: 'от дорогих к дешевым'},
           {value: 'popular', name: 'популярные'},
-          {value: 'new', name: 'новинки'},
           {value: 'promotional', name: 'акционные'},
         ];
       }

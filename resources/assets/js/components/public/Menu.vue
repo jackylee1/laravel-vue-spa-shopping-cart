@@ -7,7 +7,7 @@
             <div class="menu">
               <ul>
                 <li class="menu_link">
-                  <a class="menu_tab" @click="openLink('new')" href="javascript:void(0)">
+                  <a class="menu_tab" @click="openLink('all')" href="javascript:void(0)">
                     Новинки
                   </a>
                 </li>
