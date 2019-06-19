@@ -172,7 +172,8 @@
 
         this.$router.push({ query: Object.assign(
           {}, this.$route.query, {
-            filters: null
+            filters: null,
+            sort: 'all'
           }
         )});
 
@@ -185,7 +186,8 @@
       openLinkByObject: function (obj) {
         this.$router.push({ query: Object.assign(
           {}, this.$route.query, {
-            filters: null
+            filters: null,
+            sort: 'all'
           }
         )});
         this.$store.commit('updateSearchByText', null);
