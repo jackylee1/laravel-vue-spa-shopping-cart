@@ -17,6 +17,7 @@
 
         <Filters :currentType="currentType"
                  :currentCategory="currentCategory"
+                 v-on:changeIsLoading="changeIsLoading"
                  v-on:getProducts="getProducts"/>
 
         <Products :products="products"/>
@@ -185,6 +186,12 @@
       removeLoadActiveFilters: function (str) {
         return str.replace('load_active_filter=1', '').replace('load_active_filter=0', '');
       },
+      getSort: function () {
+        return (this.$route.query.sort !== undefined
+          && this.$route.query.sort !== null)
+          ? this.$route.query.sort
+          : 'all';
+      },
       getProducts: function (page = 1) {
         this.isLoading = true;
 
@@ -192,7 +199,8 @@
         if (this.activeFilters.length) {
           let selectActiveFilter = _.filter(this.activeFilters, {
             type_id: this.getTypeIdAndCategoryId().type_id,
-            category_id: this.getTypeIdAndCategoryId().category_id
+            category_id: this.getTypeIdAndCategoryId().category_id,
+            sort: this.getSort()
           });
           if (selectActiveFilter.length) {
             statusActiveFilters = 0;
@@ -230,12 +238,14 @@
                   let index = activeFiltersData.findIndex((item) => {
                     return item.type_id === this.getTypeIdAndCategoryId().type_id
                       && item.category_id === this.getTypeIdAndCategoryId().category_id
+                      && item.sort === this.getSort()
                   });
                   if (index === -1) {
                     activeFiltersData.push({
                       type_id: this.getTypeIdAndCategoryId().type_id,
                       category_id: this.getTypeIdAndCategoryId().category_id,
-                      filters: res.data.active_filters
+                      filters: res.data.active_filters,
+                      sort: this.getSort()
                     });
 
                     this.$store.commit('updateActiveFilters', activeFiltersData);
@@ -294,6 +304,9 @@
         }
         this.setMetaTags();
       },
+      changeIsLoading: function (value) {
+        this.isLoading = value;
+      }
     },
     watch: {
       'types': function () {

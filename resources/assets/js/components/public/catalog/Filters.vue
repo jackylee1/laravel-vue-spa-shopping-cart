@@ -79,8 +79,7 @@
       this.searchByText = this.searchByTextStore;
 
       this.typesAndCategories = this.getTypeAndCategories();
-
-      let timeout = (this.urlPrevious !== this.removeLoadActiveFilters(this.$router.currentRoute.fullPath)) ? 1000 : 0;
+      let timeout = (this.urlPrevious !== this.removeLoadActiveFilters(this.$router.currentRoute.fullPath)) ? 700 : 0;
       _.delay(() => {
         this.emitGetProducts();
       }, timeout);
@@ -183,11 +182,7 @@
       getChildrenFilters: function (filter) {
         let tempFilters = [];
 
-        let activeFilters = this.activeFilters.find((item) => {
-          let type = (this.currentType !== null) ? this.currentType.id : null;
-          let category = (this.currentCategory !== null) ? this.currentCategory.id : null;
-          return item.type_id === type && item.category_id === category
-        });
+        let activeFilters = this.getActiveFilters();
 
         if (activeFilters !== undefined) {
           this.filters.forEach((item) => {
@@ -431,7 +426,7 @@
         let category =  (this.currentCategory !== null) ? this.currentCategory.id : null;
 
         return this.activeFilters.find((item) => {
-          return item.type_id === type && item.category_id === category;
+          return item.type_id === type && item.category_id === category && item.sort === this.getSort();
         });
       },
       selectCorrectFiltersId: function (idFilters, activeFilters = null) {
