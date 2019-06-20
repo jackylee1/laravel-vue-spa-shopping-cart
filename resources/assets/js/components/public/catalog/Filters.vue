@@ -349,7 +349,9 @@
           this.routeCategory = null;
         }
 
-        return this.$router.push({ name: 'catalog', query: { type: this.routeType, category: this.routeCategory } });
+        this.renderArraySelect = [];
+        this.selectFilters = [];
+        return this.$router.push({ name: 'catalog', query: { type: this.routeType, category: this.routeCategory, filters: null } });
       },
       changeTypeOrCategories: function (value, selectedOptions) {
         this.selectTypeAndCategories = value;
@@ -362,8 +364,8 @@
         }
         if (lengthTypeAndCategories === 0) {
           this.$router.push({ query: Object.assign(
-              {}, this.$route.query, { type: null, category: null, sort: this.getSort() }
-            )});
+            {}, this.$route.query, { type: null, category: null, sort: this.getSort() }
+          )});
         }
 
         this.handleTypeOrCategoryGetProducts();
@@ -516,6 +518,9 @@
       },
       watchRouteTypeRouteCategory: function () {
         if (this.urlPrevious !== null) {
+          this.renderArraySelect = [];
+          this.selectFilters = [];
+
           this.$store.commit('updateSearchByText', null);
           this.$router.push({ query: Object.assign({}, this.$route.query, {text: null})});
         }
