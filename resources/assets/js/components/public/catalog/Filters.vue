@@ -231,11 +231,9 @@
           typeFilters = _.filter(typeFilters, (item) => item !== undefined);
         }
 
-        let filters = _.sortBy(_.unionBy(typeFilters, categoryFilters, 'filter_id'), (x) => {
+        return _.sortBy(_.unionBy(typeFilters, categoryFilters, 'filter_id'), (x) => {
           return _.findIndex(this.filters, y => x.filter_id === y.id);
         });
-
-        return filters;
       },
       setRenderArray: function () {
         if (!this.waitFilters) {
@@ -351,8 +349,7 @@
           this.routeCategory = null;
         }
 
-        this.setDataInUrl();
-        this.emitGetProducts();
+        return this.$router.push({ name: 'catalog', query: { type: this.routeType, category: this.routeCategory } });
       },
       changeTypeOrCategories: function (value, selectedOptions) {
         this.selectTypeAndCategories = value;
