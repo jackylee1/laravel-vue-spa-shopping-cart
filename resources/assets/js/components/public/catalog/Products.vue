@@ -12,7 +12,7 @@
                 <template v-if="product.status_bestseller">
                   <hr style="margin-top: 0px;margin-bottom: 0px;">
                   <p class="new">
-                    Топ<br>продаж
+                    Хит<br>продаж
                   </p>
                 </template>
               </div>
