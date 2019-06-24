@@ -31,6 +31,9 @@ class CreateProductsTable extends Migration
             $table->boolean('status')->default(true);
             $table->boolean('in_xml')->default(false);
 
+            $table->boolean('new')->default(false);
+            $table->boolean('status_bestseller')->default(false);
+
             $table->text('m_title')->nullable();
             $table->text('m_description')->nullable();
             $table->text('m_keywords')->nullable();

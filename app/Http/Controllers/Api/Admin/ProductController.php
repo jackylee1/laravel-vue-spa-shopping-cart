@@ -76,7 +76,8 @@ class ProductController extends Controller
             'm_title' => 'nullable|string|max:50000',
             'm_description' => 'nullable|string|max:50000',
             'm_keyword' => 'nullable|string|max:50000',
-            'in_xml' => 'nullable|boolean'
+            'in_xml' => 'nullable|boolean',
+            'status_bestseller' => 'nullable|boolean'
         ]);
         if (request()->filled('discount_start') && request()->filled('discount_end')) {
             $start_date = DateTimeTools::explodeRequestDateTime(request()->get('discount_start'));
@@ -120,7 +121,8 @@ class ProductController extends Controller
             'main_type' => 'Дефолтный тип товара',
             'main_type.type_id' => 'Тип товара для «хлебных крошек»',
             'main_type.category_id' => 'Категория для «хлебных крошек»',
-            'in_xml' => 'В XML'
+            'in_xml' => 'В XML',
+            'status_bestseller' => 'Топ продаж'
         ]);
     }
 
@@ -133,6 +135,7 @@ class ProductController extends Controller
             'selected_categories.*' => 'nullable|integer|exists:categories,id',
             'selected_filters' => 'nullable|array',
             'selected_filters.*' => 'nullable|integer|exists:filters,id',
+            'sort' => 'nullable|in:created_at,bestseller'
         ]);
         if ($validator->fails()) {
             return response()->json([

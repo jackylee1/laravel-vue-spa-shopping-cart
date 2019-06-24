@@ -20,7 +20,9 @@
                  v-on:changeIsLoading="changeIsLoading"
                  v-on:getProducts="getProducts"/>
 
-        <Products :products="products"/>
+        <Products v-on:getProducts="getProducts"
+                  :pagination="pagination"
+                  :products="products"/>
 
         <div v-if="products !== undefined && products.length === 0" class="alert alert-info" style="margin-top:20px; width: 100%">
           По запросу нет товаров
@@ -231,6 +233,13 @@
               }).then((res) => {
                 this.$store.commit('updateUrlPrevious', this.removeLoadActiveFilters(this.$router.currentRoute.fullPath));
 
+                let products = res.data.products;
+                if (this.$router.currentRoute.query.load_more !== undefined
+                  && parseInt(this.$router.currentRoute.query.load_more) === 1) {
+                  if (this.productsStore.data !== undefined) {
+                    products.data = this.productsStore.data.concat(products.data);
+                  }
+                }
                 this.$store.commit('updateProducts', res.data.products);
 
                 if (res.data.active_filters !== undefined) {

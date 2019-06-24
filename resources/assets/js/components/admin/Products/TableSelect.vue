@@ -129,6 +129,21 @@
         </template>
       </el-table-column>
       <el-table-column
+          label="Топ продаж"
+          min-width="70">
+        <template slot-scope="props">
+          <template v-if="props.row.status_bestseller">
+            <p>Да</p>
+          </template>
+          <template v-else>
+            <p>Нет</p>
+          </template>
+          <template v-if="props.row.bestseller !== null">
+            <small>продаж: {{props.row.bestseller.quantity}}</small>
+          </template>
+        </template>
+      </el-table-column>
+      <el-table-column
           fixed="right"
           min-width="150">
         <template slot-scope="props">

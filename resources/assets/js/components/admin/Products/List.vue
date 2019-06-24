@@ -61,6 +61,18 @@
           </el-option>
         </el-select>
       </el-form-item>
+
+      <el-form-item label="Порядок сортировки" prop="sort">
+        <el-select v-model="formSearch.sort" placeholder="">
+          <el-option
+              v-for="item in this.selectSort"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+
       <el-form-item>
         <el-button-group>
           <el-button type="default" @click="onResetSearch">
@@ -94,12 +106,11 @@
       <el-table-column
           prop="article"
           label="Артикул"
-          min-width="100">
+          min-width="60">
       </el-table-column>
       <el-table-column type="expand">
         <template slot-scope="props">
           <p>SEO URL: {{props.row.slug}}</p>
-          <p v-if="props.row.preview_description.length">Краткое описание: {{props.row.preview_description}}</p>
           <p v-if="props.row.discount_price > 0">Акцилнная цена: {{props.row.discount_price}}</p>
           <p v-if="props.row.date_inclusion">Дата включения: {{props.row.date_inclusion}}</p>
           <p>Дата добавления: {{props.row.created_at}}</p>
@@ -146,6 +157,21 @@
             <el-tooltip class="item" effect="dark" content="Отключен на сайте" placement="top-start">
               <i class="el-icon-circle-close-outline icons-on-table"></i>
             </el-tooltip>
+          </template>
+        </template>
+      </el-table-column>
+      <el-table-column
+          label="Топ продаж"
+          min-width="70">
+        <template slot-scope="props">
+          <template v-if="props.row.status_bestseller">
+            <p>Да</p>
+          </template>
+          <template v-else>
+            <p>Нет</p>
+          </template>
+          <template v-if="props.row.bestseller !== null">
+            <small>продаж: {{props.row.bestseller.quantity}}</small>
           </template>
         </template>
       </el-table-column>
@@ -295,6 +321,9 @@
       selectBoolean: function () {
         return this.$store.getters.selectDataBoolean;
       },
+      selectSort: function () {
+        return this.$store.getters.selectDataSort;
+      },
       filtersStore: function () {
         return this.$store.getters.filters;
       },
@@ -385,6 +414,7 @@
           selected_categories: [],
           selected_filters: [],
           only_discounts: 0,
+          sort: 'created_at'
         };
         this.oldFormSearch = this.formSearch;
         this.$store.commit('updateSearchProducts', this.formSearch);

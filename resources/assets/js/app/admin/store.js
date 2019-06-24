@@ -13,6 +13,10 @@ export default {
         { value: 'user', label: 'Пользователь' },
         { value: 'administration', label: 'Администрация' }
       ],
+      sort: [
+        { value: 'created_at', label: 'По дате' },
+        { value: 'bestseller', label: 'По количеству продаж' }
+      ],
       listPromotionalCodeStatuses: [
         { value: 1, label: 'Активные' },
         { value: 0, label: 'Использованные' }
@@ -59,6 +63,7 @@ export default {
         selected_categories: [],
         selected_filters: [],
         only_discounts: 0,
+        sort: 'created_at'
       },
       promotionalCodes: {
         q: '',
@@ -162,6 +167,9 @@ export default {
     },
     selectDataBoolean: function (state) {
       return state.selectData.boolean;
+    },
+    selectDataSort: function (state) {
+      return state.selectData.sort;
     },
     selectDataTextBlockDataTypes: function (state) {
       return state.selectData.textBlockDataTypes;

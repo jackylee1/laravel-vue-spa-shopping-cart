@@ -112,7 +112,7 @@
           return;
         }
 
-
+        this.$router.push({ query: Object.assign({}, this.$route.query, { load_more: 0 }) });
 
         this.$emit('pageChange', page);
         this.$scrollTo('#top_line', 450);

@@ -142,6 +142,17 @@
           </el-select>
         </el-form-item>
 
+        <el-form-item label="Топ продаж" prop="status_bestseller">
+          <el-select v-model="form.status_bestseller" placeholder="">
+            <el-option
+                v-for="item in this.selectBoolean"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+
         <PageElementsAlerts :alerts="alerts" :type="typeAlerts"/>
 
         <el-form-item>
@@ -1216,7 +1227,8 @@
           m_description: '',
           m_keywords: '',
           video: [],
-          in_xml: 0
+          in_xml: 0,
+          status_bestseller: 0
         }
       },
       setBreadcrumbElements: function () {

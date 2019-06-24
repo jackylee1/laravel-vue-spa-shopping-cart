@@ -45,7 +45,7 @@
       },
       getOptions: function () {
         return [
-          {value: 'all', name: 'все товары'},
+          {value: 'all', name: 'Новинки'},
           {value: 'from_cheap_to_expensive', name: 'от дешевых к дорогим'},
           {value: 'from_expensive_to_cheap', name: 'от дорогих к дешевым'},
           {value: 'popular', name: 'популярные'},
@@ -78,6 +78,7 @@
         this.sort = this.$route.query.sort;
       },
       'sort': function (value) {
+        this.$store.commit('updateEventApp', true);
         this.$router.push({ query: Object.assign({}, this.$route.query, { sort: value }) });
 
         this.$emit('updateSort', value);

@@ -85,6 +85,9 @@
       }, timeout);
     },
     computed: {
+      eventApp: function () {
+        return this.$store.getters.eventApp;
+      },
       searchByTextStore: function () {
         return this.$store.getters.searchByText;
       },
@@ -165,6 +168,8 @@
 
         this.selectFilters[this.activeVModel] = filters;
         this.selectFiltersToArrayIds();
+
+
 
         this.setDataInUrl();
         this.emitGetProducts();
@@ -321,6 +326,7 @@
 
         params.filters = this.selectFilters;
         params.sort = this.getSort();
+        params.page = 1;
 
         this.$router.push({ query: Object.assign(
           {}, this.$route.query, params
@@ -515,6 +521,13 @@
         }
 
         this.setSelectTypeAndCategories();
+      },
+      'eventApp': function (eventApp) {
+        if (eventApp) {
+          this.renderArraySelect = [];
+          this.selectFilters = [];
+          this.$store.commit('updateEventApp', false);
+        }
       },
       watchRouteTypeRouteCategory: function () {
         if (this.urlPrevious !== null) {

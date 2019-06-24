@@ -1,10 +1,21 @@
 <template>
   <div>
     <template v-if="products !== undefined && products.length">
-      <template v-for="(productsChunk, index) in _.chunk(products, 4)">
-        <div class="row category_items">
+      <div class="row category_items">
+        <template v-for="(productsChunk, index) in _.chunk(products, 4)">
           <template v-for="(product, productIndex) in productsChunk">
             <div class="col-md-3 col-sm-6 col-6 the_items_card">
+              <div class="labels" v-if="product.new || product.status_bestseller">
+                <p v-if="product.new" class="new">
+                  Новый<br>товар
+                </p>
+                <template v-if="product.status_bestseller">
+                  <hr style="margin-top: 0px;margin-bottom: 0px;">
+                  <p class="new">
+                    Топ<br>продаж
+                  </p>
+                </template>
+              </div>
               <div class="thumb-wrapper">
                 <div class="img-box">
                   <router-link :to="{name: 'product', params: {slug: product.slug}}">
@@ -120,8 +131,13 @@
               </div>
             </template>
           </template>
+        </template>
+
+        <div v-if="pagination.currentPage < pagination.totalPages"
+             class="col-12 show_more_bottom">
+          <button @click="loadMoreProducts">Показать еще <i class="fas fa-sync-alt"></i></button>
         </div>
-      </template>
+      </div>
     </template>
   </div>
 </template>
@@ -137,7 +153,7 @@
     name: 'Products',
     mixins: [mixinFavorite, mixinCart, mixinAlerts],
     components: {Errors, RenderAvailable},
-    props: ['products'],
+    props: ['products', 'pagination'],
     computed: {
       _() {
         return _;
@@ -150,6 +166,10 @@
       }
     },
     methods: {
+      loadMoreProducts: function () {
+        this.$router.push({ query: Object.assign({}, this.$route.query, { load_more: 1 }) });
+        this.$emit('getProducts', this.pagination.currentPage + 1);
+      },
       quickView: function (product) {
         this.idAvailable = _.first(product.available);
         if (this.idAvailable !== undefined) {

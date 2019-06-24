@@ -33,6 +33,7 @@ export default {
     settings: [],
     indexMediaFiles: [],
     activeFilters: [],
+    eventApp: false
   },
   getters: {
     currentUser: function (state) {
@@ -121,6 +122,9 @@ export default {
     },
     activeFilters: function (state) {
       return state.activeFilters;
+    },
+    eventApp: function (state) {
+      return state.eventApp
     }
   },
   mutations: {
@@ -222,6 +226,9 @@ export default {
     },
     updateActiveFilters: function (state, payload) {
       state.activeFilters = payload;
+    },
+    updateEventApp: function (state, payload) {
+      state.eventApp = payload;
     }
   }
 };

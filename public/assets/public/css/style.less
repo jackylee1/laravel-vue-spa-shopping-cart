@@ -658,6 +658,35 @@ h1 {
             }
         }
 
+        .show_more_top {
+            text-align: center;
+
+            button {
+                background: #fff;
+                border: none;
+                color: #444;
+                font-size: 16px;
+                text-align: center;
+                cursor: pointer;
+                transition: all 0.2s;
+
+                .fas {
+                    font-size: 10px;
+                    transition: all 0.2s;
+                }
+
+                &:hover {
+                    color: #df1e30;
+
+                    .fas {
+                        -webkit-transform: rotate(180deg);  /* to support Safari and Android browser */
+                        -ms-transform: rotate(180deg);      /* to support IE 9 */
+                        transform: rotate(180deg);
+                    }
+                }
+            }
+        }
+
         .filter_title {
 
             h3 {
@@ -731,6 +760,24 @@ h1 {
 
         //Замена класса для quick view
         .the_items_card {
+            position: relative;
+
+            .labels {
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                font-size: 12px;
+                box-shadow: 0 0 6px #00000029;
+                line-height: 16px;
+                font-family: 'Exo 2', sans-serif;
+                font-weight: 600;
+                font-style: italic;
+                z-index: 1000;
+                text-transform: uppercase;
+                padding: 10px;
+                background: #ffffff7a;
+            }
+
             .quick_view {
                 width: 83%;
                 text-align: center;
@@ -777,6 +824,24 @@ h1 {
                         color: #df1e30;
                     }
                 }
+
+                .item_img_modal {
+                    .labels {
+                        position: absolute;
+                        top: 10px;
+                        left: 10px;
+                        font-size: 12px;
+                        box-shadow: 0 0 6px #00000029;
+                        line-height: 20px;
+                        font-family: 'Exo 2', sans-serif;
+                        font-weight: 600;
+                        font-style: italic;
+                        z-index: 1000;
+                        text-transform: uppercase;
+                        padding: 10px;
+                        background: #ffffff7a;
+                    }
+                }
             }
             
             .variations {
@@ -812,6 +877,35 @@ h1 {
 
                     input {
                         display: none;
+                    }
+                }
+            }
+        }
+
+        .show_more_bottom {
+            text-align: center;
+
+            button {
+                background: #fff;
+                border: none;
+                color: #444;
+                font-size: 16px;
+                text-align: center;
+                cursor: pointer;
+                transition: all 0.2s;
+
+                .fas {
+                    font-size: 10px;
+                    transition: all 0.2s;
+                }
+
+                &:hover {
+                    color: #df1e30;
+
+                    .fas {
+                        -webkit-transform: rotate(180deg);  /* to support Safari and Android browser */
+                        -ms-transform: rotate(180deg);      /* to support IE 9 */
+                        transform: rotate(180deg);
                     }
                 }
             }
@@ -2597,6 +2691,10 @@ h1 {
                 .collapse:not(.show) {
                     display: none;
                 }
+            }
+
+            .show_more_top {
+                margin-bottom: 35px;
             }
         }
 

@@ -409,6 +409,12 @@ class Order extends Model
     protected function addProduct() {
         $order = Order::find(request()->get('order_id'));
         $product = Product::getProduct(request()->get('product_id'));
+
+        $bestseller = $product->bestseller()->firstOrCreate([]);
+        $bestseller->update([
+            'quantity' => $bestseller->quantity + request()->get('quantity')
+        ]);
+
         $available = $product->available()->where('id', request()->get('product_available_id'))->first();
         $available->update([
             'quantity' => $available->quantity - request()->get('quantity')
@@ -439,10 +445,18 @@ class Order extends Model
     protected function deleteProduct() {
         $order = Order::find(request()->get('order_id'));
         $order_product = $order->products->where('id', request()->get('order_product_id'))->first();
+
         $available = $order_product->available()->where('id', $order_product->product_available_id)->first();
         $available->update([
             'quantity' => $order_product->quantity + $available->quantity
         ]);
+
+        $bestseller = Product::getProduct($order_product->product_id)->bestseller()->firstOrCreate([]);
+        $difference_quantity = $bestseller->quantity - $available->quantity;
+        $bestseller->update([
+            'quantity' => ($difference_quantity < 0) ? 0 : $difference_quantity
+        ]);
+
         $order->products()->where('id', request()->get('order_product_id'))->delete();
         $products = $order->products->filter(function ($item) {
             return $item->id !== request()->get('order_product_id');

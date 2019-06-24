@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Model;
 use App\Tools\File;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -99,7 +100,8 @@ class Product extends Model
         'm_title',
         'm_description',
         'm_keywords',
-        'in_xml'
+        'in_xml',
+        'status_bestseller'
     ];
 
     protected $casts = [
@@ -110,6 +112,7 @@ class Product extends Model
         'main_image' => 'integer',
         'status' => 'integer',
         'in_xml' => 'integer',
+        'status_bestseller' => 'integer',
         'date_inclusion' => 'date'
     ];
 
@@ -226,11 +229,11 @@ class Product extends Model
     }
 
     public function scopeNewProducts($query) {
-        return $query->whereBetween('created_at', [Carbon::now()->subDays(5), Carbon::now()]);
+        return $query->whereBetween('created_at', [Carbon::now()->subMonths(1), Carbon::now()]);
     }
 
     public function scopeJoinBestseller($query) {
-        return $query->leftJoin('product_bestsellers', function ($join) {
+        return $query->join('product_bestsellers', function ($join) {
             $join->on('products.id', '=', 'product_bestsellers.product_id');
             $join->addSelect([
                 'product_bestsellers.product_id',
@@ -248,6 +251,9 @@ class Product extends Model
 
     protected function getProducts() {
         $query = Product::query();
+
+        $query->select(['products.*']);
+
         if (request()->filled('q')) {
             $like_data = getLikeData(request()->get('q'));
             $query->whereRaw('lower(like_name) like ?', ["%{$like_data['str']}%"])
@@ -279,9 +285,32 @@ class Product extends Model
             });
         }
 
-        $products = $query->orderBy('created_at', 'desc')->paginate(10);
+        if (request()->filled('sort')) {
+            switch (request()->get('sort')) {
+                case 'created_at':
+                    $query->orderBy('created_at', 'desc');
+                    break;
+                case 'bestseller':
+                    $query->join('product_bestsellers', function ($join) {
+                        $join->on('products.id', '=', 'product_bestsellers.product_id');
+                    });
+                    $query->addSelect([
+                        'product_bestsellers.id as product_bestseller_id',
+                        'product_bestsellers.quantity as product_bestseller_quantity',
+                        'product_bestsellers.product_id as product_bestseller_product_id',
+                    ]);
+                    $query->orderByDesc('product_bestseller_quantity');
+                    break;
+            }
+        }
+        else {
+            $query->orderBy('created_at', 'desc');
+        }
+
+        $products = $query->paginate(12);
 
         ProductTool::checkRelevanceDiscount($products->items());
+        ProductTool::checkNewProducts($products->items());
 
         return $products;
     }
@@ -289,6 +318,7 @@ class Product extends Model
     public static function getProduct($id) {
         $product = Product::find($id);
         $product = ProductTool::checkRelevanceDiscount($product);
+        $product = ProductTool::checkNewProducts($product);
 
         return $product;
     }
@@ -302,6 +332,7 @@ class Product extends Model
         }])->allSelectAndCurrentPrice()->first();
 
         $product = ProductTool::checkRelevanceDiscount($product);
+        $product = ProductTool::checkNewProducts($product);
 
         return $product;
     }
@@ -346,6 +377,7 @@ class Product extends Model
             'products.created_at',
             'products.status',
             'products.date_inclusion',
+            'products.main_image',
             'products.main_image',
             DB::raw('IF(products.discount_price IS NOT NULL, products.discount_price, products.price) as current_price')
         ]);
@@ -486,10 +518,11 @@ class Product extends Model
             $products = $query->where('in_xml', true)->disableCache()->get();
         }
         else {
-            $products = (request()->filled('limit')) ? $query->limit(request()->get('limit'))->get() : $query->paginate(12);
+            $products = (request()->filled('limit')) ? $query->limit(request()->get('limit'))->get() : $query->paginate(16);
         }
 
         ProductTool::checkRelevanceDiscount((request()->filled('limit') || $all) ? $products : $products->items());
+        ProductTool::checkNewProducts((request()->filled('limit') || $all) ? $products : $products->items());
 
         return $products;
     }
@@ -530,8 +563,13 @@ class Product extends Model
         $model->m_description = request()->get('m_description');
         $model->m_keywords = request()->get('m_keywords');
         $model->in_xml = request()->get('in_xml');
+        $model->status_bestseller = request()->get('status_bestseller');
 
         $model->save();
+
+        if (isset($model->bestseller) && $model->bestseller === null) {
+            $model->bestseller()->create([]);
+        }
 
         if (request()->filled('main_type')) {
             $type = $model->mainType()->first();

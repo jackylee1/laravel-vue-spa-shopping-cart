@@ -48,4 +48,43 @@ class ProductTool
         }
         return self::$products;
     }
+
+    /**
+     * @param $product
+     * @return mixed
+     */
+    private static function handleCheckNewProducts($product) {
+        $current_datetime = Carbon::now();
+        $datetime_sub_months = Carbon::now()->subMonths(1);
+
+        $created_at = Carbon::parse($product->created_at);
+        $old_new_status = $product->new;
+        if ($created_at->gte($datetime_sub_months) && $created_at->lte($current_datetime)) {
+            $product->new = 1;
+        }
+
+        if ($old_new_status !== $product->new) {
+            $product->save();
+        }
+
+        return $product;
+    }
+
+    public static function checkNewProducts($products) {
+        self::$products = $products;
+        if (is_array(self::$products)) {
+            self::$products = collect(self::$products);
+        }
+        switch (self::$products) {
+            case (self::$products instanceof Model):
+                self::$products = self::handleCheckNewProducts(self::$products);
+                break;
+            case (self::$products instanceof Collection):
+                self::$products->each(function ($product) {
+                    return self::handleCheckNewProducts($product);
+                });
+                break;
+        }
+        return self::$products;
+    }
 }
