@@ -50,7 +50,13 @@
     props: ['currentCategory', 'currentType', 'selectFilters'],
     created: function () {
       this.options = this.getOptions;
-      this.perPage = this.perPageStore;
+    },
+    mounted: function () {
+      this.perPage = (this.$route.query.per_page !== null && this.$route.query.per_page !== undefined)
+        ? this.$route.query.per_page : this.perPageStore;
+      if (this.perPage !== this.perPageStore) {
+        this.$store.commit('updatePerPage', this.perPage);
+      }
     },
     computed: {
       getIsMobile: function () {
@@ -90,7 +96,12 @@
         }
       },
       getSelectPerPage: function (value) {
-        return this.perPageOptions.find(item => item.value === value) || {
+        if (value === null) {
+          value = (this.$route.query.per_page !== null && this.$route.query.per_page !== undefined)
+            ? this.$route.query.per_page : this.perPageStore;
+        }
+
+        return this.perPageOptions.find(item => item.value == value) || {
           name: '',
           value: ''
         }
@@ -107,7 +118,9 @@
         this.sort = value;
       },
       '$route.query.per_page': function (value) {
-        this.perPage = value;
+        if (value !== undefined) {
+          this.perPage = value;
+        }
       },
       '$route': function (to, from) {
         this.sort = this.$route.query.sort;

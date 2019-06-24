@@ -342,7 +342,9 @@
         this.getProducts();
       },
       'perPage': function (perPage) {
-        if (this.urlPrevious !== null) {
+        if (this.urlPrevious !== null
+          && this.$router.currentRoute.query.page !== undefined
+          && this.$router.currentRoute.query.page !== null) {
           let page = parseInt(this.$router.currentRoute.query.page);
           let lastPage = Math.ceil(this.productsStore.total/perPage);
 
