@@ -628,6 +628,38 @@ h1 {
         .active {
             margin-bottom: 0;
         }
+
+        .sort {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+
+            p {
+                width: 40%;
+            }
+
+            .dropdown {
+                width: 60%;
+            }
+        }
+
+        .show_on_page {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+
+            p {
+                width: 60%;
+            }
+
+            .dropdown {
+                width: 40%;
+
+                .dropdown-item {
+                    padding: 5px;
+                }
+            }
+        }
     }
     .filters {
         text-align: right;
@@ -765,14 +797,14 @@ h1 {
             .labels {
                 position: absolute;
                 top: 10px;
-                left: 10px;
+                left: 20px;
                 font-size: 12px;
                 box-shadow: 0 0 6px #00000029;
                 line-height: 16px;
                 font-family: 'Exo 2', sans-serif;
                 font-weight: 600;
                 font-style: italic;
-                z-index: 1000;
+                z-index: 10;
                 text-transform: uppercase;
                 padding: 10px;
                 background: #ffffff7a;

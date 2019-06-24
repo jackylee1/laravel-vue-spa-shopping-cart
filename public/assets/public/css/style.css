@@ -515,6 +515,31 @@ h1 {
 .wrapper .titles_top .active {
   margin-bottom: 0;
 }
+.wrapper .titles_top .sort {
+  display: flex;
+  align-items: center;
+  padding: 15px 0;
+}
+.wrapper .titles_top .sort p {
+  width: 40%;
+}
+.wrapper .titles_top .sort .dropdown {
+  width: 60%;
+}
+.wrapper .titles_top .show_on_page {
+  display: flex;
+  align-items: center;
+  padding: 15px 0;
+}
+.wrapper .titles_top .show_on_page p {
+  width: 60%;
+}
+.wrapper .titles_top .show_on_page .dropdown {
+  width: 40%;
+}
+.wrapper .titles_top .show_on_page .dropdown .dropdown-item {
+  padding: 5px;
+}
 .wrapper .filters {
   text-align: right;
 }

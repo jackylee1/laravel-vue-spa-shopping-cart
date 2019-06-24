@@ -518,7 +518,11 @@ class Product extends Model
             $products = $query->where('in_xml', true)->disableCache()->get();
         }
         else {
-            $products = (request()->filled('limit')) ? $query->limit(request()->get('limit'))->get() : $query->paginate(16);
+            $per_page = 16;
+            if (request()->filled('per_page')) {
+                $per_page = request()->get('per_page');
+            }
+            $products = (request()->filled('limit')) ? $query->limit(request()->get('limit'))->get() : $query->paginate($per_page);
         }
 
         ProductTool::checkRelevanceDiscount((request()->filled('limit') || $all) ? $products : $products->items());

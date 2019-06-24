@@ -12,6 +12,7 @@
 
         <Sort v-on:getProducts="getProducts"
               v-on:updateSort="updateSort"
+              v-on:updatePerPage="updatePerPage"
               :currentCategory="currentCategory"
               :currentType="currentType"/>
 
@@ -101,6 +102,7 @@
         isFullPage: true,
         products: [],
         sort: (this.$route.query.sort !== undefined && this.$route.query.sort !== null) ? this.$route.query.sort : 'all',
+        perPage: (this.$route.query.per_page !== undefined && this.$route.query.per_page !== null) ? this.$route.query.per_page : 16,
         pagination: {
           currentPage: 1,
           totalPages: 1,
@@ -170,6 +172,9 @@
       updateSort: function (value) {
         this.sort = value;
       },
+      updatePerPage: function (value) {
+        this.perPage = value;
+      },
       setProducts: function (products) {
         this.pagination.currentPage = products.current_page;
         this.pagination.totalPages = products.last_page;
@@ -228,6 +233,7 @@
                 category: this.getTypeIdAndCategoryId().category_id,
                 filters: this.$route.query.filters,
                 sort: this.sort,
+                per_page: this.perPage,
                 text: this.$store.getters.searchByText,
                 load_active_filter: statusActiveFilters
               }).then((res) => {
@@ -327,6 +333,9 @@
         this.setTypesAndBreadcrumbs();
       },
       'sort': function () {
+        this.getProducts();
+      },
+      'perPage': function () {
         this.getProducts();
       }
     },

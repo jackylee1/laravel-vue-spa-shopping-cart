@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="row titles_top">
-      <div class="col-md-6 col-12 my-auto">
+      <div class="col-md-5 col-12 my-auto">
         <template v-if="currentCategory !== null">
           <h1 class="category_title">{{currentCategory.name}}</h1>
         </template>
@@ -9,11 +9,8 @@
           <h1 class="category_title">{{currentType.name}}</h1>
         </template>
       </div>
-      <div :class="(getIsMobile) ? 'col-12 sort text-center my-auto' : 'col-md-3 col-6 sort righted my-auto'">
+      <div class="col-lg-4 col-md-5 col-12 sort my-auto" style="padding: 5px">
         <p>Сортировка:</p>
-      </div>
-      <div :style="(getIsMobile) ? 'padding-bottom: 25px;' : ''"
-           :class="(getIsMobile) ? 'col-12 my-auto' : 'col-md-3 col-6 my-auto'">
         <multiselect :value="getSelectSort(sort)"
                      :options="options"
                      @input="onChangeSort"
@@ -22,7 +19,22 @@
                      selectLabel=""
                      placeholder=""
                      deselectLabel=""
-                     selectedLabel="Выбрано"
+                     selectedLabel=""
+                     track-by="value">
+        </multiselect>
+      </div>
+
+      <div class="col-lg-3 col-md-3 col-12 show_on_page" style="padding: 5px">
+        <p>Показать:</p>
+        <multiselect :value="getSelectPerPage(perPage)"
+                     :options="perPageOptions"
+                     @input="onChangePerPage"
+                     label="name"
+                     :searchable="false"
+                     selectLabel=""
+                     placeholder=""
+                     deselectLabel=""
+                     selectedLabel=""
                      track-by="value">
         </multiselect>
       </div>
@@ -38,10 +50,14 @@
     props: ['currentCategory', 'currentType', 'selectFilters'],
     created: function () {
       this.options = this.getOptions;
+      this.perPage = this.perPageStore;
     },
     computed: {
       getIsMobile: function () {
         return isMobileOnly;
+      },
+      perPageStore: function () {
+        return this.$store.getters.perPage;
       },
       getOptions: function () {
         return [
@@ -56,7 +72,14 @@
     data() {
       return {
         sort: this.$route.query.sort,
-        options: []
+        options: [],
+        perPage: null,
+        perPageOptions: [
+          {value: 16, name: '16 шт.'},
+          {value: 32, name: '32 шт.'},
+          {value: 50, name: '50 шт.'},
+          {value: 100, name: '100 шт.'},
+        ]
       }
     },
     methods: {
@@ -66,13 +89,25 @@
           value: ''
         }
       },
+      getSelectPerPage: function (value) {
+        return this.perPageOptions.find(item => item.value === value) || {
+          name: '',
+          value: ''
+        }
+      },
       onChangeSort: function (sort) {
         this.sort = sort.value;
+      },
+      onChangePerPage: function (perPage) {
+        this.perPage = perPage.value;
       }
     },
     watch: {
       '$route.query.sort': function (value) {
         this.sort = value;
+      },
+      '$route.query.per_page': function (value) {
+        this.perPage = value;
       },
       '$route': function (to, from) {
         this.sort = this.$route.query.sort;
@@ -82,6 +117,12 @@
         this.$router.push({ query: Object.assign({}, this.$route.query, { sort: value }) });
 
         this.$emit('updateSort', value);
+      },
+      'perPage': function (value) {
+        this.$router.push({ query: Object.assign({}, this.$route.query, { par_page: value }) });
+
+        this.$store.commit('updatePerPage', value);
+        this.$emit('updatePerPage', value);
       }
     }
   }

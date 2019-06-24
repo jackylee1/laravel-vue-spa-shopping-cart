@@ -42,6 +42,7 @@
                                selectLabel=""
                                deselectLabel=""
                                placeholder=""
+                               open-direction="top"
                                noOptions="Нет данных"
                                selectedLabel="Выбрано">
                     <template slot="tag" slot-scope="{ option, remove }">
@@ -534,8 +535,8 @@
           this.renderArraySelect = [];
           this.selectFilters = [];
 
-          this.setRenderArray();
-          this.setSelectTypeAndCategories();
+          //this.setRenderArray();
+          //this.setSelectTypeAndCategories();
 
           this.$store.commit('updateSearchByText', null);
           this.$router.push({ query: Object.assign({}, this.$route.query, {text: null})});

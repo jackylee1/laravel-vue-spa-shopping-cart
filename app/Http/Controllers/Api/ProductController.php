@@ -36,7 +36,8 @@ class ProductController extends Controller
             'type' => 'nullable|integer|exists:types,id',
             'category' => 'nullable|integer',
             'sort' => 'nullable|in:all,from_cheap_to_expensive,from_expensive_to_cheap,popular,new,promotional',
-            'load_active_filter' => 'nullable|boolean'
+            'load_active_filter' => 'nullable|boolean',
+            'per_page' => 'nullable|integer|in:16,32,50,100'
         ]);
         $this->setValidateAttribute([
             'type' => 'Тип продукции',

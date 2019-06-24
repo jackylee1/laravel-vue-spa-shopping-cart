@@ -33,7 +33,8 @@ export default {
     settings: [],
     indexMediaFiles: [],
     activeFilters: [],
-    eventApp: false
+    eventApp: false,
+    perPage: 16
   },
   getters: {
     currentUser: function (state) {
@@ -125,6 +126,9 @@ export default {
     },
     eventApp: function (state) {
       return state.eventApp
+    },
+    perPage: function (state) {
+      return state.perPage;
     }
   },
   mutations: {
@@ -229,6 +233,9 @@ export default {
     },
     updateEventApp: function (state, payload) {
       state.eventApp = payload;
+    },
+    updatePerPage: function (state, payload) {
+      state.perPage = payload;
     }
   }
 };
