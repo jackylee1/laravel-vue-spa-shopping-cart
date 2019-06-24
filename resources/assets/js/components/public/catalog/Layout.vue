@@ -199,7 +199,62 @@
           ? this.$route.query.sort
           : 'all';
       },
-      getProducts: function (page = 1) {
+      apiGetProducts: function (page, statusActiveFilters) {
+        console.log('api products');
+        this.$store.commit('updateTypePrevious', this.currentType);
+        this.$store.commit('updateCategoryPrevious', this.currentCategory);
+
+        this.$store.commit('updateUrlPrevious', this.removeUnnecessaryFromURL(this.$router.currentRoute.fullPath));
+
+        ApiProducts.get(page, {
+          type: this.getTypeIdAndCategoryId().type_id,
+          category: this.getTypeIdAndCategoryId().category_id,
+          filters: this.$route.query.filters,
+          sort: this.sort,
+          per_page: this.perPage,
+          text: this.$store.getters.searchByText,
+          load_active_filter: statusActiveFilters
+        }).then((res) => {
+          let products = res.data.products;
+          if (this.$router.currentRoute.query.load_more !== undefined
+            && parseInt(this.$router.currentRoute.query.load_more) === 1) {
+            if (this.productsStore.data !== undefined) {
+              products.data = this.productsStore.data.concat(products.data);
+            }
+          }
+          this.$store.commit('updateProducts', res.data.products);
+
+          if (res.data.active_filters !== undefined) {
+            let activeFiltersData = this.activeFilters;
+            let index = activeFiltersData.findIndex((item) => {
+              return item.type_id === this.getTypeIdAndCategoryId().type_id
+                && item.category_id === this.getTypeIdAndCategoryId().category_id
+                && item.sort === this.getSort()
+            });
+            if (index === -1) {
+              activeFiltersData.push({
+                type_id: this.getTypeIdAndCategoryId().type_id,
+                category_id: this.getTypeIdAndCategoryId().category_id,
+                filters: res.data.active_filters,
+                sort: this.getSort()
+              });
+
+              this.$store.commit('updateActiveFilters', activeFiltersData);
+            }
+          }
+
+          this.setProducts(res.data.products);
+        }).catch((error) => {
+          this.alerts = error.response.data.errors;
+          this.$notify({
+            type: 'error',
+            title: 'Ошибка',
+            text: 'при выполнеении запроса'
+          });
+          this.isLoading = false;
+        });
+      },
+      getProducts: function (page = 1, ignoreUrlPrevious = false) {
         this.isLoading = true;
 
         let statusActiveFilters = 1;
@@ -219,64 +274,16 @@
           load_active_filter: statusActiveFilters
         }) });
 
-        if (this.removeUnnecessaryFromURL(this.$router.currentRoute.fullPath) === this.urlPrevious) {
+        if (!ignoreUrlPrevious && this.removeUnnecessaryFromURL(this.$router.currentRoute.fullPath) === this.urlPrevious) {
           this.setProducts(this.productsStore);
         }
         else {
           setTimeout(() => {
-            if (this.removeUnnecessaryFromURL(this.$router.currentRoute.fullPath) !== this.urlPrevious) {
-              this.$store.commit('updateTypePrevious', this.currentType);
-              this.$store.commit('updateCategoryPrevious', this.currentCategory);
-
-              ApiProducts.get(page, {
-                type: this.getTypeIdAndCategoryId().type_id,
-                category: this.getTypeIdAndCategoryId().category_id,
-                filters: this.$route.query.filters,
-                sort: this.sort,
-                per_page: this.perPage,
-                text: this.$store.getters.searchByText,
-                load_active_filter: statusActiveFilters
-              }).then((res) => {
-                this.$store.commit('updateUrlPrevious', this.removeUnnecessaryFromURL(this.$router.currentRoute.fullPath));
-
-                let products = res.data.products;
-                if (this.$router.currentRoute.query.load_more !== undefined
-                  && parseInt(this.$router.currentRoute.query.load_more) === 1) {
-                  if (this.productsStore.data !== undefined) {
-                    products.data = this.productsStore.data.concat(products.data);
-                  }
-                }
-                this.$store.commit('updateProducts', res.data.products);
-
-                if (res.data.active_filters !== undefined) {
-                  let activeFiltersData = this.activeFilters;
-                  let index = activeFiltersData.findIndex((item) => {
-                    return item.type_id === this.getTypeIdAndCategoryId().type_id
-                      && item.category_id === this.getTypeIdAndCategoryId().category_id
-                      && item.sort === this.getSort()
-                  });
-                  if (index === -1) {
-                    activeFiltersData.push({
-                      type_id: this.getTypeIdAndCategoryId().type_id,
-                      category_id: this.getTypeIdAndCategoryId().category_id,
-                      filters: res.data.active_filters,
-                      sort: this.getSort()
-                    });
-
-                    this.$store.commit('updateActiveFilters', activeFiltersData);
-                  }
-                }
-
-                this.setProducts(res.data.products);
-              }).catch((error) => {
-                this.alerts = error.response.data.errors;
-                this.$notify({
-                  type: 'error',
-                  title: 'Ошибка',
-                  text: 'при выполнеении запроса'
-                });
-                this.isLoading = false;
-              });
+            if (ignoreUrlPrevious) {
+              this.apiGetProducts(page, statusActiveFilters);
+            }
+            else if (this.removeUnnecessaryFromURL(this.$router.currentRoute.fullPath) !== this.urlPrevious) {
+              this.apiGetProducts(page, statusActiveFilters);
             }
           }, 1200);
         }
@@ -335,8 +342,17 @@
       'sort': function () {
         this.getProducts();
       },
-      'perPage': function () {
-        this.getProducts();
+      'perPage': function (perPage) {
+        if (this.urlPrevious !== null) {
+          let page = parseInt(this.$router.currentRoute.query.page);
+          let lastPage = Math.ceil(this.productsStore.total/perPage);
+
+          if (page > lastPage) {
+            page = lastPage;
+          }
+
+          this.getProducts(page);
+        }
       }
     },
     beforeDestroy() {

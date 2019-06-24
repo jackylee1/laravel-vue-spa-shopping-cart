@@ -80,6 +80,7 @@
       this.searchByText = this.searchByTextStore;
 
       this.typesAndCategories = this.getTypeAndCategories();
+
       let timeout = (this.urlPrevious !== this.removeUnnecessaryFromURL(this.$router.currentRoute.fullPath)) ? 700 : 0;
       _.delay(() => {
         this.emitGetProducts();

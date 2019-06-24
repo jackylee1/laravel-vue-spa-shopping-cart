@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="row titles_top">
-      <div class="col-md-5 col-12 my-auto">
+      <div class="col-lg-5 col-md-3 col-12 my-auto">
         <template v-if="currentCategory !== null">
           <h1 class="category_title">{{currentCategory.name}}</h1>
         </template>
@@ -24,7 +24,7 @@
         </multiselect>
       </div>
 
-      <div class="col-lg-3 col-md-3 col-12 show_on_page" style="padding: 5px">
+      <div class="col-lg-3 col-md-4 col-12 show_on_page" style="padding: 5px">
         <p>Показать:</p>
         <multiselect :value="getSelectPerPage(perPage)"
                      :options="perPageOptions"
