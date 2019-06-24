@@ -200,7 +200,6 @@
           : 'all';
       },
       apiGetProducts: function (page, statusActiveFilters) {
-        console.log('api products');
         this.$store.commit('updateTypePrevious', this.currentType);
         this.$store.commit('updateCategoryPrevious', this.currentCategory);
 
@@ -351,7 +350,7 @@
             page = lastPage;
           }
 
-          this.getProducts(page);
+          this.getProducts(page, true);
         }
       }
     },
