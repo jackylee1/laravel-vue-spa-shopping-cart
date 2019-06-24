@@ -80,7 +80,7 @@
       this.searchByText = this.searchByTextStore;
 
       this.typesAndCategories = this.getTypeAndCategories();
-      let timeout = (this.urlPrevious !== this.removeLoadActiveFilters(this.$router.currentRoute.fullPath)) ? 700 : 0;
+      let timeout = (this.urlPrevious !== this.removeUnnecessaryFromURL(this.$router.currentRoute.fullPath)) ? 700 : 0;
       _.delay(() => {
         this.emitGetProducts();
       }, timeout);
@@ -143,8 +143,8 @@
       }
     },
     methods: {
-      removeLoadActiveFilters: function (str) {
-        return str.replace('load_active_filter=1', '').replace('load_active_filter=0', '');
+      removeUnnecessaryFromURL: function (str) {
+        return str.replace(/\bper_page=[0-9]+\b/, '').replace(/\bload_active_filter=[0-9]+\b/, '');
       },
       selectFiltersToArrayIds: function () {
         this.selectFilters = this.selectFilters.map((item) => {
@@ -334,7 +334,7 @@
         )});
       },
       emitGetProducts: function () {
-        let timeout = (this.urlPrevious !== this.removeLoadActiveFilters(this.$router.currentRoute.fullPath)) ? 700 : 0;
+        let timeout = (this.urlPrevious !== this.removeUnnecessaryFromURL(this.$router.currentRoute.fullPath)) ? 700 : 0;
 
         setTimeout(() => {
           this.$emit('getProducts', this.$router.currentRoute.query.page);

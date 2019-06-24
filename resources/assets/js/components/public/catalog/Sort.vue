@@ -119,7 +119,7 @@
         this.$emit('updateSort', value);
       },
       'perPage': function (value) {
-        this.$router.push({ query: Object.assign({}, this.$route.query, { par_page: value }) });
+        this.$router.push({ query: Object.assign({}, this.$route.query, { per_page: value }) });
 
         this.$store.commit('updatePerPage', value);
         this.$emit('updatePerPage', value);

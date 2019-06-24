@@ -190,8 +190,8 @@
           category_id: (this.currentCategory !== null) ? this.currentCategory.id : null
         };
       },
-      removeLoadActiveFilters: function (str) {
-        return str.replace('load_active_filter=1', '').replace('load_active_filter=0', '');
+      removeUnnecessaryFromURL: function (str) {
+        return str.replace(/\bper_page=[0-9]+\b/, '').replace(/\bload_active_filter=[0-9]+\b/, '');
       },
       getSort: function () {
         return (this.$route.query.sort !== undefined
@@ -219,12 +219,12 @@
           load_active_filter: statusActiveFilters
         }) });
 
-        if (this.removeLoadActiveFilters(this.$router.currentRoute.fullPath) === this.urlPrevious) {
+        if (this.removeUnnecessaryFromURL(this.$router.currentRoute.fullPath) === this.urlPrevious) {
           this.setProducts(this.productsStore);
         }
         else {
           setTimeout(() => {
-            if (this.removeLoadActiveFilters(this.$router.currentRoute.fullPath) !== this.urlPrevious) {
+            if (this.removeUnnecessaryFromURL(this.$router.currentRoute.fullPath) !== this.urlPrevious) {
               this.$store.commit('updateTypePrevious', this.currentType);
               this.$store.commit('updateCategoryPrevious', this.currentCategory);
 
@@ -237,7 +237,7 @@
                 text: this.$store.getters.searchByText,
                 load_active_filter: statusActiveFilters
               }).then((res) => {
-                this.$store.commit('updateUrlPrevious', this.removeLoadActiveFilters(this.$router.currentRoute.fullPath));
+                this.$store.commit('updateUrlPrevious', this.removeUnnecessaryFromURL(this.$router.currentRoute.fullPath));
 
                 let products = res.data.products;
                 if (this.$router.currentRoute.query.load_more !== undefined
