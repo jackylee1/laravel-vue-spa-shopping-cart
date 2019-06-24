@@ -633,7 +633,7 @@ h1 {
   font-family: 'Exo 2', sans-serif;
   font-weight: 600;
   font-style: italic;
-  z-index: 1000;
+  z-index: 10;
   text-transform: uppercase;
   padding: 10px;
   background: #ffffff7a;

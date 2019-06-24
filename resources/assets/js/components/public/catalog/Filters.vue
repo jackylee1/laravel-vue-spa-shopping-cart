@@ -534,6 +534,9 @@
           this.renderArraySelect = [];
           this.selectFilters = [];
 
+          this.setRenderArray();
+          this.setSelectTypeAndCategories();
+
           this.$store.commit('updateSearchByText', null);
           this.$router.push({ query: Object.assign({}, this.$route.query, {text: null})});
         }

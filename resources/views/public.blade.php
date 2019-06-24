@@ -30,6 +30,11 @@
         .price-not-discount {
             color: #333333;
         }
+
+        .multiselect {
+            z-index: 98;
+        }
+
         .multiselect__option--highlight:after {
             background: #f00;
         }
