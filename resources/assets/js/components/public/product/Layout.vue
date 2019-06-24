@@ -171,7 +171,6 @@
       },
       setBreadcrumbs: function (typeId, categoryId) {
         let type = this.types.find((item) => item.id === typeId);
-        console.log(this.urlPrevious);
 
         let category = undefined;
         if (categoryId !== null) {
