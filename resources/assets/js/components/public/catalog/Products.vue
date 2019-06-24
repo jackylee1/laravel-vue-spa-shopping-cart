@@ -135,7 +135,12 @@
 
         <div v-if="pagination.currentPage < pagination.totalPages"
              class="col-12 show_more_bottom">
-          <button @click="loadMoreProducts">Показать еще <i class="fas fa-sync-alt"></i></button>
+          <button style="font-size: 19px;color: #a8a7a7"
+                  @click="loadMoreProducts">
+            Показать еще
+            <i  style="font-size: 16px;"
+                class="fas fa-sync-alt"></i>
+          </button>
         </div>
       </div>
     </template>
