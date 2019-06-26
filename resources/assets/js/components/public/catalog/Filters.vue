@@ -367,8 +367,6 @@
       changeTypeOrCategories: function (value, selectedOptions) {
         this.selectTypeAndCategories = value;
 
-        this.$store.commit('updateStatusClearSearch', true);
-
         let lengthTypeAndCategories = this.selectTypeAndCategories.length;
         if (lengthTypeAndCategories === 1) {
           this.$router.push({ query: Object.assign(
@@ -528,6 +526,7 @@
         }
 
         this.setSelectTypeAndCategories();
+        this.setFiltersToUrl();
       },
       'eventApp': function (eventApp) {
         if (eventApp) {
@@ -567,6 +566,7 @@
       },
       'searchByTextStore': function (value) {
         this.searchByText = value;
+        this.emitGetProducts();
       },
       'filters': function () {
         this.waitFilters = false;
