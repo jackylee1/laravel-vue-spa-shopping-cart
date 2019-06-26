@@ -22,12 +22,12 @@
                             <template v-if="category.children !== undefined && category.children.length">
                               <li v-if="!category.hidden_name"
                                   :style="(category.active_link) ? 'cursor: pointer' : 'cursor: default'"
-                                  v-on:click="(category.active_link) ? openLinkByObject({ name: 'catalog', query: { type: type.slug, category:  category.slug } }) : false">
+                                  v-on:click="(category.active_link) ? openLinkByObject({ name: 'catalog', query: { type: type.slug, category:  category.slug, text: null } }) : false">
                                 <p>{{category.name}}</p>
                               </li>
                               <template v-for="categoryChildren in sortCategories(category.children)">
                                 <li>
-                                  <router-link :to="{ name: 'catalog', query: { type: type.slug, category: categoryChildren.slug } }">
+                                  <router-link :to="{ name: 'catalog', query: { type: type.slug, category: categoryChildren.slug, text: null } }">
                                     {{categoryChildren.name}}
                                   </router-link>
                                 </li>
@@ -36,7 +36,7 @@
                             <template v-else>
                               <li v-if="!category.hidden_name"
                                   style="cursor: pointer"
-                                  @click="openLinkByObject({ name: 'catalog', query: { type: type.slug, category:  category.slug } })">
+                                  @click="openLinkByObject({ name: 'catalog', query: { type: type.slug, category:  category.slug, text: null } })">
                                 <p>{{category.name}}</p>
                               </li>
                             </template>
@@ -173,7 +173,8 @@
         this.$router.push({ query: Object.assign(
           {}, this.$route.query, {
             filters: null,
-            sort: 'all'
+            sort: 'all',
+            text: null
           }
         )});
 
@@ -187,7 +188,8 @@
         this.$router.push({ query: Object.assign(
           {}, this.$route.query, {
             filters: null,
-            sort: 'all'
+            sort: 'all',
+            text: null
           }
         )});
         this.$store.commit('updateSearchByText', null);
