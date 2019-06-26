@@ -27,9 +27,9 @@
                               </li>
                               <template v-for="categoryChildren in sortCategories(category.children)">
                                 <li>
-                                  <router-link :to="{ name: 'catalog', query: { type: type.slug, category: categoryChildren.slug, text: null } }">
+                                  <a href="javascript:void(0)" @click="openLinkByObject({ name: 'catalog', query: { type: type.slug, category: categoryChildren.slug, text: null } })">
                                     {{categoryChildren.name}}
-                                  </router-link>
+                                  </a>
                                 </li>
                               </template>
                             </template>
@@ -179,22 +179,15 @@
         )});
 
         if (name === 'new' || name === 'promotional' || name === 'all') {
-          return this.$router.push({name: 'catalog', query: { sort: name }});
+          return this.$router.push({name: 'catalog', query: { sort: name, text: null, type: null, category: null }});
         }
 
         return this.$router.push({name: name});
       },
       openLinkByObject: function (obj) {
-        this.$router.push({ query: Object.assign(
-          {}, this.$route.query, {
-            filters: null,
-            sort: 'all',
-            text: null
-          }
-        )});
         this.$store.commit('updateSearchByText', null);
 
-        return this.$router.push(obj);
+        this.$router.push(obj);
       }
     },
     watch: {

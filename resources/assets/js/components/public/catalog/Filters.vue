@@ -332,6 +332,7 @@
         params.filters = this.selectFilters;
         params.sort = this.getSort();
         params.page = 1;
+        params.text = null;
 
         this.$router.push({ query: Object.assign(
           {}, this.$route.query, params
@@ -362,20 +363,27 @@
 
         this.renderArraySelect = [];
         this.selectFilters = [];
-        return this.$router.push({ name: 'catalog', query: { type: this.routeType, category: this.routeCategory, filters: null } });
+        return this.$router.push({ name: 'catalog', query: {
+          type: this.routeType,
+          category: this.routeCategory,
+          filters: null,
+          text: null
+        } });
       },
       changeTypeOrCategories: function (value, selectedOptions) {
         this.selectTypeAndCategories = value;
 
+        this.$store.commit('updateSearchByText', null);
+
         let lengthTypeAndCategories = this.selectTypeAndCategories.length;
         if (lengthTypeAndCategories === 1) {
           this.$router.push({ query: Object.assign(
-              {}, this.$route.query, { category: null, sort: this.getSort() }
+              {}, this.$route.query, { category: null, sort: this.getSort(), text: null }
             )});
         }
         if (lengthTypeAndCategories === 0) {
           this.$router.push({ query: Object.assign(
-            {}, this.$route.query, { type: null, category: null, sort: this.getSort() }
+            {}, this.$route.query, { type: null, category: null, sort: this.getSort(), text: null }
           )});
         }
 
