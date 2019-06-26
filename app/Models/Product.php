@@ -481,6 +481,12 @@ class Product extends Model
                 });
             }
         }
+        else {
+            $query->where(function ($query) {
+                $query->whereTypeAndCategory();
+                $query->searchByText();
+            });
+        }
 
         if (request()->filled('sort')) {
             switch (request()->get('sort')) {

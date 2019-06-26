@@ -34,105 +34,45 @@ export default {
     indexMediaFiles: [],
     activeFilters: [],
     eventApp: false,
-    perPage: 16
+    perPage: 16,
+    statusClearSearch: true
   },
   getters: {
-    currentUser: function (state) {
-      return state.currentUser;
-    },
-    isLoggedIn(state) {
-      return state.isLoggedIn;
-    },
-    sliders: function (state) {
-      return state.sliders;
-    },
-    textPages: function (state) {
-      return state.textPages;
-    },
-    loadIndex: function (state) {
-      return state.loadIndex;
-    },
-    loadCommon: function (state) {
-      return state.loadCommon;
-    },
-    linkToSocialNetworks: function (state) {
-      return state.linkToSocialNetworks;
-    },
-    types: function (state) {
-      return state.types;
-    },
-    filters: function (state) {
-      return state.filters;
-    },
-    products: function (state) {
-      return state.products;
-    },
-    urlPrevious: function (state) {
-      return state.urlPrevious;
-    },
-    loadFBComments: function (state) {
-      return state.loadFBComments;
-    },
-    categoryPrevious: function (state) {
-      return state.categoryPrevious;
-    },
-    typePrevious: function (state) {
-      return state.typePrevious;
-    },
-    sizeTables: function (state) {
-      return state.sizeTables;
-    },
-    newProducts: function (state) {
-      return state.newProducts;
-    },
-    searchByText: function (state) {
-      return state.searchByText;
-    },
-    cart: function (state) {
-      return state.cart;
-    },
-    favorite: function (state) {
-      return state.favorite;
-    },
-    paymentMethods: function (state) {
-      return state.paymentMethods;
-    },
-    areas: function (state) {
-      return state.areas;
-    },
-    cities: function (state) {
-      return state.cities;
-    },
-    warehouses: function (state) {
-      return state.warehouses;
-    },
-    orders: function (state) {
-      return state.orders;
-    },
-    bestsellerProducts: function (state) {
-      return state.bestsellerProducts;
-    },
-    utfRecords: function (state) {
-      return state.utfRecords;
-    },
-    settings: function (state) {
-      return state.settings;
-    },
-    indexMediaFiles: function (state) {
-      return state.indexMediaFiles;
-    },
-    activeFilters: function (state) {
-      return state.activeFilters;
-    },
-    eventApp: function (state) {
-      return state.eventApp
-    },
-    perPage: function (state) {
-      return state.perPage;
-    }
+    currentUser: (state) => state.currentUser,
+    isLoggedIn: (state) => state.isLoggedIn,
+    sliders: (state) => state.sliders,
+    textPages: (state) => state.textPages,
+    loadIndex: (state) => state.loadIndex,
+    loadCommon: (state) => state.loadCommon,
+    linkToSocialNetworks: (state) => state.linkToSocialNetworks,
+    types: (state) => state.types,
+    filters: (state) => state.filters,
+    products: (state) => state.products,
+    urlPrevious: (state) => state.urlPrevious,
+    loadFBComments: (state) => state.loadFBComments,
+    categoryPrevious: (state) => state.categoryPrevious,
+    typePrevious: (state) => state.typePrevious,
+    sizeTables: (state) => state.sizeTables,
+    newProducts: (state) => state.newProducts,
+    searchByText: (state) => state.searchByText,
+    cart: (state) => state.cart,
+    favorite: (state) => state.favorite,
+    paymentMethods: (state) => state.paymentMethods,
+    areas: (state) => state.areas,
+    cities: (state) => state.cities,
+    warehouses: (state) => state.warehouses,
+    orders: (state) => state.orders,
+    bestsellerProducts: (state) => state.bestsellerProducts,
+    utfRecords: (state) => state.utfRecords,
+    settings: (state) => state.settings,
+    indexMediaFiles: (state) => state.indexMediaFiles,
+    activeFilters: (state) => state.activeFilters,
+    eventApp: (state) => state.eventApp,
+    perPage: (state) => state.perPage,
+    statusClearSearch: (state) => state.statusClearSearch,
   },
   mutations: {
-    loginSuccess: function (state, payload) {
+    loginSuccess: (state, payload) => {
       state.isLoggedIn = true;
       state.currentUser = Object.assign({}, payload.user, {token: payload.access_token});
 
@@ -143,99 +83,42 @@ export default {
         window.$cookies.set('user', state.currentUser, 0);
       }
     },
-    logout: function (state) {
+    logout: (state) => {
       localStorage.removeItem('user');
       window.$cookies.remove('user');
 
       state.isLoggedIn = false;
       state.currentUser = null;
     },
-    updateSliders: function(state, payload) {
-      state.sliders = payload;
-    },
-    updateTextPages: function(state, payload) {
-      state.textPages = payload;
-    },
-    updateLoadIndex: function(state, payload) {
-      state.loadIndex = payload;
-    },
-    updateLoadCommon: function(state, payload) {
-      state.loadCommon = payload;
-    },
-    updateLinkToSocialNetworks: function(state, payload) {
-      state.linkToSocialNetworks = payload;
-    },
-    updateTypes: function (state, payload) {
-      state.types = payload;
-    },
-    updateFilters: function (state, payload) {
-      state.filters = payload;
-    },
-    updateProducts: function (state, payload) {
-      state.products = payload;
-    },
-    updateUrlPrevious: function (state, payload) {
-      state.urlPrevious = payload;
-    },
-    updateLoadFBComments: function (state, payload) {
-      state.loadFBComments = payload;
-    },
-    updateCategoryPrevious: function (state, payload) {
-      state.categoryPrevious = payload;
-    },
-    updateTypePrevious: function (state, payload) {
-      state.typePrevious = payload;
-    },
-    updateSizeTables: function (state, payload) {
-      state.sizeTables = payload;
-    },
-    updateNewProducts: function (state, payload) {
-      state.newProducts = payload;
-    },
-    updateSearchByText: function (state, payload) {
-      state.searchByText = payload;
-    },
-    updateCart: function (state, payload) {
-      state.cart = payload;
-    },
-    updateFavorite: function (state, payload) {
-      state.favorite = payload;
-    },
-    updatePaymentMethods: function (state, payload) {
-      return state.paymentMethods = payload;
-    },
-    updateAreas: function (state, payload) {
-      state.areas = payload;
-    },
-    updateCities: function (state, payload) {
-      state.cities = payload;
-    },
-    updateWarehouses: function (state, payload) {
-      state.warehouses = payload;
-    },
-    updateOrders: function (state, payload) {
-      state.orders = payload;
-    },
-    updateBestsellerProducts: function (state, payload) {
-      state.bestsellerProducts = payload;
-    },
-    updateUtfRecords: function (state, payload) {
-      state.utfRecords = payload;
-    },
-    updateSettings: function (state, payload) {
-      state.settings = payload;
-    },
-    updateIndexMediaFiles: function (state, payload) {
-      state.indexMediaFiles = payload;
-    },
-    updateActiveFilters: function (state, payload) {
-      state.activeFilters = payload;
-    },
-    updateEventApp: function (state, payload) {
-      state.eventApp = payload;
-    },
-    updatePerPage: function (state, payload) {
-      state.perPage = payload;
-    }
+    updateSliders: (state, payload) => state.sliders = payload,
+    updateTextPages: (state, payload) => state.textPages = payload,
+    updateLoadIndex: (state, payload) => state.loadIndex = payload,
+    updateLoadCommon: (state, payload) => state.loadCommon = payload,
+    updateLinkToSocialNetworks: (state, payload) => state.linkToSocialNetworks = payload,
+    updateTypes: (state, payload) => state.types = payload,
+    updateFilters: (state, payload) => state.filters = payload,
+    updateProducts: (state, payload) => state.products = payload,
+    updateUrlPrevious: (state, payload) => state.urlPrevious = payload,
+    updateLoadFBComments: (state, payload) => state.loadFBComments = payload,
+    updateCategoryPrevious: (state, payload) => state.categoryPrevious = payload,
+    updateTypePrevious: (state, payload) => state.typePrevious = payload,
+    updateSizeTables: (state, payload) => state.sizeTables = payload,
+    updateNewProducts: (state, payload) => state.newProducts = payload,
+    updateSearchByText: (state, payload) => state.searchByText = payload,
+    updateCart: (state, payload) => state.cart = payload,
+    updateFavorite: (state, payload) => state.favorite = payload,
+    updatePaymentMethods: (state, payload) => state.paymentMethods = payload,
+    updateAreas: (state, payload) => state.areas = payload,
+    updateCities: (state, payload) => state.cities = payload,
+    updateWarehouses: (state, payload) => state.warehouses = payload,
+    updateOrders: (state, payload) => state.orders = payload,
+    updateBestsellerProducts: (state, payload) => state.bestsellerProducts = payload,
+    updateUtfRecords: (state, payload) => state.utfRecords = payload,
+    updateSettings: (state, payload) => state.settings = payload,
+    updateIndexMediaFiles: (state, payload) => state.indexMediaFiles = payload,
+    updateActiveFilters: (state, payload) => state.activeFilters = payload,
+    updateEventApp: (state, payload) => state.eventApp = payload,
+    updatePerPage: (state, payload) => state.perPage = payload,
+    updateStatusClearSearch: (state, payload) => state.statusClearSearch = payload,
   }
 };

@@ -119,7 +119,10 @@
       },
       urlPrevious: function () {
         return this.$store.getters.urlPrevious;
-      }
+      },
+      statusClearSearch: function () {
+        return this.$store.getters.statusClearSearch;
+      },
     },
     data() {
       return {
@@ -364,6 +367,8 @@
       changeTypeOrCategories: function (value, selectedOptions) {
         this.selectTypeAndCategories = value;
 
+        this.$store.commit('updateStatusClearSearch', true);
+
         let lengthTypeAndCategories = this.selectTypeAndCategories.length;
         if (lengthTypeAndCategories === 1) {
           this.$router.push({ query: Object.assign(
@@ -539,8 +544,12 @@
           this.setRenderArray();
           this.setSelectTypeAndCategories();
 
-          this.$store.commit('updateSearchByText', null);
-          this.$router.push({ query: Object.assign({}, this.$route.query, {text: null})});
+          if (this.statusClearSearch) {
+            this.$store.commit('updateSearchByText', null);
+            this.$router.push({ query: Object.assign({}, this.$route.query, {text: null})});
+          }
+
+          this.$store.commit('updateStatusClearSearch', true);
         }
       },
       renderArraySelect: function () {

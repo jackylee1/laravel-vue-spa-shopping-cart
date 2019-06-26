@@ -117,9 +117,11 @@
       getProducts: function () {
         this.resultProductsAutoComplete = [];
         this.$store.commit('updateSearchByText', this.textSearch);
-        this.$router.push({ query: Object.assign({}, this.$route.query, { text: this.textSearch }) });
+        this.$router.push({name: 'catalog', query: { text: this.textSearch, category: null, type: null, sort: 'all' } });
 
         this.textSearch = null;
+
+        this.$store.commit('updateStatusClearSearch', false);
         this.$emit('getProducts');
       },
       setCountFavoriteProducts: function () {
