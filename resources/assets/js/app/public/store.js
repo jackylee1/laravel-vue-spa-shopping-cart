@@ -35,7 +35,7 @@ export default {
     activeFilters: [],
     eventApp: false,
     perPage: 16,
-    statusClearSearch: true
+    statusClearSearch: true,
   },
   getters: {
     currentUser: (state) => state.currentUser,

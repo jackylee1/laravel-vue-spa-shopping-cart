@@ -122,7 +122,7 @@
       },
       statusClearSearch: function () {
         return this.$store.getters.statusClearSearch;
-      },
+      }
     },
     data() {
       return {
@@ -171,10 +171,12 @@
           return false;
         }
 
-        this.selectFilters[this.activeVModel] = filters;
-        this.selectFiltersToArrayIds();
-
-
+        this.selectFilters[this.activeVModel] = filters.map(item => {
+          if (typeof item === 'object') {
+            return (item.id !== undefined) ? item.id : item;
+          }
+          return item;
+        });
 
         this.setDataInUrl();
         this.emitGetProducts();
@@ -534,7 +536,7 @@
         }
 
         this.setSelectTypeAndCategories();
-        this.setFiltersToUrl();
+        //this.setFiltersToUrl();
       },
       'eventApp': function (eventApp) {
         if (eventApp) {
