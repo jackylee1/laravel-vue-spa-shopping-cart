@@ -365,11 +365,13 @@
 
         this.renderArraySelect = [];
         this.selectFilters = [];
-        return this.$router.push({ name: 'catalog', query: {
+
+        this.$router.push({ name: 'catalog', query: {
           type: this.routeType,
           category: this.routeCategory,
           filters: null,
-          text: null
+          text: null,
+          sort: this.getSort()
         } });
       },
       changeTypeOrCategories: function (value, selectedOptions) {
