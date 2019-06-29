@@ -556,6 +556,12 @@
 
       this.sizeTables = this.sizeTablesStore;
 
+      if (this.sizeTables.length === 0) {
+        ApiSizeTables.get().then((res) => {
+          this.$store.commit('updateSizeTables', res.data.size_tables);
+        })
+      }
+
       this.currentRoute = this.$router.currentRoute;
       if (this.currentRoute.name === 'products-update') {
         if (this.products.data !== undefined && this.products.data.length) {
@@ -596,15 +602,7 @@
         return this.$store.getters.types;
       },
       sizeTablesStore: function () {
-        if (this.$store.getters.sizeTables.length) {
-          return this.$store.getters.sizeTables;
-        }
-        else {
-          return ApiSizeTables.get().then((res) => {
-            this.$store.commit('updateSizeTables', res.data.size_tables);
-            return res.data.size_tables;
-          })
-        }
+        return this.$store.getters.sizeTables;
       },
       selectBoolean: function () {
         return this.$store.getters.selectDataBoolean;
@@ -1460,6 +1458,9 @@
           && this.form.main_type['category_id'] !== this.selectedFormCategory[this.selectedFormCategory.length - 1]) {
           this.form.main_type['category_id'] = this.selectedFormCategory;
         }
+      },
+      'sizeTablesStore': function (sizeTables) {
+        this.sizeTables = sizeTables;
       }
     },
     beforeDestroy() {
