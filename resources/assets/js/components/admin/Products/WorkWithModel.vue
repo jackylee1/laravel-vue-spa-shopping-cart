@@ -1379,6 +1379,10 @@
         this.form = this.defaultFormData();
         this.setBreadcrumbElements();
         this.currentRoute = this.$router.currentRoute;
+        this.description = '';
+        this.selectedSizeTable = null;
+        this.selectedFormType = null;
+        this.selectedFormCategory = null;
       },
       'form.name': function (val) {
         if (this.countChangesSlug !== 0) {
