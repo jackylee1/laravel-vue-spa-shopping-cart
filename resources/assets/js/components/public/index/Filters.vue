@@ -12,7 +12,7 @@
                 <a @click="productsByFilter(filterChildren)"
                    href="javascript:void(0)">
                   <img :src="`/app/public/images/filter/${filterChildren.image_preview}`"
-                       :alt="filterChildren.name"
+                       :alt="filterChildren.name + ' ' + filterChildren.id"
                        class="brand_logo">
                 </a>
               </template>
@@ -73,11 +73,26 @@
         return this.$store.getters.filters.filter((item) => {
           return item.show_on_index === 1;
         });
-      }
+      },
+      activeFilters: function () {
+        return this.$store.getters.activeFilters;
+      },
     },
     methods: {
       getTreeFilters: function (filters) {
+        let activeFilters = [];
+
+        if (this.activeFilters.length) {
+          let index = this.activeFilters.findIndex((item) => {
+            return item.sort === 'all' && item.type_id === null && item.category_id === null;
+          });
+          if (index !== -1) {
+            activeFilters = this.activeFilters[index].filters;
+          }
+        }
+
         let tempFilters = filters;
+
         this.filters.forEach((filter) => {
           this.$store.getters.filters.forEach((item) => {
             if (filter.id === item.parent_id && item.show_image) {
@@ -85,6 +100,16 @@
             }
           });
         });
+
+        tempFilters = _.uniqBy(tempFilters, 'id').filter((item) => {
+          if (item.parent_id === 0) {
+            return item;
+          }
+          else if (activeFilters.includes(item.id)) {
+            return item;
+          }
+        });
+
         return arrayToTree(tempFilters, {
           parentProperty: 'parent_id',
           customID: 'id'

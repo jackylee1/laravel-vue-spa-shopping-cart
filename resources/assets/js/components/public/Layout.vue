@@ -51,6 +51,8 @@
           localStorage.setItem('cart_key', res.data.cart.key);
           localStorage.setItem('favorite_key', res.data.favorite.key);
 
+          this.setActiveFilters(res.data.active_filters);
+
           this.$store.commit('updateLinkToSocialNetworks', this.linkToSocialNetworks);
           this.$store.commit('updateTextPages', this.textPages);
           this.$store.commit('updateTypes', res.data.types);
@@ -85,6 +87,9 @@
       }
     },
     computed: {
+      activeFilters: function () {
+        return this.$store.getters.activeFilters;
+      },
       linkToSocialNetworksStore: function () {
         return this.$store.getters.linkToSocialNetworks;
       },
@@ -105,6 +110,24 @@
       }
     },
     methods: {
+      setActiveFilters: function (filters) {
+        let activeFiltersData = this.activeFilters;
+        let index = activeFiltersData.findIndex((item) => {
+          return item.type_id === null
+            && item.category_id === null
+            && item.sort === 'all'
+        });
+        if (index === -1) {
+          activeFiltersData.push({
+            type_id: null,
+            category_id: null,
+            filters: filters,
+            sort: 'all'
+          });
+        }
+
+        this.$store.commit('updateActiveFilters', activeFiltersData);
+      },
       handleGetProducts: function () {
         if (this.$router.currentRoute.name === 'catalog') {
           let index = this.$children.findIndex((item) => item.$vnode.tag.includes('CatalogLayout'));

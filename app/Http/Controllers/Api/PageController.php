@@ -9,6 +9,7 @@ use App\Models\IndexMediaFile;
 use App\Models\LinkToSocialNetwork;
 use App\Models\OrderPaymentMethod;
 use App\Models\Product;
+use App\Models\ProductInFilter;
 use App\Models\Setting;
 use App\Models\SizeTable;
 use App\Models\Slider;
@@ -66,6 +67,7 @@ class PageController extends Controller
         $this->setData('utf_records', UtfRecord::getItems());
         $this->setData('settings', Setting::getItems());
         $this->setData('index_media_files', IndexMediaFile::getItems());
+        $this->setData('active_filters', ProductInFilter::getActiveFilters());
 
         if (auth()->check()) {
             $this->setData('user', auth()->user());
