@@ -488,11 +488,15 @@
             if (typeof item === 'string' && item.indexOf(',') !== -1) {
               return item.split(',').map(item => parseInt(item));
             }
-            else {
+            else if (Array.isArray(item)) {
+              return item;
+            }
+            else if (typeof item === 'string') {
               return parseInt(item);
             }
           });
         }
+
         this.renderArraySelect.forEach((item, index) => {
           let urlFilter = (urlFilters[index]) !== undefined ? urlFilters[index] : null;
           if (urlFilter !== null && !isNaN(urlFilter)) {

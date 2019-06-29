@@ -154,7 +154,20 @@
         });
       },
       getTreeFilters: function (filters) {
+        let activeFilters;
+        activeFilters = [];
+
+        if (this.activeFilters.length) {
+          let index = this.activeFilters.findIndex((item) => {
+            return item.sort === 'all' && item.type_id === null && item.category_id === null;
+          });
+          if (index !== -1) {
+            activeFilters = this.activeFilters[index].filters;
+          }
+        }
+
         let tempFilters = filters;
+
         filters.forEach((filter) => {
           this.$store.getters.filters.forEach((item) => {
             if (filter.id === item.parent_id && item.show_image) {
@@ -162,6 +175,16 @@
             }
           });
         });
+
+        tempFilters = _.uniqBy(tempFilters, 'id').filter((item) => {
+          if (item.parent_id === 0) {
+            return item;
+          }
+          else if (activeFilters.includes(item.id)) {
+            return item;
+          }
+        });
+
         return arrayToTree(tempFilters, {
           parentProperty: 'parent_id',
           customID: 'id'

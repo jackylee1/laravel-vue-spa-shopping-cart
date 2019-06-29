@@ -128,6 +128,17 @@
 
         this.$store.commit('updateActiveFilters', activeFiltersData);
       },
+      handleSetRenderArray: function () {
+        if (this.$router.currentRoute.name === 'catalog') {
+          let indexCatalog = this.$children.findIndex((item) => item.$vnode.tag.includes('CatalogLayout'));
+          if (indexCatalog !== -1) {
+            let indexFilters = this.$children[indexCatalog].$children.findIndex((item) => item.$vnode.tag.includes('Filters'));
+            if (indexFilters !== -1) {
+              this.$children[indexCatalog].$children[indexFilters].setRenderArray();
+            }
+          }
+        }
+      },
       handleGetProducts: function () {
         if (this.$router.currentRoute.name === 'catalog') {
           let index = this.$children.findIndex((item) => item.$vnode.tag.includes('CatalogLayout'));

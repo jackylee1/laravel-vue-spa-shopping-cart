@@ -74,9 +74,6 @@
           return item.show_on_index === 1;
         });
       },
-      activeFilters: function () {
-        return this.$store.getters.activeFilters;
-      },
     },
     methods: {
       getTreeFilters: function (filters) {
