@@ -149,6 +149,11 @@
       onSubmit: function () {
         this.$refs['formWorkWithModel'].validate((valid) => {
           if (valid) {
+            this.form.description = this.form.description.replace(/style="(.*?)"/gm, '')
+              .replace(/width="(.*?)"/gm, '')
+              .replace(/height="(.*?)"/gm, '');
+            this.description = this.form.description;
+
             if (this.currentRoute.name === 'size-tables-update') {
               ApiSizeTables.update(this.$route.params.id, this.form).then((response) => {
                 this.$notify.success({
@@ -205,6 +210,7 @@
         this.form = this.defaultFormData();
         this.setBreadcrumbElements();
         this.currentRoute = this.$router.currentRoute;
+        this.description = this.form.description;
       },
     },
     beforeDestroy() {
