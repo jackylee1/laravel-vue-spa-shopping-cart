@@ -1456,7 +1456,8 @@
         }
       },
       'selectedFormCategory': function () {
-        if (this.form.main_type['category_id'] !== this.selectedFormCategory[this.selectedFormCategory.length - 1]) {
+        if (this.selectedFormCategory !== null
+          && this.form.main_type['category_id'] !== this.selectedFormCategory[this.selectedFormCategory.length - 1]) {
           this.form.main_type['category_id'] = this.selectedFormCategory;
         }
       }
