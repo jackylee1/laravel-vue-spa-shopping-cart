@@ -48,6 +48,7 @@
         g.src = u + "/widget.js";
         s.parentNode.insertBefore(g, s);
     })();
+
 </script>
 
 <script src="{{ mix('js/manifest.js') }}"></script>
@@ -61,54 +62,6 @@
 <script type="text/javascript" src="/assets/public/js/jquery.touchSwipe.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
 <script src="https://unpkg.com/ionicons@4.4.6/dist/ionicons.js"></script>
-
-<script type="text/javascript">
-  $(document).ready(function () {
-
-    "use strict";
-
-    $('.menu > ul > li:has( > ul)').addClass('menu-dropdown-icon');
-    $('.menu > ul > li > ul:not(:has(ul))').addClass('normal-sub');
-    $(".menu > ul").before("<div class=\"mobile_block\">" +
-      "<a class=\"logo_mobiled\" href=\"/\">" +
-      "<img class=\"navbar_logo\" src=\"/assets/public/images/logo-mobile.png\" alt=\"FitClothing\"></a>" +
-      "<a class=\"menu-mobile\" href=\"/\"></a>" +
-      "</div>");
-    $(".menu > ul > li").hover(
-      function (e) {
-        if ($(window).width() > 1025) {
-          $(this).children("ul").fadeIn(150);
-          e.preventDefault();
-        }
-      }, function (e) {
-        if ($(window).width() > 1025) {
-          $(this).children("ul").fadeOut(150);
-          e.preventDefault();
-        }
-      }
-    );
-
-    $(document).on('click', function(e){
-      if($(e.target).parents('.menu').length === 0)
-        $(".menu > ul").removeClass('show-on-mobile');
-    });
-
-    $(".menu > ul > li").click(function() {
-      var thisMenu = $(this).children("ul");
-      var prevState = thisMenu.css('display');
-      $(".menu > ul > li > ul").fadeOut();
-      if ($(window).width() < 1025) {
-        if(prevState !== 'block')
-          thisMenu.fadeIn(150);
-      }
-    });
-
-    $(".menu-mobile").click(function (e) {
-      $(".menu > ul").toggleClass('show-on-mobile');
-      e.preventDefault();
-    });
-  });
-</script>
 
 </body>
 </html>
