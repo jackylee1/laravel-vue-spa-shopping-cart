@@ -120,9 +120,6 @@
         this.types = this.typesStore;
       }
     },
-    updated() {
-      jquery.createMenu();
-    },
     computed: {
       _() {
         return _;
@@ -216,6 +213,7 @@
     watch: {
       'typesStore': function (types) {
         this.types = types;
+        _.delay(jquery.createMenu, 1000);
       }
     }
   }
