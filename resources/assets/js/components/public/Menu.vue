@@ -108,7 +108,6 @@
 
 <script>
   import mixinProducts from '../../app/public/mixins/Products';
-  import * as jquery from '../../app/public/src/jquery';
 
   let arrayToTree = require('array-to-tree');
 
@@ -119,9 +118,6 @@
       if (this.typesStore.length) {
         this.types = this.typesStore;
       }
-    },
-    updated() {
-      jquery.createMenu();
     },
     computed: {
       _() {
