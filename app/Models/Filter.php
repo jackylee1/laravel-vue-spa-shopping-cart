@@ -95,8 +95,14 @@ class Filter extends Model
         File::delete($this->path_image, [$model->image_preview, $model->image_origin]);
     }
 
-    public static function getFilters() {
-        return Filter::where('active', true)->orderBy('sorting_order', 'asc')->get();
+    public static function getFilters($active = true) {
+        $query = Filter::query();
+
+        if ($active) {
+            $query->where('active', $active);
+        }
+
+        return $query->orderBy('sorting_order', 'asc')->get();
     }
 
     public static function getFiltersById($id, $check_type_and_category = false, $id_categories = []) {

@@ -97,7 +97,7 @@ class FilterController extends Controller
 
     public function index() {
         return response()->json([
-            'filters' => Filter::getFilters()
+            'filters' => Filter::getFilters(false)
         ]);
     }
 
