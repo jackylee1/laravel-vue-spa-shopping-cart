@@ -497,7 +497,7 @@
       </span>
     </el-dialog>
 
-    <el-dialog  style="text-align:center" width="35%" :title="titleDialogWorkWith" :visible.sync="visibleDialogWorkWithCropImage">
+    <el-dialog  style="text-align:center" width="80%" :title="titleDialogWorkWith" :visible.sync="visibleDialogWorkWithCropImage">
       <croppa
           :width="cropWidth"
           :height="cropHeight"
