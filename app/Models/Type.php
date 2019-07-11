@@ -108,12 +108,14 @@ class Type extends Model
         return Type::where('slug', $slug)->first();
     }
 
-    public static function types($public = false) {
-        $types = Type::with(['categories' => function ($query) {
-            $query->with(['filters' => function ($query) {
-                $query->join('filters', function ($join) {
+    public static function types($public = false, $filter_active = true) {
+        $types = Type::with(['categories' => function ($query) use ($filter_active) {
+            $query->with(['filters' => function ($query) use ($filter_active) {
+                $query->join('filters', function ($join) use ($filter_active) {
                     $join->on('category_filters.filter_id', '=', 'filters.id');
-                    $join->where('active', true);
+                    if ($filter_active) {
+                        $join->where('active', true);
+                    }
                 });
                 $query->orderBy('filters.sorting_order', 'asc');
                 $query->addSelect([
@@ -124,10 +126,12 @@ class Type extends Model
                 ]);
             }]);
             $query->orderBy('sorting_order', 'asc');
-        }])->with(['filters' => function ($query) {
-            $query->join('filters', function ($join) {
+        }])->with(['filters' => function ($query) use ($filter_active) {
+            $query->join('filters', function ($join) use ($filter_active) {
                 $join->on('type_filters.filter_id', '=', 'filters.id');
-                $join->where('active', true);
+                if ($filter_active) {
+                    $join->where('active', true);
+                }
             });
             $query->orderBy('filters.sorting_order', 'asc');
             $query->addSelect([

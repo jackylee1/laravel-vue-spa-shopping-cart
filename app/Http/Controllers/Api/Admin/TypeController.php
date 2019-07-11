@@ -86,7 +86,7 @@ class TypeController extends Controller
     public function index()
     {
         return response()->json([
-            'types' => Type::types()
+            'types' => Type::types(false, false)
         ]);
     }
 
