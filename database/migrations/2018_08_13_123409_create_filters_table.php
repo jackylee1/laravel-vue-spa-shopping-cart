@@ -22,6 +22,7 @@ class CreateFiltersTable extends Migration
             $table->integer('type');
             $table->char('image_origin')->nullable();
             $table->char('image_preview')->nullable();
+            $table->integer('attached_filter_to_image')->nullable();
             $table->integer('sorting_order')->default(0);
             $table->boolean('show_on_index')->default(false);
             $table->boolean('show_on_header')->default(false);

@@ -3,12 +3,12 @@
     <PageElementsBreadcrumb :breadcrumbElements="breadcrumbElements"/>
 
     <div class="ds-block" v-on:click="alerts = []">
-      <el-form label-position="top" class="ds-source"
+      <el-form label-position="right" class="ds-source"
                ref="formWorkWithModel"
                :rules="rules"
                @keydown.enter="onSubmit"
                :model="form"
-               label-width="120px">
+               label-width="200px">
         <el-form-item label="Промо-код" prop="code">
           <el-input :disabled="true" type="text" v-model="form.code" placeholder="Введите Промо-код"></el-input>
         </el-form-item>

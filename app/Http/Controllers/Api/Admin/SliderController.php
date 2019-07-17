@@ -44,7 +44,9 @@ class SliderController extends Controller
             'title' => 'required|string|max:191',
             'description' => 'nullable|string|max:50000',
             'url' => 'nullable|url',
-            'image' => ($update) ? 'nullable' : 'required' . '|image|max:2048'
+            'image' => ($update) ? 'nullable' : 'required' . '|image|max:2048',
+            'title_align' => 'nullable|string|in:center,left,right',
+            'btn_align' => 'nullable|string|in:center,left,right',
         ]);
 
         $this->setValidateAttribute([

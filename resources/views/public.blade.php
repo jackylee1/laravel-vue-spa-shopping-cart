@@ -26,6 +26,12 @@
     </style>
 
     <script src="//unpkg.com/@textback/notification-widget@latest/build/index.js"></script>
+
+    <style type="text/css">
+        .checkout_form .checkout_login .validate, .checkout_data .checkout_login .validate, .checkout_form .checkout_user_info .validate, .checkout_data .checkout_user_info .validate {
+            font-weight: 100;
+        }
+    </style>
 </head>
 
 <body>

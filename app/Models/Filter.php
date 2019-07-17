@@ -39,6 +39,15 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Filter whereTypeIndex($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Filter disableCache()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Filter withCacheCooldownSeconds($seconds)
+ * @property string|null $slug
+ * @property int $show_image
+ * @property int $active
+ * @property int|null $attached_filter_to_image
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\CategoryFilter[] $categoryFilter
+ * @property-read \App\Models\TypeFilter $typeFilter
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Filter whereActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Filter whereAttachedFilterToImage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Filter whereShowImage($value)
  */
 class Filter extends Model
 {
@@ -59,6 +68,7 @@ class Filter extends Model
         'show_image',
         'image_origin',
         'image_preview',
+        'attached_filter_to_image',
         'slug'
     ];
     protected $casts = [
@@ -70,6 +80,7 @@ class Filter extends Model
         'show_on_header' => 'integer',
         'show_on_footer' => 'integer',
         'show_image' => 'integer',
+        'attached_filter_to_image' => 'integer',
         'active' => 'integer',
     ];
     public $timestamps = false;
@@ -141,6 +152,10 @@ class Filter extends Model
         $model->show_on_footer = request()->get('show_on_footer');
         $model->active = request()->get('active');
         $model->show_image = request()->get('show_image');
+
+        if ($model->parent_id == 0) {
+            $model->attached_filter_to_image = request()->get('attached_filter_to_image');
+        }
 
         if ($image_origin !== null && $image_preview !== null) {
             $this->deleteImages($model);

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <section class="utp" v-if="utfRecords.length">
+    <section class="utp">
       <div class="container d-flex justify-content-center">
         <div class="row">
           <div class="col-12 utp_items centered">

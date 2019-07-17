@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TypeFilter disableCache()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TypeFilter withCacheCooldownSeconds($seconds)
  * @property-read \App\Models\Filter $filter
+ * @property-read \App\Models\ProductInFilterTree $productInFilterTree
  */
 class TypeFilter extends Model
 {

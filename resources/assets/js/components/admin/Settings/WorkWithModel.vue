@@ -3,12 +3,12 @@
     <PageElementsBreadcrumb :breadcrumbElements="breadcrumbElements"/>
 
     <div class="ds-block" v-on:click="alerts = []">
-      <el-form label-position="top" class="ds-source"
+      <el-form label-position="right" class="ds-source"
                ref="formWorkWithModel"
                :rules="rules"
                @keydown.enter="onSubmit"
                :model="form"
-               label-width="120px">
+               label-width="200px">
 
         <el-form-item label="Контактный телефон (1)" prop="phone1">
           <el-input type="text" v-model="form.phone1" placeholder="Введите Контактный телефон (1)"></el-input>

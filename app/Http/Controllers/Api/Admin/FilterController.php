@@ -79,6 +79,7 @@ class FilterController extends Controller
             'show_on_footer' => 'nullable|boolean',
             'show_on_index' => 'nullable|boolean',
             'show_image' => 'nullable|boolean',
+            'attached_filter_to_image' => 'nullable|integer|exists:filters,id'
         ]);
 
         $this->setValidateAttribute([
@@ -91,7 +92,8 @@ class FilterController extends Controller
             'show_on_footer' => 'Показать в футере',
             'show_image' => 'Отображать изображение',
             'image' => 'Изображение фильтра',
-            'slug' => 'SEO URL'
+            'slug' => 'SEO URL',
+            'attached_filter_to_image' => 'Прикрепленный фильтр к изображению'
         ]);
     }
 

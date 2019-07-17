@@ -446,9 +446,13 @@
       getActiveFilters: function () {
         let type =  (this.currentType !== null) ? this.currentType.id : null;
         let category =  (this.currentCategory !== null) ? this.currentCategory.id : null;
+        let text = this.$store.getters.searchByText;
 
         return this.activeFilters.find((item) => {
-          return item.type_id === type && item.category_id === category && item.sort === this.getSort();
+          return item.type_id === type
+            && item.category_id === category
+            && item.sort === this.getSort()
+            && item.text === text;
         });
       },
       selectCorrectFiltersId: function (idFilters, activeFilters = null) {

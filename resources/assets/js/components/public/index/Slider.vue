@@ -15,14 +15,16 @@
             <div :class="(index === 0) ? 'carousel-item active' : 'carousel-item'"
                  :style="'background-image: url(/app/public/images/slider/'+item.image_origin+')'">
               <div class="carousel-caption d-none d-md-block">
-                <h2>{{item.title}}</h2>
+                <h2 :style="`text-align: ${item.title_align}`">{{item.title}}</h2>
                 <p v-html="item.description"></p>
-                <a v-if="item.url !== null"
-                   href="javascript:void(0)"
-                   @click="openLinkSlider(item.url)"
-                   class="more_info">
-                  Подробнее
-                </a>
+                <div :style="`text-align: ${item.btn_align}`">
+                  <a v-if="item.url !== null"
+                     href="javascript:void(0)"
+                     @click="openLinkSlider(item.url)"
+                     class="more_info">
+                    Подробнее
+                  </a>
+                </div>
               </div>
             </div>
           </template>

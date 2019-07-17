@@ -3,12 +3,12 @@
     <PageElementsBreadcrumb :breadcrumbElements="breadcrumbElements"/>
 
     <div class="ds-block" v-on:click="alerts = []">
-      <el-form label-position="top" class="ds-source"
+      <el-form label-position="right" class="ds-source"
                ref="formWorkWithModel"
                :rules="rules"
                @keydown.enter="onSubmit"
                :model="form"
-               label-width="120px">
+               label-width="200px">
         <el-form-item label="Артикул" prop="article">
           <el-input type="text" v-model="form.article" placeholder="Введите Артикул"></el-input>
         </el-form-item>
@@ -352,7 +352,9 @@
     </el-row>
 
     <el-dialog width="40%" :title="titleDialogWorkWith" :visible.sync="visibleDialogWorkWithVideo">
-      <el-form :model="modelVideo"
+      <el-form label-position="right" label-width="200px"
+               :model="modelVideo"
+               @keyup.enter.native="videoManagementHandler"
                ref="formWorkWithVideo">
         <el-form-item label="Ссылка на Youtube видео"
                       prop="url">
@@ -381,7 +383,7 @@
     </el-dialog>
 
     <el-dialog width="40%" :title="titleDialogWorkWith" :visible.sync="visibleDialogWorkWithAvailable">
-      <el-form ref="formWorkWithAvailable">
+      <el-form label-position="right" label-width="200px" ref="formWorkWithAvailable">
         <el-form-item label="Выберите параметры товара">
           <el-select :disabled="disabledSelectFilters"
                      v-model="selectedFilters"
@@ -466,7 +468,9 @@
 
     <el-dialog width="40%" :title="titleDialogWorkWith" :visible.sync="visibleDialogWorkWithImage">
       <el-form ref="formWorkWithImage"
+               label-position="right" label-width="200px"
                :rules="rulesImage"
+               @keyup.enter.native="clickWorkWithImage"
                :model="workWithImage">
         <img height="50%" width="auto" v-bind:src="this.getFullPathImage(this.productImageOnModal)" class="ds-image">
         <el-button-group style="text-align:center;margin-top:15px;margin-bottom:15px;">

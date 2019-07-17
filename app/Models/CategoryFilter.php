@@ -20,6 +20,8 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CategoryFilter disableCache()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CategoryFilter withCacheCooldownSeconds($seconds)
+ * @property-read \App\Models\Filter $filter
+ * @property-read \App\Models\ProductInFilterTree $productInFiltersTree
  */
 class CategoryFilter extends Model
 {

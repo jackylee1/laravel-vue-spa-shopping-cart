@@ -45,7 +45,12 @@ export default {
       textBlockDataTypes: [
         { value: 0, label: 'Страница' },
         { value: 1, label: 'Ссылка' }
-      ]
+      ],
+      align: [
+        { value: 'left', label: 'По левому краю' },
+        { value: 'center', label: 'По центру' },
+        { value: 'right', label: 'По правому краю' }
+      ],
     },
     users: [],
     search: {
@@ -173,6 +178,9 @@ export default {
     },
     selectDataTextBlockDataTypes: function (state) {
       return state.selectData.textBlockDataTypes;
+    },
+    selectDataAlign: function (state) {
+      return state.selectData.align;
     },
     searchProducts: function (state) {
       return state.search.products;

@@ -129,7 +129,7 @@ class ProductInFilter extends Model
         ])->get();
     }
 
-    public static function getActiveFilters($type_id = null, $category_id = null) {
+    public static function getActiveFilters($type_id = null, $category_id = null, $text = null) {
         $query = ProductInFilter::query();
         $where = [];
 
@@ -144,6 +144,12 @@ class ProductInFilter extends Model
             $id_categories[] = $category_id;
             $query->whereHas('categories', function ($query) use ($id_categories) {
                 $query->whereIn('category_id', $id_categories);
+            });
+        }
+
+        if ($text !== null) {
+            $query->whereHas('product', function ($query) {
+                $query->searchByText();
             });
         }
 

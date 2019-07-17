@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ProductInFilterTree disableCache()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ProductInFilterTree withCacheCooldownSeconds($seconds)
+ * @property-read \App\Models\ProductInFilter $productInFilter
  */
 class ProductInFilterTree extends Model
 {

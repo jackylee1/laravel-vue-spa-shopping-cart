@@ -2,7 +2,9 @@
   <div>
     <PageElementsBreadcrumb :breadcrumbElements="breadcrumbElements"/>
 
-    <el-form :model="formSearch" class="ds-query-form" label-width="250px">
+    <el-form :model="formSearch"
+             @keyup.enter.native="onSubmitSearch"
+             class="ds-query-form" label-width="250px">
       <el-form-item label="ID Заказа">
         <el-input v-model="formSearch.id"
                   placeholder="ID Заказа">
@@ -325,6 +327,8 @@
         this.getOrders(page);
       },
       onResetSearch: function () {
+        this.alerts = [];
+
         this.formSearch = {
           id: null,
           user_name: '',
@@ -338,7 +342,13 @@
         this.getOrders(1);
       },
       onSubmitSearch: function () {
-        this.getOrders(1);
+        this.alerts = [];
+
+        this.getOrders(1).catch(error => {
+          this.alerts = error.response.data.errors;
+          this.typeAlerts = 'error';
+          this.loading = false;
+        });
         this.oldFormSearch = this.formSearch;
         this.$store.commit('updateSearchOrders', this.formSearch);
       },

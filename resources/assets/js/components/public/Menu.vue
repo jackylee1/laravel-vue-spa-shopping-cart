@@ -46,7 +46,7 @@
                       <li v-if="type.image_origin !== null" class="sixth_column">
                         <ul>
                           <li>
-                            <a href="javascript:void(0)">
+                            <a href="javascript:void(0)" @click="openLinkByObject({ name: 'catalog', query: { type: type.slug, text: null } })">
                               <img class="menu_img"
                                    :src="`/app/public/images/type/${type.image_origin}`"
                                    :alt="type.name">
@@ -84,9 +84,17 @@
                           <li v-if="filter.image_preview !== null" class="sixth_column brands">
                             <ul>
                               <li>
-                                <a href="javascript:void(0)">
+                                <a v-if="filter.attached_filter_to_image !== null"
+                                   @click="productsByFilter(filtersOnHeader.find(item => item.id === filter.attached_filter_to_image))"
+                                   href="javascript:void(0)">
                                   <img class="menu_img"
-                                       :src="`/app/public/images/filter/${filter.image_preview}`"
+                                       :src="`/app/public/images/filter/${filter.image_origin}`"
+                                       :alt="filter.name">
+                                </a>
+                                <a v-else
+                                   href="javascript:void(0)">
+                                  <img class="menu_img"
+                                       :src="`/app/public/images/filter/${filter.image_origin}`"
                                        :alt="filter.name">
                                 </a>
                               </li>

@@ -77,6 +77,13 @@ use Illuminate\Support\Facades\DB;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product whereMKeywords($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product whereMTitle($value)
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProductVideo[] $video
+ * @property int $in_xml
+ * @property int $new
+ * @property int $status_bestseller
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product promotionalProduct()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product whereInXml($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product whereNew($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product whereStatusBestseller($value)
  */
 class Product extends Model
 {

@@ -4,7 +4,11 @@
       <div class="col-sm-6 variants">
       </div>
       <div class="col-sm-6 tablecell">
-        <a href="#size_table">Таблица размеров</a>
+        <a v-if="product.size_table !== null"
+           href="javascript:void(0)"
+           @click="scrollToTableSizes">
+          Таблица размеров
+        </a>
       </div>
     </div>
 
@@ -25,7 +29,11 @@
         </form>
       </div>
       <div class="col-md-4 size_table_link">
-        <a v-if="product.size_table !== null" href="#size_table">Таблица размеров</a>
+        <a v-if="product.size_table !== null"
+           href="javascript:void(0)"
+           @click="scrollToTableSizes">
+          Таблица размеров
+        </a>
       </div>
     </div>
     <div v-if="idAvailable === null" class="row by_it">
@@ -86,6 +94,9 @@
     mixins: [mixinFavorite, mixinCart, mixinAlerts],
     components: {ModalByInOnOneClick, Errors, RenderAvailable},
     methods: {
+      scrollToTableSizes: function () {
+        this.$scrollTo('#size_table', 650)
+      },
       modalByInOneClick: function () {
         $('#modalByInOnOneClick').modal('show');
       }

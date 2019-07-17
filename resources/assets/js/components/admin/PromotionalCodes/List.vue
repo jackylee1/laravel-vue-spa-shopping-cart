@@ -4,7 +4,9 @@
 
     <PageElementsAlerts :alerts="alerts" :type="typeAlert"/>
 
-    <el-form :inline="true" :model="formSearch" class="ds-query-form">
+    <el-form :inline="true" :model="formSearch"
+             @keyup.enter.native="onSubmitSearch"
+             class="ds-query-form">
       <el-form-item label="Текст запроса">
         <el-input v-model="formSearch.q" placeholder="Введите текст запроса"></el-input>
       </el-form-item>

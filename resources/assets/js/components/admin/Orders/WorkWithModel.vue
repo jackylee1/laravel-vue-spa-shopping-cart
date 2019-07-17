@@ -3,12 +3,12 @@
     <PageElementsBreadcrumb :breadcrumbElements="breadcrumbElements"/>
 
     <div class="ds-block" v-on:click="alerts = []">
-      <el-form label-position="top" class="ds-source"
+      <el-form label-position="right" class="ds-source"
                ref="formWorkWithModel"
                :rules="rules"
                @keydown.enter="onSubmit"
                :model="form"
-               label-width="120px">
+               label-width="200px">
 
         <input type="hidden" :value="form.user_id">
         <el-form-item label="Пользователь" v-if="user !== null">
@@ -21,17 +21,21 @@
         </el-form-item>
 
         <template v-if="user !== null && user.discount > 0">
-          <el-alert :closable="false"
-                    title="Прикрепленный пользователь имеет персональную скилку. Она в приоритете выше скидки на группу."
-                    type="info">
-          </el-alert>
+          <el-form-item>
+            <el-alert :closable="false"
+                      title="Прикрепленный пользователь имеет персональную скилку. Она в приоритете выше скидки на группу."
+                      type="info">
+            </el-alert>
+          </el-form-item>
         </template>
 
         <template v-if="user !== null && user.group !== undefined && user.group !== null">
-          <el-alert :closable="false"
-                    title="Прикреплённый пользователь состоит в Группе пользователей. Её скидка может повлиять на общую сумму заказа"
-                    type="info">
-          </el-alert>
+          <el-form-item>
+            <el-alert :closable="false"
+                      title="Прикреплённый пользователь состоит в Группе пользователей. Её скидка может повлиять на общую сумму заказа"
+                      type="info">
+            </el-alert>
+          </el-form-item>
         </template>
 
         <template v-if="user !== null && user.promotional_codes.length">
@@ -45,16 +49,20 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-alert :closable="false"
-                    title="Чтобы открепить промо-код от заказа выберите 'Не выбран'"
-                    type="info">
-          </el-alert>
+          <el-form-item>
+            <el-alert :closable="false"
+                      title="Чтобы открепить промо-код от заказа выберите 'Не выбран'"
+                      type="info">
+            </el-alert>
+          </el-form-item>
         </template>
         <template v-else>
-          <el-alert :closable="false"
-                    title="Чтобы открепить промо-код от заказа удалите данные в поле Промо-код"
-                    type="info">
-          </el-alert>
+          <el-form-item>
+            <el-alert :closable="false"
+                      title="Чтобы открепить промо-код от заказа удалите данные в поле Промо-код"
+                      type="info">
+            </el-alert>
+          </el-form-item>
         </template>
 
         <el-form-item v-if="form.promotional_code != null"
@@ -378,7 +386,7 @@
     <el-dialog width="45%" v-if="operationsOnProduct !== null"
                :title="operationsOnProduct.name + ' | Выберите опции и введите количество'"
                :visible.sync="dialogSelectAvailableVisible">
-      <el-form>
+      <el-form label-position="right" label-width="200px">
         <el-form-item label="Опция">
           <el-select v-model="selectedAvailableId"
                      placeholder="Выберите опцию">
@@ -390,9 +398,11 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <template v-if="selectedAvailableId !== null">
-          <p>В наличии: {{this.getQuantityAvailable().quantity}}</p>
-        </template>
+        <el-form-item>
+          <template v-if="selectedAvailableId !== null">
+            <p>В наличии: {{this.getQuantityAvailable().quantity}}</p>
+          </template>
+        </el-form-item>
         <el-form-item label="Количество">
           <el-input v-model="inputQuantity"
                     placeholder="Введите количество">

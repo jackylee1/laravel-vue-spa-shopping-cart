@@ -89,9 +89,13 @@
                   order.data.unshift(res.data.order);
                   this.$store.commit('updateOrders', order);
                 }
+
                 this.phone = null;
                 this.typeAlerts = 'success';
                 this.alerts = 'Заказ успешно создан. В ближайшее время с Вами свяжется менеджер для уточнения данных по заказу';
+
+                this.$validator.reset();
+
                 this.$notify({
                   type: 'success',
                   title: 'Заказ',

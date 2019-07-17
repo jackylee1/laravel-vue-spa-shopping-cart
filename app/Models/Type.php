@@ -40,6 +40,13 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Type whereMDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Type whereMKeywords($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Type whereMTitle($value)
+ * @property string|null $image_index_origin
+ * @property string|null $image_index_preview
+ * @property int $show_on_header
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Type whereImageIndexOrigin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Type whereImageIndexPreview($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Type whereShowOnCertificate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Type whereShowOnHeader($value)
  */
 class Type extends Model
 {

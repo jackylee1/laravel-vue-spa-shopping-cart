@@ -3,12 +3,12 @@
     <PageElementsBreadcrumb :breadcrumbElements="breadcrumbElements"/>
 
     <div class="ds-block" v-on:click="alerts = []">
-      <el-form label-position="top" class="ds-source"
+      <el-form label-position="right" class="ds-source"
                ref="formWorkWithModel"
                :rules="rules"
                @keydown.enter="onSubmit"
                :model="form"
-               label-width="120px">
+               label-width="200px">
 
         <el-form-item label="Наименование" prop="name">
           <el-input type="text" v-model="form.name" placeholder="Введите Имя"></el-input>
@@ -177,6 +177,9 @@
 
     <el-dialog :title="titleDialogWorkWith" :visible.sync="visibleDialogWorkWithNode">
       <el-form ref="formWorkWithNode"
+               label-position="right"
+               label-width="200px"
+               @keyup.enter.native="clickWorkWithNode"
                v-loading="loading"
                :rules="rulesNode"
                :model="workWithNode">
@@ -219,12 +222,15 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-alert
-              style="margin-bottom: 10px"
-              title="Если выбрать Нет то при отрисовке категорий в шабке сайта будут видны только подкатегории"
-              type="info"
-              :closable="false">
-          </el-alert>
+
+          <el-form-item>
+            <el-alert
+                style="margin-bottom: 10px"
+                title="Если выбрать Нет то при отрисовке категорий в шабке сайта будут видны только подкатегории"
+                type="info"
+                :closable="false">
+            </el-alert>
+          </el-form-item>
         </template>
 
         <template v-if="workWithNode.parent_id === 1">
@@ -267,14 +273,16 @@
           </el-form-item>
         </template>
 
-        <el-select v-model="workWithNode.parent_id" placeholder="Выберите родителя" prop="parent_id">
-          <el-option
-              v-for="item in renderSelectParent"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id">
-          </el-option>
-        </el-select>
+        <el-form-item>
+          <el-select v-model="workWithNode.parent_id" placeholder="Выберите родителя" prop="parent_id">
+            <el-option
+                v-for="item in renderSelectParent"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
       </el-form>
       <PageElementsAlerts :alerts="modalAlerts" :type="modalTypeAlerts"/>
       <span slot="footer" class="dialog-footer">

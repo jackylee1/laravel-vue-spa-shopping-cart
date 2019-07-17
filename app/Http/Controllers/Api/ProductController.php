@@ -71,7 +71,8 @@ class ProductController extends Controller
             if ($request->filled('load_active_filter') && $request->load_active_filter == 1) {
                 $this->setData('active_filters', ProductInFilter::getActiveFilters(
                     $request->get('type'),
-                    $request->get('category')
+                    $request->get('category'),
+                    mb_strlen($request->get('text')) > 0 ? $request->get('text') : null
                 ));
             }
         }

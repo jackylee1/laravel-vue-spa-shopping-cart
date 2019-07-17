@@ -68,6 +68,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Order whereAreaId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Order whereCityId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Order whereWarehouseId($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\OrderPromotionalCodeUsedCash[] $promotionalCodeUsedCash
  */
 class Order extends Model
 {

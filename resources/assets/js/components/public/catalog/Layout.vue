@@ -229,13 +229,15 @@
               return item.type_id === this.getTypeIdAndCategoryId().type_id
                 && item.category_id === this.getTypeIdAndCategoryId().category_id
                 && item.sort === this.getSort()
+                && item.text === this.$store.getters.searchByText
             });
             if (index === -1) {
               activeFiltersData.push({
                 type_id: this.getTypeIdAndCategoryId().type_id,
                 category_id: this.getTypeIdAndCategoryId().category_id,
                 filters: res.data.active_filters,
-                sort: this.getSort()
+                sort: this.getSort(),
+                text: this.$store.getters.searchByText
               });
 
               this.$store.commit('updateActiveFilters', activeFiltersData);
@@ -261,7 +263,8 @@
           let selectActiveFilter = _.filter(this.activeFilters, {
             type_id: this.getTypeIdAndCategoryId().type_id,
             category_id: this.getTypeIdAndCategoryId().category_id,
-            sort: this.getSort()
+            sort: this.getSort(),
+            text: this.$store.getters.searchByText
           });
           if (selectActiveFilter.length) {
             statusActiveFilters = 0;

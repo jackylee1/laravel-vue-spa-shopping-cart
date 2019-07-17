@@ -1,6 +1,8 @@
 <template>
   <div>
-    <el-form :model="formSearch" class="ds-query-form" label-width="250px">
+    <el-form :model="formSearch"
+             @keyup.enter.native="onSubmitSearch"
+             class="ds-query-form" label-width="250px">
       <el-form-item label="Поиск по">
         <el-input v-model="formSearch.q"
                   placeholder="артикул, наименованию и краткому описанию"></el-input>

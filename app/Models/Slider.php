@@ -29,6 +29,10 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Slider disableCache()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Slider withCacheCooldownSeconds($seconds)
+ * @property string|null $title_align
+ * @property string|null $btn_align
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Slider whereBtnAlign($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Slider whereTitleAlign($value)
  */
 class Slider extends Model
 {
@@ -41,7 +45,9 @@ class Slider extends Model
         'url',
         'image_preview',
         'image_origin',
-        'sorting_order'
+        'sorting_order',
+        'title_align',
+        'btn_align'
     ];
     public $path_image = 'public/images/slider/';
 
@@ -72,6 +78,8 @@ class Slider extends Model
             $model->image_origin = $image_origin;
         }
         $model->sorting_order = (request()->filled('sorting_order')) ? request()->get('sorting_order') : 0;
+        $model->title_align = request()->get('title_align');
+        $model->btn_align = request()->get('btn_align');
         $model->save();
 
         return $model;

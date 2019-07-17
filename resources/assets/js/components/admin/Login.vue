@@ -1,7 +1,9 @@
 <template>
   <div style="">
-    <div class="ds-block" style="min-width: 350px; max-width: 750px;margin: auto;" @keydown.enter="onSubmit">
-      <el-form class="ds-source" ref="form" :model="form" label-width="120px">
+    <div class="ds-block" style="min-width: 350px; max-width: 750px;margin: auto;">
+      <el-form class="ds-source" ref="form" :model="form"
+               @keyup.enter.native="onSubmit"
+               label-width="200px">
         <el-form-item label="E-mail">
           <el-input type="email" v-model="form.email" placeholder="Введите E-mail"></el-input>
         </el-form-item>

@@ -41,6 +41,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Category whereMTitle($value)
  * @property int|null $hidden_name
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Category whereHiddenName($value)
+ * @property int $active_link
+ * @property-read \App\Models\ProductInFilterCategory $productInCategories
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Category whereActiveLink($value)
  */
 class Category extends Model
 {

@@ -40,7 +40,10 @@
 
     <el-dialog :title="titleDialogWorkWithNode" :visible.sync="visibleDialogWorkWithNode">
       <el-form ref="formWorkWithNode"
+               label-position="right"
+               label-width="200px"
                :rules="rulesNode"
+               @keyup.enter.native="clickWorkWithNode"
                :model="workWithNode">
         <el-form-item label="Наименование" prop="name">
           <el-input v-model="workWithNode.name"></el-input>
@@ -72,6 +75,27 @@
             <div v-if="fileName.length">Выбранное изображение: {{fileName}}</div>
           </el-upload>
         </el-form-item>
+
+        <template v-if="workWithNode.parent_id === 0">
+          <el-form-item label="Прикрепленный фильтр к изображению">
+            <el-select v-model="workWithNode.attached_filter_to_image" placeholder="Прикрепленный фильтр к изображению"
+                       prop="attached_filter_to_image">
+              <el-option
+                  v-for="item in this.getChildrenFilters(workWithNode)"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item>
+            <el-alert :closable="false"
+                      title="Прикрепленный фильтр к изображению - учитывается только на Изображение в меню сайта"
+                      type="info">
+            </el-alert>
+          </el-form-item>
+        </template>
 
         <el-form-item v-if="workWithNode.type !== 0" label="Показать на главной">
           <el-select v-model="workWithNode.show_on_index" placeholder="Показать на главной" prop="show_on_index">
@@ -106,7 +130,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item  v-if="workWithNode.type === 0">
+        <el-form-item v-if="workWithNode.type === 0">
           <el-alert :closable="false"
                     title="Показать изображение - учитывается в случае если родительский фильтр Отображается на главной или Отображается в шапке"
                     type="info">
@@ -135,14 +159,14 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item  v-if="workWithNode.type !== 0">
+        <el-form-item v-if="workWithNode.type !== 0">
           <el-alert :closable="false"
                     title="Активный фильтр - параметр отвечает за отображение фильтра на сайте."
                     type="info">
           </el-alert>
         </el-form-item>
 
-        <el-form-item  label="Выберите тип фильтра">
+        <el-form-item label="Выберите тип фильтра">
           <el-select v-model="workWithNode.type" placeholder="Выберите тип" prop="type">
             <el-option
                 v-for="item in this.selectFilterTypes"
@@ -325,6 +349,7 @@
           image: null,
           image_preview: null,
           image_origin: null,
+          attached_filter_to_image: null,
           slug: null
         };
         this.visibleDialogWorkWithNode = true;
@@ -422,6 +447,13 @@
           remove: null,
           lower: true
         })
+      },
+      getChildrenFilters: function (filter) {
+        let filters = _.filter(this.filters, { parent_id: filter.id });
+
+        filters.unshift({id: null, name: ''});
+
+        return filters;
       }
     },
     components: {

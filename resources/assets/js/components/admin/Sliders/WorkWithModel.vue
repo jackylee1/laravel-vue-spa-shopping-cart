@@ -3,12 +3,12 @@
     <PageElementsBreadcrumb :breadcrumbElements="breadcrumbElements"/>
 
     <div class="ds-block" v-on:click="alerts = []">
-      <el-form label-position="top" class="ds-source"
+      <el-form label-position="right" class="ds-source"
                ref="formWorkWithModel"
                :rules="rules"
                @keydown.enter="onSubmit"
                :model="form"
-               label-width="120px">
+               label-width="200px">
         <el-form-item label="Текущее изображение" v-if="form.image_preview !== null">
           <img width="250" height="auto" :src="'/app/public/images/slider/'+form.image_preview">
         </el-form-item>
@@ -41,6 +41,28 @@
 
         <el-form-item label="Ссылка на кнопке" prop="url">
           <el-input type="text" v-model="form.url" placeholder="Введите Ссылку на кнопке"></el-input>
+        </el-form-item>
+
+        <el-form-item label="Выравнивание заголовка">
+          <el-select v-model="form.title_align" placeholder="Выравнивание заголовка" prop="title_align">
+            <el-option
+                v-for="item in this.selectAlign"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="Выравнивание кнопки">
+          <el-select v-model="form.btn_align" placeholder="Выравнивание кнопки" prop="btn_align">
+            <el-option
+                v-for="item in this.selectAlign"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
 
         <el-form-item label="Порядок сорт." prop="sorting_order">
@@ -135,6 +157,9 @@
       sliders: function() {
         return this.$store.getters.sliders;
       },
+      selectAlign: function () {
+        return this.$store.getters.selectDataAlign;
+      },
     },
     methods: {
       changeOldForm: function (data) {
@@ -181,6 +206,8 @@
           image: {},
           image_preview: null,
           image_origin: null,
+          title_align: 'left',
+          btn_align: 'left'
         }
       },
       setBreadcrumbElements: function () {

@@ -3,12 +3,12 @@
     <PageElementsBreadcrumb :breadcrumbElements="breadcrumbElements"/>
 
     <div class="ds-block" v-on:click="alerts = []">
-      <el-form label-position="top" class="ds-source"
+      <el-form label-position="right" class="ds-source"
                ref="formWorkWithModel"
                :rules="rules"
                @keydown.enter="onSubmit"
                :model="form"
-               label-width="120px">
+               label-width="200px">
 
         <el-form-item label="Ссылка на Youtube видео" prop="video">
           <el-input type="text" v-model="form.video" placeholder="Введите Ссылка на Youtube видео"></el-input>
@@ -191,3 +191,9 @@
     }
   }
 </script>
+
+<style scoped>
+  .el-form-item {
+    margin-bottom: 5px;
+  }
+</style>
