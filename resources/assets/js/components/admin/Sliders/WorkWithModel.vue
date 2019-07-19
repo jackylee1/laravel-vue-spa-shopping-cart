@@ -54,6 +54,10 @@
           </el-select>
         </el-form-item>
 
+        <el-form-item label="Цвет заголовка" prop="title_color">
+          <el-color-picker v-model="form.title_color"></el-color-picker>
+        </el-form-item>
+
         <el-form-item label="Выравнивание кнопки">
           <el-select v-model="form.btn_align" placeholder="Выравнивание кнопки" prop="btn_align">
             <el-option
@@ -207,7 +211,8 @@
           image_preview: null,
           image_origin: null,
           title_align: 'left',
-          btn_align: 'left'
+          btn_align: 'left',
+          title_color: '#fff'
         }
       },
       setBreadcrumbElements: function () {

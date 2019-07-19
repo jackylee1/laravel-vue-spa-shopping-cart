@@ -19,6 +19,7 @@ class CreateSlidersTable extends Migration
             $table->text('description')->nullable();
             $table->text('url')->nullable();
             $table->text('title_align')->default('left');
+            $table->text('title_color')->default('#fff');
             $table->text('btn_align')->default('left');
             $table->char('image_origin');
             $table->char('image_preview');

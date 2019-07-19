@@ -240,6 +240,9 @@ class OrderController extends Controller
 
     public function sendStatus(Request $request) {
         $order = Order::getOrder($request->order_id);
+        $order->load([
+            'status'
+        ]);
         $status = null;
         $this->setValidateRule([
             'order_id' => 'required|integer|exists:orders,id',
@@ -274,7 +277,7 @@ class OrderController extends Controller
         }
 
         Notification::route('mail', $email)
-            ->notify(new SendOrderStatusNotification($status, $order->id, $order->user_id));
+            ->notify(new SendOrderStatusNotification($status, $order));
 
         $status->send_status = true;
         $status->save();

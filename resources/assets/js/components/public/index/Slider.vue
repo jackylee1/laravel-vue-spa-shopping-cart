@@ -15,7 +15,7 @@
             <div :class="(index === 0) ? 'carousel-item active' : 'carousel-item'"
                  :style="'background-image: url(/app/public/images/slider/'+item.image_origin+')'">
               <div class="carousel-caption d-none d-md-block">
-                <h2 :style="`text-align: ${item.title_align}`">{{item.title}}</h2>
+                <h2 :style="`text-align: ${item.title_align};color:${item.title_color}`">{{item.title}}</h2>
                 <p v-html="item.description"></p>
                 <div :style="`text-align: ${item.btn_align}`">
                   <a v-if="item.url !== null"

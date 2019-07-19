@@ -29,6 +29,7 @@ class CreateFiltersTable extends Migration
             $table->boolean('show_on_footer')->default(false);
             $table->boolean('show_image')->default(true);
             $table->boolean('active')->default(true);
+            $table->boolean('is_brand')->default(false);
         });
     }
 

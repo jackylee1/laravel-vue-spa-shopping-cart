@@ -113,13 +113,18 @@ class OrderController extends Controller
         $cart->products()->delete();
         $cart->save();
 
+        $order = Order::getOrder($order->id);
+        $order->load([
+            'status'
+        ]);
+
         if ($order->email !== null) {
             Notification::route('mail', $order->email)
                 ->notify(new SendCreateOrderNotification($order));
 
         }
 
-        $this->sendToAdminCreateNotification($order->id);
+        $this->sendToAdminCreateNotification($order);
 
         event(new AdminEvent('order', $order));
 
@@ -226,7 +231,11 @@ class OrderController extends Controller
 
         $order = Order::getOrder($order->id);
 
-        $this->sendToAdminCreateNotification($order->id);
+        $order->load([
+            'status'
+        ]);
+
+        $this->sendToAdminCreateNotification($order);
 
         event(new AdminEvent('order', $order));
 

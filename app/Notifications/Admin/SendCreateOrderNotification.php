@@ -2,6 +2,9 @@
 
 namespace App\Notifications\Admin;
 
+use App\Models\Filter;
+use App\Models\Setting;
+use App\Models\Type;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,11 +14,11 @@ class SendCreateOrderNotification extends Notification
 {
     use Queueable;
 
-    public $order_id;
+    public $order;
 
-    public function __construct($order_id)
+    public function __construct($order)
     {
-        $this->order_id = $order_id;
+        $this->order = $order;
     }
 
     /**
@@ -37,12 +40,17 @@ class SendCreateOrderNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        $mail_message = new MailMessage();
-        $mail_message->subject('У вас новый заказ | '.env('APP_NAME'))
-            ->greeting('У вас новый заказ.');
-        $mail_message->action('Просмотреть в админ. панеле', url("/admin/orders/update/{$this->order_id}"));
+        $setting = Setting::getItems();
 
-        return $mail_message;
+        return (new MailMessage())->subject('Заказ на сайте ' . env('APP_NAME'))->view('emails.order', [
+            'types'=> Type::types(),
+            'filters' => Filter::getFilters(),
+            'order' => $this->order,
+            'btn_url' => url('/admin/orders/update/' . $this->order->id),
+            'btn_name' => 'Просмотреть в админ панеле',
+            'address' => $setting->firstWhere('slug', 'address')->value,
+            'email' => $setting->firstWhere('slug', 'email')->value,
+        ]);
     }
 
     /**

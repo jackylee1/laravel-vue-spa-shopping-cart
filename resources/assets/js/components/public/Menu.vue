@@ -64,7 +64,7 @@
                       <a class="menu_tab last" href="#">{{filter.name}}</a>
                       <template v-if="filter.children !== undefined && filter.children.length">
                         <ul>
-                          <template v-for="(filtersChunk, index) in _.chunk(filter.children, 4)">
+                          <template v-for="(filtersChunk, index) in _.chunk(filter.children, 3)">
                             <li :class="(index === 0) ? 'first_column brands' : 'second_column brands'">
                               <ul>
                                 <template v-for="filterItemChunk in filtersChunk">

@@ -182,6 +182,12 @@
           min-width="150">
         <template slot-scope="props">
           <el-button-group>
+            <el-tooltip content="Скопировать ссылку" placement="top">
+              <el-button size="mini"
+                         @click="clipboardCopyUrl(props.row.slug)">
+                <i class="ai-copy"></i>
+              </el-button>
+            </el-tooltip>
             <el-button
                 @click.native.prevent="viewOnSite(props.row)"
                 size="mini">
@@ -480,6 +486,21 @@
       },
       goToUpdate: function (id) {
         this.$router.push({name: 'products-update', params: {id: id}})
+      },
+      clipboardCopyUrl: function (slug) {
+        let url = location.protocol+'//'+location.hostname;
+        url += `/product/${slug}`;
+        this.$copyText(url).then(() => {
+          this.$notify.success({
+            offset: 50,
+            title: 'Ссылка скопирована в буфер обмена'
+          });
+        }).catch(() => {
+          this.$notify.error({
+            offset: 50,
+            title: 'Ошибка при копировании ссылки в буфер обмен'
+          });
+        });
       }
     },
     components: {

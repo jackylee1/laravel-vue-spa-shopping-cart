@@ -46,11 +46,7 @@
                              :to="{name: 'product', params: {slug: product.product.slug}}">
                   {{product.product.name}}
                 </router-link>
-                <span>
-                                    <a @click="deleteProductFromCart(product.id)" href="javascript:void(0)">
-                                        <i class="far fa-trash-alt"></i>
-                                    </a>
-                                </span>
+                <span><a @click="deleteProductFromCart(product.id)" href="javascript:void(0)"><i class="far fa-trash-alt"></i></a></span>
                 <template v-for="filter in getAvailable(product.product_available_id, product.product).filters">
                   <p v-html="getParentAndSelectFilter(filter.filter_id)"></p>
                 </template>

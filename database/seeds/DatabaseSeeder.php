@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
         $this->call(UsersTableSeeder::class);
         $this->call(SettingTableSeeder::class);
         $this->call(CategoryTableSeeder::class);
+        $this->call(TextNotificationTableSeeder::class);
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }
@@ -79,5 +80,21 @@ class SettingTableSeeder extends Seeder {
         DB::table('settings')->insert($data);
 
         $this->command->info('Settings seeded');
+    }
+}
+
+class TextNotificationTableSeeder extends Seeder {
+    public function run() {
+        $data = [
+            ['slug' => 'new_order'],
+            ['slug' => 'update_status_order'],
+            ['slug' => 'promotional_code']
+        ];
+
+        DB::table('text_notifications')->delete();
+        DB::table('text_notifications')->truncate();
+        DB::table('text_notifications')->insert($data);
+
+        $this->command->info('TextNotification seeded');
     }
 }

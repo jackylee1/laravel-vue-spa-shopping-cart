@@ -2,6 +2,9 @@
 
 namespace App\Notifications\PublicNotification;
 
+use App\Models\Filter;
+use App\Models\Setting;
+use App\Models\Type;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -37,17 +40,17 @@ class SendCreateOrderNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        $mail_message = new MailMessage();
-        $mail_message->subject('Заказ успешно создан | '.env('APP_NAME'))
-            ->greeting('Заказ был успешно создан.')
-            ->line('С Вами в ближайшее время свяжется менеджер для подствержение заказа.')
-            ->line("ID Заказа: {$this->order->id}");
-        
-        if (auth()->check()) {
-            $mail_message->action('Просмотреть в личном кабинете', url()->to("/user/order/{$this->order->id}"));
-        }
+        $setting = Setting::getItems();
 
-        return $mail_message;
+        return (new MailMessage())->subject('Заказ на сайте ' . env('APP_NAME'))->view('emails.order', [
+            'types'=> Type::types(),
+            'filters' => Filter::getFilters(),
+            'order' => $this->order,
+            'btn_url' => url('/user/order/' . $this->order->id),
+            'btn_name' => 'Просмотреть на сайте',
+            'address' => $setting->firstWhere('slug', 'address')->value,
+            'email' => $setting->firstWhere('slug', 'email')->value,
+        ]);
     }
 
     /**

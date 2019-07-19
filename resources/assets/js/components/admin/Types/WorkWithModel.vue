@@ -125,6 +125,11 @@
 
         <el-form-item>
           <el-button-group>
+            <el-tooltip content="Скопировать ссылку" placement="top">
+              <el-button @click="clipboardCopyUrl(form.slug)">
+                <i class="ai-copy"></i>
+              </el-button>
+            </el-tooltip>
             <el-button v-if="showFilters" type="default" @click="viewOnSite(null)"><i class="el-icon-view"></i></el-button>
             <el-button v-if="showFilters" type="default" @click="modalWorkWithFilters">Управление фильтрами</el-button>
             <el-button v-if="showTree" type="default" @click="modalCreateNode">Добавить категорию</el-button>
@@ -150,6 +155,12 @@
                   <span>{{ node.data.sorting_order }}</span>
                   <span>
                     <el-button-group>
+                      <el-tooltip content="Скопировать ссылку" placement="top">
+                        <el-button size="mini"
+                                   @click="clipboardCopyUrl(form.slug, node.data.slug)">
+                          <i class="ai-copy"></i>
+                        </el-button>
+                      </el-tooltip>
                       <el-button @click="viewOnSite(node.data)"
                         size="mini">
                         <i class="el-icon-view"></i>
@@ -811,6 +822,27 @@
             });
             return false;
           }
+        });
+      },
+      clipboardCopyUrl: function (type, category = null) {
+        let url = location.protocol+'//'+location.hostname;
+
+        url += `/catalog?type=${type}`;
+
+        if (category !== null) {
+          url += `&category=${category}`;
+        }
+
+        this.$copyText(url).then(() => {
+          this.$notify.success({
+            offset: 50,
+            title: 'Ссылка скопирована в буфер обмена'
+          });
+        }).catch(() => {
+          this.$notify.error({
+            offset: 50,
+            title: 'Ошибка при копировании ссылки в буфер обмен'
+          });
         });
       }
     },

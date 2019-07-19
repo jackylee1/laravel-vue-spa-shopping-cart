@@ -2,6 +2,9 @@
 
 namespace App\Notifications\Admin;
 
+use App\Models\Filter;
+use App\Models\Setting;
+use App\Models\Type;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -12,14 +15,12 @@ class SendOrderStatusNotification extends Notification
     use Queueable;
 
     public $order_status,
-           $order_id,
-           $user_id;
+           $order;
 
-    public function __construct($order_status, $order_id, $user_id)
+    public function __construct($order_status, $order)
     {
         $this->order_status = $order_status;
-        $this->order_id = $order_id;
-        $this->user_id = $user_id;
+        $this->order = $order;
     }
 
     /**
@@ -41,16 +42,23 @@ class SendOrderStatusNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        $main_message = new MailMessage();
-        $main_message->subject('Был изменён статус заказа')
-                    ->greeting('Был изменён статус заказа')
-                    ->line("ID Заказа: $this->order_id")
-                    ->line('Текущий статус заказа: ' . $this->order_status->status->name);
-        if ($this->user_id !== null) {
-            $main_message->action('Просмотреть в личном кабинете', url("/user/order/$this->order_id"));
+        $setting = Setting::getItems();
+
+        $data = [
+            'types'=> Type::types(),
+            'filters' => Filter::getFilters(),
+            'order' => $this->order,
+            'new_order_status' => $this->order_status->status->name,
+            'address' => $setting->firstWhere('slug', 'address')->value,
+            'email' => $setting->firstWhere('slug', 'email')->value,
+        ];
+
+        if ($this->order->user_id !== null) {
+            $data['btn_url'] = url('/admin/orders/update/' . $this->order->id);
+            $data['btn_name'] = 'Просмотреть на сайте';
         }
 
-        return $main_message;
+        return (new MailMessage())->subject('Был изменён статус заказа | ' . env('APP_NAME'))->view('emails.order', $data);
     }
 
     /**

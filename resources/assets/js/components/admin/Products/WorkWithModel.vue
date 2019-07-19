@@ -157,18 +157,21 @@
 
         <el-form-item>
           <el-button-group>
-            <el-button v-if="currentRoute.name === 'products-update'"
-                       type="default"
-                       @click="viewOnSite"><i class="el-icon-view"></i></el-button>
-            <el-button v-if="currentRoute.name === 'products-update'"
-                       type="default"
-                       @click="dialogWorkWithFilter">Добавить в ...</el-button>
-            <el-button v-if="currentRoute.name === 'products-update'"
-                       type="default"
-                       @click="dialogWorkWithAvailable">Наличие товара</el-button>
-            <el-button v-if="currentRoute.name === 'products-update'"
-                       type="default"
-                       @click="modalCreateVideo">Добавить видео</el-button>
+            <template v-if="currentRoute.name === 'products-update'">
+              <el-tooltip content="Скопировать ссылку" placement="top">
+                <el-button @click="clipboardCopyUrl(form.slug)">
+                  <i class="ai-copy"></i>
+                </el-button>
+              </el-tooltip>
+              <el-button type="default"
+                         @click="viewOnSite"><i class="el-icon-view"></i></el-button>
+              <el-button type="default"
+                         @click="dialogWorkWithFilter">Добавить в ...</el-button>
+              <el-button type="default"
+                         @click="dialogWorkWithAvailable">Наличие товара</el-button>
+              <el-button type="default"
+                         @click="modalCreateVideo">Добавить видео</el-button>
+            </template>
             <el-button type="primary" @click="onSubmit">{{submitName}}</el-button>
           </el-button-group>
         </el-form-item>
@@ -1368,6 +1371,21 @@
             });
           }
         }
+      },
+      clipboardCopyUrl: function (slug) {
+        let url = location.protocol+'//'+location.hostname;
+        url += `/product/${slug}`;
+        this.$copyText(url).then(() => {
+          this.$notify.success({
+            offset: 50,
+            title: 'Ссылка скопирована в буфер обмена'
+          });
+        }).catch(() => {
+          this.$notify.error({
+            offset: 50,
+            title: 'Ошибка при копировании ссылки в буфер обмен'
+          });
+        });
       }
     },
     components: {
